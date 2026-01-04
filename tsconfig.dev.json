@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": true,
+    "sourceMap": true,
+    "inlineSources": true
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "src/coverage"
+  ],
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true
+  }
+}
