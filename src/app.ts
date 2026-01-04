@@ -1,7 +1,5 @@
 import express from "express";
-import swaggerUi from "swagger-ui-express";
 import * as fs from "fs";
-import * as yaml from "js-yaml";
 import path from 'path';
 import registerRoutes from "./routes";
 import { setupMiddleware } from "./middleware/setup";
@@ -34,19 +32,9 @@ app.use(
   express.static(path.join(__dirname, '..', 'uploads'))
 );
 
-// Serve Swagger UI
-let swaggerPath = path.join(__dirname, '../api-docs/bundled.yaml');
-if (!fs.existsSync(swaggerPath)) {
-  // Try the dist path
-  swaggerPath = path.join(__dirname, 'api-docs/bundled.yaml');
-}
+// 
 
-try {
-  const swaggerDocument = yaml.load(fs.readFileSync(swaggerPath, 'utf8')) as object;
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-} catch (error) {
-  console.warn('Warning: Swagger documentation could not be loaded:', error);
-}
+
 
 // Register routes with prefixes
 registerRoutes(app);
