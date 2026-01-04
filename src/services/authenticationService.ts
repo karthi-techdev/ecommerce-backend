@@ -35,7 +35,7 @@ interface IUser {
 import { UserModel } from "../models/userModel";
 import { CustomError } from "../utils/customError";
 import { HTTP_STATUS_CODE } from "../utils/httpResponse";
-import emailService from "../utils/emailConfig";
+// import emailService from "../utils/emailConfig";
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 
@@ -107,7 +107,7 @@ class AuthenticationService {
 
     // Send reset email
     try {
-      await emailService.sendPasswordResetEmail(email, resetToken);
+      // await emailService.sendPasswordResetEmail(email, resetToken);
       return true;
     } catch (error) {
       user.resetPasswordToken = undefined;
@@ -177,7 +177,7 @@ class AuthenticationService {
 
       // Send welcome email for new users
       try {
-        await emailService.sendWelcomeEmail(data.email, data.email.split('@')[0]); // Using email username as name
+        // await emailService.sendWelcomeEmail(data.email, data.email.split('@')[0]); // Using email username as name
       } catch (error) {
         console.error('Failed to send welcome email:', error);
         // Don't throw error here as user creation was successful
