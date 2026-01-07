@@ -14,12 +14,10 @@ Content-Type: application/json
    "phone":"xxxxxxxxxx"
 }
 ```
-
 ### 1.2 Member Login
 ```
 POST /business-organisation/login
 Content-Type: application/json
-
 {
   "email": "admin@avenstek.com",
   "password": "password123"
