@@ -3,7 +3,11 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "allowJs": true,
     "skipLibCheck": true,
@@ -21,26 +25,44 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "isolatedModules": true,
-    "types": ["@testing-library/jest-dom", "jest", "@types/text-encoding", "node"],
+    "types": [
+      "@types/text-encoding",
+      "node"
+    ],
     "baseUrl": "src",
     "paths": {
-      "@/components/*": ["components/*"],
-      "@/pages/*": ["pages/*"],
-      "@/stores/*": ["stores/*"],
-      "@/types/*": ["types/*"],
-      "@/common/*": ["common/*"],
-      "@/validations/*": ["validations/*"],
-      "@/utils/*": ["utils/*"],
-      "@/templates/*": ["components/templates/*"],
-      "@shared/*": ["../../shared/*"]
+      "@/components/*": [
+        "components/*"
+      ],
+      "@/pages/*": [
+        "pages/*"
+      ],
+      "@/stores/*": [
+        "stores/*"
+      ],
+      "@/types/*": [
+        "types/*"
+      ],
+      "@/common/*": [
+        "common/*"
+      ],
+      "@/validations/*": [
+        "validations/*"
+      ],
+      "@/utils/*": [
+        "utils/*"
+      ],
+      "@/templates/*": [
+        "components/templates/*"
+      ],
+      "@shared/*": [
+        "../../shared/*"
+      ]
     }
   },
   "include": [
     "src",
     "src/common",
-    "src/__tests__/**/*",
-    "../../Auth/employee.test.tsx",
-    "../../Auth/faq.test.tsx",
     "../../shared/**/*"
   ]
 }
