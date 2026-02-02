@@ -4,9 +4,11 @@ import { Express } from "express";
 import authenticationRoutes from "./authenticationRoutes";
 import faqRoutes from "./faqRoutes";
 import { authenticate } from "../middleware/authentication";
+import mainCategoryRoutes from "./mainCategoryRoutes";
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
   app.use("/api/v1/faqs", faqRoutes);
+  app.use("/api/v1/admin/main-categories", mainCategoryRoutes);
 }
 
