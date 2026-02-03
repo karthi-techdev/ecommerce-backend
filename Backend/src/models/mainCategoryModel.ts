@@ -1,7 +1,7 @@
 import { Schema, model, Document } from "mongoose";
 
 export interface IMainCategory extends Document {
-  mainCategoryId: string;
+  
   name: string;
   slug: string;
   description: string;
@@ -14,13 +14,40 @@ export interface IMainCategory extends Document {
 
 const mainCategorySchema = new Schema<IMainCategory>(
   {
-    mainCategoryId: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    slug: { type: String, required: true, unique: true },
-    description: { type: String, required: true },
-    image: { type: String, required: true }, 
-    isActive: { type: Boolean, default: true },
-    isDeleted: { type: Boolean, default: false },
+    name: {
+      type: String,
+      required: [true, "name is required"],
+      unique: true,
+      trim: true,
+    },
+
+    slug: {
+      type: String,
+      required: [true, "slug is required"],
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+
+    description: {
+      type: String,
+      required: [true, "description is required"],
+    },
+
+    image: {
+      type: String,
+      required: [true, "image is required"],
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true, // ✅ auto generation
+    },
+
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
@@ -28,5 +55,5 @@ const mainCategorySchema = new Schema<IMainCategory>(
 export const MainCategoryModel = model<IMainCategory>(
   "MainCategory",
   mainCategorySchema,
-  "main_categories" 
+  "main_categories"
 );

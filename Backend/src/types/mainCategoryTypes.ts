@@ -1,5 +1,4 @@
 export interface IMainCategoryInput {
-  mainCategoryId: string;
   name: string;
   slug: string;
   description: string;

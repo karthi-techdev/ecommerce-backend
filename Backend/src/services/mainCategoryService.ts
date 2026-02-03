@@ -8,11 +8,6 @@ class MainCategoryService {
 
   private validateCategory(data: Partial<IMainCategoryInput>, isUpdate = false): void {
     const rules = [
-      !isUpdate
-        ? ValidationHelper.isRequired(data.mainCategoryId, "mainCategoryId")
-        : data.mainCategoryId !== undefined
-          ? ValidationHelper.isNonEmptyString(data.mainCategoryId, "mainCategoryId")
-          : null,
 
       !isUpdate
         ? ValidationHelper.isRequired(data.name, "name")
@@ -31,25 +26,33 @@ class MainCategoryService {
         : data.description !== undefined
           ? ValidationHelper.isNonEmptyString(data.description, "description")
           : null,
-
-      data.isActive !== undefined
-        ? ValidationHelper.isBoolean(data.isActive, "isActive")
-        : null,
-
-      data.isDeleted !== undefined
-        ? ValidationHelper.isBoolean(data.isDeleted, "isDeleted")
-        : null,
     ];
 
     const errors = ValidationHelper.validate(rules);
     if (errors.length > 0) {
-      throw new Error(errors.map(e => e.message).join(", "));
+      throw new Error(errors[0].message); 
     }
   }
 
   async createMainCategory(data: IMainCategoryInput): Promise<IMainCategory> {
     this.validateCategory(data);
-    return await mainCategoryRepository.createMainCategory(data);
+
+    const existingName = await mainCategoryRepository.findByName(data.name);
+    if (existingName) {
+      throw new Error("Name already exists");
+    }
+
+    const existingSlug = await mainCategoryRepository.findBySlug(data.slug);
+    if (existingSlug) {
+      throw new Error("Slug already exists");
+    }
+
+    return await mainCategoryRepository.createMainCategory({
+      name: data.name,
+      slug: data.slug,
+      description: data.description,
+      image: data.image,
+    });
   }
 
   async getAllMainCategories(page = 1, limit = 10, filter?: string) {
@@ -57,27 +60,34 @@ class MainCategoryService {
   }
 
   async getMainCategoryById(id: string | Types.ObjectId) {
-    const error = ValidationHelper.isValidObjectId(id, "id");
-    if (error) {
-      throw new Error(error.message);
-    }
+    ValidationHelper.isValidObjectId(id, "id");
     return await mainCategoryRepository.getMainCategoryById(id);
   }
 
+ 
   async updateMainCategory(id: string | Types.ObjectId, data: Partial<IMainCategoryInput>) {
-    const error = ValidationHelper.isValidObjectId(id, "id");
-    if (error) {
-      throw new Error(error.message);
-    }
+    ValidationHelper.isValidObjectId(id, "id");
     this.validateCategory(data, true);
+
+    if (data.name) {
+      const nameExists = await mainCategoryRepository.findByNameExceptId(data.name, id);
+      if (nameExists) {
+        throw new Error("Name already exists");
+      }
+    }
+
+    if (data.slug) {
+      const slugExists = await mainCategoryRepository.findBySlugExceptId(data.slug, id);
+      if (slugExists) {
+        throw new Error("Slug already exists");
+      }
+    }
+
     return await mainCategoryRepository.updateMainCategory(id, data);
   }
 
   async softDeleteMainCategory(id: string | Types.ObjectId) {
-    const error = ValidationHelper.isValidObjectId(id, "id");
-    if (error) {
-      throw new Error(error.message);
-    }
+    ValidationHelper.isValidObjectId(id, "id");
     return await mainCategoryRepository.softDeleteMainCategory(id);
   }
 
@@ -86,18 +96,12 @@ class MainCategoryService {
   }
 
   async restoreMainCategory(id: string | Types.ObjectId) {
-    const error = ValidationHelper.isValidObjectId(id, "id");
-    if (error) {
-      throw new Error(error.message);
-    }
+    ValidationHelper.isValidObjectId(id, "id");
     return await mainCategoryRepository.restoreMainCategory(id);
   }
 
   async deleteMainCategoryPermanently(id: string | Types.ObjectId) {
-    const error = ValidationHelper.isValidObjectId(id, "id");
-    if (error) {
-      throw new Error(error.message);
-    }
+    ValidationHelper.isValidObjectId(id, "id");
     return await mainCategoryRepository.deleteMainCategoryPermanently(id);
   }
 }

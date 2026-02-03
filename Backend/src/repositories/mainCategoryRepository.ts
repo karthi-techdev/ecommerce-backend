@@ -1,17 +1,46 @@
 import { MainCategoryModel, IMainCategory } from "../models/mainCategoryModel";
 import { IMainCategoryInput } from "../types/mainCategoryTypes";
 import { Types } from "mongoose";
-import { CommonRepository } from "./commonRepository";
 
 class MainCategoryRepository {
-  private commonRepository: CommonRepository<IMainCategory>;
-
-  constructor() {
-    this.commonRepository = new CommonRepository(MainCategoryModel);
-  }
-
   async createMainCategory(data: IMainCategoryInput): Promise<IMainCategory> {
     return await MainCategoryModel.create(data);
+  }
+
+  async findByName(name: string): Promise<IMainCategory | null> {
+    return await MainCategoryModel.findOne({
+      name,
+      isDeleted: false,
+    });
+  }
+
+  async findBySlug(slug: string): Promise<IMainCategory | null> {
+    return await MainCategoryModel.findOne({
+      slug,
+      isDeleted: false,
+    });
+  }
+
+  async findByNameExceptId(
+    name: string,
+    id: string | Types.ObjectId
+  ): Promise<IMainCategory | null> {
+    return await MainCategoryModel.findOne({
+      name,
+      _id: { $ne: id },
+      isDeleted: false,
+    });
+  }
+
+  async findBySlugExceptId(
+    slug: string,
+    id: string | Types.ObjectId
+  ): Promise<IMainCategory | null> {
+    return await MainCategoryModel.findOne({
+      slug,
+      _id: { $ne: id },
+      isDeleted: false,
+    });
   }
 
   async getAllMainCategories(page = 1, limit = 10, filter?: string) {
@@ -23,24 +52,21 @@ class MainCategoryRepository {
     const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([
-      MainCategoryModel.find(query).skip(skip).limit(limit).exec(),
-      MainCategoryModel.countDocuments(query).exec(),
+      MainCategoryModel.find(query).skip(skip).limit(limit),
+      MainCategoryModel.countDocuments(query),
     ]);
-
-    const totalPages = Math.max(1, Math.ceil(total / limit));
-
     return {
       data,
       meta: {
         total,
-        totalPages,
+        totalPages: Math.max(1, Math.ceil(total / limit)),
         page,
         limit,
       },
     };
   }
 
-  async getMainCategoryById(id: string | Types.ObjectId): Promise<IMainCategory | null> {
+  async getMainCategoryById(id: string | Types.ObjectId) {
     return await MainCategoryModel.findOne({
       _id: id,
       isDeleted: false,
@@ -50,7 +76,7 @@ class MainCategoryRepository {
   async updateMainCategory(
     id: string | Types.ObjectId,
     data: Partial<IMainCategory>
-  ): Promise<IMainCategory | null> {
+  ) {
     return await MainCategoryModel.findOneAndUpdate(
       { _id: id, isDeleted: false },
       data,
@@ -58,7 +84,7 @@ class MainCategoryRepository {
     );
   }
 
-  async softDeleteMainCategory(id: string | Types.ObjectId): Promise<IMainCategory | null> {
+  async softDeleteMainCategory(id: string | Types.ObjectId) {
     return await MainCategoryModel.findOneAndUpdate(
       { _id: id, isDeleted: false },
       { isDeleted: true },
@@ -66,7 +92,7 @@ class MainCategoryRepository {
     );
   }
 
-  async restoreMainCategory(id: string | Types.ObjectId): Promise<IMainCategory | null> {
+  async restoreMainCategory(id: string | Types.ObjectId) {
     return await MainCategoryModel.findOneAndUpdate(
       { _id: id, isDeleted: true },
       { isDeleted: false, isActive: true },
@@ -74,7 +100,7 @@ class MainCategoryRepository {
     );
   }
 
-  async deleteMainCategoryPermanently(id: string | Types.ObjectId): Promise<IMainCategory | null> {
+  async deleteMainCategoryPermanently(id: string | Types.ObjectId) {
     return await MainCategoryModel.findByIdAndDelete(id);
   }
 
@@ -87,17 +113,15 @@ class MainCategoryRepository {
     const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([
-      MainCategoryModel.find(query).skip(skip).limit(limit).exec(),
-      MainCategoryModel.countDocuments(query).exec(),
+      MainCategoryModel.find(query).skip(skip).limit(limit),
+      MainCategoryModel.countDocuments(query),
     ]);
-
-    const totalPages = Math.max(1, Math.ceil(total / limit));
 
     return {
       data,
       meta: {
         total,
-        totalPages,
+        totalPages: Math.max(1, Math.ceil(total / limit)),
         page,
         limit,
       },
