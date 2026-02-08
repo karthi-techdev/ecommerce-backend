@@ -202,11 +202,12 @@ const BrandFormTemplate: React.FC = () => {
 
   return (
     <div className="p-6">
-      <FormHeader
-        managementName="Brand"
-        addButtonLink="/brand"
-        type={isEditMode ? 'Edit' : 'Add'}
-      />
+     <FormHeader
+  managementName=""
+  addButtonLink="/brand"
+  type={isEditMode ? 'Edit' : 'Add'}
+/>
+
 
       <form
         onSubmit={handleSubmit}
