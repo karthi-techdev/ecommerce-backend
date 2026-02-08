@@ -1,5 +1,5 @@
 import brandRepository from "../repositories/brandRepository";
-import { IBrand } from "../models/brandModel";
+import { IBrand , BrandModel} from "../models/brandModel";
 import { Types } from "mongoose";
 import ValidationHelper from "../utils/validationHelper";
 
@@ -49,33 +49,36 @@ class BrandService {
   }
 
   // GET ALL
-  async getAllBrands(
-    page = 1,
-    limit = 10,
-    filter?: string,
-    includeDeleted = false
-  ) {
-    return await brandRepository.getAllBrands(
-      page,
-      limit,
-      filter,
-      includeDeleted
-    );
-  }
+async getAllBrands(
+  page = 1,
+  limit = 10,
+  filter?: string,
+  includeDeleted = false
+) {
+  return await brandRepository.getAllBrands(page, limit, filter, includeDeleted);
+}
+
+
 
   // UPDATE
-  async updateBrand(
-    id: string | Types.ObjectId,
-    data: Partial<IBrand>
-  ): Promise<IBrand | null> {
+ async updateBrand(id: string, data: Partial<IBrand>): Promise<IBrand | null> {
 
-    const error = ValidationHelper.isValidObjectId(id, "id");
-    if (error) throw new Error(error.message);
+  if (data.name) {
+    data.name = data.name.trim();
 
-    this.validateBrandData(data, true);
+    const existingBrand = await BrandModel.findOne({
+      name: data.name,
+      _id: { $ne: id }
+    });
 
-    return await brandRepository.updateBrand(id, data);
+    if (existingBrand) {
+      throw new Error('Brand name already exists');
+    }
   }
+
+  return await BrandModel.findByIdAndUpdate(id, data, { new: true });
+}
+
 
   // SOFT DELETE
   async softDeleteBrand(
@@ -109,6 +112,40 @@ class BrandService {
 
     return await brandRepository.deleteBrand(id);
   }
+
+  async toggleStatus(id: string | Types.ObjectId): Promise<IBrand | null> {
+  const error = ValidationHelper.isValidObjectId(id, "id");
+  if (error) throw new Error(error.message);
+
+  const brand = await brandRepository.findById(id);
+  if (!brand) throw new Error("Brand not found");
+
+  const updatedBrand = await brandRepository.updateBrand(id, {
+    isActive: !brand.isActive
+  });
+
+  return updatedBrand;
+}
+
+
+async getBrandById(id: string | Types.ObjectId): Promise<IBrand | null> {
+
+  const error = ValidationHelper.isValidObjectId(id, "id");
+  if (error) throw new Error(error.message);
+
+  const brand = await brandRepository.findById(id);
+
+  if (!brand) throw new Error("Brand not found");
+
+  return brand;
+}
+
+async getTrashBrands(page: number, limit: number) {
+  return await brandRepository.getTrashBrands(page, limit);
+}
+
+
+
 }
 
 export default new BrandService();

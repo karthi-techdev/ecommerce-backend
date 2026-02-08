@@ -6,6 +6,18 @@ export interface Faq {
   answer: string;
   status?: 'active' | 'inactive';
 }
+export interface Brand {
+  _id?: string;           
+  name: string;           
+  slug: string;           
+  description?: string;   
+  image?: string;         
+  isActive?: boolean;     
+  isDeleted?: boolean;    
+  createdAt?: string;     
+  updatedAt?: string;
+}
+
 
 export type InputType =
   | 'text'
@@ -38,6 +50,7 @@ export interface FieldConfig {
   defaultValue?: any;
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
+ 
 }
 
 export type ColumnConfig<T> = {

@@ -4,78 +4,82 @@ import { HTTP_RESPONSE } from "../utils/httpResponse";
 import { processUpload } from "../utils/fileUpload";
 
 class BrandController {
-  // Create Brand
-  async createBrand(req: Request, res: Response, next: NextFunction): Promise<void> {
+  //CREATE BRAND
+  async createBrand(req: Request, res: Response, next: NextFunction) {
   try {
     const { name, slug, description } = req.body;
-
-    if (!req.file) {
-      throw new Error("image is required");
-    }
-
-    let isActive: boolean | undefined;
-    if (req.body.isActive !== undefined) {
-      isActive = req.body.isActive === "true";
-    }
-
-    const result = await processUpload(req, req.file);
-    const imageFilename = result.filename;
 
     const brand = await brandService.createBrand({
       name,
       slug,
       description,
-      isActive,
-      image: imageFilename
+      image: req.file?.filename
     });
 
     res.status(201).json({
-      status: HTTP_RESPONSE.SUCCESS,
-      message: "Brand created",
+      success: true,
+      message: "Brand created successfully",
       data: brand
     });
-  } catch (err: any) {
+
+  } catch (error: any) {
+
+    res.status(400).json({
+      success: false,
+      message: error.message || "Something went wrong"
+    });
+  }
+}
+
+
+  //GET ALL BRANDS
+  async getAllBrands(req: Request, res: Response, next: NextFunction) {
+    try {
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 10;
+      const filter = req.query.status as string;
+
+      const result = await brandService.getAllBrands(page, limit, filter, false);
+
+      res.status(200).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        ...result 
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  //GET TRASH BRANDS
+ async getTrashBrands(req: Request, res: Response, next: NextFunction) {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const result = await brandService.getTrashBrands(page, limit);
+
+    res.status(200).json({
+      status: HTTP_RESPONSE.SUCCESS,
+      ...result,
+    });
+  } catch (err) {
     next(err);
   }
 }
 
 
-
-  // Get All Brands
-  async getAllBrands(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
-      const filter = req.query.status as string | undefined;
-      const result = await brandService.getAllBrands(page, limit, filter);
-
-      res.status(200).json({
-        status: HTTP_RESPONSE.SUCCESS,
-        data: result.data,
-        meta: result.meta
-      });
-    } catch (err: any) {
-      next(err);
-    }
-  }
-
-  // Update Brand
-  async updateBrand(req: Request, res: Response, next: NextFunction): Promise<void> {
+  // UPDATE BRAND
+  async updateBrand(req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.params.id;
-      if (!id) {
-        res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "Brand id is required" });
-        return;
-      }
-
       const { name, slug, description } = req.body;
-      let isActive: boolean | undefined = undefined;
+
+      let isActive;
       if (req.body.isActive !== undefined) {
-        if (req.body.isActive === "true") isActive = true;
-        else if (req.body.isActive === "false") isActive = false;
+        isActive = req.body.isActive === "true";
       }
 
-      let imageFilename: string | undefined;
+      let imageFilename;
       if (req.file) {
         const result = await processUpload(req, req.file);
         imageFilename = result.filename;
@@ -86,95 +90,119 @@ class BrandController {
       if (imageFilename) updatedData.image = imageFilename;
 
       const brand = await brandService.updateBrand(id, updatedData);
-      if (!brand) {
-        res.status(404).json({ status: HTTP_RESPONSE.FAIL, message: "Brand not found" });
-        return;
-      }
 
-      res.status(200).json({
+      if (!brand) throw new Error("Brand not found");
+
+      res.json({
         status: HTTP_RESPONSE.SUCCESS,
         message: "Brand updated",
         data: brand
       });
-    } catch (err: any) {
+    } catch (err) {
       next(err);
     }
   }
 
-  // Soft Delete Brand
-  async softDeleteBrand(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const id = req.params.id;
-      if (!id) {
-        res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "Brand id is required" });
-        return;
-      }
-
-      const brand = await brandService.softDeleteBrand(id);
-      if (!brand) {
-        res.status(404).json({ status: HTTP_RESPONSE.FAIL, message: "Brand not found" });
-        return;
-      }
-
-      res.status(200).json({
-        status: HTTP_RESPONSE.SUCCESS,
-        message: "Brand soft deleted successfully",
-        data: brand
-      });
-    } catch (err: any) {
-      next(err);
-    }
-  }
-
-  // Restore Brand
-  async restoreBrand(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const id = req.params.id;
-      if (!id) {
-        res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "Brand id is required" });
-        return;
-      }
-
-      const brand = await brandService.restoreBrand(id);
-      if (!brand) {
-        res.status(404).json({ status: HTTP_RESPONSE.FAIL, message: "Brand not found" });
-        return;
-      }
-
-      res.status(200).json({
-        status: HTTP_RESPONSE.SUCCESS,
-        message: "Brand restored successfully",
-        data: brand
-      });
-    } catch (err: any) {
-      next(err);
-    }
-  }
-
-  // Hard Delete Brand
-async hardDeleteBrand(req: Request, res: Response, next: NextFunction): Promise<void> {
+  // SOFT DELETE BRAND
+ async softDeleteBrand(req: Request, res: Response, next: NextFunction) {
   try {
-    const id = req.params.id;
-    if (!id) {
-      res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "Brand id is required" });
-      return;
-    }
+    const brand = await brandService.softDeleteBrand(req.params.id);
 
-    const brand = await brandService.hardDeleteBrand(id);
     if (!brand) {
-      res.status(404).json({ status: HTTP_RESPONSE.FAIL, message: "Brand not found" });
-      return;
+      return res.status(404).json({
+        status: "fail",
+        message: "Brand not found",
+      });
     }
 
-    res.status(200).json({
-      status: HTTP_RESPONSE.SUCCESS,
-      message: "Brand permanently deleted",
+    res.json({
+      status: "success",
+      message: "Brand moved to trash successfully",
+      data: brand,
     });
   } catch (err: any) {
+    console.error("SoftDeleteBrand Error:", err.message);
+    res.status(500).json({
+      status: "error",
+      message: err.message || "Failed to move brand to trash",
+    });
+  }
+}
+
+
+  //RESTORE BRAND 
+  async restoreBrand(req: Request, res: Response, next: NextFunction) {
+    try {
+      const brand = await brandService.restoreBrand(req.params.id);
+
+      res.json({
+        status: HTTP_RESPONSE.SUCCESS,
+        message: "Brand restored",
+        data: brand
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+ //TOGGLE STATUS
+async toggleStatus(req: Request, res: Response, next: NextFunction) {
+  try {
+    const brandId = req.params.id;
+    if (!brandId) throw new Error("Brand ID is required");
+
+    console.log("[ToggleStatus] Request received for brand ID:", brandId);
+
+    const brand = await brandService.toggleStatus(brandId);
+
+    console.log("[ToggleStatus] Brand after toggle:", brand);
+
+    if (!brand) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Brand not found"
+      });
+    }
+
+    res.json({
+      status: "success",
+      message: `Brand status toggled to ${brand.isActive ? "active" : "inactive"}`,
+      data: brand
+    });
+  } catch (err) {
+    console.error("[ToggleStatus] Error:", err);
     next(err);
   }
 }
 
+
+  //  HARD DELETE BRAND
+  async hardDeleteBrand(req: Request, res: Response, next: NextFunction) {
+    try {
+      await brandService.hardDeleteBrand(req.params.id);
+
+      res.json({
+        status: HTTP_RESPONSE.SUCCESS,
+        message: "Brand permanently deleted"
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  //  GET BRAND BY ID
+  async getBrandById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const brand = await brandService.getBrandById(req.params.id);
+
+      res.status(200).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        data: brand
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export default new BrandController();

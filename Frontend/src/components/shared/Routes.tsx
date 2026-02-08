@@ -7,6 +7,13 @@ const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
 
+const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
+const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
+const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
+
+
+
+
 const routes: RouteObject[] = [
   {
     path: '/',
@@ -28,6 +35,24 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <FaqFormPage /> },
         ],
       },
+      {
+        path: 'brand',
+        children: [
+          { path: '', element: <BrandListPage /> }, 
+          { path: 'add', element: <BrandFormPage /> },   
+          { path: 'edit/:id', element: <BrandFormPage /> }, 
+        ],
+      },
+
+      
+{
+  path: 'trash',
+  children: [
+    { path: 'brand', element: <BrandTrashPage /> },
+  ]
+}
+     
+       
     ],
   },
   {

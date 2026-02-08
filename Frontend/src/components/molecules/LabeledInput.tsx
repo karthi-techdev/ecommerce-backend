@@ -67,7 +67,7 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(({
           value={value || ''}
           onChange={handleInputChange}
           placeholder={placeholder}
-          required={required}
+          
           disabled={disabled}
           aria-label={ariaLabel}
         />
@@ -97,7 +97,7 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(({
           value={value || ''}
           onChange={handleInputChange}
           placeholder={placeholder}
-          required={required}
+          
           disabled={disabled}
           aria-label={ariaLabel}
           className={error ? 'border-red-500' : ''}
