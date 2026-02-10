@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axiosInstance from "../utils/axios";
+import axiosInstance from "../components/utils/axios";
 import type { Brand } from "../types/common";
 import ImportedURL from "../common/urls";
 

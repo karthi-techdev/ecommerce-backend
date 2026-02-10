@@ -8,13 +8,22 @@ import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
 
 import BrandTrashPage from '../components/pages/trash/BrandTrashPage';
 
+import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
+import SubCategoryFormTemplate from '@/components/templates/subcategory/SubcategoryFormTemplate';
+import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
+import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
 
 export const router = createBrowserRouter([
+  {
+        path: '/login',
+        element: <AdminLoginTemplate />,
+      },
+
   {
     path: '/',
     element: <Layout />,
     children: [
-      { index: true, element: <Dashboard /> }, 
+      {  path: '/', element: <Dashboard /> }, 
       {
         path: 'faq',
         children: [
@@ -31,12 +40,54 @@ export const router = createBrowserRouter([
           { path: 'edit/:id', element: <BrandFormTemplate /> },
         ],
       },
+      
+      
+      
       {
-        path: 'trash',
-        children: [
-          { path: 'brand', element: <BrandTrashPage /> }, 
+        path: 'faq',
+        children: [ 
+          {
+            path: '',
+            element: <FaqListTemplate />,
+          },
+          {
+            path: 'add',
+            element: <FaqFormTemplate />,
+          },
+          {
+            path: 'edit/:id',
+            element: <FaqFormTemplate />,
+          },
         ],
       },
+      {
+        path: 'subcategory',
+        children: [
+          {
+            path: '',
+            element: <SubCategoryListTemplate />,
+          },
+          {
+            path: 'add',
+            element: <SubCategoryFormTemplate />,
+          },
+          {
+            path: 'edit/:id',
+            element: <SubCategoryFormTemplate />,
+          },
+        ],
+      },
+      {
+        path: 'trash',
+        children : [
+          {
+             path: 'subcategory', 
+             element: <SubCategoryTrashListTemplate /> 
+          },
+          { path: 'brand', element: <BrandTrashPage /> }, 
+        ]
+      }
+      
     ],
   },
 ]);

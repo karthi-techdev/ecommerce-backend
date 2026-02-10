@@ -36,7 +36,7 @@ interface MulterFile {
 const storage = multer.diskStorage({
   destination: (req: MulterRequest, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
     try {
-      const managementName = req.managementName || 'default';
+      const managementName =  req.managementName || req.res?.locals?.managementName || "default";
       const sanitizedManagementName = managementName.replace(/[^a-zA-Z0-9-_]/g, '');
       const uploadPath = path.join('uploads', sanitizedManagementName);
       

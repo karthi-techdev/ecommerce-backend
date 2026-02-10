@@ -27,6 +27,18 @@ const API = {
   toggleBrandStatus: `${ROOTURL}brands/togglestatus`,
   trashBrands: `${ROOTURL}brands/trash`,
   checkDuplicateBrand: `${ROOTURL}brands/check-duplicate`,
+  //subcategory endpoints
+  addSubCategory: `${ROOTURL}subcategory/`,
+  listSubCategory: `${ROOTURL}subcategory/`,
+  getSubCategoryById: `${ROOTURL}subcategory/getSubCategoryById/`,
+  updateSubCategory: `${ROOTURL}subcategory/updateSubCategory/`,
+  deleteSubCategory: `${ROOTURL}subcategory/softDeleteSubCategory/`,
+  hardDeleteSubCategory:`${ROOTURL}subcategory/permanentDelete/`,
+  restoreSubCategory:`${ROOTURL}subcategory/restore/`,
+  toggleStatusSubCategory: `${ROOTURL}subcategory/togglestatus/`,
+  checkDuplicateSubCategory: `${ROOTURL}subcategory/check-duplicate`,
+  listSubCategoryTrash: `${ROOTURL}subcategory/trash/`,
+
 };
 
 const ImportedURL = { API, LIVEURL, FILEURL, SETTINGS_ID };

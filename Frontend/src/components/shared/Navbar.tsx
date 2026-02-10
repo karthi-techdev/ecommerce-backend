@@ -7,6 +7,8 @@ import logoImg from '../../assets/images/logo.png';
 import LabeledInput from '../molecules/LabeledInput';
 import ProfileDropdown from '../organisms/ProfileDropdown';
 import NotificationList from '../molecules/NotificationList';
+import { useAuthStore } from '../../stores/authStore';
+import Swal from 'sweetalert2';
 
 interface Notification {
   id: number;
@@ -21,6 +23,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const {logout , admin } = useAuthStore()
 
   // Handle fullscreen change
   useEffect(() => {
@@ -58,7 +61,29 @@ const Navbar = () => {
 
   const handleSignOut = useCallback(() => {
     closeAllDropdowns();
-  }, [closeAllDropdowns]);
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will be logged out from this session',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, Logout',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+
+        Swal.fire(
+          'Logged Out!',
+          'You have been successfully logged out.',
+          'success'
+        );
+      }
+    });
+
+  }, [closeAllDropdowns, logout]);
+
 
   const handleSearch = useCallback((e: { target: { name: string; value: string | boolean } }) => {
     if (typeof e.target.value === 'string') {
@@ -129,7 +154,7 @@ const Navbar = () => {
                   <FiMaximize className="h-5 w-5" />
                 )}
               </motion.button>
-            </div>
+            </div> 
             <div className="ml-2 relative">
               <motion.button
                 whileTap={{ scale: 0.95 }}
@@ -178,7 +203,7 @@ const Navbar = () => {
                   <HiOutlineUser className="h-4 w-4 text-white" />
                 </motion.div>
                 <span className="hidden md:inline-block ml-2 text-sm font-medium text-gray-700">
-                  Guest User
+                  {admin?.name || "Guest User"}
                 </span>
                 <FiChevronDown
                   className={`hidden md:inline-block ml-1 h-4 w-4 text-gray-500 transition-transform ${
