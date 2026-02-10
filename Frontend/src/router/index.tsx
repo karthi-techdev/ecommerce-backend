@@ -6,8 +6,13 @@ import FaqFormTemplate from '../components/templates/faq/FaqFormTemplate';
 import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
 import SubCategoryFormTemplate from '@/components/templates/subcategory/SubcategoryFormTemplate';
 import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
+import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
 
 export const router = createBrowserRouter([
+  {
+        path: '/login',
+        element: <AdminLoginTemplate />,
+      },
   {
     path: '/',
     element: <Layout />,
@@ -16,9 +21,10 @@ export const router = createBrowserRouter([
         path: '/',
         element: <Dashboard />,
       },
+      
       {
         path: 'faq',
-        children: [
+        children: [ 
           {
             path: '',
             element: <FaqListTemplate />,
@@ -63,3 +69,4 @@ export const router = createBrowserRouter([
     ],
   },
 ]);
+

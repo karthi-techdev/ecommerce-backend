@@ -1,0 +1,17 @@
+[{
+  "_id": {
+    "$oid": "697df428ab882a62123e9946"
+  },
+  "name": "Default Admin",
+  "email": "admin@company.com",
+  "role": "SuperAdmin",
+  "isActive": true,
+  "lastLoginAt": {
+    "$date": "2026-02-09T15:17:04.106Z"
+  },
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "updatedAt": {
+    "$date": "2026-02-09T15:17:04.108Z"
+  },
+  "password": "$2b$12$ZxBJCSY0f8GdoY5kl7FtquN8t6SuhkdsEFVwTPjLIGf1mZGRwt0hO"
+}]

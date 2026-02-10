@@ -57,9 +57,12 @@ const SubCategoryListTemplate: React.FC = () => {
     loadData();
   }, [currentPage, selectedFilter, fetchSubCategories]);
 
-  useEffect(() => {
-    if (error) toast.error(error);
-  }, [error]);
+useEffect(() => {
+  if (error && !error.toLowerCase().includes('exists')) {
+    toast.error(error);
+  }
+}, [error]);
+
 
   const handlePageChange = (selectedItem: { selected: number }) => {
     setCurrentPage(selectedItem.selected + 1);
