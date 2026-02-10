@@ -3,8 +3,13 @@ import Layout from '../components/shared/Layout';
 import Dashboard from '../components/templates/dashboard/Dashboard';
 import FaqListTemplate from '../components/templates/faq/FaqListTemplate';
 import FaqFormTemplate from '../components/templates/faq/FaqFormTemplate';
+import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
 
 export const router = createBrowserRouter([
+  {
+        path: '/login',
+        element: <AdminLoginTemplate />,
+      },
   {
     path: '/',
     element: <Layout />,
@@ -13,9 +18,10 @@ export const router = createBrowserRouter([
         path: '/',
         element: <Dashboard />,
       },
+      
       {
         path: 'faq',
-        children: [
+        children: [ 
           {
             path: '',
             element: <FaqListTemplate />,
@@ -33,3 +39,4 @@ export const router = createBrowserRouter([
     ],
   },
 ]);
+
