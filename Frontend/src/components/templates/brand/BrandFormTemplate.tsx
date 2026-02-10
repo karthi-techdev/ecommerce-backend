@@ -7,6 +7,8 @@ import { validateBrandForm, type BrandFormData, type ValidationErrors } from '..
 import FormHeader from '../../molecules/FormHeader';
 import FormField from '../../molecules/FormField';
 import type { FieldConfig } from '../../../types/common';
+import { useDebounce } from '../../../components/hooks/useDebounce';
+
 
 const brandFields: FieldConfig[] = [
   { name: 'name', label: 'Name', type: 'text', placeholder: 'Enter brand name...', required: true },
@@ -31,6 +33,8 @@ const BrandFormTemplate: React.FC = () => {
     description: '',
     img: null,
   });
+  const debouncedName = useDebounce(formData.name, 500);
+
 
   const [slug, setSlug] = useState('');
   const [preview, setPreview] = useState<string | null>('/preview-image.jpg');
@@ -66,6 +70,31 @@ const BrandFormTemplate: React.FC = () => {
     }
   }, [id, brands]);
 
+ useEffect(() => {
+
+  if (!debouncedName.trim()) return;
+
+  // ❗ Stop duplicate check if already validation error exists
+  if (errors.name && errors.name !== 'Name already exists') return;
+
+  const trimmedValue = debouncedName.trim().toLowerCase();
+
+  if (checkBrandNameExists(trimmedValue, id)) {
+    setErrors((prev) => ({
+      ...prev,
+      name: 'Name already exists',
+    }));
+  } else {
+    setErrors((prev) => ({
+      ...prev,
+      name: undefined,
+    }));
+  }
+
+}, [debouncedName, id, errors.name]);
+
+
+
   //Handle Input
   const handleChange = (name: keyof BrandFormData, value: string | File | null) => {
 
@@ -82,15 +111,7 @@ const BrandFormTemplate: React.FC = () => {
       }
 
       const trimmedValue = value.trim().toLowerCase();
-      if (checkBrandNameExists(trimmedValue, id)) {
-        setErrors((prev) => ({
-          ...prev,
-          name: 'Brand name already exists',
-        }));
-
-        setFormData((prev) => ({ ...prev, name: value }));
-        return;
-      }
+    
       setErrors((prev) => ({
         ...prev,
         name: undefined,
@@ -162,43 +183,42 @@ const BrandFormTemplate: React.FC = () => {
   };
 
   // Image Change
-  const handleImageChange = (
-    file: File | null,
-    inputElement?: HTMLInputElement
-  ) => {
-    if (!file) return;
+const handleImageChange = (
+  file: File | null,
+  inputElement?: HTMLInputElement
+) => {
+  if (!file) return;
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
 
-    if (!allowedTypes.includes(file.type)) {
-
-      setErrors((prev) => ({
-        ...prev,
-        img: 'Only JPG, PNG, or WEBP images are allowed',
-      }));
-
-      if (inputElement) inputElement.value = '';
-
-      setPreview('/preview-image.jpg');
-
-      setTimeout(() => {
-        setErrors((prev) => ({
-          ...prev,
-          img: undefined,
-        }));
-      }, 5000);
-
-      return;
-    }
+  if (!allowedTypes.includes(file.type)) {
 
     setErrors((prev) => ({
       ...prev,
-      img: undefined,
+      img: 'Only JPG, PNG, or WEBP images are allowed',
     }));
 
-    handleChange('img', file);
-    setPreview(URL.createObjectURL(file));
-  };
+    if (inputElement) inputElement.value = '';
+
+
+    setTimeout(() => {
+      setErrors((prev) => ({
+        ...prev,
+        img: undefined,
+      }));
+    }, 5000);
+
+    return;
+  }
+
+  setErrors((prev) => ({
+    ...prev,
+    img: undefined,
+  }));
+
+  handleChange('img', file);
+  setPreview(URL.createObjectURL(file));
+};
 
   return (
     <div className="p-6">
@@ -276,8 +296,8 @@ const BrandFormTemplate: React.FC = () => {
             {isSubmitting
               ? 'Saving...'
               : isEditMode
-              ? 'Update Brand'
-              : 'Add Brand'}
+              ? 'Update'
+              : 'Add'}
           </button>
         </div>
 

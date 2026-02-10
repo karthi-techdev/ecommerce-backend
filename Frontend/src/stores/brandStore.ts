@@ -59,6 +59,7 @@ export const useBrandStore = create<BrandState>((set, get) => ({
     page = 1,
     limit = 10,
     filter: "total" | "active" | "inactive" = "total"
+    
   ) => {
     try {
       set({ loading: true, error: null });

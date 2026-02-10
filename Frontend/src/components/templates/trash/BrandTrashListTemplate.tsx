@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import TableHeader from '../../molecules/TableHeader';
 import Loader from '../../atoms/Loader';
 import Pagination from '../../atoms/Pagination';
 import { useBrandStore } from '../../../stores/brandStore';
-import { Trash2, RefreshCcw} from 'lucide-react';
+import { Trash2, RefreshCcw } from 'lucide-react';
 import { PAGINATION_CONFIG } from '../../../constants/pagination';
 
 const BrandTrashListTemplate: React.FC = () => {
-  const navigate = useNavigate();
+
   const {
     trashBrands,
     fetchTrashBrands,
@@ -20,13 +19,26 @@ const BrandTrashListTemplate: React.FC = () => {
     error,
     trashCurrentPage,
     trashTotalPages,
-    totalTrashBrands,
   } = useBrandStore();
 
-useEffect(() => {
-  fetchTrashBrands(1, PAGINATION_CONFIG.DEFAULT_LIMIT);
-}, []);
+  // ✅ ADD STATE
+  const [searchTerm, setSearchTerm] = useState('');
 
+  // ✅ FILTER LOGIC
+  const filteredTrashBrands =
+    searchTerm.trim() === ''
+      ? trashBrands
+      : trashBrands.filter((brand) =>
+          brand.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+  useEffect(() => {
+    fetchTrashBrands(1, PAGINATION_CONFIG.DEFAULT_LIMIT);
+  }, []);
+
+  useEffect(() => {
+    if (error) toast.error(error);
+  }, [error]);
 
   if (loading) return <Loader />;
 
@@ -74,10 +86,12 @@ useEffect(() => {
 
   return (
     <div className="p-6">
+
+      {/* ✅ FIX HERE */}
       <TableHeader
         managementName="Trash Brands"
-        searchTerm=""
-        onSearchChange={() => {}}
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
         addButtonLabel="Back to Brands"
         addButtonLink="/brand"
       />
@@ -85,58 +99,71 @@ useEffect(() => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mt-4">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
+
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S.NO</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">S.NO</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
             </thead>
+
             <tbody className="bg-white divide-y divide-gray-200">
-              {trashBrands.length === 0 ? (
+
+              {filteredTrashBrands.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
+                  <td colSpan={5} className="text-center py-4 text-gray-500">
                     No trash brands available
                   </td>
                 </tr>
               ) : (
-                trashBrands.map((brand, index) => (
+                filteredTrashBrands.map((brand, index) => (
                   <tr key={brand._id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-  {(trashCurrentPage - 1) * PAGINATION_CONFIG.DEFAULT_LIMIT + index + 1}
-</td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{brand.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{brand.description || '-'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      {(trashCurrentPage - 1) * PAGINATION_CONFIG.DEFAULT_LIMIT + index + 1}
+                    </td>
+
+                    <td className="px-6 py-4 text-sm text-gray-900">{brand.name}</td>
+
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      {brand.description || '-'}
+                    </td>
+
+                    <td className="px-6 py-4">
                       <img
                         src={`${import.meta.env.VITE_FILE_URL}default/${brand.image}`}
                         alt={brand.name}
-                        className="w-12 h-12 object-cover rounded-md border border-gray-200"
+                        className="w-12 h-12 object-cover rounded-md border"
                       />
                     </td>
-                    <td className="px-4 py-2 flex gap-2 items-center">
+
+                    <td className="px-4 py-2 flex gap-2">
+
                       <button
                         onClick={() => handleRestore(brand._id!)}
-                        className="bg-transparent text-green-500 hover:text-green-700 p-2 rounded"
-                        title="Restore"
+                        className="text-green-500 hover:text-green-700 p-2"
                       >
                         <RefreshCcw size={16} />
                       </button>
+
                       <button
                         onClick={() => handlePermanentDelete(brand._id!)}
-                        className="bg-transparent text-red-500 hover:text-red-700 p-2 rounded"
-                        title="Permanent Delete"
+                        className="text-red-500 hover:text-red-700 p-2"
                       >
                         <Trash2 size={16} />
                       </button>
+
                     </td>
+
                   </tr>
                 ))
               )}
+
             </tbody>
+
           </table>
         </div>
       </div>
@@ -150,6 +177,7 @@ useEffect(() => {
           />
         </div>
       )}
+
     </div>
   );
 };
