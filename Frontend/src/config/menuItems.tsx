@@ -1,14 +1,7 @@
-import { FiTrash2 , FiSettings, FiBriefcase  } from 'react-icons/fi';
+import { FiSettings, FiBriefcase, FiTag, FiTrash2 } from 'react-icons/fi';
+
 import { BiCategory } from "react-icons/bi";
 import type { ReactNode } from 'react';
-
-export interface MenuItem {
-  key: string;
-  label: string;
-  icon: ReactNode;
-  path: string;
-  submenu?: SubMenuItem[];
-}
 
 export interface SubMenuItem {
   key: string;
@@ -16,25 +9,36 @@ export interface SubMenuItem {
   path: string;
 }
 
+export interface MenuItem {
+  key: string;
+  label: string;
+  icon: ReactNode;
+  path?: string;           
+  submenu?: SubMenuItem[];
+}
+
 const menuItems: MenuItem[] = [
   {
     key: 'dashboard',
     label: 'Dashboard',
     icon: <FiBriefcase />,
-    path: '/dashboard'
+    path: '/',           
   },
   {
     key: 'site-settings',
     label: 'Site Settings',
     icon: <FiSettings />,
-    path: '#',
     submenu: [
-      {
-        key: 'faq',
-        label: 'FAQ',
-        path: '/faq'
-      },
-    ]
+      { key: 'faq', label: 'FAQ', path: '/faq' },
+    ],
+  },
+  {
+    key: 'brand',
+    label: 'Brand',
+    icon: <FiTag />,
+    path: '/brand',
+      
+    
   },
   {
     key: 'category',
@@ -53,15 +57,17 @@ const menuItems: MenuItem[] = [
     key: 'trash',
     label: 'Trash',
     icon: <FiTrash2 />,
-    path: '#',
     submenu: [
-      {
+      { key: 'trash-brand', label: 'Brand', path: '/trash/brand' },
+       {
         key: 'subcategory-trash',
         label: 'Subcategory',
         path: '/trash/subcategory'
       }  
-    ]
-  }
+    ],
+  },
+  
+  
 ];
 
 export default menuItems;

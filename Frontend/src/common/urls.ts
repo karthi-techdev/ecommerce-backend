@@ -6,19 +6,27 @@ const ROOTURL = `${LIVEURL}api/v1/`;
 const FILEURL = LIVEURL;
 const SETTINGS_ID = '68ad8844bfdf0cec7f623bc2';
 
-
-
-
 const API = {
-  // FAQ endpoints
-  addfaq: `${ROOTURL}faqs/`,
-  listfaq: `${ROOTURL}faqs/`,
+  // ---------------- FAQ endpoints ----------------
+  addFaq: `${ROOTURL}faqs/`,
+  listFaq: `${ROOTURL}faqs/`,
   getFaq: `${ROOTURL}faqs/getFaqById/`,
-  updatefaq: `${ROOTURL}faqs/updateFaq/`,
-  deletefaq: `${ROOTURL}faqs/softDeleteFaq/`,
-  toggleStatusfaq: `${ROOTURL}faqs/togglestatus/`,
+  updateFaq: `${ROOTURL}faqs/updateFaq/`,
+  deleteFaq: `${ROOTURL}faqs/softDeleteFaq/`,
+  toggleStatusFaq: `${ROOTURL}faqs/togglestatus/`,
   checkDuplicateFaq: `${ROOTURL}faqs/check-duplicate`,
 
+  // ---------------- Brand endpoints ----------------
+  addBrand: `${ROOTURL}brands/`,
+  listBrand: `${ROOTURL}brands/`,
+  getBrand: `${ROOTURL}brands/getBrandById/`,
+  updateBrand: `${ROOTURL}brands/updateBrand/`,
+  softDeleteBrand: `${ROOTURL}brands/softDeleteBrand/`,
+  restoreBrand: `${ROOTURL}brands/restore`, 
+  hardDeleteBrand: `${ROOTURL}brands/permanentDelete`,
+  toggleBrandStatus: `${ROOTURL}brands/togglestatus`,
+  trashBrands: `${ROOTURL}brands/trash`,
+  checkDuplicateBrand: `${ROOTURL}brands/check-duplicate`,
   //subcategory endpoints
   addSubCategory: `${ROOTURL}subcategory/`,
   listSubCategory: `${ROOTURL}subcategory/`,

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import TableHeader from '../../molecules/TableHeader';
 import Loader from '../../atoms/Loader';
 import Pagination from '../../atoms/Pagination';
-import { useSubCategoryStore } from '../../../stores/subCategoryStore';
+import { useSubCategoryStore } from '../../../stores/subcategoryStore';
 import type { SubCategory } from '../../../types/common';
 import {Layers,CheckCircle,XCircle,Pencil,Trash2,ToggleLeft,ToggleRight} from 'lucide-react';
 import { truncate } from '../../utils/helper';

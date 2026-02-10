@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {validateSubCategoryForm,type SubCategoryFormData,type ValidationErrors,} from '../../validations/subCategoryValidation';
-import { useSubCategoryStore } from '../../../stores/subCategoryStore';
+import {validateSubCategoryForm,type SubCategoryFormData,type ValidationErrors,} from '../../validations/subcategoryValidation';
+import { useSubCategoryStore } from '../../../stores/subcategoryStore';
 import FormHeader from '../../molecules/FormHeader';
 import FormField from '../../molecules/FormField';
 import type { FieldConfig } from '../../../types/common';
@@ -270,20 +270,17 @@ const handleChange = (e: any) => {
             return (
               <FormField
                 key={field.name}
-                field={{
-                  ...field,
-                  label: isRequired ? (
-                    <span>
-                      {field.label} <span className="text-red-500">*</span>
-                    </span>
-                  ) : (
-                    field.label
-                  ),
-                  options:
-                    field.name === 'mainCategoryId'
-                      ? MAIN_CATEGORY_OPTIONS
-                      : undefined,
-                }}
+               field={{
+  ...field,
+  options:
+    field.name === 'mainCategoryId'
+      ? MAIN_CATEGORY_OPTIONS
+      : undefined,
+}}
+isRequired={isRequired}
+
+
+
                 value={
                   field.type === 'file'
                     ? undefined

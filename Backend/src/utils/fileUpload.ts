@@ -64,15 +64,24 @@ const storage = multer.diskStorage({
 });
 
 // File filter function
-const fileFilter = (req: MulterRequest, file: MulterFile, cb: FileFilterCallback): void => {
-  if (!CONFIG.ALLOWED_MIME_TYPES.includes(file.mimetype)) {
-    const error = new Error(`Invalid file type. Allowed types: ${CONFIG.ALLOWED_MIME_TYPES.join(', ')}`);
-    console.error(`File upload rejected:`, { filename: file.originalname, type: file.mimetype });
-    cb(error);
+const fileFilter = (
+  req: MulterRequest,
+  file: MulterFile,
+  cb: FileFilterCallback
+): void => {
+  if (!file.mimetype.startsWith('image/')) {
+    cb(new Error('Only image files are allowed (jpg, png, webp)'));
     return;
   }
+
+  if (!CONFIG.ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+    cb(new Error('Unsupported image format'));
+    return;
+  }
+
   cb(null, true);
 };
+
 
 // Generate secure filename
 const generateSecureFilename = (originalname: string): string => {

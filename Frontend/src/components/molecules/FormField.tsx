@@ -8,6 +8,7 @@ interface FormFieldProps {
   value: any;
   onChange?: (e: { target: { name: string; value: any } }) => void;
   error?: string;
+  isRequired?: boolean; 
 }
 
 const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error }) => {

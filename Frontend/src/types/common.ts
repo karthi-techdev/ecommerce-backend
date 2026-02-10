@@ -6,6 +6,18 @@ export interface Faq {
   answer: string;
   status?: 'active' | 'inactive';
 }
+export interface Brand {
+  _id?: string;           
+  name: string;           
+  slug: string;           
+  description?: string;   
+  image?: string;         
+  isActive?: boolean;     
+  isDeleted?: boolean;    
+  createdAt?: string;     
+  updatedAt?: string;
+}
+
 
 export interface SubCategory {
   _id?: string;
@@ -51,6 +63,8 @@ export interface FieldConfig {
   defaultValue?: any;
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
+  accept?: string; 
+ 
   options? :{label:string , value:string}[];
 }
 

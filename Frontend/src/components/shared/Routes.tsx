@@ -89,6 +89,13 @@ const PublicRoute = () => {
   return !isAuthenticated ? <Outlet /> : <Navigate to="/dashboard" replace />;
 };
 
+const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
+const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
+const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
+
+
+
+
 const routes: RouteObject[] = [
   {
     element: <PublicRoute />,
@@ -97,6 +104,9 @@ const routes: RouteObject[] = [
         path: 'login',
         element: <AdminLoginTemplate />,
       },
+     
+     
+       
     ],
   },
   {
@@ -122,6 +132,14 @@ const routes: RouteObject[] = [
               { path: 'edit/:id', element: <FaqFormPage /> },
             ],
           }, 
+           {
+        path: 'brand',
+        children: [
+          { path: '', element: <BrandListPage /> }, 
+          { path: 'add', element: <BrandFormPage /> },   
+          { path: 'edit/:id', element: <BrandFormPage /> }, 
+        ],
+      },
           {
         path: 'subcategory',
         children: [
@@ -134,6 +152,7 @@ const routes: RouteObject[] = [
         path: 'trash',
         children: [
           { path: 'subcategory', element: <SubcategoryTrashPage /> },
+          { path: 'brand', element: <BrandTrashPage /> },
         ]
       }
         ],
