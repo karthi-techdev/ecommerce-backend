@@ -13,7 +13,7 @@ const exists = promisify(fs.exists);
 
 const CONFIG = {
   MAX_FILE_SIZE: 20 * 1024 * 1024, // 20MB
-  ALLOWED_MIME_TYPES: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
+  ALLOWED_MIME_TYPES: ['image/jpeg', 'image/png', 'image/webp'],
   IMAGE_QUALITY: 80,
   MAX_WIDTH: 2000,
   THUMBNAIL_SIZE: 200
@@ -36,7 +36,7 @@ interface MulterFile {
 const storage = multer.diskStorage({
   destination: (req: MulterRequest, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
     try {
-      const managementName = req.managementName || 'default';
+      const managementName =  req.managementName || req.res?.locals?.managementName || "default";
       const sanitizedManagementName = managementName.replace(/[^a-zA-Z0-9-_]/g, '');
       const uploadPath = path.join('uploads', sanitizedManagementName);
       

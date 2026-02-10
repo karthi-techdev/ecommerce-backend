@@ -3,6 +3,9 @@ import Layout from '../components/shared/Layout';
 import Dashboard from '../components/templates/dashboard/Dashboard';
 import FaqListTemplate from '../components/templates/faq/FaqListTemplate';
 import FaqFormTemplate from '../components/templates/faq/FaqFormTemplate';
+import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
+import SubCategoryFormTemplate from '@/components/templates/subcategory/SubcategoryFormTemplate';
+import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
 import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
 
 export const router = createBrowserRouter([
@@ -36,6 +39,33 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: 'subcategory',
+        children: [
+          {
+            path: '',
+            element: <SubCategoryListTemplate />,
+          },
+          {
+            path: 'add',
+            element: <SubCategoryFormTemplate />,
+          },
+          {
+            path: 'edit/:id',
+            element: <SubCategoryFormTemplate />,
+          },
+        ],
+      },
+      {
+        path: 'trash',
+        children : [
+          {
+             path: 'subcategory', 
+             element: <SubCategoryTrashListTemplate /> 
+          },
+        ]
+      }
+      
     ],
   },
 ]);
