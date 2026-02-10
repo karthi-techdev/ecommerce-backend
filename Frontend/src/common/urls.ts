@@ -18,6 +18,19 @@ const API = {
   deletefaq: `${ROOTURL}faqs/softDeleteFaq/`,
   toggleStatusfaq: `${ROOTURL}faqs/togglestatus/`,
   checkDuplicateFaq: `${ROOTURL}faqs/check-duplicate`,
+
+  //subcategory endpoints
+  addSubCategory: `${ROOTURL}subcategory/`,
+  listSubCategory: `${ROOTURL}subcategory/`,
+  getSubCategoryById: `${ROOTURL}subcategory/getSubCategoryById/`,
+  updateSubCategory: `${ROOTURL}subcategory/updateSubCategory/`,
+  deleteSubCategory: `${ROOTURL}subcategory/softDeleteSubCategory/`,
+  hardDeleteSubCategory:`${ROOTURL}subcategory/permanentDelete/`,
+  restoreSubCategory:`${ROOTURL}subcategory/restore/`,
+  toggleStatusSubCategory: `${ROOTURL}subcategory/togglestatus/`,
+  checkDuplicateSubCategory: `${ROOTURL}subcategory/check-duplicate`,
+  listSubCategoryTrash: `${ROOTURL}subcategory/trash/`,
+
 };
 
 const ImportedURL = { API, LIVEURL, FILEURL, SETTINGS_ID };

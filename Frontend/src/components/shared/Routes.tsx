@@ -6,6 +6,9 @@ import Layout from './Layout';
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
+const SubcategoryPage = lazy(() => import('../pages/subcategory/SubcategoryListPage'));
+const SubcategoryFormPage = lazy(() => import('../pages/subcategory/SubcategoryFormPage'));
+const SubcategoryTrashPage = lazy(() => import('../pages/trash/SubcategoryTrashListPage'));
 
 const routes: RouteObject[] = [
   {
@@ -28,6 +31,20 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <FaqFormPage /> },
         ],
       },
+      {
+        path: 'subcategory',
+        children: [
+          { path: '', element: <SubcategoryPage /> },
+          { path: 'add', element: <SubcategoryFormPage /> },
+          { path: 'edit/:id', element: <SubcategoryFormPage /> },
+        ],
+      },
+      {
+        path: 'trash',
+        children: [
+          { path: 'subcategory', element: <SubcategoryTrashPage /> },
+        ]
+      }
     ],
   },
   {
