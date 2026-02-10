@@ -136,7 +136,7 @@ const BrandTrashListTemplate: React.FC = () => {
                       <img
                         src={`${import.meta.env.VITE_FILE_URL}default/${brand.image}`}
                         alt={brand.name}
-                        className="w-12 h-12 object-cover rounded-md border"
+                        className="w-12 h-12 object-cover rounded-md "
                       />
                     </td>
 
