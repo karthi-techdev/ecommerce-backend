@@ -47,10 +47,12 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error }) 
         value={value}
         onChange={onChange}
         placeholder={field.placeholder}
+        readonly={field.readonly}
         required={field.required}
         disabled={field.disabled}
         aria-label={field.ariaLabel} 
         error={error}
+        options={field.options}
       />
     </div>
   );

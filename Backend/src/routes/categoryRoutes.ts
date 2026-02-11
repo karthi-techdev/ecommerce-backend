@@ -1,0 +1,20 @@
+import { Router } from "express";
+import categoryController from "../controllers/categoryController";
+import { upload } from "../utils/fileUpload";
+import { setCategoryUpload } from "../middleware/setManagementName";
+const router=Router();
+router.post('/',setCategoryUpload,upload.single('image'),(req, res, next) => categoryController.createCategory(req, res, next));
+router.get('/',(req,res,next)=>categoryController.getCategory(req,res,next));
+router.get('/mainCategory',(req,res,next)=>categoryController.getMainCategory(req,res,next));
+router.get('/subCategory/:mainCategoryId',(req,res,next)=>categoryController.getSubCategory(req,res,next));
+router.get('/getCategoryById/:id',(req,res,next)=>{categoryController.getCategoryById(req,res,next)});
+router.get('/categoryStats',(req,res,next)=>{categoryController.getCategoryStats(req,res,next)});
+router.get('/getCategoryBySlug/:slug',(req,res,next)=>{categoryController.getCategoryBySlug(req,res,next)});
+router.put('/updateCategory/:id',setCategoryUpload,upload.single('image'),(req,res,next)=>categoryController.updateCategory(req,res,next));
+router.patch('/softDelete/:id',(req,res,next)=>categoryController.softDeleteCategory(req,res,next));
+router.delete('/permanentDelete/:id',(req,res,next)=>{categoryController.deletePermanantly(req,res,next)});
+router.patch('/restore/:id',(req,res,next)=>{categoryController.restoreCategory(req,res,next)});
+router.get('/trash',(req,res,next)=>{categoryController.getAllTrash(req,res,next)});
+router.patch('/togglestatus/:id',(req,res,next)=>{categoryController.toggleStatus(req,res,next)})
+router.post('/slugExist',(req,res,next)=>{categoryController.checkSlugExist(req,res,next)});
+export default router;

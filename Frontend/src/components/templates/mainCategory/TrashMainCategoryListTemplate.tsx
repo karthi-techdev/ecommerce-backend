@@ -14,7 +14,7 @@ const TrashMainCategoryListTemplate: React.FC = () => {
   const navigate = useNavigate();
 
   const {
-    categories,
+    mainCategories,
     fetchTrashedCategories,
     restoreCategory,
     permanentDeleteCategory,
@@ -40,7 +40,7 @@ const TrashMainCategoryListTemplate: React.FC = () => {
     setCurrentPage(selectedItem.selected + 1);
   };
 
-  const filteredCategories = categories.filter(
+  const filteredCategories = mainCategories.filter(
     (cat) =>
       cat.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       cat.description?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -143,10 +143,7 @@ const TrashMainCategoryListTemplate: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {category.image ? (
                       <img
-                        src={`${import.meta.env.VITE_FILE_URL.replace(
-                          /\/$/,
-                          ''
-                        )}${category.image}`}
+                        src={`http://localhost:5000${category.image}`}
                         alt={category.name}
                         className="w-12 h-12 object-cover rounded-md"
                       />

@@ -1,6 +1,7 @@
-import {FiSettings,FiBriefcase,FiLayers,FiTag,FiList,FiTrash2} from 'react-icons/fi';
-import type { ReactNode } from 'react';
+import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase,FiTrash2 } from 'react-icons/fi';
 import { BiCategory } from "react-icons/bi";
+import {FiLayers,FiTag,FiList} from 'react-icons/fi';
+import type { ReactNode } from 'react';
 
 
 export interface SubMenuItem {
@@ -55,9 +56,14 @@ const menuItems: MenuItem[] = [
           key: 'subcategory',
           label: 'Subcategory',
           path: '/subcategory',
-      },
+      },{
+        key:'category',
+        label:'Category',
+        path:'/category'
+      }
     ]
   },
+
       {
         key: 'trash',
         label: 'Trash',
@@ -71,6 +77,11 @@ const menuItems: MenuItem[] = [
             label: 'Subcategory',
             path: '/trash/subcategory'
           },  
+          {
+      key:'trash-category',
+      label:'Category',
+      path:'/trash/category'   
+    }
         ],
       },
     ];

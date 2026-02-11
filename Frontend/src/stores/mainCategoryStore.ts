@@ -12,7 +12,7 @@ interface MainCategoryStats {
 }
 
 interface MainCategoryState {
-  categories: MainCategory[];
+  mainCategories: MainCategory[];
   stats: MainCategoryStats;
   loading: boolean;
   error: string | null;
@@ -42,7 +42,7 @@ permanentDeleteCategory: (id: string) => Promise<void>;
 }
 
 export const useMainCategoryStore = create<MainCategoryState>((set) => ({
-  categories: [],
+  mainCategories: [],
   stats: { total: 0, active: 0, inactive: 0 },
   loading: false,
   error: null,
@@ -66,27 +66,27 @@ export const useMainCategoryStore = create<MainCategoryState>((set) => ({
         }`
       );
 
-      const categories = Array.isArray(res.data?.data)
+      const mainCategories = Array.isArray(res.data?.data)
         ? res.data.data
         : [];
 
       const meta = res.data?.meta || {};
 
       set({
-        categories,
+        mainCategories,
         stats: {
-          total: meta.total ?? categories.length,
-          active:meta.active ??categories.filter((c: MainCategory) => c.isActive).length,
-          inactive:meta.inactive ??categories.filter((c: MainCategory) => !c.isActive).length,
+          total: meta.total ?? mainCategories.length,
+          active:meta.active ??mainCategories.filter((c: MainCategory) => c.isActive).length,
+          inactive:meta.inactive ??mainCategories.filter((c: MainCategory) => !c.isActive).length,
         },
         page,
-        totalPages: Math.ceil((meta.total ?? categories.length) / limit),
+        totalPages: Math.ceil((meta.total ?? mainCategories.length) / limit),
         loading: false,
       });
     } catch (error: any) {
       set({
         error: 'Failed to fetch categories',
-        categories: [],
+        mainCategories: [],
         loading: false,
       });
     }
@@ -98,7 +98,7 @@ export const useMainCategoryStore = create<MainCategoryState>((set) => ({
   );
 
   set({
-    categories: res.data?.data ?? [],
+    mainCategories: res.data?.data ?? [],
     totalPages: Math.ceil(
   (res.data?.meta?.total ?? (res.data?.data?.length ?? 0)) / limit
 ),
@@ -131,18 +131,18 @@ permanentDeleteCategory: async (id: string) => {
 
   toggleCategoryStatus: async (id: string) => {
   set((state) => ({
-    categories: state.categories.map((cat) =>
+    categories: state.mainCategories.map((cat) =>
       cat._id === id
         ? { ...cat, isActive: !cat.isActive }
         : cat
     ),
     stats: {
       total: state.stats.total,
-      active: state.categories.filter(
+      active: state.mainCategories.filter(
         (c) =>
           c._id === id ? !c.isActive : c.isActive
       ).length,
-      inactive: state.categories.filter(
+      inactive: state.mainCategories.filter(
         (c) =>
           c._id === id ? c.isActive : !c.isActive
       ).length,

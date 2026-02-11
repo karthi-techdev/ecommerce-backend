@@ -22,7 +22,7 @@ import ImportedURL from '../../../common/urls';
 const MainCategoryListTemplate: React.FC = () => {
   const navigate = useNavigate();
   const {
-    categories,
+    mainCategories,
     stats,
     fetchCategories,
     deleteCategory,
@@ -141,7 +141,7 @@ const MainCategoryListTemplate: React.FC = () => {
       icon: <XCircle size={20} />,
     },
   ];
-  const filteredCategories = categories.filter((category) => {
+  const filteredCategories = mainCategories.filter((category) => {
   if (selectedFilter === 'active') return category.isActive === true;
   if (selectedFilter === 'inactive') return category.isActive === false;
   return true; 
@@ -221,10 +221,7 @@ const MainCategoryListTemplate: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {category.image ? (
                       <img
-                        src={`${import.meta.env.VITE_FILE_URL.replace(
-                          /\/$/,
-                          ''
-                        )}${category.image}`}
+                        src={`http://localhost:5000${category.image}`}
                         alt={category.name}
                         className="w-12 h-12 object-cover rounded-md"
                       />
