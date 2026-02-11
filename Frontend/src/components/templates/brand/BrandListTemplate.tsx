@@ -187,7 +187,10 @@ const BrandListTemplate: React.FC = () => {
 
                     <td className="px-6 py-4 text-sm text-gray-900">
                       <img
-                        src={`${import.meta.env.VITE_FILE_URL}default/${brand.image}`}
+                        src={`http://localhost:5000/${brand.image}`}
+
+
+
                         alt={brand.name}
                         className="w-12 h-12 object-cover rounded-md border border-gray-200"
                       />

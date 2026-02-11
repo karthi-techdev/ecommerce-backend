@@ -64,7 +64,8 @@ const BrandFormTemplate: React.FC = () => {
         setSlug(brand.slug);
 
         if (brand.image) {
-          setPreview(`${import.meta.env.VITE_FILE_URL}default/${brand.image}`);
+          setPreview(`http://localhost:5000/${brand.image}`);
+
         }
       }
     }

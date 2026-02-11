@@ -1,24 +1,30 @@
 import express from "express";
-import path from 'path';
+import path from "path";
 import registerRoutes from "./routes";
 import { setupMiddleware } from "./middleware/setup";
 import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 
-// Initialize basic middleware first
+// Initialize middleware
 setupMiddleware(app);
 
-// Register routes
-registerRoutes(app);
-
+// ✅ Static files FIRST
 app.use(
   "/uploads",
-  express.static(path.resolve(__dirname, "../uploads"))
+  express.static(path.join(process.cwd(), "uploads"))
 );
 
 
-// Centralized error handler
+
+
+
+
+
+// ✅ Then routes
+registerRoutes(app);
+
+// Error handler last
 app.use(errorHandler);
 
 export default app;

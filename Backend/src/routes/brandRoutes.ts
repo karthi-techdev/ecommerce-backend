@@ -1,13 +1,20 @@
 import { Router } from "express";
 import brandController from "../controllers/brandController";
 import { upload } from "../utils/fileUpload";
+import { setBrandUpload } from "../middleware/setManagementName";
+
 
 const router = Router();
 
 // Create Brand
-router.post("/", upload.single("image"), (req, res, next) =>
-  brandController.createBrand(req, res, next)
+router.post(
+  "/",
+  setBrandUpload,
+  upload.single("image"),
+  brandController.createBrand
 );
+
+
 
 // Get All Brands
 router.get("/", (req, res, next) =>
@@ -20,9 +27,15 @@ router.get("/getBrandById/:id", (req, res, next) =>
 );
 
 // Update Brand
-router.put("/updateBrand/:id", upload.single("image"), (req, res, next) =>
-  brandController.updateBrand(req, res, next)
+
+router.put(
+  "/updateBrand/:id",
+  setBrandUpload,
+  upload.single("image"),
+  brandController.updateBrand
 );
+
+
 
 // Soft Delete Brand
 router.delete("/softDeleteBrand/:id", (req, res, next) =>
