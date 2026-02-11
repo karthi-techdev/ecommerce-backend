@@ -1,13 +1,7 @@
-import {FiSettings,FiBriefcase,FiLayers,FiList,FiTrash2} from 'react-icons/fi';
+import {FiSettings,FiBriefcase,FiLayers,FiTag,FiList,FiTrash2} from 'react-icons/fi';
 import type { ReactNode } from 'react';
+import { BiCategory } from "react-icons/bi";
 
-export interface MenuItem {
-  key: string;
-  label: string;
-  icon: ReactNode;
-  path: string;
-  submenu?: SubMenuItem[];
-}
 
 export interface SubMenuItem {
   key: string;
@@ -16,30 +10,39 @@ export interface SubMenuItem {
   icon?: ReactNode;
 }
 
+export interface MenuItem {
+  key: string;
+  label: string;
+  icon: ReactNode;
+  path?: string;           
+  submenu?: SubMenuItem[];
+}
+
 const menuItems: MenuItem[] = [
   {
     key: 'dashboard',
     label: 'Dashboard',
     icon: <FiBriefcase />,
-    path: '/dashboard',
+    path: '/dashboard',         
   },
   {
     key: 'site-settings',
     label: 'Site Settings',
     icon: <FiSettings />,
-    path: '#',
     submenu: [
-  {
-    key: 'faq',
-    label: 'FAQ',
-    path: '/faq',
-  },
-   ]
+      { key: 'faq', label: 'FAQ', path: '/faq' },
+    ],
   },
   {
-    key: 'manage-categories',
+    key: 'brand',
+    label: 'Brand',
+    icon: <FiTag />,
+    path: '/brand',
+  },
+  {
+    key: 'category',
     label: 'Manage Categories',
-    icon: <FiLayers />,
+    icon: <BiCategory />,
     path: '#',
     submenu: [
       {
@@ -47,24 +50,30 @@ const menuItems: MenuItem[] = [
         label: 'Main Category',
         path: '/main-category',
         icon: <FiList />,
-      },
-    ],
   },
-  {
-    key: 'trash',
-    label: 'Trash',
-    icon: <FiTrash2 />,
-    path: '#',
-    submenu: [
       {
-        key: 'trash-main-category',
-        label: 'Main Category',
-        path: '/trash/main-category',
-        icon: <FiLayers />,
+          key: 'subcategory',
+          label: 'Subcategory',
+          path: '/subcategory',
       },
-    ],
+    ]
   },
-];
-
-
+      {
+        key: 'trash',
+        label: 'Trash',
+        icon: <FiTrash2 />,
+        path: '#',
+        submenu: [
+          { key: 'trash-brand', label: 'Brand', path: '/trash/brand' },
+          {key: 'trash-main-category',label: 'Main Category',path: '/trash/main-category'},
+          {
+            key: 'subcategory-trash',
+            label: 'Subcategory',
+            path: '/trash/subcategory'
+          },  
+        ],
+      },
+    ];
+      
+  
 export default menuItems;

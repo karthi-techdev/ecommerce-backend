@@ -1,7 +1,6 @@
 import express from "express";
 import mainCategoryController from "../controllers/mainCategoryController";
 import { upload } from "../utils/fileUpload";
-
 const router = express.Router();
 
 router.post("/",(req, res, next) => {(req as any).managementName = "main-categories";

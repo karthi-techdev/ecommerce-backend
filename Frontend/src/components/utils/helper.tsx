@@ -53,7 +53,15 @@ export const countryPhoneCodes: Record<string, string> = {
   'VU': '+678', 'VE': '+58', 'VN': '+84', 'VG': '+1-284', 'VI': '+1-340',
   'WF': '+681', 'EH': '+212', 'YE': '+967', 'ZM': '+260', 'ZW': '+263'
 };
-
+export const generateSlug = (str: string): string => {
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+};
 /**
  * Truncates a string to a specified maximum length, appending '...' if truncated.
  */

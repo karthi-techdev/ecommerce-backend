@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 
 // Login rate limiter: 5 attempts per 15 minutes
 export const loginRateLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
+    windowMs: 1 * 60 * 1000, // 15 minutes
     max: 5, // 5 attempts
     message: { 
         status: 'error',

@@ -5,10 +5,16 @@ import authenticationRoutes from "./authenticationRoutes";
 import faqRoutes from "./faqRoutes";
 import { authenticate } from "../middleware/authentication";
 import mainCategoryRoutes from "./mainCategoryRoutes";
+import brandRoutes from "./brandRoutes"
+import subCategoryRoutes from "./subCategoryRoutes";
+import adminAuthRoutes from "./adminAuthRoutes";
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
   app.use("/api/v1/faqs", faqRoutes);
   app.use("/api/v1/admin/main-categories", mainCategoryRoutes);
+  app.use("/api/v1/brands", brandRoutes);
+  app.use("/api/v1/subcategory", subCategoryRoutes);
+  app.use("/api/v1/admin/auth", adminAuthRoutes);
 }
 

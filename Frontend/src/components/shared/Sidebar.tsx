@@ -4,10 +4,11 @@ import { motion } from 'framer-motion';
 import SidebarMenuItem from '../molecules/SidebarMenuItem';
 import IconButton from '../atoms/IconButton';
 import menuItems from '../../config/menuItems';
+import { useAuthStore } from '../../stores/authStore';
 
 const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean; setIsCollapsed: (v: boolean) => void }) => {
   const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
-
+  const { admin } = useAuthStore()
   // Using imported menu items configuration
 
   const toggleSubmenu = (key: string) => {
@@ -86,7 +87,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean; setIsC
           <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
             {!isCollapsed && (
               <div>
-                <p className="text-sm font-bold text-gray-800">Guest User</p>
+                <p className="text-sm font-bold text-gray-800">{admin?.name || "Guest User"}</p>
               </div>
             )}
             <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-white">

@@ -9,23 +9,15 @@ const app = express();
 // Initialize basic middleware first
 setupMiddleware(app);
 
-app.use(
-  "/uploads",
-  (req, res, next) => {
-    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
-    next();
-  },
-  express.static(path.resolve(__dirname, "../uploads"))
-);
-
-
 
 // Register routes
 registerRoutes(app);
 
 
-
-
+app.use(
+  "/uploads",
+  express.static(path.resolve(__dirname, "../uploads"))
+);
 
 
 // Centralized error handler
