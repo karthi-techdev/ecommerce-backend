@@ -1,4 +1,5 @@
-import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase } from 'react-icons/fi';
+import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase,FiTrash2 } from 'react-icons/fi';
+import { BiCategory } from "react-icons/bi";
 import type { ReactNode } from 'react';
 
 export interface MenuItem {
@@ -35,7 +36,32 @@ const menuItems: MenuItem[] = [
       }
       
     ]
-  }
+  },{
+    key:'manage-categories',
+    label:"Manage Categories",
+    icon:<BiCategory/>,
+    path:'#',
+    submenu:[
+      {
+        key:'category',
+        label:'Category',
+        path:'/category'
+      }
+    ]
+  },
+  {
+  key:'manage-trash',
+  label:"Trash",
+  icon:<FiTrash2/>,
+  path:'#',
+  submenu:[
+    {
+      key:'trash-category',
+      label:'Category',
+      path:'/trash/category'   
+    }
+  ]
+}
 ];
 
 export default menuItems;

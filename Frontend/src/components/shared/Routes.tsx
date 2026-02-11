@@ -6,7 +6,9 @@ import Layout from './Layout';
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
-
+const CategoryPage = lazy(() => import('../pages/category/CategoryListPage'));
+const CategoryFormPage = lazy(() => import('../pages/category/CategoryFormPage'));
+const CategoryTrashPage = lazy(() => import('../pages/trash/CategoryTrashListPage'));
 const routes: RouteObject[] = [
   {
     path: '/',
@@ -19,6 +21,23 @@ const routes: RouteObject[] = [
       {
         path: 'dashboard',
         element: <Dashboard />,
+      },
+      {
+        path:'category',
+       children:[
+        {path:'',element:<CategoryPage/>},
+        {path:'add',element:<CategoryFormPage/>},
+        {path:'edit/:id',element:<CategoryFormPage/>},
+       ]
+      },
+       {
+        path: 'trash',
+        children: [
+          {
+            path: 'category',
+            element: <CategoryTrashPage />,
+          },
+        ],
       },
       {
         path: 'faq',

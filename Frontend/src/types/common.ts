@@ -6,7 +6,35 @@ export interface Faq {
   answer: string;
   status?: 'active' | 'inactive';
 }
-
+export interface PopulatedCategory{
+  _id:string;
+  name:string;
+}
+export interface Category{
+  _id?:string;
+  name:string;
+  slug:string;
+  description:string;
+  image:string;
+  mainCategoryId:PopulatedCategory;
+  subCategoryId:PopulatedCategory;
+  status:'active'|'inactive';
+}
+export interface mainCategory{
+  _id:string;
+  name:string;
+  slug:string;
+  description:string;
+  image:string;
+}
+export interface subCategory{
+  _id:string;
+  name:string;
+  slug:string;
+  description:string;
+  image:string;
+  mainCategoryId:string;
+}
 export type InputType =
   | 'text'
   | 'email'
@@ -24,6 +52,10 @@ export type InputType =
   | 'composite'
   | 'array';
 
+  export interface SelectOption {
+  label: string;
+  value: string;
+}
 export interface FieldConfig {
   name: string;
   label: string;
@@ -33,6 +65,7 @@ export interface FieldConfig {
   placeholder?: string;
   ariaLabel?: string;
   validation?: z.ZodSchema<any>;
+  options?:SelectOption[];
   disabled?: boolean;
   readonly?: boolean;
   defaultValue?: any;
