@@ -6,6 +6,16 @@ export interface Faq {
   answer: string;
   status?: 'active' | 'inactive';
 }
+export interface MainCategory {
+  _id?: string;
+  mainCategoryId?: string;
+  name: string;
+  slug: string;
+  description: string;
+  image:  File | string | null;
+  isActive: boolean;
+}
+
 
 export type InputType =
   | 'text'
@@ -37,8 +47,7 @@ export interface FieldConfig {
   readonly?: boolean;
   defaultValue?: any;
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
-  dataTestId?: string;
-}
+ }
 
 export type ColumnConfig<T> = {
   key: keyof T;

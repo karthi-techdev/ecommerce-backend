@@ -70,6 +70,7 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(({
           required={required}
           disabled={disabled}
           aria-label={ariaLabel}
+          className={error ? 'border-red-500 focus:ring-red-500' : ''}
         />
       ) : type === 'checkbox' ? (
         <Checkbox

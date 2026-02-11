@@ -66,7 +66,8 @@ const TableHeader: React.FC<TableHeaderProps> = ({
               key={stat.id}
               {...stat}
               isActive={selectedFilterId === stat.id}
-              onClick={() => onSelectFilter?.(stat.id)}
+              onClick={() => onSelectFilter?.(stat.id) }
+              
             />
           ))}
         </div>

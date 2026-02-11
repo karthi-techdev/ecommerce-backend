@@ -29,14 +29,14 @@ class MainCategoryController {
         return;
       }
       const uploaded = await processUpload(req as any, req.file);
-      const imageUrl = `/uploads/main-categories/${uploaded.filename}`;
+      const imagePath = `/uploads/main-categories/${uploaded.filename}`;
       const category = await mainCategoryService.createMainCategory({
-        name,
-        slug,
-        description,
-        image: imageUrl,
-      });
-      res.status(201).json({
+          name,
+          slug,
+          description,
+          image: imagePath, 
+        });
+        res.status(201).json({
         status: HTTP_RESPONSE.SUCCESS,
         message: "Main category created successfully",
         data: category,
@@ -45,6 +45,28 @@ class MainCategoryController {
       next(err);
     }
   }
+
+  async checkMainCategoryName(
+  req: Request,
+  res: Response
+): Promise<void> {
+  const { name, id } = req.query;
+
+  if (!name) {
+    res.status(200).json({ exists: false });
+    return;
+  }
+
+  const exists = await mainCategoryService.checkCategoryNameExists(
+    String(name),
+    id ? String(id) : undefined
+  );
+
+  res.status(200).json({
+    status: HTTP_RESPONSE.SUCCESS,
+    exists,
+  });
+}
 
   async getAllMainCategories(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -145,29 +167,33 @@ class MainCategoryController {
     }
   }
 
-  async restoreMainCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
+  async restoreMainCategory(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { id } = req.params;
 
-      const { id } = req.params;
-      const category = await mainCategoryService.restoreMainCategory(id);
-      
-      if (!category) {
-        res.status(404).json({
-          status: HTTP_RESPONSE.FAIL,
-          message: "Main category not found",
-        });
-        return;
-      }
+    const category = await mainCategoryService.restoreMainCategory(id);
 
-      res.status(200).json({
-        status: HTTP_RESPONSE.SUCCESS,
-        message: "Main category restored successfully",
-
+    if (!category) {
+      res.status(404).json({
+        status: HTTP_RESPONSE.FAIL,
+        message: "Main category not found",
       });
-    } catch (err) {
-      next(err);
+      return;
     }
+
+    res.status(200).json({
+      status: HTTP_RESPONSE.SUCCESS,
+      message: "Main category restored successfully",
+      data: category, 
+    });
+  } catch (err) {
+    next(err);
   }
+}
 
   async deleteMainCategoryPermanently(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -191,6 +217,48 @@ class MainCategoryController {
       next(err);
     }
   }
+
+  async toggleMainCategoryStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+
+      const category = await mainCategoryService.toggleMainCategoryStatus(id);
+
+      res.status(200).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        message: "Status updated successfully",
+        data: category,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getAllTrashMainCategories(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const result = await mainCategoryService.getAllTrashMainCategories(
+      page,
+      limit
+    );
+
+    res.status(200).json({
+      status: HTTP_RESPONSE.SUCCESS,
+      data: result.data,
+      meta: result.meta,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+
 }
 
 export default new MainCategoryController();

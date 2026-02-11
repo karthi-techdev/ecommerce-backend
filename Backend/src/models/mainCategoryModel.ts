@@ -17,7 +17,6 @@ const mainCategorySchema = new Schema<IMainCategory>(
     name: {
       type: String,
       required: [true, "name is required"],
-      unique: true,
       trim: true,
     },
 
@@ -41,7 +40,7 @@ const mainCategorySchema = new Schema<IMainCategory>(
 
     isActive: {
       type: Boolean,
-      default: true, // ✅ auto generation
+      default: true,
     },
 
     isDeleted: {

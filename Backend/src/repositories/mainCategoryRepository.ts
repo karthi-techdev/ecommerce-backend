@@ -6,7 +6,6 @@ class MainCategoryRepository {
   async createMainCategory(data: IMainCategoryInput): Promise<IMainCategory> {
     return await MainCategoryModel.create(data);
   }
-
   async findByName(name: string): Promise<IMainCategory | null> {
     return await MainCategoryModel.findOne({
       name,
@@ -31,6 +30,18 @@ class MainCategoryRepository {
       isDeleted: false,
     });
   }
+  async checkNameExists(name: string, id?: string) {
+  const query: any = {
+    name: { $regex: `^${name}$`, $options: 'i' },
+    isDeleted: false,
+  };
+
+  if (id) {
+    query._id = { $ne: id };
+  }
+
+  return await MainCategoryModel.findOne(query);
+}
 
   async findBySlugExceptId(
     slug: string,
@@ -52,7 +63,7 @@ class MainCategoryRepository {
     const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([
-      MainCategoryModel.find(query).skip(skip).limit(limit),
+      MainCategoryModel.find(query).sort({createdAt: -1}).skip(skip).limit(limit).exec(),
       MainCategoryModel.countDocuments(query),
     ]);
     return {
@@ -92,11 +103,11 @@ class MainCategoryRepository {
     );
   }
 
-  async restoreMainCategory(id: string | Types.ObjectId) {
-    return await MainCategoryModel.findOneAndUpdate(
-      { _id: id, isDeleted: true },
-      { isDeleted: false, isActive: true },
-      { new: true }
+  async restoreMainCategory(id: string) {
+    return await MainCategoryModel.findByIdAndUpdate(
+      id,
+      { isDeleted: false },
+      { new: true } 
     );
   }
 
@@ -113,7 +124,7 @@ class MainCategoryRepository {
     const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([
-      MainCategoryModel.find(query).skip(skip).limit(limit),
+      MainCategoryModel.find(query).sort({ updatedAt: -1}).skip(skip).limit(limit).exec(),
       MainCategoryModel.countDocuments(query),
     ]);
 
@@ -127,6 +138,20 @@ class MainCategoryRepository {
       },
     };
   }
+
+  async toggleStatus(id: string | Types.ObjectId) {
+    const category = await MainCategoryModel.findById(id);
+
+    if (!category || category.isDeleted) {
+      return null;
+    }
+
+    category.isActive = !category.isActive;
+    await category.save();
+
+    return category;
+  }
+
 }
 
 export default new MainCategoryRepository();
