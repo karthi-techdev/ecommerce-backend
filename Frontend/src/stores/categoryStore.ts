@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import axiosInstance from '../utils/axios';
+import axiosInstance from '../components/utils/axios';
 import type { Category,mainCategory, subCategory } from '../types/common';
 import ImportedURL from '../common/urls';
 
@@ -224,7 +224,6 @@ slugEXist: async (data: any) => {
 
   addCategory: async (category: CategoryPayload) => {
     try {
-      console.log(category)
       const formData = new FormData();
     formData.append('name', category.name);
     formData.append('description', category.description);
@@ -234,7 +233,7 @@ slugEXist: async (data: any) => {
     if (category.image instanceof File) {
       formData.append('image', category.image);
     }
-    console.log(formData);
+    console.log(formData,' in store');
 for (const pair of formData.entries()) {
   console.log(pair[0], pair[1]);
 }

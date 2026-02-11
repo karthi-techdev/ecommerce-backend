@@ -1,4 +1,4 @@
-import { ICategory, MainCategoryModel,SubCategoryModel,CategoryModel } from '../models/categoryModel';
+import { ICategory,CategoryModel } from '../models/categoryModel';
 import ValidationHelper from '../utils/validationHelper';
 import { Types } from 'mongoose';
 import { CommonService } from './commonService';
@@ -51,19 +51,6 @@ class categoryService {
     this.validateCategoryData(data);
     if(!await this.validateSlug(data.slug)){
       throw new Error('Invalid slug');
-    }
-    const isMainCategoryExist=await MainCategoryModel.findById(data.mainCategoryId);
-    if(!isMainCategoryExist){
-      throw new Error('MainCategory id not exist');
-    }
-    const isSubCategoryExist=await SubCategoryModel.findById(data.subCategoryId);
-    if(!isSubCategoryExist){
-      throw new Error('SubCategory id not exist');
-    }
-    if(isSubCategoryExist.mainCategoryId){
-      if(!isSubCategoryExist.mainCategoryId.equals(isMainCategoryExist._id)){
-        throw new Error('Sub category is not belongs to that main category')
-      }
     }
     data.name=data.name[0].toUpperCase()+data.name.slice(1);
     data.description=data.description[0].toUpperCase()+data.description.slice(1);

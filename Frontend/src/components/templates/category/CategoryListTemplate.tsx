@@ -224,10 +224,10 @@ const CategoryListTemplate: React.FC = () => {
 
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {truncate(category.mainCategoryId.name, 40)}
+                      {truncate(category.mainCategoryId?.name, 40)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {truncate(category.subCategoryId.name, 40)}
+                      {truncate(category.subCategoryId?.name, 40)}
                     </td>
                     <td className="px-4 py-2">
                       <button

@@ -20,7 +20,6 @@ export const validateCategoryForm = (data: CategoryFormData): ValidationErrors =
   const errors: ValidationErrors = {
   };
 
-  // Validate question
   if (!data.name) {
     errors.name = 'Name is required.';
   } else if (data.name.trim().length < 5) {

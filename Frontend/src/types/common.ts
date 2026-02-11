@@ -35,6 +35,41 @@ export interface subCategory{
   image:string;
   mainCategoryId:string;
 }
+export interface MainCategory {
+  _id?: string;
+  name: string;
+  slug: string;
+  description: string;
+  image:  File | string | null;
+  isActive: boolean;
+}
+
+export interface Brand {
+  _id?: string;           
+  name: string;           
+  slug: string;           
+  description?: string;   
+  image?: string;         
+  isActive?: boolean;     
+  isDeleted?: boolean;    
+  createdAt?: string;     
+  updatedAt?: string;
+}
+
+
+export interface SubCategory {
+  _id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  image?: string;          
+  mainCategoryId: string;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: string;
+  mainCategory?:{name:string};
+}
+
 export type InputType =
   | 'text'
   | 'email'
@@ -65,13 +100,16 @@ export interface FieldConfig {
   placeholder?: string;
   ariaLabel?: string;
   validation?: z.ZodSchema<any>;
-  options?:SelectOption[];
   disabled?: boolean;
   readonly?: boolean;
   defaultValue?: any;
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
-}
+  accept?: string; 
+  options? :{label:string , value:string}[];
+ }
+ 
+
 
 export type ColumnConfig<T> = {
   key: keyof T;

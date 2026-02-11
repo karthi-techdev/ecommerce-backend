@@ -211,14 +211,14 @@ const CategoryTrashListTemplate: React.FC = () => {
 
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {truncate(category.mainCategoryId.name, 40)}
+                      {truncate(category.mainCategoryId?.name, 40)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {truncate(category.subCategoryId.name, 40)}
+                      {truncate(category.subCategoryId?.name, 40)}
                     </td>
                     <td className="px-4 py-2 flex gap-3 items-center">
                       <button
-                        className="bg-transparent text-indigo-500 hover:text-indigo-700 p-2 rounded"
+                        className="bg-transparent text-green-600 hover:text-indigo-700 p-2 rounded"
                         title="Restore"
                       >
                         <FiRefreshCw size={16} onClick={()=>handleRestore(category)}/>

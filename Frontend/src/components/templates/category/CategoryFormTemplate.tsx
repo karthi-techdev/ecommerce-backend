@@ -20,12 +20,9 @@ const CategoryFormTemplate: React.FC = () => {
     fetchCategoryById,
     addCategory,
     updateCategory,
-    fetchMainCategory,
-    mainCategories,
     fetchSubCategory,
-    subCategories,slugEXist
+    subCategories,slugEXist,fetchMainCategory,mainCategories
   } = useCategoryStore();
-
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -274,14 +271,12 @@ if (name === 'image') {
 
   setIsSubmitting(true);
   try {
-    if (!formData.image) {
-      formData.image = defaultImage;
-    }
 
     if (id) {
       await updateCategory(id, formData);
       toast.success('Category updated successfully');
     } else {
+      console.log(formData,'in add')
       await addCategory(formData);
       toast.success('Category added successfully');
     }
@@ -322,7 +317,7 @@ if (name === 'image') {
           : `http://localhost:5000${imagePreview}`
         : defaultImage
     }
-    className="h-32 w-32 rounded-lg object-cover border"
+    className="h-32 w-32 rounded-lg object-cover "
     alt="Preview"
   />
 </div>

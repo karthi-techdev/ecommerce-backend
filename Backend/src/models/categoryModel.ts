@@ -13,10 +13,6 @@ export interface ICategory extends Document{
     updatedAt:Date;
 }
 
-const mainCategorySchema = new Schema({ name: { type: String, required: true,}, slug: { type: String, required: true, unique: true }, description: { type: String },image:{type:String} }, { timestamps: true });
- export const MainCategoryModel = model("mainCategory", mainCategorySchema);
-const subCategorySchema = new Schema({ name: { type: String, required: true,}, slug: { type: String, required: true, unique: true }, description: { type: String },image:{type:String}, mainCategoryId: { type: mongoose.Schema.Types.ObjectId, ref: "mainCategory" } }, { timestamps: true });
- export const SubCategoryModel = model("subCategory", subCategorySchema);
 
 
 
@@ -25,8 +21,8 @@ const categorySchema=new Schema<ICategory>({
     slug:{type:String,unique:true},
     description:{type:String,required:true,trim:true},
     image:{type:String},
-    mainCategoryId:{type:mongoose.Schema.Types.ObjectId,ref:"mainCategory"},
-    subCategoryId:{type:mongoose.Schema.Types.ObjectId,ref:"subCategory"},
+    mainCategoryId:{type:mongoose.Schema.Types.ObjectId,ref:"MainCategory"},
+    subCategoryId:{type:mongoose.Schema.Types.ObjectId,ref:"subcategories"},
     status:{type:String,enum:['active','inactive'],default:'active'},
     isDeleted:{type:Boolean,default:false}
 },{
