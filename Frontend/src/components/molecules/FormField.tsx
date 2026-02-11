@@ -49,7 +49,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error }) 
         placeholder={field.placeholder}
         required={field.required}
         disabled={field.disabled}
-        aria-label={field.ariaLabel}
+        aria-label={field.ariaLabel} 
         error={error}
       />
     </div>

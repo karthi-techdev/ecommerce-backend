@@ -73,6 +73,8 @@ import { useAuthStore } from '../../stores/authStore';
 import NotFoundPage from '../utils/notFound';
 
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
+
+// FAQ
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
 const SubcategoryPage = lazy(() => import('../pages/subcategory/SubcategoryListPage'));
@@ -96,6 +98,18 @@ const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
 
 
 
+// MAIN CATEGORY
+const MainCategoryPage = lazy(
+  () => import('../pages/mainCategory/MainCategoryListPage')
+);
+const MainCategoryFormPage = lazy(
+  () => import('../pages/mainCategory/MainCategoryFormPage')
+);
+const TrashMainCategoryPage = lazy(
+  () => import('../pages/mainCategory/TrashMainCategoryListPage')
+);
+
+
 const routes: RouteObject[] = [
   {
     element: <PublicRoute />,
@@ -112,6 +126,8 @@ const routes: RouteObject[] = [
   {
     element: <PrivateRoute />,
     children: [
+      
+      // FAQ ROUTES
       {
         path: '/',
         element: <Layout />,
@@ -140,6 +156,14 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <BrandFormPage /> }, 
         ],
       },
+      {
+        path: 'main-category',
+        children: [
+          { path: '', element: <MainCategoryPage /> },
+          { path: 'add', element: <MainCategoryFormPage /> },
+          { path: 'edit/:id', element: <MainCategoryFormPage /> },
+        ],
+      },
           {
         path: 'subcategory',
         children: [
@@ -153,10 +177,13 @@ const routes: RouteObject[] = [
         children: [
           { path: 'subcategory', element: <SubcategoryTrashPage /> },
           { path: 'brand', element: <BrandTrashPage /> },
+          {path: 'main-category',element: <TrashMainCategoryPage />},
         ]
       }
         ],
       },
+
+      
     ],
   },
 
@@ -168,3 +195,8 @@ const routes: RouteObject[] = [
 ];
 
 export default routes;
+
+
+
+
+

@@ -216,7 +216,7 @@ const BrandListTemplate: React.FC = () => {
 
                       <button
                         onClick={() => handleSoftDelete(brand)}
-                        className="text-orange-500 hover:text-orange-700 p-2"
+                        className="text-red-500 hover:text-orange-700 p-2"
                       >
                         <Trash2 size={16} />
                       </button>

@@ -9,8 +9,10 @@ const app = express();
 // Initialize basic middleware first
 setupMiddleware(app);
 
+
 // Register routes
 registerRoutes(app);
+
 
 app.use(
   "/uploads",

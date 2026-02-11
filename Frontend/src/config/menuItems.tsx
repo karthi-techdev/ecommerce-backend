@@ -1,12 +1,13 @@
-import { FiSettings, FiBriefcase, FiTag, FiTrash2 } from 'react-icons/fi';
-
-import { BiCategory } from "react-icons/bi";
+import {FiSettings,FiBriefcase,FiLayers,FiTag,FiList,FiTrash2} from 'react-icons/fi';
 import type { ReactNode } from 'react';
+import { BiCategory } from "react-icons/bi";
+
 
 export interface SubMenuItem {
   key: string;
   label: string;
   path: string;
+  icon?: ReactNode;
 }
 
 export interface MenuItem {
@@ -22,7 +23,7 @@ const menuItems: MenuItem[] = [
     key: 'dashboard',
     label: 'Dashboard',
     icon: <FiBriefcase />,
-    path: '/',           
+    path: '/dashboard',         
   },
   {
     key: 'site-settings',
@@ -37,8 +38,6 @@ const menuItems: MenuItem[] = [
     label: 'Brand',
     icon: <FiTag />,
     path: '/brand',
-      
-    
   },
   {
     key: 'category',
@@ -47,27 +46,34 @@ const menuItems: MenuItem[] = [
     path: '#',
     submenu: [
       {
-        key: 'subcategory',
-        label: 'Subcategory',
-        path: '/subcategory'
+        key: 'main-category',
+        label: 'Main Category',
+        path: '/main-category',
+        icon: <FiList />,
+  },
+      {
+          key: 'subcategory',
+          label: 'Subcategory',
+          path: '/subcategory',
       },
     ]
   },
-  {
-    key: 'trash',
-    label: 'Trash',
-    icon: <FiTrash2 />,
-    submenu: [
-      { key: 'trash-brand', label: 'Brand', path: '/trash/brand' },
-       {
-        key: 'subcategory-trash',
-        label: 'Subcategory',
-        path: '/trash/subcategory'
-      }  
-    ],
-  },
+      {
+        key: 'trash',
+        label: 'Trash',
+        icon: <FiTrash2 />,
+        path: '#',
+        submenu: [
+          { key: 'trash-brand', label: 'Brand', path: '/trash/brand' },
+          {key: 'trash-main-category',label: 'Main Category',path: '/trash/main-category'},
+          {
+            key: 'subcategory-trash',
+            label: 'Subcategory',
+            path: '/trash/subcategory'
+          },  
+        ],
+      },
+    ];
+      
   
-  
-];
-
 export default menuItems;

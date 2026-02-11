@@ -6,6 +6,16 @@ export interface Faq {
   answer: string;
   status?: 'active' | 'inactive';
 }
+export interface MainCategory {
+  _id?: string;
+  mainCategoryId?: string;
+  name: string;
+  slug: string;
+  description: string;
+  image:  File | string | null;
+  isActive: boolean;
+}
+
 export interface Brand {
   _id?: string;           
   name: string;           
@@ -64,9 +74,10 @@ export interface FieldConfig {
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
   accept?: string; 
- 
   options? :{label:string , value:string}[];
-}
+ }
+ 
+
 
 export type ColumnConfig<T> = {
   key: keyof T;

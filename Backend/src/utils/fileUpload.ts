@@ -13,7 +13,7 @@ const exists = promisify(fs.exists);
 
 const CONFIG = {
   MAX_FILE_SIZE: 20 * 1024 * 1024, // 20MB
-  ALLOWED_MIME_TYPES: ['image/jpeg', 'image/png', 'image/webp'],
+  ALLOWED_MIME_TYPES: ['image/jpeg', 'image/png', 'image/webp','image/jpg' ],
   IMAGE_QUALITY: 80,
   MAX_WIDTH: 2000,
   THUMBNAIL_SIZE: 200
@@ -64,6 +64,11 @@ const storage = multer.diskStorage({
 });
 
 // File filter function
+const fileFilter = (req: MulterRequest, file: MulterFile, cb: FileFilterCallback): void => {
+  if (!CONFIG.ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+    const error = new Error(`Invalid image. Allowed types: ${CONFIG.ALLOWED_MIME_TYPES.join(', ')}`);
+    console.error(`File upload rejected:`, { filename: file.originalname, type: file.mimetype });
+    cb(error);
 const fileFilter = (
   req: MulterRequest,
   file: MulterFile,
@@ -81,8 +86,8 @@ const fileFilter = (
 
   cb(null, true);
 };
-
-
+}
+}
 // Generate secure filename
 const generateSecureFilename = (originalname: string): string => {
   const timestamp = Date.now();
@@ -110,6 +115,9 @@ const optimizeImage = async (filePath: string, mimetype: string): Promise<void> 
         break;
       case 'image/webp':
         await image.webp({ quality: CONFIG.IMAGE_QUALITY }).toFile(filePath + '_opt');
+        break;
+      case 'image/jpg':
+        await image.jpeg({quality: CONFIG.IMAGE_QUALITY }).toFile(filePath + '_opt');
         break;
     }
     

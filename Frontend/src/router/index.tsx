@@ -3,6 +3,9 @@ import Layout from '../components/shared/Layout';
 import Dashboard from '../components/templates/dashboard/Dashboard';
 import FaqListTemplate from '../components/templates/faq/FaqListTemplate';
 import FaqFormTemplate from '../components/templates/faq/FaqFormTemplate';
+import MainCategoryListTemplate from '../components/templates/mainCategory/MainCategoryListTemplate';
+import MainCategoryFormTemplate from '../components/templates/mainCategory/MainCategoryFormTemplate';
+import TrashMainCategoryListTemplate from'../components/templates/mainCategory/TrashMainCategoryListTemplate';
 import BrandListTemplate from '../components/templates/brand/BrandListTemplate';
 import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
 
@@ -40,26 +43,6 @@ export const router = createBrowserRouter([
           { path: 'edit/:id', element: <BrandFormTemplate /> },
         ],
       },
-      
-      
-      
-      {
-        path: 'faq',
-        children: [ 
-          {
-            path: '',
-            element: <FaqListTemplate />,
-          },
-          {
-            path: 'add',
-            element: <FaqFormTemplate />,
-          },
-          {
-            path: 'edit/:id',
-            element: <FaqFormTemplate />,
-          },
-        ],
-      },
       {
         path: 'subcategory',
         children: [
@@ -77,18 +60,31 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      
+      {
+        path: 'main-category',
+        children: [
+          { path: '', element: <MainCategoryListTemplate /> },
+          { path: 'add', element: <MainCategoryFormTemplate /> },
+          { path: 'edit/:id', element: <MainCategoryFormTemplate /> },
+        ]
+      },
       {
         path: 'trash',
-        children : [
+          children : [
           {
              path: 'subcategory', 
              element: <SubCategoryTrashListTemplate /> 
           },
           { path: 'brand', element: <BrandTrashPage /> }, 
-        ]
-      }
+          {
+            path: 'main-category',
+            element: <TrashMainCategoryListTemplate />,
+          },
+        ],
+      },
       
     ],
-  },
+  }
 ]);
 
