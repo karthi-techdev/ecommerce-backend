@@ -46,9 +46,9 @@ const menuItems: MenuItem[] = [
     path: '#',
     submenu: [
       {
-        key: 'main-category',
+        key: 'mainCategory',
         label: 'Main Category',
-        path: '/main-category',
+        path: '/mainCategory',
         icon: <FiList />,
   },
       {
@@ -65,7 +65,7 @@ const menuItems: MenuItem[] = [
         path: '#',
         submenu: [
           { key: 'trash-brand', label: 'Brand', path: '/trash/brand' },
-          {key: 'trash-main-category',label: 'Main Category',path: '/trash/main-category'},
+          {key: 'trash-main-category',label: 'Main Category',path: '/trash/mainCategory'},
           {
             key: 'subcategory-trash',
             label: 'Subcategory',

@@ -22,11 +22,11 @@ import ImportedURL from '../../../common/urls';
 const MainCategoryListTemplate: React.FC = () => {
   const navigate = useNavigate();
   const {
-    categories,
+    mainCategories,
     stats,
-    fetchCategories,
-    deleteCategory,
-    toggleCategoryStatus,
+    fetchMainCategories,
+    deleteMainCategory,
+    toggleMainCategoryStatus,
     totalPages,
     loading,
     error,
@@ -46,7 +46,7 @@ const MainCategoryListTemplate: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('total');
 
   useEffect(() => {
-    fetchCategories(
+    fetchMainCategories(
       currentPage,
       PAGINATION_CONFIG.DEFAULT_LIMIT,
       selectedFilter
@@ -64,12 +64,12 @@ const MainCategoryListTemplate: React.FC = () => {
   };
 
 
-  const handleToggleStatus = async (category: MainCategory) => {
-    const action = category.isActive ? 'hide' : 'show';
+  const handleToggleStatus = async (mainCategory: MainCategory) => {
+    const action = mainCategory.isActive ? 'hide' : 'show';
 
     const result = await Swal.fire({
       title: 'Are you sure?',
-      text: `Do you want to ${action} this category?`,
+      text: `Do you want to ${action} this mainCategory?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes',
@@ -77,12 +77,12 @@ const MainCategoryListTemplate: React.FC = () => {
 
     if (result.isConfirmed) {
       try {
-        await toggleCategoryStatus(category._id!);
-        toast.success(`Category ${action}d successfully`);
+        await toggleMainCategoryStatus(mainCategory._id!);
+        toast.success(`MainCategory ${action}d successfully`);
 
         setCurrentPage(1); 
 
-        await fetchCategories(
+        await fetchMainCategories(
           1,
           PAGINATION_CONFIG.DEFAULT_LIMIT,
           selectedFilter
@@ -94,21 +94,21 @@ const MainCategoryListTemplate: React.FC = () => {
     }
   };
 
-  const handleDelete = async (category: MainCategory) => {
+  const handleDelete = async (mainCategory: MainCategory) => {
     const result = await Swal.fire({
-      title: 'Delete category?',
-      text: category.name,
+      title: 'Delete Main Category?',
+      text: mainCategory.name,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Delete',
     });
 
     if (result.isConfirmed) {
-      await deleteCategory(category._id!);
+      await deleteMainCategory(mainCategory._id!);
 
       setCurrentPage(1); 
 
-      await fetchCategories(
+      await fetchMainCategories(
         1,
         PAGINATION_CONFIG.DEFAULT_LIMIT,
         selectedFilter
@@ -141,9 +141,9 @@ const MainCategoryListTemplate: React.FC = () => {
       icon: <XCircle size={20} />,
     },
   ];
-  const filteredCategories = categories.filter((category) => {
-  if (selectedFilter === 'active') return category.isActive === true;
-  if (selectedFilter === 'inactive') return category.isActive === false;
+  const filteredMainCategories = mainCategories.filter((mainCategory) => {
+  if (selectedFilter === 'active') return mainCategory.isActive === true;
+  if (selectedFilter === 'inactive') return mainCategory.isActive === false;
   return true; 
 });
 
@@ -155,7 +155,7 @@ const MainCategoryListTemplate: React.FC = () => {
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         addButtonLabel="Add"
-        addButtonLink="/main-category/add"
+        addButtonLink="/mainCategory/add"
         statFilters={statFilters}
         selectedFilterId={selectedFilter}
         onSelectFilter={(id) => {
@@ -191,7 +191,7 @@ const MainCategoryListTemplate: React.FC = () => {
           </thead>
 
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredCategories.length === 0 ? (
+            {filteredMainCategories.length === 0 ? (
               <tr>
                 <td
                   colSpan={6}
@@ -201,8 +201,8 @@ const MainCategoryListTemplate: React.FC = () => {
                 </td>
               </tr>
             ) : (
-              filteredCategories.map((category, index) => (
-                <tr key={category._id} className="text-sm text-gray-700">
+              filteredMainCategories.map((mainCategory, index) => (
+                <tr key={mainCategory._id} className="text-sm text-gray-700">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {(currentPage - 1) *
                       PAGINATION_CONFIG.DEFAULT_LIMIT +
@@ -211,21 +211,18 @@ const MainCategoryListTemplate: React.FC = () => {
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-                    {category.name}
+                    {mainCategory.name}
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    {category.description || '-'}
+                    {mainCategory.description || '-'}
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {category.image ? (
+                    {mainCategory.image ? (
                       <img
-                        src={`${import.meta.env.VITE_FILE_URL.replace(
-                          /\/$/,
-                          ''
-                        )}${category.image}`}
-                        alt={category.name}
+                        src={`http://localhost:5000${mainCategory.image}`}
+                        alt={mainCategory.name}
                         className="w-12 h-12 object-cover rounded-md"
                       />
                     ) : (
@@ -234,8 +231,8 @@ const MainCategoryListTemplate: React.FC = () => {
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <button onClick={() => handleToggleStatus(category)}>
-                      {category.isActive ? (
+                    <button onClick={() => handleToggleStatus(mainCategory)}>
+                      {mainCategory.isActive ? (
                         <ToggleRight className="text-green-500" />
                       ) : (
                         <ToggleLeft className="text-gray-400" />
@@ -247,7 +244,7 @@ const MainCategoryListTemplate: React.FC = () => {
                     <button
                       className="text-indigo-500 hover:text-indigo-700"
                       onClick={() =>
-                        navigate(`/main-category/edit/${category._id}`)
+                        navigate(`/mainCategory/edit/${mainCategory._id}`)
                       }
                     >
                       <Pencil size={16} />
@@ -255,7 +252,7 @@ const MainCategoryListTemplate: React.FC = () => {
 
                     <button
                       className="text-red-500 hover:text-red-700"
-                      onClick={() => handleDelete(category)}
+                      onClick={() => handleDelete(mainCategory)}
                     >
                       <Trash2 size={16} />
                     </button>

@@ -47,7 +47,7 @@ const MainCategoryFormTemplate: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-const { fetchCategoryById, addCategory, updateCategory } =
+const { fetchMainCategoryById, addMainCategory, updateMainCategory } =
   useMainCategoryStore();
 
   const [formData, setFormData] = useState<MainCategoryFormData>({
@@ -73,7 +73,7 @@ const { fetchCategoryById, addCategory, updateCategory } =
       try {
         const exists = await useMainCategoryStore
           .getState()
-          .checkCategoryNameExists(debouncedName, id);
+          .checkMainCategoryNameExists(debouncedName, id);
 
         setErrors(prev => ({
           ...prev,
@@ -103,27 +103,27 @@ const { fetchCategoryById, addCategory, updateCategory } =
   useEffect(() => {
     const fetchData = async () => {
       if (id) {
-      const category = await fetchCategoryById(id);
-        if (category) {
+      const mainCategory = await fetchMainCategoryById(id);
+        if (mainCategory) {
           setFormData({
-            name: category.name || '',
-            slug: category.slug || '',
-            description: category.description || '',
-            image: category.image || null,
-            isActive: category.isActive ?? true,
+            name: mainCategory.name || '',
+            slug: mainCategory.slug || '',
+            description: mainCategory.description || '',
+            image: mainCategory.image || null,
+            isActive: mainCategory.isActive ?? true,
           });
-          if (category.image) {
-            const baseUrl = import.meta.env.VITE_FILE_URL.replace(/\/$/, '');
-            setImagePreview(`${baseUrl}${category.image}`);
+          if (mainCategory.image) {
+            const baseUrl = "http://localhost:5000".replace(/\/$/, '');
+            setImagePreview(`${baseUrl}${mainCategory.image}`);
           }
 
         } else {
-          toast.error('Failed to load category data');
+          toast.error('Failed to load main category data');
         }
       }
     };
     fetchData();
-  }, [id, fetchCategoryById]);
+  }, [id, fetchMainCategoryById]);
 
  
 
@@ -217,6 +217,7 @@ const { fetchCategoryById, addCategory, updateCategory } =
   e.preventDefault();
 
   const validationErrors = validateMainCategoryForm(formData, Boolean(id));
+
  
   if (Object.keys(validationErrors).length > 0) {
     setErrors(validationErrors);
@@ -236,14 +237,14 @@ const { fetchCategoryById, addCategory, updateCategory } =
     }
 
     if (id) {
-      await updateCategory(id, payload);
+      await updateMainCategory(id, payload);
       toast.success('Main category updated successfully');
     } else {
-      await addCategory(payload);
+      await addMainCategory(payload);
       toast.success('Main category added successfully');
     }
 
-    navigate('/main-category');
+    navigate('/mainCategory');
   } catch (error: any) {
     const errorMessage =
       error?.response?.data?.message || 'Something went wrong';
@@ -266,7 +267,7 @@ const { fetchCategoryById, addCategory, updateCategory } =
     <div className="p-6">
       <FormHeader
         managementName=""
-        addButtonLink="/main-category"
+        addButtonLink="/mainCategory"
         type={id ? 'Edit' : 'Add'}
       />
 

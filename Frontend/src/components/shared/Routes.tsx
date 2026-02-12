@@ -106,7 +106,7 @@ const MainCategoryFormPage = lazy(
   () => import('../pages/mainCategory/MainCategoryFormPage')
 );
 const TrashMainCategoryPage = lazy(
-  () => import('../pages/mainCategory/TrashMainCategoryListPage')
+  () => import('../pages/trash/TrashMainCategoryListPage')
 );
 
 
@@ -157,7 +157,7 @@ const routes: RouteObject[] = [
         ],
       },
       {
-        path: 'main-category',
+        path: 'mainCategory',
         children: [
           { path: '', element: <MainCategoryPage /> },
           { path: 'add', element: <MainCategoryFormPage /> },
@@ -177,7 +177,7 @@ const routes: RouteObject[] = [
         children: [
           { path: 'subcategory', element: <SubcategoryTrashPage /> },
           { path: 'brand', element: <BrandTrashPage /> },
-          {path: 'main-category',element: <TrashMainCategoryPage />},
+          {path: 'mainCategory',element: <TrashMainCategoryPage />},
         ]
       }
         ],
