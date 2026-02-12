@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
-import TableHeader from '../../molecules/TableHeader';
-import Loader from '../../atoms/Loader';
-import Pagination from '../../atoms/Pagination';
-import { useBrandStore } from '../../../stores/brandStore';
+import TableHeader from '../../../molecules/TableHeader';
+import Loader from '../../../atoms/Loader';
+import Pagination from '../../../atoms/Pagination';
+import { useBrandStore } from '../../../../stores/brandStore';
 import { Trash2, RefreshCcw } from 'lucide-react';
-import { PAGINATION_CONFIG } from '../../../constants/pagination';
+import { PAGINATION_CONFIG } from '../../../../constants/pagination';
 
 const BrandTrashListTemplate: React.FC = () => {
 
