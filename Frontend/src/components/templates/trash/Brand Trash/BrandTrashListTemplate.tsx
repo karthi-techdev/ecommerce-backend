@@ -21,10 +21,10 @@ const BrandTrashListTemplate: React.FC = () => {
     trashTotalPages,
   } = useBrandStore();
 
-  // ✅ ADD STATE
+  
   const [searchTerm, setSearchTerm] = useState('');
 
-  // ✅ FILTER LOGIC
+
   const filteredTrashBrands =
     searchTerm.trim() === ''
       ? trashBrands
@@ -87,7 +87,7 @@ const BrandTrashListTemplate: React.FC = () => {
   return (
     <div className="p-6">
 
-      {/* ✅ FIX HERE */}
+     
       <TableHeader
         managementName="Trash Brands"
         searchTerm={searchTerm}

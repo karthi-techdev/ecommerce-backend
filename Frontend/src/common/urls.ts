@@ -15,6 +15,32 @@ const API = {
   deleteFaq: `${ROOTURL}faqs/softDeleteFaq/`,
   toggleStatusFaq: `${ROOTURL}faqs/togglestatus/`,
   checkDuplicateFaq: `${ROOTURL}faqs/check-duplicate`,
+  // Category endpoints
+  addCategory: `${ROOTURL}admin/categories/`,
+  listCategory: `${ROOTURL}admin/categories/`,
+  getCategory: `${ROOTURL}admin/categories/getCategoryById/`,
+  updateCategory: `${ROOTURL}admin/categories/updateCategory/`,
+  deleteCategory: `${ROOTURL}admin/categories/softDelete/`,
+  toggleStatusCategory:`${ROOTURL}admin/categories/togglestatus/`,
+  trashCategory:`${ROOTURL}admin/categories/trash`,
+  permanentDeleteCategory:`${ROOTURL}admin/categories/permanentDelete/`,
+  restoreCategory:`${ROOTURL}admin/categories/restore/`,
+  categoryStats:`${ROOTURL}admin/categories/categoryStats`,
+  mainCategory:`${ROOTURL}admin/categories/mainCategory`,
+  subCategory:`${ROOTURL}admin/categories/subCategory/`,
+  slugExist:`${ROOTURL}admin/categories/slugExist`,
+
+    // Main Category endpoints
+  listMainCategory: `${ROOTURL}admin/main-categories`,
+  addMainCategory: `${ROOTURL}admin/main-categories`,
+  getMainCategory: `${ROOTURL}admin/main-categories/`,
+  updateMainCategory: `${ROOTURL}admin/main-categories/`,
+  deleteMainCategory: `${ROOTURL}admin/main-categories/soft-delete/`,
+  toggleMainCategoryStatus: `${ROOTURL}admin/main-categories/toggle-status/`,
+  checkDuplicateMainCategory: `${ROOTURL}admin/main-categories/check-duplicate`,
+  getTrashMainCategory: `${ROOTURL}admin/main-categories/trash`,
+  restoreMainCategory: `${ROOTURL}admin/main-categories/restore/`,
+  permanentDeleteMainCategory: `${ROOTURL}admin/main-categories/permanent-delete/`,
 
   // ---------------- Brand endpoints ----------------
   addBrand: `${ROOTURL}brands/`,
@@ -40,6 +66,7 @@ const API = {
   listSubCategoryTrash: `${ROOTURL}subcategory/trash/`,
 
 };
+
 
 const ImportedURL = { API, LIVEURL, FILEURL, SETTINGS_ID };
 export default ImportedURL;

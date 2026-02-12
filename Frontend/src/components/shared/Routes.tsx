@@ -73,8 +73,12 @@ import { useAuthStore } from '../../stores/authStore';
 import NotFoundPage from '../utils/notFound';
 
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
+
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
+const CategoryPage = lazy(() => import('../pages/category/CategoryListPage'));
+const CategoryFormPage = lazy(() => import('../pages/category/CategoryFormPage'));
+const CategoryTrashPage = lazy(() => import('../pages/trash/CategoryTrashListPage'));
 const SubcategoryPage = lazy(() => import('../pages/subcategory/SubcategoryListPage'));
 const SubcategoryFormPage = lazy(() => import('../pages/subcategory/SubcategoryFormPage'));
 const SubcategoryTrashPage = lazy(() => import('../pages/trash/SubcategoryTrashListPage'));
@@ -93,7 +97,15 @@ const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
 const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
 const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
 
-
+const MainCategoryPage = lazy(
+  () => import('../pages/mainCategory/MainCategoryListPage')
+);
+const MainCategoryFormPage = lazy(
+  () => import('../pages/mainCategory/MainCategoryFormPage')
+);
+const TrashMainCategoryPage = lazy(
+  () => import('../pages/mainCategory/TrashMainCategoryListPage')
+);
 
 
 const routes: RouteObject[] = [
@@ -104,9 +116,6 @@ const routes: RouteObject[] = [
         path: 'login',
         element: <AdminLoginTemplate />,
       },
-     
-     
-       
     ],
   },
   {
@@ -140,6 +149,21 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <BrandFormPage /> }, 
         ],
       },
+      {
+        path: 'main-category',
+        children: [
+          { path: '', element: <MainCategoryPage /> },
+          { path: 'add', element: <MainCategoryFormPage /> },
+          { path: 'edit/:id', element: <MainCategoryFormPage /> },
+        ],
+      },{
+        path:'category',
+       children:[
+        {path:'',element:<CategoryPage/>},
+        {path:'add',element:<CategoryFormPage/>},
+        {path:'edit/:id',element:<CategoryFormPage/>},
+       ]
+      },
           {
         path: 'subcategory',
         children: [
@@ -153,6 +177,8 @@ const routes: RouteObject[] = [
         children: [
           { path: 'subcategory', element: <SubcategoryTrashPage /> },
           { path: 'brand', element: <BrandTrashPage /> },
+          {path: 'main-category',element: <TrashMainCategoryPage />},
+          {path: 'category',element: <CategoryTrashPage />,},
         ]
       }
         ],
@@ -160,7 +186,6 @@ const routes: RouteObject[] = [
     ],
   },
 
-  // ✅ 404 Catch All Route
   {
     path: '*',
     element: <NotFoundPage />,
@@ -168,3 +193,8 @@ const routes: RouteObject[] = [
 ];
 
 export default routes;
+
+
+
+
+

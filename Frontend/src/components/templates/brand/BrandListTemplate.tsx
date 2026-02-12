@@ -40,7 +40,7 @@ const BrandListTemplate: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('total');
 
-  // ✅ SEARCH FILTER
+
   const filteredBrands =
     searchTerm.trim() === ''
       ? brands

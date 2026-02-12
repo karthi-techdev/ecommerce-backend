@@ -1,12 +1,14 @@
-import { FiSettings, FiBriefcase, FiTag, FiTrash2 } from 'react-icons/fi';
-
+import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase,FiTrash2 } from 'react-icons/fi';
 import { BiCategory } from "react-icons/bi";
+import {FiLayers,FiTag,FiList} from 'react-icons/fi';
 import type { ReactNode } from 'react';
+
 
 export interface SubMenuItem {
   key: string;
   label: string;
   path: string;
+  icon?: ReactNode;
 }
 
 export interface MenuItem {
@@ -22,7 +24,7 @@ const menuItems: MenuItem[] = [
     key: 'dashboard',
     label: 'Dashboard',
     icon: <FiBriefcase />,
-    path: '/',           
+    path: '/dashboard',         
   },
   {
     key: 'site-settings',
@@ -37,8 +39,6 @@ const menuItems: MenuItem[] = [
     label: 'Brand',
     icon: <FiTag />,
     path: '/brand',
-      
-    
   },
   {
     key: 'category',
@@ -47,27 +47,44 @@ const menuItems: MenuItem[] = [
     path: '#',
     submenu: [
       {
-        key: 'subcategory',
-        label: 'Subcategory',
-        path: '/subcategory'
-      },
+        key: 'main-category',
+        label: 'Main Category',
+        path: '/main-category',
+        icon: <FiList />,
+  },
+      {
+          key: 'subcategory',
+          label: 'Subcategory',
+          path: '/subcategory',
+      },{
+        key:'category',
+        label:'Category',
+        path:'/category'
+      }
     ]
   },
-  {
-    key: 'trash',
-    label: 'Trash',
-    icon: <FiTrash2 />,
-    submenu: [
-      { key: 'trash-brand', label: 'Brand', path: '/trash/brand' },
-       {
-        key: 'subcategory-trash',
-        label: 'Subcategory',
-        path: '/trash/subcategory'
-      }  
-    ],
-  },
-  
-  
-];
 
+      {
+        key: 'trash',
+        label: 'Trash',
+        icon: <FiTrash2 />,
+        path: '#',
+        submenu: [
+          { key: 'trash-brand', label: 'Brand', path: '/trash/brand' },
+          {key: 'trash-main-category',label: 'Main Category',path: '/trash/main-category'},
+          {
+            key: 'subcategory-trash',
+            label: 'Subcategory',
+            path: '/trash/subcategory'
+          },  
+          {
+      key:'trash-category',
+      label:'Category',
+      path:'/trash/category'   
+    }
+        ],
+      },
+    ];
+      
+  
 export default menuItems;

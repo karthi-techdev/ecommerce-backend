@@ -13,7 +13,7 @@ const exists = promisify(fs.exists);
 
 const CONFIG = {
   MAX_FILE_SIZE: 20 * 1024 * 1024, // 20MB
-  ALLOWED_MIME_TYPES: ['image/jpeg', 'image/png', 'image/webp'],
+  ALLOWED_MIME_TYPES: ['image/jpeg', 'image/png', 'image/webp','image/jpg' ],
   IMAGE_QUALITY: 80,
   MAX_WIDTH: 2000,
   THUMBNAIL_SIZE: 200
@@ -70,6 +70,7 @@ const fileFilter = (
   file: MulterFile,
   cb: FileFilterCallback
 ): void => {
+
   if (!file.mimetype.startsWith('image/')) {
     cb(new Error('Only image files are allowed (jpg, png, webp)'));
     return;
@@ -82,8 +83,6 @@ const fileFilter = (
 
   cb(null, true);
 };
-
-
 // Generate secure filename
 const generateSecureFilename = (originalname: string): string => {
   const timestamp = Date.now();
@@ -111,6 +110,9 @@ const optimizeImage = async (filePath: string, mimetype: string): Promise<void> 
         break;
       case 'image/webp':
         await image.webp({ quality: CONFIG.IMAGE_QUALITY }).toFile(filePath + '_opt');
+        break;
+      case 'image/jpg':
+        await image.jpeg({quality: CONFIG.IMAGE_QUALITY }).toFile(filePath + '_opt');
         break;
     }
     
