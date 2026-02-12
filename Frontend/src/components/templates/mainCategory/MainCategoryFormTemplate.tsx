@@ -33,7 +33,6 @@ const mainCategoryFields: FieldConfig[] = [
     type: 'textarea',
     placeholder: 'Enter description',
     required: true, 
-    maxLength: 255,
   },
   {
     name: 'image',

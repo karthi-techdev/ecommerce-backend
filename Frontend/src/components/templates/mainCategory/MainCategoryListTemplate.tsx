@@ -120,27 +120,40 @@ const MainCategoryListTemplate: React.FC = () => {
   };
 
   if (loading) return <Loader />;
+const statFilters: {
+  id: string;
+  title: string;
+  value: number;
+  trend: 'up' | 'down';
+  change: string;
+  icon: React.ReactNode;
+}[] = [
+  {
+    id: 'total',
+    title: 'Total',
+    value: stats.total,
+    icon: <HelpCircle size={20} />,
+    trend: 'up',
+    change: '0%',
+  },
+  {
+    id: 'active',
+    title: 'Active',
+    value: stats.active,
+    icon: <CheckCircle size={20} />,
+    trend: 'up',
+    change: '0%',
+  },
+  {
+    id: 'inactive',
+    title: 'Inactive',
+    value: stats.inactive,
+    icon: <XCircle size={20} />,
+    trend: 'down',
+    change: '0%',
+  },
+];
 
-  const statFilters = [
-    {
-      id: 'total',
-      title: 'Total',
-      value: stats.total,
-      icon: <HelpCircle size={20} />,
-    },
-    {
-      id: 'active',
-      title: 'Active',
-      value: stats.active,
-      icon: <CheckCircle size={20} />,
-    },
-    {
-      id: 'inactive',
-      title: 'Inactive',
-      value: stats.inactive,
-      icon: <XCircle size={20} />,
-    },
-  ];
   const filteredMainCategories = mainCategories.filter((mainCategory) => {
   if (selectedFilter === 'active') return mainCategory.isActive === true;
   if (selectedFilter === 'inactive') return mainCategory.isActive === false;

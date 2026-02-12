@@ -3,6 +3,9 @@ import Layout from '../components/shared/Layout';
 import Dashboard from '../components/templates/dashboard/Dashboard';
 import FaqListTemplate from '../components/templates/faq/FaqListTemplate';
 import FaqFormTemplate from '../components/templates/faq/FaqFormTemplate';
+import CategoryListTemplate from '../components/templates/category/CategoryListTemplate';
+import CategoryFormTemplate from '../components/templates/category/CategoryFormTemplate';
+import CategoryTrashListPage from '../components/templates/trash/CategoryTrash/CategoryTrashListTemplate';
 import MainCategoryListTemplate from '../components/templates/mainCategory/MainCategoryListTemplate';
 import MainCategoryFormTemplate from '../components/templates/mainCategory/MainCategoryFormTemplate';
 import TrashMainCategoryListTemplate from '../components/templates/trash/MainCategoryTrash/TrashMainCategoryListTemplate'
@@ -27,6 +30,24 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {  path: '/', element: <Dashboard /> }, 
+      {
+        path:'/category',
+        children:[
+          {
+            path:"",
+            element:<CategoryListTemplate/>
+          }
+           ,{
+            path: 'add',
+            element: <CategoryFormTemplate />,
+          },
+          {
+            path: 'edit/:id',
+            element: <CategoryFormTemplate />,
+          },
+        ]
+      }
+      ,
       {
         path: 'faq',
         children: [
@@ -81,6 +102,10 @@ export const router = createBrowserRouter([
             path: 'mainCategory',
             element: <TrashMainCategoryListTemplate />,
           },
+          {
+             path: 'category', 
+             element: <CategoryTrashListPage /> 
+          }, 
         ],
       },
       

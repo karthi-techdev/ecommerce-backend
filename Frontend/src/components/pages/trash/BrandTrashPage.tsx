@@ -1,5 +1,5 @@
 import React from 'react';
-import BrandTrashListTemplate from '../../templates/trash/BrandTrashListTemplate';
+import BrandTrashListTemplate from '../../templates/trash/Brand Trash/BrandTrashListTemplate';
 
 const BrandTrashPage: React.FC = () => {
   return <BrandTrashListTemplate />;
