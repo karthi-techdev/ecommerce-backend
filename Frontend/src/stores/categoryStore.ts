@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import axiosInstance from '../components/utils/axios';
 import type { Category,mainCategory, subCategory } from '../types/common';
 import ImportedURL from '../common/urls';
+import { data } from 'react-router-dom';
 
 const { API } = ImportedURL;
 
@@ -18,6 +19,8 @@ export interface CategoryPayload {
   subCategoryId: string;    
   image: File |string| null;
   status?:string;
+
+   
 }
 
 interface CategoryState {
@@ -29,6 +32,10 @@ interface CategoryState {
   error: string | null;
   page: number;
   totalPages: number;
+  trashCurrentPage: number;
+  trashTotalPages: number;
+  totalTrashCategories: number;
+
   fetchCategories: (
     page?: number,
     limit?: number,
@@ -59,6 +66,10 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
   error: null,
   page: 1,
   totalPages: 1,
+  
+  trashCurrentPage: 1,
+  trashTotalPages: 1,
+  totalTrashCategories: 0,
 
   fetchCategories: async (page = 1, limit = 20, filter = 'total') => {
     try {
@@ -123,17 +134,15 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
       set({loading:true,error:null});
       const statusParam=filter==='active'?'active':filter==='inactive'?'inactive':'';
       const res=await axiosInstance.get(`${API.trashCategory}?page=${page}?limit=${limit}${statusParam ? `&status=${statusParam}` : ''}`);
-      const {data:categories,meta}=res.data.data;
+      const {data:categories,meta}=res.data;
+      console.log(res)
       set({
         categories:Array.isArray(categories)?categories:[],
-        stats:{
-          total:meta?.total??0,
-          active:meta?.active??0,
-          inactive:meta?.inactive??0
-        },
+        trashCurrentPage: meta.page,
+        trashTotalPages: meta.totalPages,
+        totalTrashCategories: meta.total,
         error:null,
         loading:false,
-        totalPages:meta?.totalPages??1
       })
     } catch (error:any) {
       set({

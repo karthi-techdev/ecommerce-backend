@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import Loader from '../../../atoms/Loader';
 import Pagination from '../../../atoms/Pagination';
 import TableHeader from '../../../molecules/TableHeader';
-import { useSubCategoryStore } from '../../../../stores/subCategoryStore';
+import { useSubCategoryStore } from '../../../../stores/subcategoryStore';
 import type { SubCategory } from '../../../types/common';
 import { Trash2 } from 'lucide-react';
 import { FiRefreshCw } from "react-icons/fi";
