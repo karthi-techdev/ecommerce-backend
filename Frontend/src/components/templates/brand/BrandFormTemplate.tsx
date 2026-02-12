@@ -75,7 +75,7 @@ const BrandFormTemplate: React.FC = () => {
 
   if (!debouncedName.trim()) return;
 
-  // ❗ Stop duplicate check if already validation error exists
+ 
   if (errors.name && errors.name !== 'Name already exists') return;
 
   const trimmedValue = debouncedName.trim().toLowerCase();
