@@ -31,6 +31,7 @@ interface MainCategoryState {
     limit?: number,
     filter?: 'total' | 'active' | 'inactive'
   ) => Promise<void>;
+  fetchAllMainCategories: (  ) => Promise<void>;
   checkMainCategoryNameExists: (name: string, id?: string) => Promise<boolean>;
   fetchMainCategoryById: (id: string) => Promise<MainCategory | null>;
   addMainCategory: (category: MainCategory | FormData) => Promise<void>;
@@ -91,7 +92,36 @@ export const useMainCategoryStore = create<MainCategoryState>((set) => ({
       });
     }
   },
+  fetchAllMainCategories: async () => {
+  try {
+    set({ loading: true, error: null });
 
+    const res = await axiosInstance.get(API.listAllMainCategory);
+
+    const mainCategories = Array.isArray(res.data?.data)
+      ? res.data.data
+      : [];
+
+    set({
+      mainCategories,
+      stats: {
+        total: mainCategories.length,
+        active: mainCategories.filter((c: MainCategory) => c.isActive).length,
+        inactive: mainCategories.filter((c: MainCategory) => !c.isActive).length,
+      },
+      page: 1,
+      totalPages: 1,
+      loading: false,
+    });
+
+  } catch (error) {
+    set({
+      error: 'Failed to fetch mainCategories',
+      mainCategories: [],
+      loading: false,
+    });
+  }
+},
   fetchTrashedMainCategories: async (page = 1, limit = 20) => {
   const res = await axiosInstance.get(
     `${API.getTrashMainCategory}?page=${page}&limit=${limit}`

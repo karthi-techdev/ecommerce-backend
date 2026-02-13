@@ -27,14 +27,7 @@ export interface mainCategory{
   description:string;
   image:string;
 }
-export interface subCategory{
-  _id:string;
-  name:string;
-  slug:string;
-  description:string;
-  image:string;
-  mainCategoryId:string;
-}
+
 export interface MainCategory {
   _id?: string;
   name: string;
@@ -55,8 +48,6 @@ export interface Brand {
   createdAt?: string;     
   updatedAt?: string;
 }
-
-
 export interface SubCategory {
   _id?: string;
   name: string;
@@ -67,7 +58,7 @@ export interface SubCategory {
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: string;
-  mainCategory?:{name:string};
+  mainCategory?: {_id: string; name: string;};
 }
 
 export type InputType =
