@@ -65,6 +65,7 @@ const storage = multer.diskStorage({
 });
 
 // File filter function
+
 const fileFilter = (
   req: MulterRequest,
   file: MulterFile,
@@ -83,6 +84,7 @@ const fileFilter = (
 
   cb(null, true);
 };
+
 // Generate secure filename
 const generateSecureFilename = (originalname: string): string => {
   const timestamp = Date.now();

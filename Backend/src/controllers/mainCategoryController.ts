@@ -5,6 +5,7 @@ import { processUpload } from "../utils/fileUpload";
 
 class MainCategoryController {
 
+  
   async createMainCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { name, slug, description } = req.body;

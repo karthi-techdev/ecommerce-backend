@@ -1,4 +1,4 @@
-import TrashMainCategoryListTemplate from '../../templates/mainCategory/TrashMainCategoryListTemplate';
+import TrashMainCategoryListTemplate from "../../templates/trash/MainCategoryTrash/TrashMainCategoryListTemplate";
 
 const TrashMainCategoryListPage = () => {
   return <TrashMainCategoryListTemplate />;
