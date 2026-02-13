@@ -3,6 +3,8 @@ import { FiSearch, FiPlus } from 'react-icons/fi';
 import Input from '../atoms/Input';
 import ButtonLink from '../atoms/ButtonLink';
 import StatCard from '../atoms/StatCard';
+import { useLocation } from 'react-router-dom';
+
 
 interface StatFilter {
   id: string;
@@ -34,7 +36,8 @@ const TableHeader: React.FC<TableHeaderProps> = ({
   selectedFilterId,
   onSelectFilter,
 }) => {
-
+  const location = useLocation();
+  const isTrashPage = location.pathname.includes('/trash');
   return (
     <div className="mb-6 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -52,10 +55,13 @@ const TableHeader: React.FC<TableHeaderProps> = ({
               className="pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
           </div>
-          <ButtonLink to={addButtonLink}>
-            <FiPlus className="mr-2" />
-            {addButtonLabel}
-          </ButtonLink>
+          {!isTrashPage && (
+            <ButtonLink to={addButtonLink}>
+              <FiPlus className="mr-2" />
+              {addButtonLabel}
+            </ButtonLink>
+          )}
+
         </div>
       </div>
 
@@ -66,7 +72,8 @@ const TableHeader: React.FC<TableHeaderProps> = ({
               key={stat.id}
               {...stat}
               isActive={selectedFilterId === stat.id}
-              onClick={() => onSelectFilter?.(stat.id)}
+              onClick={() => onSelectFilter?.(stat.id) }
+              
             />
           ))}
         </div>

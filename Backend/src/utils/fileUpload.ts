@@ -13,7 +13,7 @@ const exists = promisify(fs.exists);
 
 const CONFIG = {
   MAX_FILE_SIZE: 20 * 1024 * 1024, // 20MB
-  ALLOWED_MIME_TYPES: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
+  ALLOWED_MIME_TYPES: ['image/jpeg', 'image/png', 'image/webp','image/jpg' ],
   IMAGE_QUALITY: 80,
   MAX_WIDTH: 2000,
   THUMBNAIL_SIZE: 200
@@ -36,9 +36,10 @@ interface MulterFile {
 const storage = multer.diskStorage({
   destination: (req: MulterRequest, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
     try {
-      const managementName = req.managementName || 'default';
+      const managementName =  req.managementName || req.res?.locals?.managementName || "default";
       const sanitizedManagementName = managementName.replace(/[^a-zA-Z0-9-_]/g, '');
-      const uploadPath = path.join('uploads', sanitizedManagementName);
+      const uploadPath = path.join(process.cwd(), 'uploads', sanitizedManagementName);
+
       
       // Create base upload directory and thumbnails directory at root level
       fs.mkdirSync(uploadPath, { recursive: true });
@@ -64,13 +65,23 @@ const storage = multer.diskStorage({
 });
 
 // File filter function
-const fileFilter = (req: MulterRequest, file: MulterFile, cb: FileFilterCallback): void => {
-  if (!CONFIG.ALLOWED_MIME_TYPES.includes(file.mimetype)) {
-    const error = new Error(`Invalid file type. Allowed types: ${CONFIG.ALLOWED_MIME_TYPES.join(', ')}`);
-    console.error(`File upload rejected:`, { filename: file.originalname, type: file.mimetype });
-    cb(error);
+
+const fileFilter = (
+  req: MulterRequest,
+  file: MulterFile,
+  cb: FileFilterCallback
+): void => {
+
+  if (!file.mimetype.startsWith('image/')) {
+    cb(new Error('Only image files are allowed (jpg, png, webp)'));
     return;
   }
+
+  if (!CONFIG.ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+    cb(new Error('Unsupported image format'));
+    return;
+  }
+
   cb(null, true);
 };
 
@@ -102,6 +113,9 @@ const optimizeImage = async (filePath: string, mimetype: string): Promise<void> 
       case 'image/webp':
         await image.webp({ quality: CONFIG.IMAGE_QUALITY }).toFile(filePath + '_opt');
         break;
+      case 'image/jpg':
+        await image.jpeg({quality: CONFIG.IMAGE_QUALITY }).toFile(filePath + '_opt');
+        break;
     }
     
     // Replace original with optimized version
@@ -115,30 +129,40 @@ const optimizeImage = async (filePath: string, mimetype: string): Promise<void> 
 // Create thumbnail
 const createThumbnail = async (filePath: string, mimetype: string): Promise<string> => {
   if (!mimetype.startsWith('image/')) return '';
-  
+
   try {
     const filename = path.basename(filePath);
     const thumbnailFilename = `thumb_${filename}`;
+
     const managementName = path.dirname(filePath).split(path.sep).pop() || 'default';
-    const thumbnailPath = path.join('uploads', managementName, 'thumbnails', thumbnailFilename);
-    
-    // Ensure thumbnail directory exists
-    await mkdir(path.dirname(thumbnailPath), { recursive: true });
-    
+
+    const thumbnailPath = path.join(
+      process.cwd(),
+      'uploads',
+      managementName,
+      'thumbnails',
+      thumbnailFilename
+    );
+
+    await fs.promises.mkdir(path.dirname(thumbnailPath), { recursive: true });
+
     await sharp(filePath)
       .resize(CONFIG.THUMBNAIL_SIZE, CONFIG.THUMBNAIL_SIZE, {
         fit: 'contain',
         background: { r: 255, g: 255, b: 255, alpha: 0 }
       })
       .toFile(thumbnailPath);
-    
+
     console.log(`Created thumbnail: ${thumbnailPath}`);
-    return thumbnailFilename; // Return only the filename, not the full path
+
+    return thumbnailFilename;
+
   } catch (err) {
     console.error(`Error creating thumbnail:`, err);
     return '';
   }
 };
+
 
 // Create upload instance
 export const upload = multer({
@@ -185,7 +209,8 @@ export const processUpload = async (req: MulterRequest, file: Express.Multer.Fil
 export const deleteFile = async (managementName: string, filename: string): Promise<boolean> => {
   try {
     const sanitizedManagementName = managementName.replace(/[^a-zA-Z0-9-_]/g, '');
-    const filePath = path.join('uploads', sanitizedManagementName, filename);
+    const filePath = path.join(process.cwd(), 'uploads', sanitizedManagementName, filename);
+
     const thumbnailPath = path.join('uploads', sanitizedManagementName, 'thumbnails', `thumb_${filename}`);
 
     if (await exists(filePath)) {

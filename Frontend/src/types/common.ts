@@ -6,6 +6,69 @@ export interface Faq {
   answer: string;
   status?: 'active' | 'inactive';
 }
+export interface PopulatedCategory{
+  _id:string;
+  name:string;
+}
+export interface Category{
+  _id?:string;
+  name:string;
+  slug:string;
+  description:string;
+  image:string;
+  mainCategoryId:PopulatedCategory;
+  subCategoryId:PopulatedCategory;
+  status:'active'|'inactive';
+}
+export interface mainCategory{
+  _id:string;
+  name:string;
+  slug:string;
+  description:string;
+  image:string;
+}
+export interface subCategory{
+  _id:string;
+  name:string;
+  slug:string;
+  description:string;
+  image:string;
+  mainCategoryId:string;
+}
+export interface MainCategory {
+  _id?: string;
+  name: string;
+  slug: string;
+  description: string;
+  image:  File | string | null;
+  isActive: boolean;
+}
+
+export interface Brand {
+  _id?: string;           
+  name: string;           
+  slug: string;           
+  description?: string;   
+  image?: string;         
+  isActive?: boolean;     
+  isDeleted?: boolean;    
+  createdAt?: string;     
+  updatedAt?: string;
+}
+
+
+export interface SubCategory {
+  _id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  image?: string;          
+  mainCategoryId: string;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: string;
+  mainCategory?:{name:string};
+}
 
 export type InputType =
   | 'text'
@@ -24,6 +87,10 @@ export type InputType =
   | 'composite'
   | 'array';
 
+  export interface SelectOption {
+  label: string;
+  value: string;
+}
 export interface FieldConfig {
   name: string;
   label: string;
@@ -38,7 +105,11 @@ export interface FieldConfig {
   defaultValue?: any;
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
-}
+  accept?: string; 
+  options? :{label:string , value:string}[];
+ }
+ 
+
 
 export type ColumnConfig<T> = {
   key: keyof T;
