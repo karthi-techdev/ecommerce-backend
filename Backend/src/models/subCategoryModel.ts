@@ -16,8 +16,7 @@ const subCategorySchema = new Schema<ISubCategory>(
         slug: {type: String, required: true, unique: true},
         description: {type: String },
         image: {type: String },
-        mainCategoryId: {type: Schema.Types.ObjectId,required: true},
-        // ref: "maincategories", 
+        mainCategoryId: {type: Schema.Types.ObjectId, ref: "MainCategory", required: true},
         isActive: {type: Boolean, default: true },
         isDeleted: {type:Boolean, default: false }
     },
