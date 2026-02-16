@@ -249,7 +249,7 @@ if (name === 'image') {
 
   const fieldErrors = validateCategoryForm(next);
   setErrors(prev => ({
-    [name]: fieldErrors[name as keyof ValidationErrors]
+    ...prev,[name]: fieldErrors[name as keyof ValidationErrors]
   }));
 };
 

@@ -259,17 +259,7 @@ else{
             const result=await categoryService.getTrashCategory(page,limit,filter);
             console.log(result)
             res.status(200).json({status:HTTP_RESPONSE.SUCCESS,
-                data:{
-                    data:result.data,
-                    meta:{
-                        total:result.meta.total,
-                        active:result.meta.active,
-                        inactive:result.meta.inactive,
-                        totalPages:result.meta.totalPages,
-                        page:page,
-                        limit:limit
-                    }
-                }
+                ...result
             })
         } catch (err:any) {
             next(err);

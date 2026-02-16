@@ -8,7 +8,7 @@ import CategoryFormTemplate from '../components/templates/category/CategoryFormT
 import CategoryTrashListPage from '../components/templates/trash/CategoryTrash/CategoryTrashListTemplate';
 import MainCategoryListTemplate from '../components/templates/mainCategory/MainCategoryListTemplate';
 import MainCategoryFormTemplate from '../components/templates/mainCategory/MainCategoryFormTemplate';
-import TrashMainCategoryListTemplate from'../components/templates/mainCategory/TrashMainCategoryListTemplate';
+import TrashMainCategoryListTemplate from '../components/templates/trash/MainCategoryTrash/TrashMainCategoryListTemplate'
 import BrandListTemplate from '../components/templates/brand/BrandListTemplate';
 import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
 
@@ -97,7 +97,7 @@ export const router = createBrowserRouter([
       },
       
       {
-        path: 'main-category',
+        path: 'mainCategory',
         children: [
           { path: '', element: <MainCategoryListTemplate /> },
           { path: 'add', element: <MainCategoryFormTemplate /> },
@@ -113,7 +113,7 @@ export const router = createBrowserRouter([
           },
           { path: 'brand', element: <BrandTrashPage /> }, 
           {
-            path: 'main-category',
+            path: 'mainCategory',
             element: <TrashMainCategoryListTemplate />,
           },
           {

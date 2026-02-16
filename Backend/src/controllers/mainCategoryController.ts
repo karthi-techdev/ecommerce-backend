@@ -5,6 +5,7 @@ import { processUpload } from "../utils/fileUpload";
 
 class MainCategoryController {
 
+  
   async createMainCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { name, slug, description } = req.body;
@@ -79,6 +80,21 @@ class MainCategoryController {
         status: HTTP_RESPONSE.SUCCESS,
         data: result.data,
         meta: result.meta,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+  async getAllListMainCategories(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const filter = req.query.filter as string;
+
+      const result = await mainCategoryService.getAllListMainCategories(filter);
+
+      res.status(200).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        data: result.data,
+        total: result.total
       });
     } catch (err) {
       next(err);

@@ -4,13 +4,15 @@ import { toast } from 'react-toastify';
 import Loader from '../../../atoms/Loader';
 import Pagination from '../../../atoms/Pagination';
 import TableHeader from '../../../molecules/TableHeader';
-import { useSubCategoryStore } from '../../../../stores/subCategoryStore';
-import type { SubCategory } from '../../../types/common';
+import { useSubCategoryStore } from '../../../../stores/subcategoryStore';
+import type { SubCategory } from '../../../../types/common';
 import { Trash2 } from 'lucide-react';
 import { FiRefreshCw } from "react-icons/fi";
 import { PAGINATION_CONFIG } from '../../../../constants/pagination';
 import ImportedURL from '../../../../common/urls';
 import { truncate } from '../../../utils/helper';
+import { useMainCategoryStore } from '../../../../stores/mainCategoryStore';
+
 
 const SubCategoryTrashListTemplate: React.FC = () => {
   const {
@@ -22,7 +24,8 @@ const SubCategoryTrashListTemplate: React.FC = () => {
     loading,
     error,
   } = useSubCategoryStore();
-
+    const {fetchAllMainCategories , mainCategories} = useMainCategoryStore();
+    console.log(trashSubCategories)
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(PAGINATION_CONFIG.DEFAULT_PAGE);
   useEffect(() => {
@@ -35,7 +38,10 @@ const SubCategoryTrashListTemplate: React.FC = () => {
   useEffect(() => {
     if (error) toast.error(error);
   }, [error]);
-
+  useEffect(() => {
+      fetchAllMainCategories(
+      );
+    }, []);
   const handlePageChange = (selectedItem: { selected: number }) => {
     setCurrentPage(selectedItem.selected + 1);
   };
@@ -93,6 +99,8 @@ const SubCategoryTrashListTemplate: React.FC = () => {
         managementName="SubCategory"
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
+        addButtonLabel="Back to SubCategory"
+        addButtonLink="/subcategory"
       />
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -100,7 +108,7 @@ const SubCategoryTrashListTemplate: React.FC = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">S.NO</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Main category</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">MainCategory</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
@@ -123,7 +131,7 @@ const SubCategoryTrashListTemplate: React.FC = () => {
                       (currentPage - 1) *
                         PAGINATION_CONFIG.DEFAULT_LIMIT}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{item.mainCategory?.name}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{item.mainCategory?.name || '-'}</td>
                   <td className="px-6 py-4">{item.name}</td>
                   <td className="px-6 py-4 text-sm text-gray-600">{truncate(item.description || '-', 30)}</td>
                   <td className="px-6 py-4">

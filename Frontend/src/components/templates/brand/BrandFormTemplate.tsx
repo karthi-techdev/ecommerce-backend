@@ -64,7 +64,8 @@ const BrandFormTemplate: React.FC = () => {
         setSlug(brand.slug);
 
         if (brand.image) {
-          setPreview(`${import.meta.env.VITE_FILE_URL}default/${brand.image}`);
+          setPreview(`http://localhost:5000/${brand.image}`);
+
         }
       }
     }
@@ -74,7 +75,7 @@ const BrandFormTemplate: React.FC = () => {
 
   if (!debouncedName.trim()) return;
 
-  // ❗ Stop duplicate check if already validation error exists
+ 
   if (errors.name && errors.name !== 'Name already exists') return;
 
   const trimmedValue = debouncedName.trim().toLowerCase();
@@ -291,6 +292,7 @@ const handleImageChange = (
           <button
             type="submit"
             disabled={isSubmitting}
+            
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
           >
             {isSubmitting
