@@ -32,8 +32,10 @@ const menuItems: MenuItem[] = [
     icon: <FiSettings />,
     submenu: [
       { key: 'faq', label: 'FAQ', path: '/faq' },
+      { key: 'page', label: 'Pages', path: '/page',},
     ],
   },
+
   {
     key: 'brand',
     label: 'Brand',

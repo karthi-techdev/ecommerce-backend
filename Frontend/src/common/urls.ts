@@ -65,6 +65,18 @@ const API = {
   checkDuplicateSubCategory: `${ROOTURL}admin/subcategory/check-duplicate`,
   listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
 
+  // Page endpoints
+  addPage: `${ROOTURL}admin/page/`,
+  listPage: `${ROOTURL}admin/page/`,
+  getPageById: `${ROOTURL}admin/page/`,
+  updatePage: `${ROOTURL}admin/page/`,
+  deletePage: `${ROOTURL}admin/page/`, 
+  hardDeletePage:`${ROOTURL}admin/page/permanent/`,
+  restorePage:`${ROOTURL}admin/page/restore/`,
+  toggleStatusPage: `${ROOTURL}admin/page/togglestatus/`,
+  checkDuplicatePage: `${ROOTURL}admin/page/check-duplicate`,
+  listPageTrash: `${ROOTURL}admin/page/trash/`,
+
 };
 
 
