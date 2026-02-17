@@ -3,6 +3,7 @@ import Input from '../atoms/Input';
 import TextArea from '../atoms/TextArea';
 import Checkbox from '../atoms/Checkbox';
 import Radio from '../atoms/Radio';
+import CustomSelect from '../atoms/Select';
 import type { InputType } from '../../types/common';
 
 interface LabeledInputProps {
@@ -12,6 +13,7 @@ interface LabeledInputProps {
   value?: any;
   onChange?: (e: { target: { name: string; value: string | boolean } }) => void;
   placeholder?: string;
+  readonly?:boolean;
   required?: boolean;
   disabled?: boolean;
   'aria-label'?: string;
@@ -28,6 +30,7 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(({
   onChange,
   placeholder,
   required,
+  readonly,
   disabled,
   'aria-label': ariaLabel,
   className,
@@ -89,13 +92,29 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(({
           label={ariaLabel}
           options={options}
         />
-      ) : (
+      ) :  type === 'select' ? (
+   <CustomSelect
+  options={options}
+  value={options.find(opt => opt.value === value) || null}
+  onChange={(selected) => {
+    onChange?.({
+      target: {
+        name,
+        value: (selected as any)?.value || ''
+      }
+    });
+  }}
+  placeholder={`Select ${label}`}
+  className={error ? 'react-select-error' : ''}
+/>
+  ) :(
         <Input
           id={name}
           name={name}
           type={type}
           value={value || ''}
           onChange={handleInputChange}
+          readOnly={readonly}
           placeholder={placeholder}
           disabled={disabled}
           aria-label={ariaLabel}

@@ -13,7 +13,7 @@ const exists = promisify(fs.exists);
 
 const CONFIG = {
   MAX_FILE_SIZE: 20 * 1024 * 1024, // 20MB
-  ALLOWED_MIME_TYPES: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
+  ALLOWED_MIME_TYPES: ['image/jpeg', 'image/png', 'image/webp','image/jpg' ],
   IMAGE_QUALITY: 80,
   MAX_WIDTH: 2000,
   THUMBNAIL_SIZE: 200
@@ -64,13 +64,23 @@ const storage = multer.diskStorage({
 });
 
 // File filter function
-const fileFilter = (req: MulterRequest, file: MulterFile, cb: FileFilterCallback): void => {
-  if (!CONFIG.ALLOWED_MIME_TYPES.includes(file.mimetype)) {
-    const error = new Error(`Invalid file type. Allowed types: ${CONFIG.ALLOWED_MIME_TYPES.join(', ')}`);
-    console.error(`File upload rejected:`, { filename: file.originalname, type: file.mimetype });
-    cb(error);
+
+const fileFilter = (
+  req: MulterRequest,
+  file: MulterFile,
+  cb: FileFilterCallback
+): void => {
+
+  if (!file.mimetype.startsWith('image/')) {
+    cb(new Error('Only image files are allowed (jpg, png, webp)'));
     return;
   }
+
+  if (!CONFIG.ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+    cb(new Error('Unsupported image format'));
+    return;
+  }
+
   cb(null, true);
 };
 
@@ -102,6 +112,9 @@ const optimizeImage = async (filePath: string, mimetype: string): Promise<void> 
       case 'image/webp':
         await image.webp({ quality: CONFIG.IMAGE_QUALITY }).toFile(filePath + '_opt');
         break;
+      case 'image/jpg':
+        await image.jpeg({quality: CONFIG.IMAGE_QUALITY }).toFile(filePath + '_opt');
+        break;
     }
 
     // Replace original with optimized version
@@ -119,6 +132,7 @@ const createThumbnail = async (filePath: string, mimetype: string): Promise<stri
   try {
     const filename = path.basename(filePath);
     const thumbnailFilename = `thumb_${filename}`;
+
     const managementName = path.dirname(filePath).split(path.sep).pop() || 'default';
     const thumbnailPath = path.join('uploads', managementName, 'thumbnails', thumbnailFilename);
 
@@ -133,12 +147,15 @@ const createThumbnail = async (filePath: string, mimetype: string): Promise<stri
       .toFile(thumbnailPath);
 
     console.log(`Created thumbnail: ${thumbnailPath}`);
-    return thumbnailFilename; // Return only the filename, not the full path
+
+    return thumbnailFilename;
+
   } catch (err) {
     console.error(`Error creating thumbnail:`, err);
     return '';
   }
 };
+
 
 // Create upload instance
 export const upload = multer({
@@ -185,7 +202,8 @@ export const processUpload = async (req: MulterRequest, file: Express.Multer.Fil
 export const deleteFile = async (managementName: string, filename: string): Promise<boolean> => {
   try {
     const sanitizedManagementName = managementName.replace(/[^a-zA-Z0-9-_]/g, '');
-    const filePath = path.join('uploads', sanitizedManagementName, filename);
+    const filePath = path.join(process.cwd(), 'uploads', sanitizedManagementName, filename);
+
     const thumbnailPath = path.join('uploads', sanitizedManagementName, 'thumbnails', `thumb_${filename}`);
 
     if (await exists(filePath)) {
