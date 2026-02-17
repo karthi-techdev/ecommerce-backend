@@ -5,7 +5,10 @@ import Layout from './Layout';
 
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
+const TestmonialPage = lazy(() => import('../pages/Testimonials/TestListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
+const TestimonialFormPage = lazy(() => import('../pages/Testimonials/TestFormPage'));
+
 
 const routes: RouteObject[] = [
   {
@@ -28,6 +31,15 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <FaqFormPage /> },
         ],
       },
+      {
+        path: 'testimonial',
+        children: [
+          { path: '', element: < TestmonialPage /> },
+          { path: 'add', element: <TestimonialFormPage /> },
+          { path: 'edit/:id', element: < TestimonialFormPage /> },
+        ],
+      },
+
     ],
   },
   {

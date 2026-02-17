@@ -32,8 +32,14 @@ const menuItems: MenuItem[] = [
         key: 'faq',
         label: 'FAQ',
         path: '/faq'
+      },
+      {
+        key: 'testimonial',
+        label: 'Testimonial',
+        path: '/testimonial'
       }
-      
+
+
     ]
   }
 ];

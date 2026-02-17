@@ -18,7 +18,16 @@ const API = {
   deletefaq: `${ROOTURL}faqs/softDeleteFaq/`,
   toggleStatusfaq: `${ROOTURL}faqs/togglestatus/`,
   checkDuplicateFaq: `${ROOTURL}faqs/check-duplicate`,
-};
+
+  // Testimonial endpoints
+  addTestimonial: `${ROOTURL}admin/testimonials/`,
+  listTestimonial: `${ROOTURL}admin/testimonials/`,
+  getTestimonialById: `${ROOTURL}admin/testimonials/getTestimonialById`,
+  updateTestimonial: `${ROOTURL}admin/testimonials/updateTestimonial/`,
+  deleteTestimonial: `${ROOTURL}admin/testimonials/softDelete/`,
+  hardDeleteTestimonial: `${ROOTURL}admin/testimonials/permanentDelete`,
+  toggleStatusTestimonial: `${ROOTURL}admin/testimonials/togglestatus`,
+}
 
 const ImportedURL = { API, LIVEURL, FILEURL, SETTINGS_ID };
 export default ImportedURL;

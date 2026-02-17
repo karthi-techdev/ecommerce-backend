@@ -1,8 +1,9 @@
 import express from "express";
 import path from 'path';
-import registerRoutes from "./routes";
-import { setupMiddleware } from "./middleware/setup";
 import { errorHandler } from "./middleware/errorHandler";
+import { setupMiddleware } from "./middleware/setup";
+import registerRoutes from "./routes";
+import testimonialRoutes from "./routes/testimonialRoutes";
 
 const app = express();
 
@@ -20,6 +21,8 @@ app.use(
   },
   express.static(path.join(__dirname, '..', 'uploads'))
 );
+
+app.use('/api/v1/admin/testimonials', testimonialRoutes)
 
 // Centralized error handler
 app.use(errorHandler);

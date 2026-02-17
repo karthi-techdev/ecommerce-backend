@@ -1,11 +1,11 @@
 const multer = require('multer');
-import sharp from 'sharp';
-import path from 'path';
-import fs from 'fs';
-import { Request } from 'express';
-import { promisify } from 'util';
 import crypto from 'crypto';
+import { Request } from 'express';
+import fs from 'fs';
 import type { FileFilterCallback } from 'multer';
+import path from 'path';
+import sharp from 'sharp';
+import { promisify } from 'util';
 
 const mkdir = promisify(fs.mkdir);
 const unlink = promisify(fs.unlink);
@@ -36,14 +36,14 @@ interface MulterFile {
 const storage = multer.diskStorage({
   destination: (req: MulterRequest, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
     try {
-      const managementName = req.managementName || 'default';
+      const managementName = req.managementName || req.res?.locals?.managementName || 'default';
       const sanitizedManagementName = managementName.replace(/[^a-zA-Z0-9-_]/g, '');
       const uploadPath = path.join('uploads', sanitizedManagementName);
-      
+
       // Create base upload directory and thumbnails directory at root level
       fs.mkdirSync(uploadPath, { recursive: true });
       fs.mkdirSync(path.join('uploads', 'thumbnails'), { recursive: true });
-      
+
       console.log(`Saving file to: ${uploadPath}`);
       cb(null, uploadPath);
     } catch (err) {
@@ -91,7 +91,7 @@ const optimizeImage = async (filePath: string, mimetype: string): Promise<void> 
 
   try {
     let image = sharp(filePath).resize(CONFIG.MAX_WIDTH, null, { withoutEnlargement: true, fit: 'inside' });
-    
+
     switch (mimetype) {
       case 'image/jpeg':
         await image.jpeg({ quality: CONFIG.IMAGE_QUALITY }).toFile(filePath + '_opt');
@@ -103,7 +103,7 @@ const optimizeImage = async (filePath: string, mimetype: string): Promise<void> 
         await image.webp({ quality: CONFIG.IMAGE_QUALITY }).toFile(filePath + '_opt');
         break;
     }
-    
+
     // Replace original with optimized version
     await fs.promises.rename(filePath + '_opt', filePath);
     console.log(`Optimized image: ${filePath}`);
@@ -115,23 +115,23 @@ const optimizeImage = async (filePath: string, mimetype: string): Promise<void> 
 // Create thumbnail
 const createThumbnail = async (filePath: string, mimetype: string): Promise<string> => {
   if (!mimetype.startsWith('image/')) return '';
-  
+
   try {
     const filename = path.basename(filePath);
     const thumbnailFilename = `thumb_${filename}`;
     const managementName = path.dirname(filePath).split(path.sep).pop() || 'default';
     const thumbnailPath = path.join('uploads', managementName, 'thumbnails', thumbnailFilename);
-    
+
     // Ensure thumbnail directory exists
     await mkdir(path.dirname(thumbnailPath), { recursive: true });
-    
+
     await sharp(filePath)
       .resize(CONFIG.THUMBNAIL_SIZE, CONFIG.THUMBNAIL_SIZE, {
         fit: 'contain',
         background: { r: 255, g: 255, b: 255, alpha: 0 }
       })
       .toFile(thumbnailPath);
-    
+
     console.log(`Created thumbnail: ${thumbnailPath}`);
     return thumbnailFilename; // Return only the filename, not the full path
   } catch (err) {
