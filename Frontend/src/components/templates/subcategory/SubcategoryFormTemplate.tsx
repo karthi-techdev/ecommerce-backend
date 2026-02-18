@@ -9,17 +9,15 @@ import ImportedURL from '../../../common/urls';
 import previewImage from '../../../assets/images/preview-image.jpg';
 import { toast } from 'react-toastify';
 import { handleError } from '../../utils/errorHandler';
-import { useMainCategoryStore } from '../../../stores/mainCategoryStore';
 
 const createSlug = (text: string) => text.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
 const ALLOWED_IMAGE_TYPES = ['image/jpeg','image/jpg','image/png','image/webp',];
 const SubCategoryFormTemplate: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const {fetchSubCategoryById,addSubCategory, updateSubCategory,checkDuplicateSubCategory,} = useSubCategoryStore();
-  const {fetchAllMainCategories , mainCategories} = useMainCategoryStore();
+  const {fetchSubCategoryById,addSubCategory, updateSubCategory,checkDuplicateSubCategory,fetchActiveMainCategories,subCategories,page, hasMore,loading} = useSubCategoryStore();
   const subCategoryFields: FieldConfig[] = [
-    { name: 'mainCategoryId', label: 'Main Category', type: 'select',placeholder: 'Select Main Category', },
+    { name: 'mainCategoryId', label: 'Main Category', type: 'select',placeholder: 'Select MainCategory', },
     { name: 'name', label: 'Name', type: 'text', placeholder: 'Enter Name',},
     { name: 'slug', label: 'Slug', type: 'text', placeholder: 'slug-is-automatically-generated', disabled: true, },
     { name: 'description', label: 'Description', type: 'textarea', placeholder: 'Enter description', },
@@ -28,6 +26,8 @@ const SubCategoryFormTemplate: React.FC = () => {
 
   const [formData, setFormData] = useState<SubCategoryFormData>({ name: '', slug: '', description: '', mainCategoryId: '', image: null,});
   const nameCheckTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const debounceNameCheck = (fn: () => void, delay = 400) => {
     if (nameCheckTimer.current) {
       clearTimeout(nameCheckTimer.current);
@@ -51,10 +51,18 @@ const SubCategoryFormTemplate: React.FC = () => {
     }, 400);
   };
 
-   useEffect(() => {
-      fetchAllMainCategories(
-      );
-    }, []);
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      fetchActiveMainCategories(1, 5, searchTerm);
+    }, 400);
+
+    return () => clearTimeout(delay);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    fetchActiveMainCategories(1, 5, "");
+  }, []);
+
   useEffect(() => {
     if (!id) return;
     const loadData = async () => {
@@ -94,6 +102,7 @@ const SubCategoryFormTemplate: React.FC = () => {
   }
   setFormData(prev => ({ ...prev, image: file }));
   setImagePreview(URL.createObjectURL(file));
+  setErrors(prev => ({ ...prev, image: undefined }));
   return;
 }
   const updatedSlug = name === 'name' ? createSlug(value) : formData.slug;
@@ -161,43 +170,48 @@ const SubCategoryFormTemplate: React.FC = () => {
             const isRequired = ['mainCategoryId', 'name'].includes(field.name) || (!id && field.name === 'image');
             return (
               <FormField
-                key={field.name}
-               field={{
-              ...field,
-              options:
-                    field.name === 'mainCategoryId'
-                      ? mainCategories.map(cat => ({
-                          label: cat.name,
-                          value: cat._id ?? "",
-                        }))
-                      : undefined,
-                }}
-            isRequired={isRequired}
-                value={
-                  field.type === 'file'? undefined : formData[field.name as keyof SubCategoryFormData] ?? ''
-                }
-                onChange={handleChange}
-                error={errors[field.name as keyof ValidationErrors]}
-              />
+  key={field.name}
+  field={{
+    ...field,
+    options:
+      field.name === 'mainCategoryId'
+        ? subCategories?.filter((cat) => cat && cat._id && cat.name).map(cat => ({
+            label: cat.name,
+            value: cat._id ?? ""
+          }))
+        : undefined,
+
+        onMenuScrollToBottom: () => {
+          if (hasMore && !loading) {
+            fetchActiveMainCategories(page + 1, 5, searchTerm);
+          }
+        },
+
+          onInputChange: (value: string) => {  
+            setSearchTerm(value);
+          }
+        }}
+        isRequired={isRequired}
+        value={
+          field.type === 'file'
+            ? undefined
+            : formData[field.name as keyof SubCategoryFormData] ?? ''
+        }
+        onChange={handleChange}
+        error={errors[field.name as keyof ValidationErrors]}
+      />
             );
           })}
 
           <div>
             <div className="h-24 w-24 border border-gray-300 rounded flex items-center justify-center">
-              <img
-                src={imagePreview || previewImage}
-                className="h-full w-full object-cover"
-              />
+              <img src={imagePreview || previewImage} className="h-full w-full object-cover" />
             </div>
           </div>
         </div>
 
         <div className="mt-6 flex justify-end">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="px-4 py-2 bg-indigo-600 text-white rounded"
-          >
+          <button type="submit" disabled={isSubmitting} className="px-4 py-2 bg-amber-600 text-white rounded">
             {isSubmitting ? 'Saving...' : id ? 'Update' : 'Save'}
           </button>
         </div>

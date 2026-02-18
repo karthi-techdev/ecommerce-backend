@@ -60,6 +60,18 @@ export interface SubCategory {
   createdAt?: string;
   mainCategory?: {_id: string; name: string;};
 }
+export interface ShipmentMethod {
+  _id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  price: number;
+  estimatedDeliveryTime: string;
+  status?: 'active' | 'inactive';
+  isDeleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 export type InputType =
   | 'text'
@@ -98,6 +110,8 @@ export interface FieldConfig {
   dataTestId?: string;
   accept?: string; 
   options? :{label:string , value:string}[];
+  onMenuScrollToBottom?: () => void;
+  onInputChange?: (value: string) => void;
  }
  
 

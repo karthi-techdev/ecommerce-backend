@@ -60,7 +60,7 @@ export const useFaqStore = create<FaqState>((set, get) => ({
       const statusParam =
         filter === 'active' ? 'active' :
           filter === 'inactive' ? 'inactive' : '';
-      const res = await axiosInstance.get(`${API.listfaq}?page=${page}&limit=${limit}${statusParam ? `&status=${statusParam}` : ''}`);
+      const res = await axiosInstance.get(`${API.listFaq}?page=${page}&limit=${limit}${statusParam ? `&status=${statusParam}` : ''}`);
       const { data: faqData, meta } = res.data.data;
       set({
         faqs: Array.isArray(faqData) ? faqData : [],
@@ -111,7 +111,7 @@ export const useFaqStore = create<FaqState>((set, get) => ({
         throw new Error('A FAQ with this question already exists');
       }
 
-      const res = await axiosInstance.post(API.addfaq, faq);
+      const res = await axiosInstance.post(API.addFaq, faq);
       set((state) => ({
         faqs: [...state.faqs, res.data.data],
         error: null
@@ -131,7 +131,7 @@ export const useFaqStore = create<FaqState>((set, get) => ({
         throw new Error('A FAQ with this question already exists');
       }
 
-      const res = await axiosInstance.put(`${API.updatefaq}${id}`, faq);
+      const res = await axiosInstance.put(`${API.updateFaq}${id}`, faq);
       set((state) => ({
         faqs: state.faqs.map(f => f._id === id ? { ...f, ...res.data.data } : f),
         error: null
@@ -144,7 +144,7 @@ export const useFaqStore = create<FaqState>((set, get) => ({
 
   deleteFaq: async (id: string) => {
     try {
-      await axiosInstance.delete(`${API.deletefaq}${id}`);
+      await axiosInstance.delete(`${API.deleteFaq}${id}`);
       set((state) => ({
         faqs: state.faqs.filter(f => f._id !== id),
         error: null
@@ -156,7 +156,7 @@ export const useFaqStore = create<FaqState>((set, get) => ({
 
   toggleStatusFaq: async (id: string) => {
     try {
-      const res = await axiosInstance.patch(`${API.toggleStatusfaq}${id}`);
+      const res = await axiosInstance.patch(`${API.toggleStatusFaq}${id}`);
       set((state) => ({
         faqs: state.faqs.map(f => {
           if (f._id === id) {

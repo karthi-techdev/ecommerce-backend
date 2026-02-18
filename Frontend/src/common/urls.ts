@@ -64,7 +64,15 @@ const API = {
   toggleStatusSubCategory: `${ROOTURL}admin/subcategory/togglestatus/`,
   checkDuplicateSubCategory: `${ROOTURL}admin/subcategory/check-duplicate`,
   listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
-
+  listActiveMainCategory: `${ROOTURL}admin/subcategory/activemain-categorylist`,
+  //shipmentMethods endpoints
+  addShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
+  listShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
+  getShipmentMethodsById: `${ROOTURL}admin/shipment-methods/getShipmentMethodById/`,
+  updateShipmentMethods: `${ROOTURL}admin/shipment-methods/updateSubCategory/updateShipmentMethod`,
+  deleteShipmentMethods: `${ROOTURL}admin/shipment-methods/softDeleteShipmentMethod/`,
+  toggleStatusShipmentMethods: `${ROOTURL}admin/shipment-methods/togglestatus/`,
+  checkDuplicateShipmentMethods: `${ROOTURL}admin/shipment-methods/check-duplicate`,
 };
 
 

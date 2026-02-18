@@ -24,7 +24,7 @@ const SubCategoryTrashListTemplate: React.FC = () => {
     loading,
     error,
   } = useSubCategoryStore();
-    const {fetchAllMainCategories , mainCategories} = useMainCategoryStore();
+    const {fetchMainCategories} = useMainCategoryStore();
     console.log(trashSubCategories)
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(PAGINATION_CONFIG.DEFAULT_PAGE);
@@ -34,12 +34,18 @@ const SubCategoryTrashListTemplate: React.FC = () => {
       PAGINATION_CONFIG.DEFAULT_LIMIT
     );
   }, [currentPage, fetchTrashSubCategories]);
-
+  console.log('trashSubCategories:', trashSubCategories);
+  // useEffect(() => {
+  //   if (error) toast.error(error);
+  // }, [error]);
   useEffect(() => {
-    if (error) toast.error(error);
-  }, [error]);
+    if (error && !loading) {
+       // Only toast if it's a general fetch error, not an action error
+       // toast.error(error); 
+    }
+  }, [error, loading]);
   useEffect(() => {
-      fetchAllMainCategories(
+      fetchMainCategories(
       );
     }, []);
   const handlePageChange = (selectedItem: { selected: number }) => {
@@ -56,6 +62,8 @@ const SubCategoryTrashListTemplate: React.FC = () => {
       text: `Restore "${item.name}" from trash?`,
       icon: 'question',
       showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, restore',
     });
 
@@ -65,8 +73,9 @@ const SubCategoryTrashListTemplate: React.FC = () => {
       await restoreSubCategory(item._id!);
       toast.success('SubCategory restored');
       fetchTrashSubCategories(currentPage, PAGINATION_CONFIG.DEFAULT_LIMIT);
-    } catch {
-      toast.error('Restore failed');
+    } catch(err:any) {
+      const msg = err?.response?.data?.message || 'Restore failed';
+      toast.error(msg);
     }
   };
 
@@ -76,7 +85,8 @@ const SubCategoryTrashListTemplate: React.FC = () => {
       text: 'This action cannot be undone!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d33',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
       confirmButtonText: 'Delete',
     });
 
@@ -86,8 +96,9 @@ const SubCategoryTrashListTemplate: React.FC = () => {
       await hardDeleteSubCategory(item._id!);
       toast.success('Deleted permanently');
       fetchTrashSubCategories(currentPage, PAGINATION_CONFIG.DEFAULT_LIMIT);
-    } catch {
-      toast.error('Delete failed');
+    } catch(err:any) {
+      const msg = err?.response?.data?.message || 'Delete failed';
+      toast.error(msg);
     }
   };
 
@@ -119,7 +130,7 @@ const SubCategoryTrashListTemplate: React.FC = () => {
           <tbody className="divide-y divide-gray-200">
             {filteredData.length === 0 ? (
               <tr>
-                <td colSpan={4} className="text-center py-10 text-gray-500">
+                <td colSpan={6} className="text-center py-10 text-gray-500">
                   Trash is empty
                 </td>
               </tr>
@@ -139,7 +150,7 @@ const SubCategoryTrashListTemplate: React.FC = () => {
                       <img
                         src={`${ImportedURL.FILEURL.replace(/\/$/, '')}/${item.image.replace(/^\//, '')}`}
                         alt={item.name}
-                        className="h-10 w-10 rounded border object-cover"
+                        className="h-10 w-10 rounded object-cover"
                       />
                     ) : (
                       <span className="text-gray-400 text-xs">No Image</span>

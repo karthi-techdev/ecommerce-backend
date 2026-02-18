@@ -6,6 +6,7 @@ const router = Router();
 
 router.post("/",setSubCategoryUpload,upload.single("image"), (req, res, next) =>subCategoryController.createSubCategory(req, res, next));
 router.get("/",(req, res, next) =>subCategoryController.getAllSubCategories(req, res, next));
+router.get("/activemain-categorylist",(req, res, next) =>subCategoryController.getAllActiveMainCategories(req, res, next));
 router.get( "/getSubCategoryById/:id",(req, res, next) => subCategoryController.getSubCategoryById(req, res, next));
 router.put("/updateSubCategory/:id",upload.single("image"),(req, res, next) =>subCategoryController.updateSubCategory(req, res, next));
 router.delete( "/softDeleteSubCategory/:id",(req, res, next) =>subCategoryController.softDeleteSubCategory(req, res, next));

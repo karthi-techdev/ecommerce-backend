@@ -72,9 +72,6 @@ class MainCategoryService {
       filter
     );
   }
-  async getAllListMainCategories(filter?: string) {
-  return await mainCategoryRepository.getAllListMainCategories(filter);
-  }
 
   async getMainCategoryById(id: string | Types.ObjectId) {
     ValidationHelper.isValidObjectId(id, "id");
