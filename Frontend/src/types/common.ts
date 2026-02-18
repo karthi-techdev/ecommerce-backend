@@ -73,6 +73,26 @@ export interface ShipmentMethod {
   updatedAt?: string;
 }
 
+export interface Page {
+    _id?: string;
+    name : string,
+    slug : string,
+    type? : "content" | "url",
+    description? : string,
+    url? : string,
+    isActive? : boolean,
+    createdAt? : Date
+}
+
+export interface PageFormData {
+  name: string;
+  slug: string;
+  description: string;
+  type: "content" | "url";
+  url?: string;
+  isActive?: boolean;
+}
+
 export type InputType =
   | 'text'
   | 'email'

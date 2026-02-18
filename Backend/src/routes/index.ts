@@ -9,6 +9,7 @@ import brandRoutes from './brandRoutes'
 import subCategoryRoutes from './subCategoryRoutes'
 import adminAuthRoutes from './adminAuthRoutes';
 import shipmentMethodRoutes from './shipmentMethodsRouter';
+import pageRoutes from "./pageRoutes"
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
@@ -19,5 +20,7 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/subcategory", subCategoryRoutes);
   app.use("/api/v1/admin/auth", adminAuthRoutes);
   app.use("/api/v1/admin/shipment-methods", shipmentMethodRoutes);
+  app.use("/api/v1/admin/page", pageRoutes);
+
 }
 

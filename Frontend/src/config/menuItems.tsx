@@ -33,6 +33,7 @@ const menuItems: MenuItem[] = [
     icon: <FiSettings />,
     submenu: [
       { key: 'faq', label: 'FAQ', path: '/faq' },
+      { key: 'page', label: 'Pages', path: '/page',},
     ],
   },
       { key: 'shipment-methods',
@@ -40,6 +41,7 @@ const menuItems: MenuItem[] = [
          icon:<FaTruck/>,
           path:'/shipment-methods'
         },
+
   {
     key: 'brand',
     label: 'Brand',

@@ -20,6 +20,8 @@ import SubCategoryTrashListTemplate from '../components/templates/trash/Subcateg
 import AdminLoginTemplate from '../components/templates/loginAuth/adminLoginTemplate';
 import ShipmentMethodListTemplate from '../components/templates/shipmentMethods/shipmentMethodsListTemplate';
 import ShipmentMethodFormTemplate from '../components/templates/shipmentMethods/ShipmentMethodsFormTemplate';
+import PageFormTemplate from '@/components/templates/page/pageFormTemplate';
+import PageListTemplate from '@/components/templates/page/pageListTemplate';
 
 export const router = createBrowserRouter([
   {
@@ -31,7 +33,19 @@ export const router = createBrowserRouter([
     path: '/',
     element: <Layout />,
     children: [
-      {  path: '/', element: <Dashboard /> }, 
+      {  path: '/', element: <Dashboard /> },
+      {  path: 'page',
+        children:[
+          {
+            path:"",
+            element:<PageListTemplate/>
+          }
+           ,{
+            path: 'add',
+            element: <PageFormTemplate />,
+          },
+        ]
+       }, 
       {
         path:'/category',
         children:[
