@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import mainCategoryService from "../services/mainCategoryService";
 import { HTTP_RESPONSE } from "../utils/httpResponse";
 import { processUpload } from "../utils/fileUpload";
+import { CustomError } from "../utils/customError";
+
 
 class MainCategoryController {
 
@@ -148,6 +150,7 @@ class MainCategoryController {
     try {
 
       const { id } = req.params;
+     
       const category = await mainCategoryService.softDeleteMainCategory(id);
       
       if (!category) {
@@ -222,7 +225,6 @@ class MainCategoryController {
   async toggleMainCategoryStatus(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-
       const category = await mainCategoryService.toggleMainCategoryStatus(id);
 
       res.status(200).json({

@@ -69,6 +69,7 @@ useEffect(() => {
   };
 
 const filteredSubCategories = subCategories.filter((item) => {
+  console.log(item)
   if (!item) return false;
 
   const name = item.name ?? '';

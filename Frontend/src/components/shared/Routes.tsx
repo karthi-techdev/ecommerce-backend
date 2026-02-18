@@ -97,6 +97,11 @@ const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
 const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
 const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
 
+const ProductListPage = lazy(() => import('../pages/products/ProductsListPage'));
+const ProductFormPage = lazy(() => import('../pages/products/ProductsFormPage'));
+const ProductTrashPage = lazy(() => import('../pages/trash/TrashMainCategoryListPage'));
+
+
 const MainCategoryPage = lazy(
   () => import('../pages/mainCategory/MainCategoryListPage')
 );
@@ -149,6 +154,16 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <BrandFormPage /> }, 
         ],
       },
+
+      {
+        path: 'products',
+        children: [
+          { path: '', element: <ProductListPage /> },
+          { path: 'add', element: <ProductFormPage /> },
+          { path: 'edit/:id', element: <ProductFormPage /> },
+        ],
+      },
+
       {
         path: 'mainCategory',
         children: [
@@ -177,8 +192,8 @@ const routes: RouteObject[] = [
         children: [
           { path: 'subcategory', element: <SubcategoryTrashPage /> },
           { path: 'brand', element: <BrandTrashPage /> },
+          { path: 'product', element: <ProductTrashPage /> },
           {path: 'mainCategory',element: <TrashMainCategoryPage />},
-          {path: 'main-category',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
         ]
       }

@@ -65,6 +65,19 @@ const API = {
   checkDuplicateSubCategory: `${ROOTURL}subcategory/check-duplicate`,
   listSubCategoryTrash: `${ROOTURL}subcategory/trash/`,
 
+
+  // ---------------- Product endpoints ----------------
+  addProduct: `${ROOTURL}products/`,
+  listProduct: `${ROOTURL}products/`,
+  getProductById: `${ROOTURL}products/getProductById/`,
+  updateProduct: `${ROOTURL}products/updateProduct/`,
+  softDeleteProduct: `${ROOTURL}products/softDelete/`,
+  permanentDeleteProduct: `${ROOTURL}products/permanentDelete/`,
+  restoreProduct: `${ROOTURL}products/restore/`,
+  toggleProductStatus: `${ROOTURL}products/toggleStatus/`,
+  trashProducts: `${ROOTURL}products/trash`,
+  checkProductSlug: `${ROOTURL}products/checkSlugExist`,
+
 };
 
 

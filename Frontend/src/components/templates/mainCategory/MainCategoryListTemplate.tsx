@@ -7,15 +7,7 @@ import TableHeader from '../../molecules/TableHeader';
 import Pagination from '../../atoms/Pagination';
 import { useMainCategoryStore } from '../../../stores/mainCategoryStore';
 import type { MainCategory } from '../../../types/common';
-import {
-  ToggleLeft,
-  ToggleRight,
-  Pencil,
-  Trash2,
-  HelpCircle,
-  CheckCircle,
-  XCircle,
-} from 'lucide-react';
+import {ToggleLeft,ToggleRight,Pencil,Trash2,HelpCircle,CheckCircle,XCircle,} from 'lucide-react';
 import { PAGINATION_CONFIG } from '../../../constants/pagination';
 import ImportedURL from '../../../common/urls';
 
@@ -65,48 +57,23 @@ const MainCategoryListTemplate: React.FC = () => {
 
 
   const handleToggleStatus = async (mainCategory: MainCategory) => {
-    const action = mainCategory.isActive ? 'hide' : 'show';
+  const action = mainCategory.isActive ? 'hide' : 'show';
 
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: `Do you want to ${action} this mainCategory?`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-    });
+  const result = await Swal.fire({
+    title: 'Are you sure?',
+    text: `Do you want to ${action} this mainCategory?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes',
+  });
 
-    if (result.isConfirmed) {
-      try {
-        await toggleMainCategoryStatus(mainCategory._id!);
-        toast.success(`MainCategory ${action}d successfully`);
+  if (result.isConfirmed) {
+    try {
+      await toggleMainCategoryStatus(mainCategory._id!);
 
-        setCurrentPage(1); 
+      toast.success(`MainCategory ${action}d successfully`);
 
-        await fetchMainCategories(
-          1,
-          PAGINATION_CONFIG.DEFAULT_LIMIT,
-          selectedFilter
-        );
-
-      } catch {
-        toast.error('Failed to update status');
-      }
-    }
-  };
-
-  const handleDelete = async (mainCategory: MainCategory) => {
-    const result = await Swal.fire({
-      title: 'Delete Main Category?',
-      text: mainCategory.name,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Delete',
-    });
-
-    if (result.isConfirmed) {
-      await deleteMainCategory(mainCategory._id!);
-
-      setCurrentPage(1); 
+      setCurrentPage(1);
 
       await fetchMainCategories(
         1,
@@ -114,10 +81,40 @@ const MainCategoryListTemplate: React.FC = () => {
         selectedFilter
       );
 
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }
+};
+
+
+  const handleDelete = async (mainCategory: MainCategory) => {
+  const result = await Swal.fire({
+    title: 'Delete Main Category?',
+    text: mainCategory.name,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Delete',
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await deleteMainCategory(mainCategory._id!);
+
       toast.success('Main Category deleted');
 
+      setCurrentPage(1);
+
+      await fetchMainCategories(
+        1,
+        PAGINATION_CONFIG.DEFAULT_LIMIT,
+        selectedFilter
+      );
+    } catch (error: any) {
+      toast.error(error.message);
     }
-  };
+  }
+};
 
   if (loading) return <Loader />;
 const statFilters: {

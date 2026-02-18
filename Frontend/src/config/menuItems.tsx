@@ -1,4 +1,4 @@
-import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase,FiTrash2 } from 'react-icons/fi';
+import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
 import { BiCategory } from "react-icons/bi";
 import {FiLayers,FiTag,FiList} from 'react-icons/fi';
 import type { ReactNode } from 'react';
@@ -41,6 +41,12 @@ const menuItems: MenuItem[] = [
     path: '/brand',
   },
   {
+    key: 'product',
+    label: 'Products',
+    icon: <FiShoppingCart />,
+    path: '/products',
+  },
+  {
     key: 'category',
     label: 'Manage Categories',
     icon: <BiCategory />,
@@ -81,7 +87,8 @@ const menuItems: MenuItem[] = [
       key:'trash-category',
       label:'Category',
       path:'/trash/category'   
-    }
+    },
+        { key: 'trash-product', label: 'Product', path: '/trash/product' }
         ],
       },
     ];

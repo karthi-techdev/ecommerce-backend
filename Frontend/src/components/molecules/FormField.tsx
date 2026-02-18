@@ -52,6 +52,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error }) 
         aria-label={field.ariaLabel} 
         error={error}
         options={field.options}
+        required={field.required} 
       />
     </div>
   );
