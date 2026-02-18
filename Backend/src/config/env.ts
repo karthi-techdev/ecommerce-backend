@@ -7,7 +7,7 @@ function getEnv(variable: string, fallback: string): string {
 }
 
 const isProduction = process.env.NODE_ENV === 'production';
-const fallbackUri = "mongodb://localhost:27017/ecommerce";
+const fallbackUri = "mongodb+srv://deva:deva7740@cluster0.83vrebx.mongodb.net/ecommerce";
 const MONGO_URI = isProduction ? getEnv("MONGO_URI", fallbackUri) : getEnv("LOCAL_MONGO_URI", fallbackUri);
 
 export const ENV = {

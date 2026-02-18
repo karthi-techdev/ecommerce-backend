@@ -3,6 +3,9 @@ import Layout from '../components/shared/Layout';
 import Dashboard from '../components/templates/dashboard/Dashboard';
 import FaqListTemplate from '../components/templates/faq/FaqListTemplate';
 import FaqFormTemplate from '../components/templates/faq/FaqFormTemplate';
+import TestimonialFormTemplate from '../components/templates/testimonial/testFormTemplate';
+import TestimonialListTemplate from '../components/templates/testimonial/testListTemplate';
+import TestFormPage from '../components/pages/Testimonials/TestFormPage';
 import CategoryListTemplate from '../components/templates/category/CategoryListTemplate';
 import CategoryFormTemplate from '../components/templates/category/CategoryFormTemplate';
 import CategoryTrashListPage from '../components/templates/trash/CategoryTrash/CategoryTrashListTemplate';
@@ -86,6 +89,23 @@ export const router = createBrowserRouter([
           { path: '', element: <SubCategoryListTemplate />, },
           { path: 'add', element: <SubCategoryFormTemplate />,},
           { path: 'edit/:id', element: <SubCategoryFormTemplate />,},
+        ],
+      },
+      {
+        path: 'testimonial',
+        children: [
+          {
+            path: '',
+            element: <TestimonialListTemplate />,
+          },
+          {
+            path: 'add',
+            element: <TestimonialFormTemplate />,
+          },
+          {
+            path: 'edit/:id',
+            element: <TestFormPage />,
+          },
         ],
       },
       

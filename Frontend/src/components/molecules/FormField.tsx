@@ -6,9 +6,9 @@ import CustomSelect from '../atoms/Select';
 interface FormFieldProps {
   field: FieldConfig;
   value: any;
-  onChange?: (e: { target: { name: string; value: any } }) => void;
+  onChange?: (e: { target: { name: string; value: any; } }) => void;
   error?: string;
-  isRequired?: boolean; 
+  isRequired?: boolean;
 }
 
 const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error,isRequired }) => {

@@ -93,6 +93,20 @@ export interface PageFormData {
   isActive?: boolean;
 }
 
+export interface Testimonial {
+  _id?: string;
+  name: string;
+  designation?: string;
+  message?: string;
+  image?: string;
+  rating?: number;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+
 export type InputType =
   | 'text'
   | 'email'
@@ -132,9 +146,7 @@ export interface FieldConfig {
   options? :{label:string , value:string}[];
   onMenuScrollToBottom?: () => void;
   onInputChange?: (value: string) => void;
- }
- 
-
+}
 
 export type ColumnConfig<T> = {
   key: keyof T;
