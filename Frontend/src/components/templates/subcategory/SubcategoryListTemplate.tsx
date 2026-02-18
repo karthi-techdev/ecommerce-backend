@@ -23,33 +23,16 @@ interface StatFilter {
 
 const SubCategoryListTemplate: React.FC = () => {
   const navigate = useNavigate();
-
-  const {
-    subCategories,
-    fetchSubCategories,
-    stats,
-    deleteSubCategory,
-    toggleStatusSubCategory,
-    totalPages,
-    loading,
-    error,
-  } = useSubCategoryStore();
-
+  const { subCategories, fetchSubCategories, stats, deleteSubCategory,toggleStatusSubCategory, totalPages,loading, error,} = useSubCategoryStore();
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState<number>(
-    PAGINATION_CONFIG.DEFAULT_PAGE
-  );
+  const [currentPage, setCurrentPage] = useState<number>(PAGINATION_CONFIG.DEFAULT_PAGE);
   type FilterType = 'total' | 'active' | 'inactive';
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('total');
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        await fetchSubCategories(
-          currentPage,
-          PAGINATION_CONFIG.DEFAULT_LIMIT,
-          selectedFilter
-        );
+        await fetchSubCategories(currentPage,PAGINATION_CONFIG.DEFAULT_LIMIT, selectedFilter );
       } catch (err: any) {
         toast.error(err?.message || 'Failed to load subcategories');
       }
@@ -64,18 +47,12 @@ useEffect(() => {
 }, [error]);
 
 
-  const handlePageChange = (selectedItem: { selected: number }) => {
-    setCurrentPage(selectedItem.selected + 1);
-  };
-
-const filteredSubCategories = subCategories.filter((item) => {
-  console.log(item)
+  const handlePageChange = (selectedItem: { selected: number }) => {setCurrentPage(selectedItem.selected + 1);};
+  const filteredSubCategories = subCategories.filter((item) => {
   if (!item) return false;
-
   const name = item.name ?? '';
   const slug = item.slug ?? '';
   const description = item.description ?? '';
-
   return (
     name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -147,11 +124,7 @@ const filteredSubCategories = subCategories.filter((item) => {
       if (result.isConfirmed) {
         try {
           await deleteSubCategory(item._id!);
-          await fetchSubCategories(
-            currentPage,
-            PAGINATION_CONFIG.DEFAULT_LIMIT,
-            selectedFilter
-          );
+          await fetchSubCategories( currentPage, PAGINATION_CONFIG.DEFAULT_LIMIT, selectedFilter);
           Swal.fire('Deleted!', 'SubCategory removed.', 'success');
         } catch {
           toast.error('Failed to delete subcategory');
@@ -159,13 +132,10 @@ const filteredSubCategories = subCategories.filter((item) => {
       }
     });
   };
-const shouldShowPagination =
-  totalPages > 1 &&
-  (
-    filteredSubCategories.length === PAGINATION_CONFIG.DEFAULT_LIMIT ||
-    currentPage > 1
-  );
-
+  const shouldShowPagination = totalPages > 1 &&
+    (
+      filteredSubCategories.length === PAGINATION_CONFIG.DEFAULT_LIMIT || currentPage > 1
+    );
   if (loading) return <Loader />;
 
   return (

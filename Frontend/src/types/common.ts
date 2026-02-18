@@ -27,14 +27,7 @@ export interface mainCategory{
   description:string;
   image:string;
 }
-export interface subCategory{
-  _id:string;
-  name:string;
-  slug:string;
-  description:string;
-  image:string;
-  mainCategoryId:string;
-}
+
 export interface MainCategory {
   _id?: string;
   name: string;
@@ -55,8 +48,6 @@ export interface Brand {
   createdAt?: string;     
   updatedAt?: string;
 }
-
-
 export interface SubCategory {
   _id?: string;
   name: string;
@@ -67,7 +58,7 @@ export interface SubCategory {
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: string;
-  mainCategory?:{name:string};
+  mainCategory?: {_id: string; name: string;};
 }
 
 
@@ -97,7 +88,37 @@ export interface Product {
 
   status: 'active' | 'inactive';
   isDeleted?: boolean;
+}
 
+export interface Page {
+    _id?: string;
+    name : string,
+    slug : string,
+    type? : "content" | "url",
+    description? : string,
+    url? : string,
+    isActive? : boolean,
+    createdAt? : Date
+}
+
+export interface PageFormData {
+  name: string;
+  slug: string;
+  description: string;
+  type: "content" | "url";
+  url?: string;
+  isActive?: boolean;
+}
+
+export interface Testimonial {
+  _id?: string;
+  name: string;
+  designation?: string;
+  message?: string;
+  image?: string;
+  rating?: number;
+  isActive?: boolean;
+  isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -157,11 +178,10 @@ export interface FieldConfig {
   defaultValue?: any;
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
-  accept?: string; 
-  options? :{label:string , value:string}[];
- }
- 
+  accept?: string;
 
+  options?: { label: string, value: string }[];
+}
 
 export type ColumnConfig<T> = {
   key: keyof T;

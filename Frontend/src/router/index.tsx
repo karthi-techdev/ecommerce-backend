@@ -3,6 +3,9 @@ import Layout from '../components/shared/Layout';
 import Dashboard from '../components/templates/dashboard/Dashboard';
 import FaqListTemplate from '../components/templates/faq/FaqListTemplate';
 import FaqFormTemplate from '../components/templates/faq/FaqFormTemplate';
+import TestimonialFormTemplate from '../components/templates/testimonial/testFormTemplate';
+import TestimonialListTemplate from '../components/templates/testimonial/testListTemplate';
+import TestFormPage from '../components/pages/Testimonials/TestFormPage';
 import CategoryListTemplate from '../components/templates/category/CategoryListTemplate';
 import CategoryFormTemplate from '../components/templates/category/CategoryFormTemplate';
 import CategoryTrashListPage from '../components/templates/trash/CategoryTrash/CategoryTrashListTemplate';
@@ -18,6 +21,8 @@ import SubCategoryListTemplate from '@/components/templates/subcategory/Subcateg
 import SubCategoryFormTemplate from '@/components/templates/subcategory/SubcategoryFormTemplate';
 import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
 import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
+import PageFormTemplate from '@/components/templates/page/pageFormTemplate';
+import PageListTemplate from '@/components/templates/page/pageListTemplate';
 
 import ProductListTemplate from '@/components/templates/products/ProductsListTemplate';
 import ProductFormTemplate from '@/components/templates/products/ProductsFormTemplate';
@@ -33,7 +38,19 @@ export const router = createBrowserRouter([
     path: '/',
     element: <Layout />,
     children: [
-      {  path: '/', element: <Dashboard /> }, 
+      {  path: '/', element: <Dashboard /> },
+      {  path: 'page',
+        children:[
+          {
+            path:"",
+            element:<PageListTemplate/>
+          }
+           ,{
+            path: 'add',
+            element: <PageFormTemplate />,
+          },
+        ]
+       }, 
       {
         path:'/category',
         children:[
@@ -91,6 +108,23 @@ export const router = createBrowserRouter([
           {
             path: 'edit/:id',
             element: <SubCategoryFormTemplate />,
+          },
+        ],
+      },
+      {
+        path: 'testimonial',
+        children: [
+          {
+            path: '',
+            element: <TestimonialListTemplate />,
+          },
+          {
+            path: 'add',
+            element: <TestimonialFormTemplate />,
+          },
+          {
+            path: 'edit/:id',
+            element: <TestFormPage />,
           },
         ],
       },

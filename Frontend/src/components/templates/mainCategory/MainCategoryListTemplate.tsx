@@ -45,8 +45,6 @@ const MainCategoryListTemplate: React.FC = () => {
     );
   }, [currentPage, selectedFilter]);
 
-
-
   useEffect(() => {
     if (error) toast.error(error);
   }, [error]);

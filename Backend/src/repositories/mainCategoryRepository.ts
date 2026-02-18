@@ -76,7 +76,23 @@ class MainCategoryRepository {
       },
     };
   }
+  
+  async getAllListMainCategories(filter?: string) {
+  const query: any = { isDeleted: false };
 
+  if (filter === "active") query.isActive = true;
+  if (filter === "inactive") query.isActive = false;
+
+  const data = await MainCategoryModel
+    .find(query)
+    .sort({ createdAt: -1 })
+    .exec();
+
+  return {
+    data,
+    total: data.length
+  };
+}
   async getMainCategoryById(id: string | Types.ObjectId) {
     return await MainCategoryModel.findOne({
       _id: id,
