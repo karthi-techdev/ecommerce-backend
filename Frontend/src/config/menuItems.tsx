@@ -32,6 +32,11 @@ const menuItems: MenuItem[] = [
     icon: <FiSettings />,
     submenu: [
       { key: 'faq', label: 'FAQ', path: '/faq' },
+       {
+        key: 'testimonial',
+        label: 'Testimonial',
+        path: '/testimonial'
+      },
       { key: 'page', label: 'Pages', path: '/page',},
     ],
   },
@@ -48,7 +53,8 @@ const menuItems: MenuItem[] = [
     icon: <BiCategory />,
     path: '#',
     submenu: [
-      {
+{
+
         key: 'mainCategory',
         label: 'Main Category',
         path: '/mainCategory',

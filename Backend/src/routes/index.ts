@@ -9,16 +9,18 @@ import brandRoutes from './brandRoutes'
 import subCategoryRoutes from './subCategoryRoutes'
 import adminAuthRoutes from './adminAuthRoutes'
 import pageRoutes from "./pageRoutes"
+import testimonialRoutes from "./testimonialRoutes";
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
   app.use("/api/v1/faqs", faqRoutes);
-    app.use("/api/v1/admin/categories", categoryRoutes);
+  app.use("/api/v1/admin/categories", categoryRoutes);
   app.use("/api/v1/admin/main-categories", mainCategoryRoutes);
   app.use("/api/v1/brands", brandRoutes);
   app.use("/api/v1/admin/subcategory", subCategoryRoutes);
   app.use("/api/v1/admin/auth", adminAuthRoutes);
   app.use("/api/v1/admin/page", pageRoutes);
+  app.use('/api/v1/admin/testimonials', testimonialRoutes)
 
 }
 

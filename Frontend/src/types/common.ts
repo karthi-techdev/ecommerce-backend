@@ -81,6 +81,20 @@ export interface PageFormData {
   isActive?: boolean;
 }
 
+export interface Testimonial {
+  _id?: string;
+  name: string;
+  designation?: string;
+  message?: string;
+  image?: string;
+  rating?: number;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+
 export type InputType =
   | 'text'
   | 'email'
@@ -116,11 +130,10 @@ export interface FieldConfig {
   defaultValue?: any;
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
-  accept?: string; 
-  options? :{label:string , value:string}[];
- }
- 
+  accept?: string;
 
+  options?: { label: string, value: string }[];
+}
 
 export type ColumnConfig<T> = {
   key: keyof T;

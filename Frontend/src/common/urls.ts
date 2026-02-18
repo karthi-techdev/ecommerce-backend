@@ -15,6 +15,16 @@ const API = {
   deleteFaq: `${ROOTURL}faqs/softDeleteFaq/`,
   toggleStatusFaq: `${ROOTURL}faqs/togglestatus/`,
   checkDuplicateFaq: `${ROOTURL}faqs/check-duplicate`,
+
+  // Testimonial endpoints
+  addTestimonial: `${ROOTURL}admin/testimonials/`,
+  listTestimonial: `${ROOTURL}admin/testimonials/`,
+  getTestimonialById: `${ROOTURL}admin/testimonials/getTestimonialById`,
+  updateTestimonial: `${ROOTURL}admin/testimonials/updateTestimonial/`,
+  deleteTestimonial: `${ROOTURL}admin/testimonials/softDelete/`,
+  hardDeleteTestimonial: `${ROOTURL}admin/testimonials/permanentDelete`,
+  toggleStatusTestimonial: `${ROOTURL}admin/testimonials/togglestatus`,
+
   // Category endpoints
   addCategory: `${ROOTURL}admin/categories/`,
   listCategory: `${ROOTURL}admin/categories/`,

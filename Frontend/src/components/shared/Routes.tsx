@@ -9,7 +9,9 @@ import NotFoundPage from '../utils/notFound';
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
+const TestmonialPage = lazy(() => import('../pages/Testimonials/TestListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
+const TestimonialFormPage = lazy(() => import('../pages/Testimonials/TestFormPage'));
 const CategoryPage = lazy(() => import('../pages/category/CategoryListPage'));
 const CategoryFormPage = lazy(() => import('../pages/category/CategoryFormPage'));
 const CategoryTrashPage = lazy(() => import('../pages/trash/CategoryTrashListPage'));
@@ -54,7 +56,7 @@ const routes: RouteObject[] = [
         path: 'login',
         element: <AdminLoginTemplate />,
       },
-    ],
+   ],
   },
   {
     element: <PrivateRoute />,
@@ -97,6 +99,14 @@ const routes: RouteObject[] = [
               { path: 'edit/:id', element: <FaqFormPage /> },
             ],
           }, 
+          {
+        path: 'testimonial',
+        children: [
+          { path: '', element: < TestmonialPage /> },
+          { path: 'add', element: <TestimonialFormPage /> },
+          { path: 'edit/:id', element: < TestimonialFormPage /> },
+        ],
+      },
            {
         path: 'brand',
         children: [
