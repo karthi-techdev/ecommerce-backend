@@ -155,33 +155,29 @@ permanentDeleteMainCategory: async (id: string) => {
 
   
   deleteMainCategory: async (id: string) => {
+  try {
     await axiosInstance.delete(`${API.deleteMainCategory}${id}`);
-  },
-
-
-  toggleMainCategoryStatus: async (id: string) => {
-  set((state) => ({
-    mainCategories: state.mainCategories.map((cat) =>
-      cat._id === id
-        ? { ...cat, isActive: !cat.isActive }
-        : cat
-    ),
-    stats: {
-      total: state.stats.total,
-      active: state.mainCategories.filter(
-        (c) =>
-          c._id === id ? !c.isActive : c.isActive
-      ).length,
-      inactive: state.mainCategories.filter(
-        (c) =>
-          c._id === id ? c.isActive : !c.isActive
-      ).length,
-    },
-  }));
-  await axiosInstance.patch(
-    `${API.toggleMainCategoryStatus}${id}`
-  );
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message || "Failed to delete Main Category";
+    throw new Error(message);
+  }
 },
+
+
+
+ toggleMainCategoryStatus: async (id: string) => {
+  try {
+    await axiosInstance.patch(
+      `${API.toggleMainCategoryStatus}${id}`
+    );
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message || "Failed to update status";
+    throw new Error(message);
+  }
+},
+
 
 
   fetchMainCategoryById: async (id: string) => {

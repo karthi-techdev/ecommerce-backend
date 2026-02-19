@@ -87,6 +87,19 @@ const API = {
   checkDuplicatePage: `${ROOTURL}admin/page/check-duplicate`,
   listPageTrash: `${ROOTURL}admin/page/trash/`,
 
+
+  // ---------------- Product endpoints ----------------
+  addProduct: `${ROOTURL}products/`,
+  listProduct: `${ROOTURL}products/`,
+  getProductById: `${ROOTURL}products/getProductById/`,
+  updateProduct: `${ROOTURL}products/updateProduct/`,
+  softDeleteProduct: `${ROOTURL}products/softDelete/`,
+  permanentDeleteProduct: `${ROOTURL}products/permanentDelete/`,
+  restoreProduct: `${ROOTURL}products/restore/`,
+  toggleProductStatus: `${ROOTURL}products/toggleStatus/`,
+  trashProducts: `${ROOTURL}products/trash`,
+  checkProductSlug: `${ROOTURL}products/checkSlugExist`,
+
 };
 
 

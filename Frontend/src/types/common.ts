@@ -61,6 +61,35 @@ export interface SubCategory {
   mainCategory?: {_id: string; name: string;};
 }
 
+
+
+export interface PopulatedProduct {
+  _id: string;
+  name: string;
+}
+
+export interface Product {
+  _id?: string;
+
+  name: string;
+  slug: string;
+  description: string;
+
+  images: string[];
+
+  price: number;
+  discountPrice?: number;
+  stockQuantity: number;
+
+  brandId: PopulatedProduct;
+  mainCategoryId: PopulatedProduct;
+  subCategoryId: PopulatedProduct;
+  categoryId: PopulatedProduct;
+
+  status: 'active' | 'inactive';
+  isDeleted?: boolean;
+}
+
 export interface Page {
     _id?: string;
     name : string,
@@ -92,6 +121,25 @@ export interface Testimonial {
   isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface ProductPayload {
+  name: string;
+  slug?: string;
+  description: string;
+
+  images: File[] | string[];
+
+  price: number;
+  discountPrice?: number;
+  stockQuantity: number;
+
+  brandId: string;
+  mainCategoryId: string;
+  subCategoryId: string;
+  categoryId: string;
+
+  status?: 'active' | 'inactive';
 }
 
 

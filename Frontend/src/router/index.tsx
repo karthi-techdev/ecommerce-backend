@@ -24,6 +24,10 @@ import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTempl
 import PageFormTemplate from '@/components/templates/page/pageFormTemplate';
 import PageListTemplate from '@/components/templates/page/pageListTemplate';
 
+import ProductListTemplate from '@/components/templates/products/ProductsListTemplate';
+import ProductFormTemplate from '@/components/templates/products/ProductsFormTemplate';
+import ProductTrashListTemplate from '@/components/templates/trash/ProductsTrash/ProductsTrashListTemplate';
+
 export const router = createBrowserRouter([
   {
         path: '/login',
@@ -79,6 +83,15 @@ export const router = createBrowserRouter([
           { path: '', element: <BrandListTemplate /> },
           { path: 'add', element: <BrandFormTemplate /> },
           { path: 'edit/:id', element: <BrandFormTemplate /> },
+        ],
+      },
+
+      {
+        path: 'products',
+        children: [
+          { path: '', element: <ProductListTemplate /> },
+          { path: 'add', element: <ProductFormTemplate /> },
+          { path: 'edit/:id', element: <ProductFormTemplate /> },
         ],
       },
       {
@@ -139,7 +152,8 @@ export const router = createBrowserRouter([
           {
              path: 'category', 
              element: <CategoryTrashListPage /> 
-          }, 
+          },
+          { path: 'product', element: <ProductTrashListTemplate /> }, 
         ],
       },
       
