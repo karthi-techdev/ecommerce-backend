@@ -40,6 +40,12 @@ const menuItems: MenuItem[] = [
     icon: <FiTag />,
     path: '/brand',
   },
+   {
+    key: 'config',
+    label: 'Config',
+    icon: <FiLayers />,
+    path: '/config',
+  },
   {
     key: 'category',
     label: 'Manage Categories',

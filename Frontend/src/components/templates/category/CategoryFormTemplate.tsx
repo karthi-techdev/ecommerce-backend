@@ -7,6 +7,8 @@ import {
   type ValidationErrors
 } from '../../validations/categoryValidation';
 import { useCategoryStore } from '../../../stores/categoryStore';
+import { useMainCategoryStore } from '../../../stores/mainCategoryStore';
+import { useSubCategoryStore } from '../../../stores/subcategoryStore';
 import FormHeader from '../../molecules/FormHeader';
 import FormField from '../../molecules/FormField';
 import type { FieldConfig } from '../../../types/common';
@@ -19,16 +21,25 @@ const CategoryFormTemplate: React.FC = () => {
   const {
     fetchCategoryById,
     addCategory,
-    updateCategory,
-    fetchSubCategory,
-    subCategories,slugEXist,fetchMainCategory,mainCategories
+    updateCategory
+    ,slugEXist
   } = useCategoryStore();
+  const {mainCategories,activeMainCategory,page,
+  totalPages,
+  loading,hasMore}=useMainCategoryStore();
+  const {
+  subCategories,
+  fetchSubCategoryByMainCategoryId,
+  subPage,
+  subHasMore,
+  loading: subLoading
+} = useSubCategoryStore();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
 const imageErrorTimer = useRef<NodeJS.Timeout | null>(null);
 const slugRequestId = useRef(0);
-
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [formData, setFormData] = useState<CategoryFormData>({
     name: '',
@@ -44,11 +55,20 @@ const slugRequestId = useRef(0);
       label: 'Main Category',
       type: 'select',
       className: 'col-span-6',
+      required:true,
       placeholder: 'Select the main category',
-      options: mainCategories.map(m => ({
-        label: m.name,
-        value: m._id
-      }))
+      options: mainCategories
+  .filter(m => m._id)
+  .map(m => ({
+    label: m.name,
+    value: m._id as string
+  })),
+ onMenuScrollToBottom: () => {
+  if (!loading && hasMore) {
+    activeMainCategory(page + 1, 5, searchTerm, true); 
+  }
+},
+
     },
     {
       name: 'subCategoryId',
@@ -56,17 +76,32 @@ const slugRequestId = useRef(0);
       type: 'select',
       className: 'col-span-6',
       placeholder: 'Select the sub category',
-      options: subCategories.map(s => ({
-        label: s.name,
-        value: s._id
-      }))
+      required:true,
+      options: subCategories
+  .filter(s => s._id)
+  .map(s => ({
+    label: s.name,
+    value: s._id as string
+  })),
+  onMenuScrollToBottom: () => {
+    if (!subLoading && subHasMore) {
+      fetchSubCategoryByMainCategoryId(
+        formData.mainCategoryId,
+        subPage + 1,
+        5,
+        "",
+        true
+      );
+    }
+  }
     },
     {
       name: 'name',
       label: 'Name',
       type: 'text',
       className: 'col-span-6',
-      placeholder: 'Enter Name...'
+      placeholder: 'Enter Name...',
+      required:true
     },
     {
       name: 'slug',
@@ -81,7 +116,8 @@ const slugRequestId = useRef(0);
       label: 'Description',
       type: 'textarea',
       className: 'col-span-12',
-      placeholder: 'Enter the description...'
+      placeholder: 'Enter the description...',
+      required:true
     },
     {
       name: 'image',
@@ -90,10 +126,10 @@ const slugRequestId = useRef(0);
       className: 'col-span-12'
     }
   ];
-
   useEffect(() => {
-    fetchMainCategory();
+    activeMainCategory(1, 5, '');
   }, []);
+
 
   useEffect(() => {
     if (!id) {
@@ -118,7 +154,7 @@ const slugRequestId = useRef(0);
             ? category.mainCategoryId._id
             : category.mainCategoryId;
         if (mainCatId) {
-          await fetchSubCategory(mainCatId);
+          await fetchSubCategoryByMainCategoryId(mainCatId);
         }
         setFormData({
           name: category.name || '',
@@ -141,16 +177,24 @@ const slugRequestId = useRef(0);
     };
     loadEditData();
   }, [id]);
- useEffect(() => {
+useEffect(() => {
   if (!formData.mainCategoryId) return;
 
-  fetchSubCategory(formData.mainCategoryId);
+  fetchSubCategoryByMainCategoryId(
+    formData.mainCategoryId,
+    1,
+    5,
+    "",
+    false
+  );
 
   setFormData(prev => ({
     ...prev,
     subCategoryId: ''
   }));
+
 }, [formData.mainCategoryId]);
+
 
 
   const generateSlug = (text: string) =>
@@ -192,9 +236,16 @@ const checkSlugExist = (slug: string) => {
     }));
   }, 500);
 };
+useEffect(() => {
+  if (formData.slug && formData.subCategoryId) {
+    checkSlugExist(formData.slug);
+  }
+}, [formData.subCategoryId]);
 
 
-const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+
+const handleChange = (e: any) => {
   const { name, value, files } = e.target;
   let next = { ...formData };
   setErrors(prev => ({
@@ -249,6 +300,7 @@ if (name === 'image') {
 
   const fieldErrors = validateCategoryForm(next);
   setErrors(prev => ({
+    ...prev,
     [name]: fieldErrors[name as keyof ValidationErrors]
   }));
 };
@@ -301,10 +353,21 @@ if (name === 'image') {
           {categoryFields.map(field => (
             <FormField
               key={field.name}
-              field={field}
+              field={{
+                ...field,
+                options:
+                  field.name === 'mainCategoryId'
+                    ? mainCategories.filter(m => m._id).map(m => ({ label: m.name, value: m._id as string }))
+                    : field.name === 'subCategoryId'
+                    ? subCategories.filter(s => s._id).map(s => ({ label: s.name, value: s._id as string }))
+                    : undefined,
+                onMenuScrollToBottom: field.onMenuScrollToBottom,
+                onInputChange: field.onInputChange
+              }}
               value={formData[field.name as keyof CategoryFormData]}
               onChange={handleChange}
               error={errors[field.name as keyof ValidationErrors]}
+              isRequired={field.required}
             />
           ))}
 

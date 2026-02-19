@@ -18,7 +18,7 @@ interface MainCategoryState {
   error: string | null;
   page: number;
   totalPages: number;
-
+  hasMore: boolean;
   fetchTrashedCategories: (
   page?: number,
   limit?: number
@@ -39,8 +39,14 @@ interface MainCategoryState {
   toggleCategoryStatus: (id: string) => Promise<void>;
   restoreCategory: (id: string) => Promise<void>;
 permanentDeleteCategory: (id: string) => Promise<void>;
-}
+activeMainCategory: (
+  page?: number,
+  limit?: number,
+  search?: string,
+  append?: boolean
+) => Promise<void>;
 
+}
 export const useMainCategoryStore = create<MainCategoryState>((set) => ({
   mainCategories: [],
   stats: { total: 0, active: 0, inactive: 0 },
@@ -48,6 +54,7 @@ export const useMainCategoryStore = create<MainCategoryState>((set) => ({
   error: null,
   page: 1,
   totalPages: 1,
+  hasMore:false,
 
   fetchCategories: async (page = 1, limit = 20, filter = 'total') => {
     try {
@@ -55,17 +62,14 @@ export const useMainCategoryStore = create<MainCategoryState>((set) => ({
 
       const statusParam =
         filter === 'active'
-          ? 'true'
-          : filter === 'inactive'
-          ? 'false'
-          : '';
+          ? 'true':'';
 
       const res = await axiosInstance.get(
         `${API.listMainCategory}?page=${page}&limit=${limit}${
           statusParam ? `&isActive=${statusParam}` : ''
         }`
       );
-
+      console.log(res,'main category');
       const mainCategories = Array.isArray(res.data?.data)
         ? res.data.data
         : [];
@@ -85,12 +89,48 @@ export const useMainCategoryStore = create<MainCategoryState>((set) => ({
       });
     } catch (error: any) {
       set({
-        error: 'Failed to fetch categories',
+        error: 'Failed to fetch main categories',
         mainCategories: [],
         loading: false,
       });
     }
   },
+ activeMainCategory: async (
+  page = 1,
+  limit = 5,
+  search = "",
+  append = false
+) => {
+  try {
+    set({ loading: true });
+
+    const res = await axiosInstance.get(
+      `${API.activeMainCategory}?page=${page}&limit=${limit}&search=${search}`
+    );
+
+    const mainCategories = Array.isArray(res.data?.data?.data)
+      ? res.data.data.data
+      : [];
+
+    const meta = res.data?.data?.meta || {};
+
+    set((state) => ({
+      mainCategories: append
+        ? [...state.mainCategories, ...mainCategories]
+        : mainCategories,
+      page: meta.page ?? page,
+      totalPages: meta.totalPages ?? 1,
+      hasMore: meta.hasMore ?? false,
+      loading: false,
+    }));
+  } catch (error: any) {
+    set({
+      error: "Failed to fetch main categories",
+      loading: false,
+    });
+  }
+},
+
 
   fetchTrashedCategories: async (page = 1, limit = 20) => {
   const res = await axiosInstance.get(

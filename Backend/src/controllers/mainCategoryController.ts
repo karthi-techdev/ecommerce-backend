@@ -108,6 +108,24 @@ class MainCategoryController {
       next(err);
     }
   }
+  async getActiveMainCategories(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+   const page = parseInt(req.query.page as string) || 1;
+const limit = parseInt(req.query.limit as string) || 5;
+const search = (req.query.search as string) || "";
+
+const result = await mainCategoryService.getActiveMainCategories(
+  page,
+  limit,
+  search
+);
+      res.status(200).json({status:HTTP_RESPONSE.SUCCESS,
+        data: result
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 
   async updateMainCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {

@@ -18,7 +18,8 @@ import SubCategoryListTemplate from '@/components/templates/subcategory/Subcateg
 import SubCategoryFormTemplate from '@/components/templates/subcategory/SubcategoryFormTemplate';
 import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
 import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
-
+import ConfigListTemplate from '../components/templates/config/ConfigListTemplate';
+import ConfigFormTemplate from '../components/templates/config/ConfigFormTemplate';
 export const router = createBrowserRouter([
   {
         path: '/login',
@@ -62,6 +63,14 @@ export const router = createBrowserRouter([
           { path: '', element: <BrandListTemplate /> },
           { path: 'add', element: <BrandFormTemplate /> },
           { path: 'edit/:id', element: <BrandFormTemplate /> },
+        ],
+      },
+      {
+        path: 'config',
+        children: [
+          { path: '', element: <ConfigListTemplate /> },
+           { path: 'add', element: <ConfigFormTemplate /> },
+          { path: 'edit/:id', element: <ConfigFormTemplate /> },
         ],
       },
       {

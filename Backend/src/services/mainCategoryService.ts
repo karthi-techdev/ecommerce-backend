@@ -72,6 +72,18 @@ class MainCategoryService {
       filter
     );
   }
+async getActiveMainCategories(
+  page: number,
+  limit: number,
+  search?: string
+) {
+  return await mainCategoryRepository.getActiveMainCategories(
+    page,
+    limit,
+    search
+  );
+}
+
 
   async getMainCategoryById(id: string | Types.ObjectId) {
     ValidationHelper.isValidObjectId(id, "id");

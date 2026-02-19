@@ -76,6 +76,46 @@ class MainCategoryRepository {
       },
     };
   }
+ async getActiveMainCategories(
+  page: number = 1,
+  limit: number = 5,
+  search?: string
+) {
+  const skip = (page - 1) * limit;
+
+  const filter: any = {
+    isActive: true,
+    isDeleted: false,
+  };
+
+  if (search && search.trim() !== "") {
+    filter.name = {
+      $regex: search.trim(),
+      $options: "i",
+    };
+  }
+
+  const [data, total] = await Promise.all([
+    MainCategoryModel.find(filter)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 }),
+    MainCategoryModel.countDocuments(filter),
+  ]);
+
+  return {
+    data,
+    meta: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      hasMore: skip + data.length < total,
+    },
+  };
+}
+
+
 
   async getMainCategoryById(id: string | Types.ObjectId) {
     return await MainCategoryModel.findOne({

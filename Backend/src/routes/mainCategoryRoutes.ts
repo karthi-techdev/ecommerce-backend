@@ -11,6 +11,7 @@ router.post("/",(req, res, next) => {(req as any).managementName = "main-categor
 );
 router.get("/", (req, res, next) =>mainCategoryController.getAllMainCategories(req, res, next));
 router.get("/trash", (req, res, next) =>mainCategoryController.getAllTrashMainCategories(req, res, next));
+router.get("/activeMainCategories",(req,res,next)=>{mainCategoryController.getActiveMainCategories(req,res,next)});
 router.delete("/soft-delete/:id", (req, res, next) =>mainCategoryController.softDeleteMainCategory(req, res, next));
 router.patch("/restore/:id", (req, res, next) =>mainCategoryController.restoreMainCategory(req, res, next));
 router.delete("/permanent-delete/:id", (req, res, next) =>mainCategoryController.deleteMainCategoryPermanently(req, res, next));

@@ -37,6 +37,17 @@ interface SubCategoryState {
   hardDeleteSubCategory: (id: string) => Promise<void>;
   checkDuplicateSubCategory: (slug: string,mainCategoryId: string,excludeId?: string) => Promise<boolean>;
   toggleStatusSubCategory: (id: string) => Promise<void>;
+  subPage: number;
+subTotalPages: number;
+subHasMore: boolean;
+
+fetchSubCategoryByMainCategoryId: (
+  mainCategoryId: string,
+  page?: number,
+  limit?: number,
+  search?: string,
+  append?: boolean
+) => Promise<void>;
 }
 
 export const useSubCategoryStore = create<SubCategoryState>((set) => ({
@@ -46,7 +57,9 @@ export const useSubCategoryStore = create<SubCategoryState>((set) => ({
   loading: false,
   error: null,
   page: 1,
-  totalPages: 1,
+  totalPages: 1,subPage: 1,
+subTotalPages: 1,
+subHasMore: false,
   
   checkDuplicateSubCategory: async (
   slug: string,
@@ -113,6 +126,48 @@ export const useSubCategoryStore = create<SubCategoryState>((set) => ({
       });
     }
   },
+  fetchSubCategoryByMainCategoryId: async (
+  mainCategoryId,
+  page = 1,
+  limit = 5,
+  search = "",
+  append = false
+) => {
+  try {
+    set({ loading: true });
+
+    const res = await axiosInstance.get(
+      `${API.subCategoryByMainCategoryId}${mainCategoryId}`,
+      {
+        params: { page, limit, search }
+      }
+    );
+
+    const subCategories = Array.isArray(res.data?.data?.data)
+      ? res.data.data.data
+      : [];
+
+    const meta = res.data?.data?.meta || {};
+
+    set((state) => ({
+      subCategories: append
+        ? [...state.subCategories, ...subCategories]
+        : subCategories,
+      subPage: meta.page ?? page,
+      subTotalPages: meta.totalPages ?? 1,
+      subHasMore: meta.hasMore ?? false,
+      loading: false,
+    }));
+
+  } catch (error: any) {
+    set({
+      error: "Failed to fetch subcategories",
+      loading: false,
+    });
+  }
+},
+
+
 
   fetchSubCategoryById: async (id: string) => {
     try {

@@ -20,21 +20,14 @@ export interface Category{
   subCategoryId:PopulatedCategory;
   status:'active'|'inactive';
 }
-export interface mainCategory{
+export  interface Config{
   _id:string;
   name:string;
   slug:string;
-  description:string;
-  image:string;
+  options:{key:string,value:string}[];
+  status:'active'|'inactive';
 }
-export interface subCategory{
-  _id:string;
-  name:string;
-  slug:string;
-  description:string;
-  image:string;
-  mainCategoryId:string;
-}
+
 export interface MainCategory {
   _id?: string;
   name: string;
@@ -107,8 +100,9 @@ export interface FieldConfig {
   dataTestId?: string;
   accept?: string; 
   options? :{label:string , value:string}[];
+  onMenuScrollToBottom?: () => void;
+  onInputChange?: (value: string) => void;
  }
- 
 
 
 export type ColumnConfig<T> = {
