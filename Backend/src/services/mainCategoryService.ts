@@ -77,6 +77,18 @@ class MainCategoryService {
       filter
     );
   }
+async getActiveMainCategories(
+  page: number,
+  limit: number,
+  search?: string
+) {
+  return await mainCategoryRepository.getAllActiveMainCategories(
+    page,
+    limit,
+    search
+  );
+}
+
   async getAllListMainCategories(filter?: string) {
   return await mainCategoryRepository.getAllListMainCategories(filter);
   }

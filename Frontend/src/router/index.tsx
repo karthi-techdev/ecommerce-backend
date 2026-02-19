@@ -21,6 +21,8 @@ import SubCategoryListTemplate from '@/components/templates/subcategory/Subcateg
 import SubCategoryFormTemplate from '@/components/templates/subcategory/SubcategoryFormTemplate';
 import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
 import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
+import ConfigListTemplate from '../components/templates/config/ConfigListTemplate';
+import ConfigFormTemplate from '../components/templates/config/ConfigFormTemplate';
 import PageFormTemplate from '@/components/templates/page/pageFormTemplate';
 import PageListTemplate from '@/components/templates/page/pageListTemplate';
 
@@ -92,6 +94,14 @@ export const router = createBrowserRouter([
           { path: '', element: <ProductListTemplate /> },
           { path: 'add', element: <ProductFormTemplate /> },
           { path: 'edit/:id', element: <ProductFormTemplate /> },
+        ],
+      },
+      {
+        path: 'config',
+        children: [
+          { path: '', element: <ConfigListTemplate /> },
+           { path: 'add', element: <ConfigFormTemplate /> },
+          { path: 'edit/:id', element: <ConfigFormTemplate /> },
         ],
       },
       {

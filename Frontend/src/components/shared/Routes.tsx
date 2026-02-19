@@ -50,7 +50,8 @@ const TrashMainCategoryPage = lazy(
   () => import('../pages/trash/TrashMainCategoryListPage')
 );
 
-
+const ConfigListPage = lazy(() => import('../pages/config/ConfigListPage'));
+const ConfigFormPage = lazy(() => import('../pages/config/ConfigFormPage'));
 const routes: RouteObject[] = [
   {
     element: <PublicRoute />,
@@ -111,6 +112,14 @@ const routes: RouteObject[] = [
         ],
       },
            {
+        path: 'config',
+        children: [
+          { path: '', element: <ConfigListPage /> }, 
+          { path: 'add', element: <ConfigFormPage /> },   
+          { path: 'edit/:id', element: <ConfigFormPage /> },  
+        ],
+      },
+       {
         path: 'brand',
         children: [
           { path: '', element: <BrandListPage /> }, 

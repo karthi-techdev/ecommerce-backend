@@ -51,6 +51,7 @@ const API = {
   getTrashMainCategory: `${ROOTURL}admin/main-categories/trash`,
   restoreMainCategory: `${ROOTURL}admin/main-categories/restore/`,
   permanentDeleteMainCategory: `${ROOTURL}admin/main-categories/permanent-delete/`,
+  activeMainCategory:`${ROOTURL}admin/main-categories//activeMainCategories`,
   listAllMainCategory: `${ROOTURL}admin/main-categories/list`,
   // ---------------- Brand endpoints ----------------
   addBrand: `${ROOTURL}brands/`,
@@ -63,7 +64,19 @@ const API = {
   toggleBrandStatus: `${ROOTURL}brands/togglestatus`,
   trashBrands: `${ROOTURL}brands/trash`,
   checkDuplicateBrand: `${ROOTURL}brands/check-duplicate`,
-  //subcategory endpoints
+
+  
+
+  // Config Endpoints
+  addConfig:`${ROOTURL}admin/config/`,
+  listConfig:`${ROOTURL}admin/config/`,
+  getConfigById:`${ROOTURL}admin/config/getConfigById/`,
+  configStats:`${ROOTURL}admin/config/configStats`,
+  updateConfig:`${ROOTURL}admin/config/editConfig/`,
+  deleteConfig:`${ROOTURL}admin/config/deleteConfig/`,
+  toggleConfigStatus:`${ROOTURL}admin/config/togglestatus/`,
+  
+    //subcategory endpoints
   addSubCategory: `${ROOTURL}admin/subcategory/`,
   listSubCategory: `${ROOTURL}admin/subcategory/`,
   getSubCategoryById: `${ROOTURL}admin/subcategory/getSubCategoryById/`,
@@ -74,6 +87,7 @@ const API = {
   toggleStatusSubCategory: `${ROOTURL}admin/subcategory/togglestatus/`,
   checkDuplicateSubCategory: `${ROOTURL}admin/subcategory/check-duplicate`,
   listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
+  subCategoryByMainCategoryId:`${ROOTURL}admin/subcategory/activeSubCategory/`,
 
   // Page endpoints
   addPage: `${ROOTURL}admin/page/`,

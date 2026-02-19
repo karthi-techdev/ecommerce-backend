@@ -20,12 +20,12 @@ export interface Category{
   subCategoryId:PopulatedCategory;
   status:'active'|'inactive';
 }
-export interface mainCategory{
+export  interface Config{
   _id:string;
   name:string;
   slug:string;
-  description:string;
-  image:string;
+  options:{key:string,value:string}[];
+  status:'active'|'inactive';
 }
 
 export interface MainCategory {
@@ -178,11 +178,11 @@ export interface FieldConfig {
   defaultValue?: any;
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
-  accept?: string;
-
-  options?: { label: string, value: string }[];
-}
-
+  accept?: string; 
+  options? :{label:string , value:string}[];
+  onMenuScrollToBottom?: () => void;
+  onInputChange?: (value: string) => void;
+ }
 export type ColumnConfig<T> = {
   key: keyof T;
   label: string;
