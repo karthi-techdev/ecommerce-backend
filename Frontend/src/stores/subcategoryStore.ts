@@ -289,9 +289,7 @@ subHasMore: false,
       const res = await axiosInstance.get(
         `${API.listSubCategoryTrash}?page=${page}&limit=${limit}`
       );
-
       const { data, meta } = res.data.data;
-
       set({
         trashSubCategories: data || [],
         page,

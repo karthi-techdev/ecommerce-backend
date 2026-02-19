@@ -37,10 +37,60 @@ const CategoryFormTemplate: React.FC = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
-const imageErrorTimer = useRef<NodeJS.Timeout | null>(null);
+const imageErrorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 const slugRequestId = useRef(0);
   const [searchTerm, setSearchTerm] = useState('');
+const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+const searchRequestId = useRef(0);
+const subSearchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+const subSearchRequestId = useRef(0);
+const [subSearchTerm, setSubSearchTerm] = useState('');
+const isInitialLoad = useRef(true);
 
+const handleSubCategorySearch = (input: string) => {
+  setSubSearchTerm(input);
+
+  if (!formData.mainCategoryId) return; // safety
+
+  // clear previous timer
+  if (subSearchTimer.current) {
+    clearTimeout(subSearchTimer.current);
+  }
+
+  // debounce
+  subSearchTimer.current = setTimeout(async () => {
+    const reqId = ++subSearchRequestId.current;
+
+    await fetchSubCategoryByMainCategoryId(
+      formData.mainCategoryId,
+      1,
+      5,
+      input,
+      false
+    );
+
+    if (reqId !== subSearchRequestId.current) return;
+  }, 500);
+};
+
+const handleMainCategorySearch = (input: string) => {
+  setSearchTerm(input);
+
+  // clear previous timer
+  if (searchTimer.current) {
+    clearTimeout(searchTimer.current);
+  }
+
+  // debounce
+  searchTimer.current = setTimeout(async () => {
+    const reqId = ++searchRequestId.current;
+
+    await activeMainCategory(1, 5, input, false);
+
+    // race condition protection (optional but pro)
+    if (reqId !== searchRequestId.current) return;
+  }, 500);
+};
   const [formData, setFormData] = useState<CategoryFormData>({
     name: '',
     description: '',
@@ -63,6 +113,7 @@ const slugRequestId = useRef(0);
     label: m.name,
     value: m._id as string
   })),
+   onInputChange: handleMainCategorySearch,
  onMenuScrollToBottom: () => {
   if (!loading && hasMore) {
     activeMainCategory(page + 1, 5, searchTerm, true); 
@@ -82,14 +133,15 @@ const slugRequestId = useRef(0);
   .map(s => ({
     label: s.name,
     value: s._id as string
-  })),
+  })), onInputChange: handleSubCategorySearch,
+
   onMenuScrollToBottom: () => {
     if (!subLoading && subHasMore) {
       fetchSubCategoryByMainCategoryId(
         formData.mainCategoryId,
         subPage + 1,
         5,
-        "",
+        subSearchTerm, 
         true
       );
     }
@@ -154,8 +206,10 @@ const slugRequestId = useRef(0);
             ? category.mainCategoryId._id
             : category.mainCategoryId;
         if (mainCatId) {
-          await fetchSubCategoryByMainCategoryId(mainCatId);
-        }
+  await fetchSubCategoryByMainCategoryId(mainCatId, 1, 5, "", false);
+  await new Promise(resolve => setTimeout(resolve, 0));
+}
+
         setFormData({
           name: category.name || '',
           description: category.description || '',
@@ -188,12 +242,16 @@ useEffect(() => {
     false
   );
 
-  setFormData(prev => ({
-    ...prev,
-    subCategoryId: ''
-  }));
+  if (!isInitialLoad.current) {
+    setFormData(prev => ({
+      ...prev,
+      subCategoryId: ''
+    }));
+  }
 
+  isInitialLoad.current = false;
 }, [formData.mainCategoryId]);
+
 
 
 
@@ -205,7 +263,7 @@ useEffect(() => {
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-');
 
-      const slugTimer = useRef<NodeJS.Timeout | null>(null);
+      const slugTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 useEffect(() => {
   setErrors(prev => ({
     ...prev,
@@ -241,6 +299,7 @@ useEffect(() => {
     checkSlugExist(formData.slug);
   }
 }, [formData.subCategoryId]);
+
 
 
 
@@ -300,8 +359,7 @@ if (name === 'image') {
 
   const fieldErrors = validateCategoryForm(next);
   setErrors(prev => ({
-    ...prev,
-    [name]: fieldErrors[name as keyof ValidationErrors]
+    ...prev,[name]: fieldErrors[name as keyof ValidationErrors]
   }));
 };
 
@@ -390,7 +448,7 @@ if (name === 'image') {
         <div className="mt-6 flex justify-end">
           <button
             disabled={isSubmitting}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:opacity-50"
+            className="px-4 py-2 bg-amber-600 text-white rounded-md disabled:opacity-50"
           >
             {isSubmitting ? 'Saving...' : id ? 'Update' : 'Save'}
           </button>

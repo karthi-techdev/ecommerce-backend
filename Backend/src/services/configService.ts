@@ -22,9 +22,6 @@ class configService{
                 if(!option.value|| option.value.trim()===''){
                     throw new Error(`Option value is required at index ${index}`)
                 }
-                if(values.has(option.value.trim())){
-                    throw new Error(`Duplicate option value '${option.value}' not allowed`)
-                }
                 values.add(option.value.trim());
             })
         }

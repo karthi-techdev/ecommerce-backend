@@ -76,47 +76,62 @@ class MainCategoryRepository {
       },
     };
   }
- async getActiveMainCategories(
-  page: number = 1,
-  limit: number = 5,
-  search?: string
-) {
+ async getAllActiveMainCategories(page = 1,limit = 5, search?: string) {
   const skip = (page - 1) * limit;
-
-  const filter: any = {
-    isActive: true,
-    isDeleted: false,
-  };
-
+  const matchStage: any = {isDeleted: false, isActive: true,};
   if (search && search.trim() !== "") {
-    filter.name = {
+    matchStage.name = {
       $regex: search.trim(),
       $options: "i",
     };
   }
+  const pipeline = [
+    { $match: matchStage },
+    { $sort: { createdAt: -1 as -1 } },
+    {
+      $facet: {
+        data: [
+          { $skip: skip },
+          { $limit: limit },
+        ],
+        totalCount: [{ $count: "count" }],
+      },
+    },
+  ];
 
-  const [data, total] = await Promise.all([
-    MainCategoryModel.find(filter)
-      .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: -1 }),
-    MainCategoryModel.countDocuments(filter),
-  ]);
-
+  const result = await MainCategoryModel.aggregate(pipeline);
+  const data = result[0]?.data || [];
+  const total = result[0]?.totalCount[0]?.count || 0;
   return {
     data,
     meta: {
       total,
+      totalPages: Math.ceil(total / limit),
       page,
       limit,
-      totalPages: Math.ceil(total / limit),
       hasMore: skip + data.length < total,
     },
   };
 }
 
 
+  
+  async getAllListMainCategories(filter?: string) {
+  const query: any = { isDeleted: false };
 
+  if (filter === "active") query.isActive = true;
+  if (filter === "inactive") query.isActive = false;
+
+  const data = await MainCategoryModel
+    .find(query)
+    .sort({ createdAt: -1 })
+    .exec();
+
+  return {
+    data,
+    total: data.length
+  };
+}
   async getMainCategoryById(id: string | Types.ObjectId) {
     return await MainCategoryModel.findOne({
       _id: id,

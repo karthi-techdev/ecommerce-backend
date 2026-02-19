@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import axiosInstance from '../components/utils/axios';
 import type { Category } from '../types/common';
 import ImportedURL from '../common/urls';
+import { data } from 'react-router-dom';
 
 const { API } = ImportedURL;
 
@@ -18,7 +19,6 @@ export interface CategoryPayload {
   subCategoryId: string;    
   image: File |string| null;
   status?:string;
-
 }
 
 interface CategoryState {

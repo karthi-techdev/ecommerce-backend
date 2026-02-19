@@ -4,6 +4,11 @@ import mainCategoryRepository from "../repositories/mainCategoryRepository";
 import ValidationHelper from "../utils/validationHelper";
 import {CustomError} from "../utils/customError";
 import { Types } from "mongoose";
+import subCategoryRepository from "../repositories/subCategoryRepository";
+import categoryRepository from "../repositories/categoryRepository";
+import { SubCategoryModel } from "../models/subCategoryModel";
+import { CategoryModel } from "../models/categoryModel";
+
 
 class MainCategoryService {
 
@@ -77,13 +82,16 @@ async getActiveMainCategories(
   limit: number,
   search?: string
 ) {
-  return await mainCategoryRepository.getActiveMainCategories(
+  return await mainCategoryRepository.getAllActiveMainCategories(
     page,
     limit,
     search
   );
 }
 
+  async getAllListMainCategories(filter?: string) {
+  return await mainCategoryRepository.getAllListMainCategories(filter);
+  }
 
   async getMainCategoryById(id: string | Types.ObjectId) {
     ValidationHelper.isValidObjectId(id, "id");
@@ -98,12 +106,15 @@ async getActiveMainCategories(
     ValidationHelper.isValidObjectId(id, "id");
     this.validateCategory(data, true);
 
-        if (data.name) {
-          const nameExists = await mainCategoryRepository.findByName(data.name);
-          if (nameExists) {
-            throw new CustomError("Name already exists", 409);
-          }
-        }
+    if (data.name) {
+      const nameExists =
+        await mainCategoryRepository.findByNameExceptId(data.name, id);
+
+      if (nameExists) {
+        throw new CustomError("Name already exists", 409);
+      }
+    }
+
 
     if (data.slug) {
       const slugExists =
@@ -118,9 +129,26 @@ async getActiveMainCategories(
 
 
   async softDeleteMainCategory(id: string | Types.ObjectId) {
-    ValidationHelper.isValidObjectId(id, "id");
-    return await mainCategoryRepository.softDeleteMainCategory(id);
+  ValidationHelper.isValidObjectId(id, "id");
+
+  const category = await mainCategoryRepository.getMainCategoryById(id);
+
+  if (!category) {
+    throw new CustomError("Main Category not found", 404);
   }
+
+  const isUsed = await this.checkMainCategoryUsage(id);
+
+  if (isUsed) {
+  throw new CustomError(
+    `"${category.name}" is already associated with other category`,
+    400
+  );
+ }
+
+  return await mainCategoryRepository.softDeleteMainCategory(id);
+}
+
 
 
   async getAllTrashMainCategories(
@@ -141,8 +169,6 @@ async getActiveMainCategories(
   return await mainCategoryRepository.restoreMainCategory(id);
 }
 
-
-
   async deleteMainCategoryPermanently(
     id: string | Types.ObjectId
   ) {
@@ -150,10 +176,47 @@ async getActiveMainCategories(
     return await mainCategoryRepository.deleteMainCategoryPermanently(id);
   }
 
-  async toggleMainCategoryStatus(id: string | Types.ObjectId) {
-    ValidationHelper.isValidObjectId(id, "id");
-    return await mainCategoryRepository.toggleStatus(id);
+ async toggleMainCategoryStatus(id: string | Types.ObjectId) {
+  ValidationHelper.isValidObjectId(id, "id");
+
+  const category = await mainCategoryRepository.getMainCategoryById(id);
+
+  if (!category) {
+    throw new CustomError("Main Category not found", 404);
   }
+
+  const isUsed = await this.checkMainCategoryUsage(id);
+
+  if (isUsed && category.isActive === true) {
+  throw new CustomError(
+    `"${category.name}" is already associated with other category`,
+    400
+  );
+ }
+
+
+  return await mainCategoryRepository.toggleStatus(id);
+}
+
+
+
+ async checkMainCategoryUsage(id: string | Types.ObjectId) {
+  ValidationHelper.isValidObjectId(id, "id");
+
+  const subCategory = await SubCategoryModel.findOne({
+    mainCategoryId: id,
+    isDeleted: false,
+  });
+
+  const category = await CategoryModel.findOne({
+    mainCategoryId: id,
+    isDeleted: false,
+  });
+
+  return !!(subCategory || category);
+}
+
+
 
 }
 

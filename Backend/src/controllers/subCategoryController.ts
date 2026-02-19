@@ -212,13 +212,13 @@ res.status(200).json({
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const filter = req.query.status as string | undefined;
+      
 
       const result = await subCategoryService.getAllTrashSubCategories(
         page,
         limit,
         filter
       );
-
       res.status(200).json({
         status: HTTP_RESPONSE.SUCCESS,
         data: {

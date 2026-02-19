@@ -51,8 +51,4 @@ const mainCategorySchema = new Schema<IMainCategory>(
   { timestamps: true }
 );
 
-export const MainCategoryModel = model<IMainCategory>(
-  "MainCategory",
-  mainCategorySchema,
-  "main_categories"
-);
+export const MainCategoryModel = model<IMainCategory>("MainCategory",mainCategorySchema, "main_categories");

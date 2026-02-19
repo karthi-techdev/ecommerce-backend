@@ -5,15 +5,24 @@ import { processUpload } from "../utils/fileUpload";
 
 class BrandController {
   //CREATE BRAND
-  async createBrand(req: Request, res: Response, next: NextFunction) {
+async createBrand(req: Request, res: Response, next: NextFunction) {
   try {
+    
+
     const { name, slug, description } = req.body;
+
+    let imagePath;
+
+    if (req.file) {
+      const result = await processUpload(req as any, req.file);
+      imagePath = `uploads/brands/${result.filename}`;
+    }
 
     const brand = await brandService.createBrand({
       name,
       slug,
       description,
-      image: req.file?.filename
+      image: imagePath
     });
 
     res.status(201).json({
@@ -23,13 +32,13 @@ class BrandController {
     });
 
   } catch (error: any) {
-
     res.status(400).json({
       success: false,
       message: error.message || "Something went wrong"
     });
   }
 }
+
 
 
   //GET ALL BRANDS
@@ -71,6 +80,8 @@ class BrandController {
   // UPDATE BRAND
   async updateBrand(req: Request, res: Response, next: NextFunction) {
     try {
+    
+
       const id = req.params.id;
       const { name, slug, description } = req.body;
 
@@ -80,10 +91,11 @@ class BrandController {
       }
 
       let imageFilename;
-      if (req.file) {
-        const result = await processUpload(req, req.file);
-        imageFilename = result.filename;
-      }
+     if (req.file) {
+  const result = await processUpload(req as any, req.file);
+  imageFilename = `uploads/brands/${result.filename}`;
+}
+
 
       const updatedData: any = { name, slug, description };
       if (isActive !== undefined) updatedData.isActive = isActive;

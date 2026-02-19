@@ -15,6 +15,16 @@ const API = {
   deleteFaq: `${ROOTURL}faqs/softDeleteFaq/`,
   toggleStatusFaq: `${ROOTURL}faqs/togglestatus/`,
   checkDuplicateFaq: `${ROOTURL}faqs/check-duplicate`,
+
+  // Testimonial endpoints
+  addTestimonial: `${ROOTURL}admin/testimonials/`,
+  listTestimonial: `${ROOTURL}admin/testimonials/`,
+  getTestimonialById: `${ROOTURL}admin/testimonials/getTestimonialById`,
+  updateTestimonial: `${ROOTURL}admin/testimonials/updateTestimonial/`,
+  deleteTestimonial: `${ROOTURL}admin/testimonials/softDelete/`,
+  hardDeleteTestimonial: `${ROOTURL}admin/testimonials/permanentDelete`,
+  toggleStatusTestimonial: `${ROOTURL}admin/testimonials/togglestatus`,
+
   // Category endpoints
   addCategory: `${ROOTURL}admin/categories/`,
   listCategory: `${ROOTURL}admin/categories/`,
@@ -42,7 +52,7 @@ const API = {
   restoreMainCategory: `${ROOTURL}admin/main-categories/restore/`,
   permanentDeleteMainCategory: `${ROOTURL}admin/main-categories/permanent-delete/`,
   activeMainCategory:`${ROOTURL}admin/main-categories//activeMainCategories`,
-
+  listAllMainCategory: `${ROOTURL}admin/main-categories/list`,
   // ---------------- Brand endpoints ----------------
   addBrand: `${ROOTURL}brands/`,
   listBrand: `${ROOTURL}brands/`,
@@ -54,18 +64,8 @@ const API = {
   toggleBrandStatus: `${ROOTURL}brands/togglestatus`,
   trashBrands: `${ROOTURL}brands/trash`,
   checkDuplicateBrand: `${ROOTURL}brands/check-duplicate`,
-  //subcategory endpoints
-  addSubCategory: `${ROOTURL}subcategory/`,
-  listSubCategory: `${ROOTURL}subcategory/`,
-  getSubCategoryById: `${ROOTURL}subcategory/getSubCategoryById/`,
-  updateSubCategory: `${ROOTURL}subcategory/updateSubCategory/`,
-  deleteSubCategory: `${ROOTURL}subcategory/softDeleteSubCategory/`,
-  hardDeleteSubCategory:`${ROOTURL}subcategory/permanentDelete/`,
-  restoreSubCategory:`${ROOTURL}subcategory/restore/`,
-  toggleStatusSubCategory: `${ROOTURL}subcategory/togglestatus/`,
-  checkDuplicateSubCategory: `${ROOTURL}subcategory/check-duplicate`,
-  listSubCategoryTrash: `${ROOTURL}subcategory/trash/`,
-  subCategoryByMainCategoryId:`${ROOTURL}subcategory/`,
+
+  
 
   // Config Endpoints
   addConfig:`${ROOTURL}admin/config/`,
@@ -75,6 +75,44 @@ const API = {
   updateConfig:`${ROOTURL}admin/config/editConfig/`,
   deleteConfig:`${ROOTURL}admin/config/deleteConfig/`,
   toggleConfigStatus:`${ROOTURL}admin/config/togglestatus/`,
+  
+    //subcategory endpoints
+  addSubCategory: `${ROOTURL}admin/subcategory/`,
+  listSubCategory: `${ROOTURL}admin/subcategory/`,
+  getSubCategoryById: `${ROOTURL}admin/subcategory/getSubCategoryById/`,
+  updateSubCategory: `${ROOTURL}admin/subcategory/updateSubCategory/`,
+  deleteSubCategory: `${ROOTURL}admin/subcategory/softDeleteSubCategory/`,
+  hardDeleteSubCategory:`${ROOTURL}admin/subcategory/permanentDelete/`,
+  restoreSubCategory:`${ROOTURL}admin/subcategory/restore/`,
+  toggleStatusSubCategory: `${ROOTURL}admin/subcategory/togglestatus/`,
+  checkDuplicateSubCategory: `${ROOTURL}admin/subcategory/check-duplicate`,
+  listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
+  subCategoryByMainCategoryId:`${ROOTURL}admin/subcategory/activeSubCategory/`,
+
+  // Page endpoints
+  addPage: `${ROOTURL}admin/page/`,
+  listPage: `${ROOTURL}admin/page/`,
+  getPageById: `${ROOTURL}admin/page/`,
+  updatePage: `${ROOTURL}admin/page/`,
+  deletePage: `${ROOTURL}admin/page/`, 
+  hardDeletePage:`${ROOTURL}admin/page/permanent/`,
+  restorePage:`${ROOTURL}admin/page/restore/`,
+  toggleStatusPage: `${ROOTURL}admin/page/togglestatus/`,
+  checkDuplicatePage: `${ROOTURL}admin/page/check-duplicate`,
+  listPageTrash: `${ROOTURL}admin/page/trash/`,
+
+
+  // ---------------- Product endpoints ----------------
+  addProduct: `${ROOTURL}products/`,
+  listProduct: `${ROOTURL}products/`,
+  getProductById: `${ROOTURL}products/getProductById/`,
+  updateProduct: `${ROOTURL}products/updateProduct/`,
+  softDeleteProduct: `${ROOTURL}products/softDelete/`,
+  permanentDeleteProduct: `${ROOTURL}products/permanentDelete/`,
+  restoreProduct: `${ROOTURL}products/restore/`,
+  toggleProductStatus: `${ROOTURL}products/toggleStatus/`,
+  trashProducts: `${ROOTURL}products/trash`,
+  checkProductSlug: `${ROOTURL}products/checkSlugExist`,
 
 };
 

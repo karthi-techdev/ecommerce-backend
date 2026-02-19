@@ -28,8 +28,10 @@ const categorySchema=new Schema<ICategory>({
 },{
     timestamps:true
 })
+
 categorySchema.index(
   { slug: 1, subCategoryId: 1 },
   { unique: true }
 );
+
 export const CategoryModel=model<ICategory>('category',categorySchema);

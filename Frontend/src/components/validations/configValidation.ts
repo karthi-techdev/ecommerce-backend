@@ -48,10 +48,8 @@ export const validateConfigForm = (
     const keyFilled = key !== '';
     const valueFilled = value !== '';
 
-    // Ignore fully empty rows
     if (!keyFilled && !valueFilled) return;
 
-    // Required pair validation
     if (keyFilled && !valueFilled) {
       optionErrors[index].value = 'Value is required.';
     }
@@ -59,27 +57,8 @@ export const validateConfigForm = (
     if (!keyFilled && valueFilled) {
       optionErrors[index].key = 'Key is required.';
     }
-
-    // Duplicate key validation
-    if (keyFilled) {
-      if (keysSeen.has(key.toLowerCase())) {
-        optionErrors[index].key = 'Duplicate key not allowed.';
-      } else {
-        keysSeen.add(key.toLowerCase());
-      }
-    }
-
-    // Duplicate value validation
-    if (valueFilled) {
-      if (valuesSeen.has(value.toLowerCase())) {
-        optionErrors[index].value = 'Duplicate value not allowed.';
-      } else {
-        valuesSeen.add(value.toLowerCase());
-      }
-    }
   });
 
-  // Attach only if any row has error
   if (optionErrors.some(err => Object.keys(err).length > 0)) {
     errors.options = optionErrors;
   }
