@@ -11,6 +11,7 @@ const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
 const TestmonialPage = lazy(() => import('../pages/Testimonials/TestListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
+const FaqTrashPage = lazy(() => import('../pages/trash/FaqTrashListPage'));
 const TestimonialFormPage = lazy(() => import('../pages/Testimonials/TestFormPage'));
 const CategoryPage = lazy(() => import('../pages/category/CategoryListPage'));
 const CategoryFormPage = lazy(() => import('../pages/category/CategoryFormPage'));
@@ -168,6 +169,7 @@ const routes: RouteObject[] = [
           { path: 'product', element: <ProductTrashPage /> },
           {path: 'mainCategory',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
+          {path: 'faq',element: <FaqTrashPage />,},
         ]
       }
         ],

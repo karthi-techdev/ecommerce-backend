@@ -8,14 +8,17 @@ const SETTINGS_ID = '68ad8844bfdf0cec7f623bc2';
 
 const API = {
   // ---------------- FAQ endpoints ----------------
-  addFaq: `${ROOTURL}faqs/`,
-  listFaq: `${ROOTURL}faqs/`,
-  getFaq: `${ROOTURL}faqs/getFaqById/`,
-  updateFaq: `${ROOTURL}faqs/updateFaq/`,
-  deleteFaq: `${ROOTURL}faqs/softDeleteFaq/`,
-  toggleStatusFaq: `${ROOTURL}faqs/togglestatus/`,
-  checkDuplicateFaq: `${ROOTURL}faqs/check-duplicate`,
-
+  addFaq: `${ROOTURL}admin/faqs/`,
+  listFaq: `${ROOTURL}admin/faqs/`,
+  getFaq: `${ROOTURL}admin/faqs/getFaqById/`,
+  updateFaq: `${ROOTURL}admin/faqs/updateFaq/`,
+  softDeleteFaq: `${ROOTURL}admin/faqs/softDeleteFaq/`,
+  toggleStatusFaq: `${ROOTURL}admin/faqs/togglestatus/`,
+  checkDuplicateFaq: `${ROOTURL}admin/faqs/check-duplicate`,
+  restoreFaq:`${ROOTURL}admin/faqs/restore/`,
+  permanantDeleteFaq:`${ROOTURL}admin/faqs/permanentDelete/`,
+  trashFaq:`${ROOTURL}admin/faqs/trash`,
+faqStats:`${ROOTURL}admin/faqs/faqStats`,
   // Testimonial endpoints
   addTestimonial: `${ROOTURL}admin/testimonials/`,
   listTestimonial: `${ROOTURL}admin/testimonials/`,
