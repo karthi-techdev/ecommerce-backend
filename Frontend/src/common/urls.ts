@@ -64,6 +64,27 @@ const API = {
   toggleStatusSubCategory: `${ROOTURL}subcategory/togglestatus/`,
   checkDuplicateSubCategory: `${ROOTURL}subcategory/check-duplicate`,
   listSubCategoryTrash: `${ROOTURL}subcategory/trash/`,
+    // ---------------- Coupon endpoints ----------------
+
+  addCoupon: `${ROOTURL}admin/coupon/`,
+
+  listCoupon: `${ROOTURL}admin/coupon/`,
+
+  getCoupon: `${ROOTURL}admin/coupon/`,
+
+  updateCoupon: `${ROOTURL}admin/coupon/`,
+
+  softDeleteCoupon: `${ROOTURL}admin/coupon/softDelete/`,
+
+  restoreCoupon: `${ROOTURL}admin/coupon/restore/`,
+
+  hardDeleteCoupon: `${ROOTURL}admin/coupon/permanentDelete/`,
+
+  toggleCouponStatus: `${ROOTURL}admin/coupon/togglestatus/`,
+
+  trashCoupon: `${ROOTURL}admin/coupon/trash`,
+  checkDuplicateCoupon: `${ROOTURL}admin/coupon/check-code`,
+
 
 };
 

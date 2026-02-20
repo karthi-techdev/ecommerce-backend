@@ -6,6 +6,7 @@ import { useBrandStore } from '../../../stores/brandStore';
 import { validateBrandForm, type BrandFormData, type ValidationErrors } from '../../validations/brandValidation';
 import FormHeader from '../../molecules/FormHeader';
 import FormField from '../../molecules/FormField';
+
 import type { FieldConfig } from '../../../types/common';
 import { useDebounce } from '../../../components/hooks/useDebounce';
 
@@ -232,6 +233,7 @@ const handleImageChange = (
 
       <form
         onSubmit={handleSubmit}
+        noValidate 
         className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6"
       >
 

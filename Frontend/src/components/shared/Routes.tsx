@@ -82,6 +82,11 @@ const CategoryTrashPage = lazy(() => import('../pages/trash/CategoryTrashListPag
 const SubcategoryPage = lazy(() => import('../pages/subcategory/SubcategoryListPage'));
 const SubcategoryFormPage = lazy(() => import('../pages/subcategory/SubcategoryFormPage'));
 const SubcategoryTrashPage = lazy(() => import('../pages/trash/SubcategoryTrashListPage'));
+const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
+const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
+const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
+const CouponListPage = lazy(() => import('../pages/coupon/CouponListPage'));
+const CouponFormPage = lazy(() => import('../pages/coupon/CouponFormPage'));
 
 const PrivateRoute = () => {
   const { isAuthenticated } = useAuthStore();
@@ -93,9 +98,7 @@ const PublicRoute = () => {
   return !isAuthenticated ? <Outlet /> : <Navigate to="/dashboard" replace />;
 };
 
-const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
-const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
-const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
+
 
 const MainCategoryPage = lazy(
   () => import('../pages/mainCategory/MainCategoryListPage')
@@ -149,6 +152,15 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <BrandFormPage /> }, 
         ],
       },
+      {
+  path: 'coupon',
+  children: [
+    { path: '', element: <CouponListPage /> },
+    { path: 'add', element: <CouponFormPage /> },
+    { path: 'edit/:id', element: <CouponFormPage /> },
+  ],
+},
+
       {
         path: 'main-category',
         children: [
