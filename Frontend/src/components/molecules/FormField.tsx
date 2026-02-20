@@ -6,12 +6,12 @@ import CustomSelect from '../atoms/Select';
 interface FormFieldProps {
   field: FieldConfig;
   value: any;
-  onChange?: (e: { target: { name: string; value: any } }) => void;
+  onChange?: (e: { target: { name: string; value: any; } }) => void;
   error?: string;
-  isRequired?: boolean; 
+  isRequired?: boolean;
 }
 
-const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error }) => {
+const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error,isRequired }) => {
   if (field.type === 'select') {
     return (
       <div className={`md:col-span-6 flex flex-col`}>
@@ -59,6 +59,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error }) 
         onChange={onChange}
         placeholder={field.placeholder}
         readonly={field.readonly}
+        
         disabled={field.disabled}
         aria-label={field.ariaLabel} 
         error={error}

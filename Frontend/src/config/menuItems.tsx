@@ -1,4 +1,4 @@
-import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase,FiTrash2 } from 'react-icons/fi';
+import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
 import { BiCategory } from "react-icons/bi";
 import {FiLayers,FiTag,FiList} from 'react-icons/fi';
 import type { ReactNode } from 'react';
@@ -32,13 +32,32 @@ const menuItems: MenuItem[] = [
     icon: <FiSettings />,
     submenu: [
       { key: 'faq', label: 'FAQ', path: '/faq' },
+       {
+        key: 'testimonial',
+        label: 'Testimonial',
+        path: '/testimonial'
+      },
+      { key: 'page', label: 'Pages', path: '/page',},
     ],
   },
+
   {
     key: 'brand',
     label: 'Brand',
     icon: <FiTag />,
     path: '/brand',
+  },
+   {
+    key: 'config',
+    label: 'Config',
+    icon: <FiLayers />,
+    path: '/config',
+  },
+  {
+    key: 'product',
+    label: 'Products',
+    icon: <FiShoppingCart />,
+    path: '/products',
   },
   {
   key: 'coupon',
@@ -53,10 +72,11 @@ const menuItems: MenuItem[] = [
     icon: <BiCategory />,
     path: '#',
     submenu: [
-      {
-        key: 'main-category',
+{
+
+        key: 'mainCategory',
         label: 'Main Category',
-        path: '/main-category',
+        path: '/mainCategory',
         icon: <FiList />,
   },
       {
@@ -78,7 +98,7 @@ const menuItems: MenuItem[] = [
         path: '#',
         submenu: [
           { key: 'trash-brand', label: 'Brand', path: '/trash/brand' },
-          {key: 'trash-main-category',label: 'Main Category',path: '/trash/main-category'},
+          {key: 'trash-main-category',label: 'Main Category',path: '/trash/mainCategory'},
           {
             key: 'subcategory-trash',
             label: 'Subcategory',
@@ -88,7 +108,8 @@ const menuItems: MenuItem[] = [
       key:'trash-category',
       label:'Category',
       path:'/trash/category'   
-    }
+    },
+        { key: 'trash-product', label: 'Product', path: '/trash/product' }
         ],
       },
     ];

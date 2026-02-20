@@ -20,21 +20,14 @@ export interface Category{
   subCategoryId:PopulatedCategory;
   status:'active'|'inactive';
 }
-export interface mainCategory{
+export  interface Config{
   _id:string;
   name:string;
   slug:string;
-  description:string;
-  image:string;
+  options:{key:string,value:string}[];
+  status:'active'|'inactive';
 }
-export interface subCategory{
-  _id:string;
-  name:string;
-  slug:string;
-  description:string;
-  image:string;
-  mainCategoryId:string;
-}
+
 export interface MainCategory {
   _id?: string;
   name: string;
@@ -85,8 +78,90 @@ export interface SubCategory {
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: string;
-  mainCategory?:{name:string};
+  mainCategory?: {_id: string; name: string;};
 }
+
+
+
+export interface PopulatedProduct {
+  _id: string;
+  name: string;
+}
+
+export interface Product {
+  _id?: string;
+
+  name: string;
+  slug: string;
+  description: string;
+
+  images: string[];
+
+  price: number;
+  discountPrice?: number;
+  stockQuantity: number;
+
+  brandId: PopulatedProduct;
+  mainCategoryId: PopulatedProduct;
+  subCategoryId: PopulatedProduct;
+  categoryId: PopulatedProduct;
+
+  status: 'active' | 'inactive';
+  isDeleted?: boolean;
+}
+
+export interface Page {
+    _id?: string;
+    name : string,
+    slug : string,
+    type? : "content" | "url",
+    description? : string,
+    url? : string,
+    isActive? : boolean,
+    createdAt? : Date
+}
+
+export interface PageFormData {
+  name: string;
+  slug: string;
+  description: string;
+  type: "content" | "url";
+  url?: string;
+  isActive?: boolean;
+}
+
+export interface Testimonial {
+  _id?: string;
+  name: string;
+  designation?: string;
+  message?: string;
+  image?: string;
+  rating?: number;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ProductPayload {
+  name: string;
+  slug?: string;
+  description: string;
+
+  images: File[] | string[];
+
+  price: number;
+  discountPrice?: number;
+  stockQuantity: number;
+
+  brandId: string;
+  mainCategoryId: string;
+  subCategoryId: string;
+  categoryId: string;
+
+  status?: 'active' | 'inactive';
+}
+
 
 export type InputType =
   | 'text'
@@ -125,10 +200,9 @@ export interface FieldConfig {
   dataTestId?: string;
   accept?: string; 
   options? :{label:string , value:string}[];
+  onMenuScrollToBottom?: () => void;
+  onInputChange?: (value: string) => void;
  }
- 
-
-
 export type ColumnConfig<T> = {
   key: keyof T;
   label: string;

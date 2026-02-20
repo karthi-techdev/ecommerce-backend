@@ -9,94 +9,33 @@ import ImportedURL from '../../../common/urls';
 import previewImage from '../../../assets/images/preview-image.jpg';
 import { toast } from 'react-toastify';
 import { handleError } from '../../utils/errorHandler';
+import { useMainCategoryStore } from '../../../stores/mainCategoryStore';
 
-const MAIN_CATEGORY_OPTIONS = [
-  { label: 'Electronics', value: '69819c4b62a9479bb5aa295f' },
-  { label: 'Fashion & Apparel', value: '69819c7d62a9479bb5aa2963' },
-  { label: 'Home & Living', value: '69819c6b62a9479bb5aa2961' },
-  { label: 'Mobiles', value: '6980965fb85f762a4730f60b' },
-];
-
-const createSlug = (text: string) =>
-  text
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-
-const ALLOWED_IMAGE_TYPES = [
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/webp',
-];
-
+const createSlug = (text: string) => text.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+const ALLOWED_IMAGE_TYPES = ['image/jpeg','image/jpg','image/png','image/webp',];
 const SubCategoryFormTemplate: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const {
-    fetchSubCategoryById,
-    addSubCategory,
-    updateSubCategory,
-    checkDuplicateSubCategory,
-  } = useSubCategoryStore();
-
+  const {fetchSubCategoryById,addSubCategory, updateSubCategory,checkDuplicateSubCategory,} = useSubCategoryStore();
+  const {fetchAllMainCategories , mainCategories} = useMainCategoryStore();
   const subCategoryFields: FieldConfig[] = [
-    {
-      name: 'mainCategoryId',
-      label: 'Main Category',
-      type: 'select',
-      placeholder: 'Select Main Category',
-    },
-    {
-      name: 'name',
-      label: 'Name',
-      type: 'text',
-      placeholder: 'Enter Name',
-    },
-    {
-      name: 'slug',
-      label: 'Slug',
-      type: 'text',
-      placeholder: 'slug-is-automatically-generated',
-      disabled: true,
-    },
-    {
-      name: 'description',
-      label: 'Description',
-      type: 'textarea',
-      placeholder: 'Enter description',
-    },
-    {
-      name: 'image',
-      label: 'Image',
-      type: 'file',
-      accept: 'image/png,image/jpeg,image/jpg,image/webp',
-    },
+    { name: 'mainCategoryId', label: 'Main Category', type: 'select',placeholder: 'Select Main Category', },
+    { name: 'name', label: 'Name', type: 'text', placeholder: 'Enter Name',},
+    { name: 'slug', label: 'Slug', type: 'text', placeholder: 'slug-is-automatically-generated', disabled: true, },
+    { name: 'description', label: 'Description', type: 'textarea', placeholder: 'Enter description', },
+    { name: 'image', label: 'Image', type: 'file', accept: 'image/png,image/jpeg,image/jpg,image/webp',},
   ];
 
-  const [formData, setFormData] = useState<SubCategoryFormData>({
-    name: '',
-    slug: '',
-    description: '',
-    mainCategoryId: '',
-    image: null,
-  });
-
+  const [formData, setFormData] = useState<SubCategoryFormData>({ name: '', slug: '', description: '', mainCategoryId: '', image: null,});
   const nameCheckTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-const debounceNameCheck = (fn: () => void, delay = 400) => {
-  if (nameCheckTimer.current) {
-    clearTimeout(nameCheckTimer.current);
-  }
-
-  nameCheckTimer.current = setTimeout(() => {
-    fn();
-  }, delay);
-};
-
+  const debounceNameCheck = (fn: () => void, delay = 400) => {
+    if (nameCheckTimer.current) {
+      clearTimeout(nameCheckTimer.current);
+    }
+    nameCheckTimer.current = setTimeout(() => {
+      fn();
+    }, delay);
+  };
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -104,7 +43,6 @@ const debounceNameCheck = (fn: () => void, delay = 400) => {
   const imageErrorDebounce = useRef<any>(null);
   const showImageErrorWithDebounce = (message: string) => {
     if (imageErrorDebounce.current) clearTimeout(imageErrorDebounce.current);
-
     imageErrorDebounce.current = setTimeout(() => {
       setErrors(prev => ({ ...prev, image: message }));
       setTimeout(() => {
@@ -113,13 +51,15 @@ const debounceNameCheck = (fn: () => void, delay = 400) => {
     }, 400);
   };
 
+   useEffect(() => {
+      fetchAllMainCategories(
+      );
+    }, []);
   useEffect(() => {
     if (!id) return;
-
     const loadData = async () => {
       const subCategory = await fetchSubCategoryById(id);
       if (!subCategory) return;
-
       setFormData({
         name: subCategory.name || '',
         slug: subCategory.slug || '',
@@ -127,14 +67,9 @@ const debounceNameCheck = (fn: () => void, delay = 400) => {
         mainCategoryId: subCategory.mainCategoryId || '',
         image: null,
       });
-
       if (subCategory.image) {
         setImagePreview(
-          `${ImportedURL.FILEURL}${
-            subCategory.image.startsWith('/')
-              ? subCategory.image.slice(1)
-              : subCategory.image
-          }`
+          `${ImportedURL.FILEURL}${subCategory.image.startsWith('/')? subCategory.image.slice(1) : subCategory.image}`
         );
       }
     };
@@ -142,91 +77,57 @@ const debounceNameCheck = (fn: () => void, delay = 400) => {
     loadData();
   }, [id, fetchSubCategoryById]);
 
-const handleChange = (e: any) => {
+  const handleChange = (e: any) => {
   const { name, value, files, type } = e.target;
 
  if (type === 'file') {
   const file = files?.[0];
-
-  if (!file) {
-    setFormData(prev => ({ ...prev, image: null }));
-    setImagePreview(null); 
-    return;
-  }
-
+  if (!file) return;
   if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
     e.target.value = '';
-    setFormData(prev => ({ ...prev, image: null }));
-    setImagePreview(null); 
     showImageErrorWithDebounce('Only JPG, PNG or WEBP images are allowed');
+    if (!id) {
+      setImagePreview(null);
+      setFormData(prev => ({ ...prev, image: null }));
+    }
     return;
   }
-
   setFormData(prev => ({ ...prev, image: file }));
   setImagePreview(URL.createObjectURL(file));
   return;
 }
-
   const updatedSlug = name === 'name' ? createSlug(value) : formData.slug;
-
-  const updatedFormData = {
-    ...formData,
-    [name]: value,
-    ...(name === 'name' && { slug: updatedSlug }),
-  };
-
+  const updatedFormData = { ...formData, [name]: value, ...(name === 'name' && { slug: updatedSlug }),};
   setFormData(updatedFormData);
-
   if (name === 'name') {
-    setErrors(prev => ({
-      ...prev,
-      name: undefined,
-    }));
+    setErrors(prev => ({ ...prev, name: undefined, }));
   }
 
   const validation = validateSubCategoryForm(updatedFormData, !!id);
-  setErrors(prev => ({
-    ...prev,
-    [name]: validation[name as keyof ValidationErrors],
-  }));
+  setErrors(prev => ({...prev, [name]: validation[name as keyof ValidationErrors],}));
 
   if (name === 'name' && value.trim() && updatedFormData.mainCategoryId) {
     debounceNameCheck(async () => {
       try {
-        const exists = await checkDuplicateSubCategory(
-          updatedSlug,
-          updatedFormData.mainCategoryId,
-          id
-        );
-
+        const exists = await checkDuplicateSubCategory( updatedSlug, updatedFormData.mainCategoryId, id);
         if (exists) {
-          setErrors(prev => ({
-            ...prev,
-            name: 'Subcategory already exists',
-          }));
+          setErrors(prev => ({ ...prev, name: 'Subcategory already exists', }));
         }
       } catch (error: any) {
-        setErrors(prev => ({
-          ...prev,
-          name: handleError(error)?.[0],
-        }));
+        setErrors(prev => ({...prev, name: handleError(error)?.[0], }));
       }
     });
   }
 };
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const validationErrors = validateSubCategoryForm(formData, !!id);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-
     setIsSubmitting(true);
-
     try {
       const payload = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
@@ -253,38 +154,27 @@ const handleChange = (e: any) => {
 
   return (
     <div className="p-6">
-      <FormHeader
-        managementName="Sub Category"
-        addButtonLink="/subcategory"
-        type={id ? 'Edit' : 'Add'}
-      />
-
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
-      >
+      <FormHeader managementName="Sub Category" addButtonLink="/subcategory" type={id ? 'Edit' : 'Add'}/>
+      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="space-y-6">
           {subCategoryFields.map(field => {
             const isRequired = ['mainCategoryId', 'name'].includes(field.name) || (!id && field.name === 'image');
-
             return (
               <FormField
                 key={field.name}
                field={{
-  ...field,
-  options:
-    field.name === 'mainCategoryId'
-      ? MAIN_CATEGORY_OPTIONS
-      : undefined,
-}}
-isRequired={isRequired}
-
-
-
+              ...field,
+              options:
+                    field.name === 'mainCategoryId'
+                      ? mainCategories.map(cat => ({
+                          label: cat.name,
+                          value: cat._id ?? "",
+                        }))
+                      : undefined,
+                }}
+            isRequired={isRequired}
                 value={
-                  field.type === 'file'
-                    ? undefined
-                    : formData[field.name as keyof SubCategoryFormData] ?? ''
+                  field.type === 'file'? undefined : formData[field.name as keyof SubCategoryFormData] ?? ''
                 }
                 onChange={handleChange}
                 error={errors[field.name as keyof ValidationErrors]}

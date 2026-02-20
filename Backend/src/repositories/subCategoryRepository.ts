@@ -34,7 +34,7 @@ class SubCategoryRepository {
        { $sort: { createdAt: -1 } },
       {
         $lookup: {
-          from: "maincategories",
+          from: "main_categories",
           localField: "mainCategoryId",
           foreignField: "_id",
           as: "mainCategory",
@@ -82,6 +82,41 @@ class SubCategoryRepository {
   ): Promise<ISubCategory | null> {
     return await SubCategoryModel.findById(id);
   }
+async getAllSubCategoriesByMainCategoryId(
+  mainCategoryId: string,
+  page: number = 1,
+  limit: number = 10,
+  search?: string
+) {
+  const query: any = {
+    mainCategoryId,
+    isDeleted: false,
+  };
+
+  if (search) {
+    query.name = { $regex: search, $options: "i" };
+  }
+
+  const skip = (page - 1) * limit;
+
+  const [data, total] = await Promise.all([
+    SubCategoryModel.find(query)
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+    SubCategoryModel.countDocuments(query),
+  ]);
+
+  return {
+    data,
+    meta: {
+      page,
+      limit,
+      total,
+      hasMore: skip + data.length < total,
+    },
+  };
+}
 
   async updateSubCategory(
     id: string | Types.ObjectId,
@@ -139,30 +174,19 @@ async getAllTrashSubCategories(
 
     const skip = (page - 1) * limit;
 
-    const data = await SubCategoryModel.aggregate([
-      { $match: listMatch },
-
-      { $sort: { updatedAt: -1 } },
-
-      {
-        $lookup: {
-          from: "maincategories",     
-          localField: "mainCategoryId",
-          foreignField: "_id",
-          as: "mainCategory",
-        },
-      },
-      {
-        $unwind: {
-          path: "$mainCategory",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-
-      { $skip: skip },
-      { $limit: limit },
-    ]);
-
+    const rawData = await SubCategoryModel.find(listMatch)
+      .populate({
+        path: "mainCategoryId",  
+        model: "MainCategory",    
+      })
+      .sort({ updatedAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(); 
+      const data = rawData.map((item: any) => ({
+      ...item,
+      mainCategory: item.mainCategoryId, 
+    }));
     const count = await SubCategoryModel.countDocuments(listMatch);
 
     const totalPages = Math.max(1, Math.ceil(count / limit));
@@ -181,6 +205,7 @@ async getAllTrashSubCategories(
     throw error;
   }
 }
+
 
   async existsBySlug(
   slug: string,
