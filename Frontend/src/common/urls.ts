@@ -8,14 +8,17 @@ const SETTINGS_ID = '68ad8844bfdf0cec7f623bc2';
 
 const API = {
   // ---------------- FAQ endpoints ----------------
-  addFaq: `${ROOTURL}faqs/`,
-  listFaq: `${ROOTURL}faqs/`,
-  getFaq: `${ROOTURL}faqs/getFaqById/`,
-  updateFaq: `${ROOTURL}faqs/updateFaq/`,
-  deleteFaq: `${ROOTURL}faqs/softDeleteFaq/`,
-  toggleStatusFaq: `${ROOTURL}faqs/togglestatus/`,
-  checkDuplicateFaq: `${ROOTURL}faqs/check-duplicate`,
-
+  addFaq: `${ROOTURL}admin/faqs/`,
+  listFaq: `${ROOTURL}admin/faqs/`,
+  getFaq: `${ROOTURL}admin/faqs/getFaqById/`,
+  updateFaq: `${ROOTURL}admin/faqs/updateFaq/`,
+  softDeleteFaq: `${ROOTURL}admin/faqs/softDeleteFaq/`,
+  toggleStatusFaq: `${ROOTURL}admin/faqs/togglestatus/`,
+  checkDuplicateFaq: `${ROOTURL}admin/faqs/check-duplicate`,
+  restoreFaq:`${ROOTURL}admin/faqs/restore/`,
+  permanantDeleteFaq:`${ROOTURL}admin/faqs/permanentDelete/`,
+  trashFaq:`${ROOTURL}admin/faqs/trash`,
+faqStats:`${ROOTURL}admin/faqs/faqStats`,
   // Testimonial endpoints
   addTestimonial: `${ROOTURL}admin/testimonials/`,
   listTestimonial: `${ROOTURL}admin/testimonials/`,
@@ -65,16 +68,17 @@ const API = {
   trashBrands: `${ROOTURL}brands/trash`,
   checkDuplicateBrand: `${ROOTURL}brands/check-duplicate`,
   //subcategory endpoints
-  addSubCategory: `${ROOTURL}subcategory/`,
-  listSubCategory: `${ROOTURL}subcategory/`,
-  getSubCategoryById: `${ROOTURL}subcategory/getSubCategoryById/`,
-  updateSubCategory: `${ROOTURL}subcategory/updateSubCategory/`,
-  deleteSubCategory: `${ROOTURL}subcategory/softDeleteSubCategory/`,
-  hardDeleteSubCategory:`${ROOTURL}subcategory/permanentDelete/`,
-  restoreSubCategory:`${ROOTURL}subcategory/restore/`,
-  toggleStatusSubCategory: `${ROOTURL}subcategory/togglestatus/`,
-  checkDuplicateSubCategory: `${ROOTURL}subcategory/check-duplicate`,
-  listSubCategoryTrash: `${ROOTURL}subcategory/trash/`,
+  addSubCategory: `${ROOTURL}admin/subcategory/`,
+  listSubCategory: `${ROOTURL}admin/subcategory/`,
+  getSubCategoryById: `${ROOTURL}admin/subcategory/getSubCategoryById/`,
+  updateSubCategory: `${ROOTURL}admin/subcategory/updateSubCategory/`,
+  deleteSubCategory: `${ROOTURL}admin/subcategory/softDeleteSubCategory/`,
+  hardDeleteSubCategory:`${ROOTURL}admin/subcategory/permanentDelete/`,
+  restoreSubCategory:`${ROOTURL}admin/subcategory/restore/`,
+  toggleStatusSubCategory: `${ROOTURL}admin/subcategory/togglestatus/`,
+  checkDuplicateSubCategory: `${ROOTURL}admin/subcategory/check-duplicate`,
+  listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
+  subCategoryByMainCategoryId:`${ROOTURL}admin/subcategory/softDeleteSubCategory/`,
     // ---------------- Coupon endpoints ----------------
 
   addCoupon: `${ROOTURL}admin/coupon/`,

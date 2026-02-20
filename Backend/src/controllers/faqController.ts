@@ -5,9 +5,8 @@ import { HTTP_RESPONSE } from "../utils/httpResponse";
 class FaqController {
   async createFaq(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { question, answer, status } = req.body;
-      if (!question || !answer || !status) {
-        // Return 400 for missing required fields
+      const { question, answer} = req.body;
+      if (!question || !answer ) {
         res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "Required fields are missing" });
         return;
       }
@@ -184,6 +183,14 @@ class FaqController {
       next(err);
     }
   }
+  async getFaqStats(req:Request,res:Response,next:NextFunction):Promise<void>{
+          try {
+              const category=await faqService.getStats();
+              res.status(200).json({status:HTTP_RESPONSE.SUCCESS,data:category});
+          } catch (err:any) {
+              next(err)
+          }
+      }
   async checkDuplicate(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { question, excludeId } = req.body;

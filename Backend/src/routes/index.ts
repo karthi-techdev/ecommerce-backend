@@ -16,7 +16,7 @@ import testimonialRoutes from "./testimonialRoutes";
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
-  app.use("/api/v1/faqs", faqRoutes);
+  app.use("/api/v1/admin/faqs", faqRoutes);
   app.use("/api/v1/admin/categories", categoryRoutes);
   app.use("/api/v1/admin/main-categories", mainCategoryRoutes);
   app.use("/api/v1/brands", brandRoutes);
