@@ -60,6 +60,13 @@ const menuItems: MenuItem[] = [
     path: '/products',
   },
   {
+  key: 'coupon',
+  label: 'Coupon',
+  icon: <FiLayers />,
+  path: '/coupon',
+},
+
+  {
     key: 'category',
     label: 'Manage Categories',
     icon: <BiCategory />,

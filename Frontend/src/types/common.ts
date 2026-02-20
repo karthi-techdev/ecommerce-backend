@@ -48,6 +48,26 @@ export interface Brand {
   createdAt?: string;     
   updatedAt?: string;
 }
+
+
+export interface Coupon {
+  _id?: string;
+  code: string;
+  description?: string;
+  discountType: 'percentage' | 'flat';
+  discountValue: number;
+  minOrderValue?: number;
+  maxDiscountAmount?: number;
+  startDate: string;
+  endDate: string;
+  usageLimit?: number;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+
 export interface SubCategory {
   _id?: string;
   name: string;

@@ -21,6 +21,10 @@ import SubCategoryListTemplate from '@/components/templates/subcategory/Subcateg
 import SubCategoryFormTemplate from '@/components/templates/subcategory/SubcategoryFormTemplate';
 import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
 import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
+import CouponListTemplate from '../components/templates/coupon/CouponListTemplate';
+import CouponFormTemplate from '../components/templates/coupon/CouponFormTemplate';
+
+
 import ConfigListTemplate from '../components/templates/config/ConfigListTemplate';
 import ConfigFormTemplate from '../components/templates/config/ConfigFormTemplate';
 import PageFormTemplate from '@/components/templates/page/pageFormTemplate';
@@ -104,6 +108,15 @@ export const router = createBrowserRouter([
           { path: 'edit/:id', element: <ConfigFormTemplate /> },
         ],
       },
+      {
+  path: 'coupon',
+  children: [
+    { path: '', element: <CouponListTemplate /> },
+    { path: 'add', element: <CouponFormTemplate /> },
+    { path: 'edit/:id', element: <CouponFormTemplate /> },
+  ],
+},
+
       {
         path: 'subcategory',
         children: [

@@ -64,6 +64,30 @@ const API = {
   toggleBrandStatus: `${ROOTURL}brands/togglestatus`,
   trashBrands: `${ROOTURL}brands/trash`,
   checkDuplicateBrand: `${ROOTURL}brands/check-duplicate`,
+  //subcategory endpoints
+  addSubCategory: `${ROOTURL}subcategory/`,
+  listSubCategory: `${ROOTURL}subcategory/`,
+  getSubCategoryById: `${ROOTURL}subcategory/getSubCategoryById/`,
+  updateSubCategory: `${ROOTURL}subcategory/updateSubCategory/`,
+  deleteSubCategory: `${ROOTURL}subcategory/softDeleteSubCategory/`,
+  hardDeleteSubCategory:`${ROOTURL}subcategory/permanentDelete/`,
+  restoreSubCategory:`${ROOTURL}subcategory/restore/`,
+  toggleStatusSubCategory: `${ROOTURL}subcategory/togglestatus/`,
+  checkDuplicateSubCategory: `${ROOTURL}subcategory/check-duplicate`,
+  listSubCategoryTrash: `${ROOTURL}subcategory/trash/`,
+    // ---------------- Coupon endpoints ----------------
+
+  addCoupon: `${ROOTURL}admin/coupon/`,
+  listCoupon: `${ROOTURL}admin/coupon/`,
+  getCoupon: `${ROOTURL}admin/coupon/`,
+  updateCoupon: `${ROOTURL}admin/coupon/`,
+  softDeleteCoupon: `${ROOTURL}admin/coupon/softDelete/`,
+  restoreCoupon: `${ROOTURL}admin/coupon/restore/`,
+  hardDeleteCoupon: `${ROOTURL}admin/coupon/permanentDelete/`,
+  toggleCouponStatus: `${ROOTURL}admin/coupon/togglestatus/`,
+  trashCoupon: `${ROOTURL}admin/coupon/trash`,
+  checkDuplicateCoupon: `${ROOTURL}admin/coupon/check-code`,
+
 
   
 
@@ -76,18 +100,7 @@ const API = {
   deleteConfig:`${ROOTURL}admin/config/deleteConfig/`,
   toggleConfigStatus:`${ROOTURL}admin/config/togglestatus/`,
   
-    //subcategory endpoints
-  addSubCategory: `${ROOTURL}admin/subcategory/`,
-  listSubCategory: `${ROOTURL}admin/subcategory/`,
-  getSubCategoryById: `${ROOTURL}admin/subcategory/getSubCategoryById/`,
-  updateSubCategory: `${ROOTURL}admin/subcategory/updateSubCategory/`,
-  deleteSubCategory: `${ROOTURL}admin/subcategory/softDeleteSubCategory/`,
-  hardDeleteSubCategory:`${ROOTURL}admin/subcategory/permanentDelete/`,
-  restoreSubCategory:`${ROOTURL}admin/subcategory/restore/`,
-  toggleStatusSubCategory: `${ROOTURL}admin/subcategory/togglestatus/`,
-  checkDuplicateSubCategory: `${ROOTURL}admin/subcategory/check-duplicate`,
-  listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
-  subCategoryByMainCategoryId:`${ROOTURL}admin/subcategory/activeSubCategory/`,
+ 
 
   // Page endpoints
   addPage: `${ROOTURL}admin/page/`,
