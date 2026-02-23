@@ -7,7 +7,12 @@ const FILEURL = LIVEURL;
 const SETTINGS_ID = '68ad8844bfdf0cec7f623bc2';
 
 const API = {
-  // ---------------- FAQ endpoints ----------------
+  // ---------- NewsLetter endpoints ----------
+  addNewsLetter: `${ROOTURL}newsLetters/`,
+  listNewsLetter: `${ROOTURL}newsLetters/`,
+  getNewsLetter: `${ROOTURL}newsLetters/getNewsLetterById/`, // backend expect /newsLetters/:id
+  updateNewsLetter: `${ROOTURL}newsLetters/updateNewsLetter/`, // backend expect /newsLetters/:id
+  deleteNewsLetter: `${ROOTURL}newsLetters/deleteNewsLetter/`,
   addFaq: `${ROOTURL}faqs/`,
   listFaq: `${ROOTURL}faqs/`,
   getFaq: `${ROOTURL}faqs/getFaqById/`,

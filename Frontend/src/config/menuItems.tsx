@@ -1,6 +1,6 @@
 import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase,FiTrash2 } from 'react-icons/fi';
 import { BiCategory } from "react-icons/bi";
-import {FiLayers,FiTag,FiList} from 'react-icons/fi';
+import {FiLayers,FiTag,FiList,FiMail } from 'react-icons/fi';
 import type { ReactNode } from 'react';
 
 
@@ -62,6 +62,12 @@ const menuItems: MenuItem[] = [
         path:'/category'
       }
     ]
+  },
+  {
+    key: 'newsletter', 
+    label: 'NewsLetter', 
+    icon: <FiMail />,
+    path: '/newsletters'
   },
 
       {

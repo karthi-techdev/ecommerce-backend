@@ -74,6 +74,8 @@ import NotFoundPage from '../utils/notFound';
 
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 
+const NewsLetterPage = lazy(() => import('../pages/newsLetter/NewsLetterListPage'));
+const NewsLetterFormPage = lazy(() => import('../pages/newsLetter/NewsLetterFormPage'));
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
 const CategoryPage = lazy(() => import('../pages/category/CategoryListPage'));
@@ -115,7 +117,7 @@ const routes: RouteObject[] = [
       {
         path: 'login',
         element: <AdminLoginTemplate />,
-      },
+      }, 
     ],
   },
   {
@@ -180,7 +182,15 @@ const routes: RouteObject[] = [
           {path: 'main-category',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
         ]
-      }
+      }, 
+      {
+            path: 'newsletters',
+            children: [
+              { path: '', element: <NewsLetterPage /> },
+              { path: 'add', element: <NewsLetterFormPage /> },
+              { path: 'edit/:id', element: <NewsLetterFormPage /> },
+            ],
+          }, 
         ],
       },
     ],
