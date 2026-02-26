@@ -1,6 +1,6 @@
 import { FiSettings, FiBriefcase,FiTrash2 } from 'react-icons/fi';
 import { BiCategory } from "react-icons/bi";
-import { FaTruck } from "react-icons/fa";
+import { FiTruck } from "react-icons/fi";
 import {FiTag,FiList} from 'react-icons/fi';
 import type { ReactNode } from 'react';
 
@@ -43,7 +43,7 @@ const menuItems: MenuItem[] = [
   },
       { key: 'shipment-methods',
          label:'ShipmentMethods',
-         icon:<FaTruck/>,
+         icon:<FiTruck/>,
           path:'/shipment-methods'
         },
 

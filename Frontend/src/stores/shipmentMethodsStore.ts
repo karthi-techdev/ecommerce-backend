@@ -1,41 +1,34 @@
 import { create } from 'zustand';
 import axiosInstance from '../components/utils/axios';
+import type { ShipmentMethod } from '../types/common';
 import ImportedURL from '../common/urls';
+
 const { API } = ImportedURL;
 
-export interface ShipmentMethod {
-  _id?: string;
-  name: string;
-  slug: string;
-  price: number;
-  estimatedDeliveryTime: string;
-  status: 'active' | 'inactive';
-}
-
-interface ShipmentStats {
+interface ShipmentMethodStats {
   total: number;
   active: number;
   inactive: number;
 }
 
-interface ShipmentState {
+interface ShipmentMethodState {
   shipmentMethods: ShipmentMethod[];
-  stats: ShipmentStats;
+  stats: ShipmentMethodStats;
   loading: boolean;
   error: string | null;
   page: number;
   totalPages: number;
-  
-  fetchShipmentMethods: (page?: number,limit?: number,filter?: 'active' | 'inactive' | 'all') => Promise<void>;
+
+  fetchShipmentMethods: (page?: number, limit?: number,filter?: 'total' | 'active' | 'inactive') => Promise<void>;
   fetchShipmentMethodById: (id: string) => Promise<ShipmentMethod | null>;
   checkDuplicateSlug: (slug: string) => Promise<boolean>;
-  addShipmentMethod: (method: ShipmentMethod) => Promise<void>;
-  updateShipmentMethod: (id: string, method: Partial<ShipmentMethod>) => Promise<void>;
+  addShipmentMethod: (data: ShipmentMethod) => Promise<void>;
+  updateShipmentMethod: (id: string, data: ShipmentMethod) => Promise<void>;
   deleteShipmentMethod: (id: string) => Promise<void>;
-  toggleStatus: (id: string) => Promise<void>;
+  toggleStatusShipmentMethod: (id: string) => Promise<void>;
 }
 
-export const useShipmentStore = create<ShipmentState>((set) => ({
+export const useShipmentMethodStore = create<ShipmentMethodState>((set, get) => ({
   shipmentMethods: [],
   stats: { total: 0, active: 0, inactive: 0 },
   loading: false,
@@ -45,41 +38,49 @@ export const useShipmentStore = create<ShipmentState>((set) => ({
 
   checkDuplicateSlug: async (slug: string) => {
     try {
-      const res = await axiosInstance.post(`${API.checkDuplicateShipmentMethods}`, { slug });
-      return res.data.exists; // Returns boolean based on your controller
+      const res = await axiosInstance.post(API.checkDuplicateShipmentMethods, { slug });
+      return res.data.exists;
     } catch (error: any) {
-      set({ error: error?.response?.data?.message || 'Failed to check slug' });
-      return false;
+      set({
+        error: error?.response?.data?.message || error?.message ||'Failed to check duplicate slug'
+      });
+      throw error;
     }
   },
 
-  fetchShipmentMethods: async (page = 1, limit = 10, filter = 'all') => {
+  fetchShipmentMethods: async (page = 1, limit = 10, filter = 'total') => {
     try {
       set({ loading: true, error: null });
-      const statusParam = filter !== 'all' ? `&status=${filter}` : '';
-      
+      const statusParam = filter === 'active'? 'active' : filter === 'inactive' ? 'inactive': '';
       const res = await axiosInstance.get(
-        `${API.listShipmentMethods}?page=${page}&limit=${limit}${statusParam}`
+        `${API.listShipmentMethods}?page=${page}&limit=${limit}${
+          statusParam ? `&status=${statusParam}` : ''
+        }`
       );
-      
-      const { data: methodData, meta } = res.data.data;
-
+      const { data: shipmentData, meta } = res.data.data;
       set({
-        shipmentMethods: Array.isArray(methodData) ? methodData : [],
+        shipmentMethods: Array.isArray(shipmentData) ? shipmentData : [],
         stats: {
           total: meta?.total ?? 0,
           active: meta?.active ?? 0,
-          inactive: meta?.inactive ?? 0,
+          inactive: meta?.inactive ?? 0
         },
         page,
         totalPages: meta?.totalPages ?? 1,
         loading: false,
+        error: null
       });
     } catch (error: any) {
       set({
-        error: error?.response?.data?.message || 'Failed to fetch shipment methods',
-        loading: false,
-        shipmentMethods: []
+        error:
+          error?.message === 'Network error'
+            ? 'Network error'
+            : error?.response?.data?.message ||
+              error?.message ||
+              'Failed to fetch shipment methods',
+        shipmentMethods: [],
+        stats: { total: 0, active: 0, inactive: 0 },
+        loading: false
       });
     }
   },
@@ -89,75 +90,95 @@ export const useShipmentStore = create<ShipmentState>((set) => ({
       set({ loading: true, error: null });
       const res = await axiosInstance.get(`${API.getShipmentMethodsById}${id}`);
       const method = res.data.data;
-      
       set((state) => ({
-        methods: state.shipmentMethods.some(m => m._id === id)
-          ? state.shipmentMethods.map(m => m._id === id ? method : m)
+        shipmentMethods: state.shipmentMethods.some(m => m._id === id)
+          ? state.shipmentMethods.map(m => m._id === id ? method : m )
           : [...state.shipmentMethods, method],
-        loading: false,
+        loading: false
       }));
       return method;
     } catch (error: any) {
-      set({ error: error?.response?.data?.message || 'Method not found', loading: false });
+      set({
+        error: error?.response?.data?.message || error?.message || 'Failed to fetch shipment method',
+        loading: false
+      });
       return null;
     }
   },
 
-  addShipmentMethod: async (method: ShipmentMethod) => {
+  addShipmentMethod: async (data: ShipmentMethod) => {
     try {
-      set({ loading: true, error: null });
-      const res = await axiosInstance.post(API.addShipmentMethods, method);
-      
+      const store = get();
+      const isDuplicate = await store.checkDuplicateSlug(data.slug);
+      if (isDuplicate) {
+        throw new Error('Shipment method with this slug already exists');
+      }
+      const res = await axiosInstance.post(API.addShipmentMethods, data);
       set((state) => ({
-        methods: [...state.shipmentMethods, res.data.data],
-        loading: false
+        shipmentMethods: [...state.shipmentMethods, res.data.data],
+        error: null
       }));
     } catch (error: any) {
-      const msg = error?.response?.data?.message || 'Failed to create shipment method';
-      set({ error: msg, loading: false });
-      throw msg;
+      set({
+        error:
+          error?.response?.data?.message ||error?.message || 'Failed to add shipment method'
+      });
+      throw error?.response?.data?.message || error?.message || error;
     }
   },
 
-  updateShipmentMethod: async (id: string, method: Partial<ShipmentMethod>) => {
-    try {
-      set({ loading: true, error: null });
-      const res = await axiosInstance.put(`${API.updateShipmentMethods}${id}`, method);
-      
-      set((state) => ({
-        methods: state.shipmentMethods.map(m => (m._id === id ? res.data.data : m)),
-        loading: false
-      }));
-    } catch (error: any) {
-      const msg = error?.response?.data?.message || 'Failed to update shipment method';
-      set({ error: msg, loading: false });
-      throw msg;
-    }
-  },
+  updateShipmentMethod: async (id: string, data: ShipmentMethod) => {
+  try {
+    const payload = {...data,price: Number(data.price)};
+    const res = await axiosInstance.put(`${API.updateShipmentMethods}${id}`, payload);
+    set((state) => ({
+      shipmentMethods: state.shipmentMethods.map(m =>
+        m._id === id ? { ...m, ...res.data.data } : m
+      ),
+      error: null
+    }));
+
+  } catch (error: any) {
+    set({
+      error: error?.response?.data?.message ||error?.message ||'Failed to update shipment method'
+    });
+    throw error?.response?.data?.message || error?.message || error;
+  }
+},
+
 
   deleteShipmentMethod: async (id: string) => {
     try {
       await axiosInstance.delete(`${API.deleteShipmentMethods}${id}`);
       set((state) => ({
-        methods: state.shipmentMethods.filter(m => m._id !== id),
+        shipmentMethods: state.shipmentMethods.filter(m => m._id !== id),
         error: null
       }));
     } catch (error: any) {
-      set({ error: error?.response?.data?.message || 'Failed to delete method' });
+      set({
+        error: error?.response?.data?.message || error?.message ||'Failed to delete shipment method'
+      });
     }
   },
 
-  toggleStatus: async (id: string) => {
+  toggleStatusShipmentMethod: async (id: string) => {
     try {
-      const res = await axiosInstance.patch(`${API.toggleStatusShipmentMethods}${id}`);
+      const res = await axiosInstance.patch(
+        `${API.toggleStatusShipmentMethods}${id}`
+      );
       set((state) => ({
-        methods: state.shipmentMethods.map(m => 
-          m._id === id ? { ...m, status: res.data.data.status } : m
-        ),
+        shipmentMethods: state.shipmentMethods.map(m => {
+          if (m._id === id) {
+            return { ...m, status: res.data.data.status };
+          }
+          return m;
+        }),
         error: null
       }));
     } catch (error: any) {
-      set({ error: error?.response?.data?.message || 'Failed to toggle status' });
+      set({
+        error: error?.response?.data?.message || error?.message || 'Failed to toggle status'
+      });
     }
   }
 }));

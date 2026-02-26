@@ -14,12 +14,11 @@ class ShipmentMethodRepository {
   async getAllShipmentMethods(page = 1, limit = 10, filter?: string) {
     try {
       const query: any = { isDeleted: false };
-      
       if (filter === 'active') query.status = 'active';
       if (filter === 'inactive') query.status = 'inactive';
       const skip = (page - 1) * limit;
       const [data, stats] = await Promise.all([
-        ShipmentMethodModel.find(query).sort({ price: 1 }).skip(skip).limit(limit).exec(),
+        ShipmentMethodModel.find(query).sort({  createdAt: -1  }).skip(skip).limit(limit).exec(),
         this.commonRepository.getStats(),
       ]);
       const totalPages = Math.ceil(stats.total / limit) || 1;

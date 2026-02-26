@@ -5,17 +5,9 @@ import { toast } from 'react-toastify';
 import TableHeader from '../../molecules/TableHeader';
 import Loader from '../../atoms/Loader';
 import Pagination from '../../atoms/Pagination';
-import { useShipmentStore } from '../../../stores/shipmentMethodsStore';
-import type { ShipmentMethod } from '../../../stores/shipmentMethodsStore';
-import {
-  Truck,
-  CheckCircle,
-  XCircle,
-  Pencil,
-  Trash2,
-  ToggleLeft,
-  ToggleRight
-} from 'lucide-react';
+import { useShipmentMethodStore } from '../../../stores/shipmentMethodsStore';
+import type { ShipmentMethod } from '../../../types/common';
+import { Truck, CheckCircle, XCircle, Pencil, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
 import { truncate } from '../../utils/helper';
 import { PAGINATION_CONFIG } from '../../../constants/pagination';
 
@@ -31,49 +23,23 @@ interface StatFilter {
 const ShipmentMethodListTemplate: React.FC = () => {
   const navigate = useNavigate();
 
-  const {
-    shipmentMethods,
-    fetchShipmentMethods,
-    deleteShipmentMethod,
-    toggleStatus,
-    totalPages,
-    loading,
-    error
-  } = useShipmentStore();
-
+  const { shipmentMethods, fetchShipmentMethods, deleteShipmentMethod, toggleStatusShipmentMethod, totalPages, loading, error,} = useShipmentMethodStore();
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState<number>(
-    PAGINATION_CONFIG.DEFAULT_PAGE
-  );
+  const [currentPage, setCurrentPage] = useState<number>(PAGINATION_CONFIG.DEFAULT_PAGE);
   type FilterType = 'total' | 'active' | 'inactive';
-  const [selectedFilter, setSelectedFilter] =
-    useState<FilterType>('total');
+  const [selectedFilter, setSelectedFilter] = useState<FilterType>('total');
 
-  // 🔹 Fetch data
   useEffect(() => {
     const loadData = async () => {
       try {
-        const apiFilter =
-          selectedFilter === 'total'
-            ? 'all'
-            : selectedFilter;
-
-        await fetchShipmentMethods(
-          currentPage,
-          PAGINATION_CONFIG.DEFAULT_LIMIT,
-          apiFilter
-        );
+        await fetchShipmentMethods(currentPage, PAGINATION_CONFIG.DEFAULT_LIMIT, selectedFilter);
       } catch (err: any) {
-        toast.error(
-          err?.message || 'Failed to load shipment methods.'
-        );
+        toast.error(err?.message || 'Failed to load Shipment Methods');
       }
     };
-
     loadData();
   }, [currentPage, selectedFilter, fetchShipmentMethods]);
 
-  // 🔹 Error toast
   useEffect(() => {
     if (error) toast.error(error);
   }, [error]);
@@ -82,31 +48,15 @@ const ShipmentMethodListTemplate: React.FC = () => {
     setCurrentPage(selectedItem.selected + 1);
   };
 
-  // 🔹 Filtered Data
-  const filteredMethods = shipmentMethods.filter((method) => {
-    if (selectedFilter === 'active' && method.status !== 'active')
-      return false;
-    if (selectedFilter === 'inactive' && method.status !== 'inactive')
-      return false;
+  const filteredData = shipmentMethods.filter((item) =>
+    item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-    return (
-      method.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      method.slug.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  });
-
-  // 🔹 Stats
   const calculateStats = (): StatFilter[] => {
     const total = shipmentMethods.length;
-    const active = shipmentMethods.filter(
-      (m) => m.status === 'active'
-    ).length;
+    const active = shipmentMethods.filter(s => s.status === 'active').length;
     const inactive = total - active;
-
-    const activePercent =
-      total > 0 ? Math.round((active / total) * 100) : 0;
-    const inactivePercent =
-      total > 0 ? Math.round((inactive / total) * 100) : 0;
 
     return [
       {
@@ -115,109 +65,71 @@ const ShipmentMethodListTemplate: React.FC = () => {
         value: total,
         trend: 'up',
         change: '100%',
-        icon: <Truck size={20} />
+        icon: <Truck size={20} />,
       },
       {
         id: 'active',
-        title: 'Active Methods',
+        title: 'Active',
         value: active,
         trend: 'up',
-        change: `${activePercent}%`,
-        icon: <CheckCircle size={20} />
+        change: `${total ? Math.round((active / total) * 100) : 0}%`,
+        icon: <CheckCircle size={20} />,
       },
       {
         id: 'inactive',
-        title: 'Inactive Methods',
+        title: 'Inactive',
         value: inactive,
         trend: 'down',
-        change: `${inactivePercent}%`,
-        icon: <XCircle size={20} />
-      }
+        change: `${total ? Math.round((inactive / total) * 100) : 0}%`,
+        icon: <XCircle size={20} />,
+      },
     ];
   };
 
   const statFilters = calculateStats();
 
-  // 🔹 Toggle Status
-  const handleToggleStatus = async (method: ShipmentMethod) => {
-    const newStatus =
-      method.status === 'active' ? 'inactive' : 'active';
-    const action =
-      newStatus === 'active' ? 'activate' : 'deactivate';
+  const handleToggleStatus = async (item: ShipmentMethod) => {
+    const newStatus = item.status === 'active' ? 'inactive' : 'active';
+    const action = newStatus === 'active' ? 'activate' : 'deactivate';
 
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: `Do you want to ${action} this shipment method?`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: `Yes, ${action} it!`
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: `Yes, ${action} it!`,
     });
 
     if (result.isConfirmed) {
       try {
-        await toggleStatus(method._id!);
-        await fetchShipmentMethods(
-          currentPage,
-          PAGINATION_CONFIG.DEFAULT_LIMIT,
-          selectedFilter === 'total'
-            ? 'all'
-            : selectedFilter
-        );
+        await toggleStatusShipmentMethod(item._id!);
+        await fetchShipmentMethods(currentPage, PAGINATION_CONFIG.DEFAULT_LIMIT, selectedFilter);
         toast.success(`Shipment method ${action}d successfully!`);
       } catch {
-        toast.error('Failed to update status.');
+        toast.error('Failed to update status');
       }
     }
   };
 
-  // 🔹 Delete
-  const handleDelete = (method: ShipmentMethod) => {
+  const handleDelete = (item: ShipmentMethod) => {
     Swal.fire({
       title: 'Are you sure?',
-      text: `You are about to delete "${method.name}"`,
+      text: `You are about to delete "${item.name}"`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await deleteShipmentMethod(method._id!);
-
-          const newTotalItems = shipmentMethods.length - 1;
-          const newTotalPages = Math.ceil(
-            newTotalItems / PAGINATION_CONFIG.DEFAULT_LIMIT
-          );
-
-          if (
-            filteredMethods.length - 1 === 0 &&
-            currentPage > newTotalPages
-          ) {
-            const newPage = Math.max(newTotalPages || 1, 1);
-            setCurrentPage(newPage);
-            await fetchShipmentMethods(
-              newPage,
-              PAGINATION_CONFIG.DEFAULT_LIMIT,
-              selectedFilter === 'total'
-                ? 'all'
-                : selectedFilter
-            );
-          } else {
-            await fetchShipmentMethods(
-              currentPage,
-              PAGINATION_CONFIG.DEFAULT_LIMIT,
-              selectedFilter === 'total'
-                ? 'all'
-                : selectedFilter
-            );
-          }
-
-          Swal.fire(
-            'Deleted!',
-            'Shipment method removed successfully.',
-            'success'
-          );
+          await deleteShipmentMethod(item._id!);
+          await fetchShipmentMethods(currentPage, PAGINATION_CONFIG.DEFAULT_LIMIT, selectedFilter);
+          Swal.fire('Deleted!', 'Shipment method removed.', 'success');
         } catch {
-          toast.error('Failed to delete shipment method.');
+          toast.error('Failed to delete shipment method');
         }
       }
     });
@@ -232,7 +144,7 @@ const ShipmentMethodListTemplate: React.FC = () => {
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         addButtonLabel="Add"
-        addButtonLink="/shipment-method/add"
+        addButtonLink="/shipment-methods/add"
         statFilters={statFilters}
         selectedFilterId={selectedFilter}
         onSelectFilter={(id) => {
@@ -248,72 +160,43 @@ const ShipmentMethodListTemplate: React.FC = () => {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">S.NO</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Delivery Time</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
             </thead>
 
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredMethods.length === 0 ? (
+              {filteredData.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
-                    No data available
-                  </td>
+                  <td colSpan={7} className="px-6 py-4 text-center text-gray-500"> No data available </td>
                 </tr>
               ) : (
-                filteredMethods.map((method, index) => (
-                  <tr key={method._id}>
-                    <td className="px-6 py-4 text-sm text-gray-500">
-                      {(currentPage - 1) *
-                        PAGINATION_CONFIG.DEFAULT_LIMIT +
-                        index +
-                        1}
-                    </td>
-
-                    <td className="px-6 py-4 text-sm text-gray-900">
-                      {truncate(method.name, 30)}
-                    </td>
-
-                    <td className="px-6 py-4 text-sm text-gray-900">
-                      ₹{method.price}
-                    </td>
-
-                    <td className="px-6 py-4 text-sm text-gray-900">
-                      {truncate(method.estimatedDeliveryTime, 30)}
-                    </td>
-
-                    <td className="px-4 py-2">
+                filteredData.map((item, index) => (
+                  <tr key={item._id}>
+                    <td className="px-6 py-4 text-sm text-gray-500"> {(currentPage - 1) * PAGINATION_CONFIG.DEFAULT_LIMIT + index + 1}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900"> {item.name}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900"> {item.description? truncate(item.description, 30): '-'} </td>
+                    <td className="px-6 py-4 text-sm text-gray-900">{item.price}</td>
+                    <td className="px-6 py-2">
                       <button
-                        onClick={() => handleToggleStatus(method)}
-                        className={`${method.status === 'active'
-                          ? 'text-green-500'
-                          : 'text-gray-400'
-                          }`}
+                        onClick={() => handleToggleStatus(item)}
+                        className={`${item.status === 'active'? 'text-green-500 hover:text-green-700' : 'text-gray-400 hover:text-gray-600'}`}
                       >
-                        {method.status === 'active'
-                          ? <ToggleRight size={18} />
-                          : <ToggleLeft size={18} />}
+                        {item.status === 'active' ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
                       </button>
                     </td>
 
-                    <td className="px-4 py-2 flex gap-3">
-                      <button
-                        onClick={() =>
-                          navigate(`/shipment-method/edit/${method._id}`)
-                        }
-                        className="text-indigo-500 hover:text-indigo-700"
-                      >
+                    <td className="px-6 py-4 text-center align-middle">
+                      <div className='flex justify-center gap-3 w-full items-center'>
+                        <button onClick={() => navigate(`/shipment-methods/edit/${item._id}`)} className="text-indigo-500 hover:text-indigo-700">
                         <Pencil size={16} />
-                      </button>
-
-                      <button
-                        onClick={() => handleDelete(method)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                        </button>
+                        <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -325,11 +208,7 @@ const ShipmentMethodListTemplate: React.FC = () => {
 
       {totalPages > 1 && (
         <div className="flex justify-center mt-6">
-          <Pagination
-            pageCount={totalPages}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
+          <Pagination pageCount={totalPages} currentPage={currentPage} onPageChange={handlePageChange}/>
         </div>
       )}
     </div>

@@ -1,25 +1,26 @@
 export interface ShipmentMethodFormData {
   name: string;
   slug: string;
-  price: number;
-  estimatedDeliveryTime: string;
+  description?: string;
+  price: string;
   status?: 'active' | 'inactive';
 }
 
-export interface ValidationErrors {
+export interface ShipmentMethodValidationErrors {
   name?: string;
   slug?: string;
+  description?: string;
   price?: string;
   estimatedDeliveryTime?: string;
+  status?: string;
 }
 
 export const validateShipmentMethodForm = (
   data: ShipmentMethodFormData,
   isEdit = false
-): ValidationErrors => {
-  const errors: ValidationErrors = {};
+): ShipmentMethodValidationErrors => {
+  const errors: ShipmentMethodValidationErrors = {};
 
-  // ✅ Name Validation
   if (!data.name) {
     errors.name = 'Name is required.';
   } else if (!data.name.trim()) {
@@ -30,27 +31,22 @@ export const validateShipmentMethodForm = (
     errors.name = 'Name must contain at least one letter.';
   }
 
-  // ✅ Price Validation
-  if (data.price === undefined || data.price === null) {
-    errors.price = 'Price is required.';
-  } else if (isNaN(data.price)) {
-    errors.price = 'Price must be a valid number.';
-  } else if (data.price < 0) {
-    errors.price = 'Price cannot be negative.';
+  if (data.description) {
+    if (data.description.trim().length < 10) {
+      errors.description = 'Description must be at least 10 characters long.';
+    } else if (!/[a-zA-Z]/.test(data.description)) {
+      errors.description = 'Description must contain at least one letter.';
+    }
   }
 
-  // ✅ Estimated Delivery Time Validation
-  if (!data.estimatedDeliveryTime) {
-    errors.estimatedDeliveryTime = 'Estimated delivery time is required.';
-  } else if (!data.estimatedDeliveryTime.trim()) {
-    errors.estimatedDeliveryTime =
-      'Estimated delivery time cannot start with space.';
-  } else if (data.estimatedDeliveryTime.trim().length < 3) {
-    errors.estimatedDeliveryTime =
-      'Estimated delivery time must be at least 3 characters long.';
-  } else if (!/[a-zA-Z0-9]/.test(data.estimatedDeliveryTime)) {
-    errors.estimatedDeliveryTime =
-      'Estimated delivery time must contain valid characters.';
+ if (!data.price) {
+    errors.price = 'Price is required.';
+  } 
+  else if (isNaN(Number(data.price))) {
+    errors.price = 'Price must be a valid number.';
+  } 
+  else if (Number(data.price) < 0) {
+    errors.price = 'Price must be greater than or equal to 0.';
   }
 
   return errors;

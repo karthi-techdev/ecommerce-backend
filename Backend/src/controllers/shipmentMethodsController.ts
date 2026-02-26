@@ -5,8 +5,8 @@ import { HTTP_RESPONSE } from "../utils/httpResponse";
 class ShipmentMethodController {
   async createShipmentMethod(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { name, slug, price, estimatedDeliveryTime, status } = req.body;    
-      if (!name || !slug || price === undefined || !estimatedDeliveryTime || !status) {
+      const { name, slug, price, status } = req.body;    
+      if (!name || !slug || price === undefined || !status) {
         res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "Required fields are missing" });
         return;
       }
@@ -126,6 +126,9 @@ class ShipmentMethodController {
         return;
       }
       const exists = await shipmentMethodService.checkDuplicateSlug(slug);
+      if (exists) {
+      throw new Error(`Name already exists`);
+    }
       res.status(200).json({ status: HTTP_RESPONSE.SUCCESS, exists });
     } catch (err: any) {
       next(err);

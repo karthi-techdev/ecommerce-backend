@@ -79,10 +79,10 @@ const API = {
   addShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
   listShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
   getShipmentMethodsById: `${ROOTURL}admin/shipment-methods/getShipmentMethodById/`,
-  updateShipmentMethods: `${ROOTURL}admin/shipment-methods/updateSubCategory/updateShipmentMethod`,
+  updateShipmentMethods: `${ROOTURL}admin/shipment-methods/updateShipmentMethod/`,
   deleteShipmentMethods: `${ROOTURL}admin/shipment-methods/softDeleteShipmentMethod/`,
   toggleStatusShipmentMethods: `${ROOTURL}admin/shipment-methods/togglestatus/`,
-  checkDuplicateShipmentMethods: `${ROOTURL}admin/shipment-methods/check-duplicate`,
+  checkDuplicateShipmentMethods: `${ROOTURL}admin/shipment-methods/check-duplicate/`,
 
   // Page endpoints
   addPage: `${ROOTURL}admin/page/`,

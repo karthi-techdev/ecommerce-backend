@@ -18,9 +18,6 @@ class ShipmentMethodService {
       !isUpdate
         ? ValidationHelper.isRequired(data.price, "price")
         : (data.price !== undefined ? ValidationHelper.isNumber(data.price, "price") : null),
-      !isUpdate
-        ? ValidationHelper.isRequired(data.estimatedDeliveryTime, "estimatedDeliveryTime")
-        : (data.estimatedDeliveryTime !== undefined ? ValidationHelper.isNonEmptyString(data.estimatedDeliveryTime, "estimatedDeliveryTime") : null),
       ValidationHelper.isValidEnum(data.status, "status", ["active", "inactive"]),
       ValidationHelper.isBoolean(data.isDeleted, "isDeleted"),
     ];

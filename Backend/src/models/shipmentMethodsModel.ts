@@ -8,7 +8,7 @@ export interface IShipmentMethod extends Document{
     estimatedDeliveryTime: string;
     status?: "active" | "inactive";
     isDeleted?:boolean;
-    createAt?: Date;
+    createdAt?: Date;
 }
 const shipmentMethodSchema = new Schema<IShipmentMethod>(
     {
@@ -16,9 +16,9 @@ const shipmentMethodSchema = new Schema<IShipmentMethod>(
         slug: {type:String, unique:true, required:true},
         description: {type:String},
         price: {type:Number,  required:true},
-        estimatedDeliveryTime: {type:String,  required:true},
+        estimatedDeliveryTime: {type:String},
         status: { type: String, enum: ["active", "inactive"], default: "active" },
-        isDeleted:{type:Boolean, default:true},
+        isDeleted:{type:Boolean, default:false},
     },
     { timestamps:true }
 )

@@ -65,8 +65,7 @@ export interface ShipmentMethod {
   name: string;
   slug: string;
   description?: string;
-  price: number;
-  estimatedDeliveryTime: string;
+  price: string;
   status?: 'active' | 'inactive';
   isDeleted?: boolean;
   createdAt?: string;

@@ -185,11 +185,11 @@ const SubCategoryListTemplate: React.FC = () => {
 
     <td className="px-6 py-4">
     <div className="flex justify-center gap-4">
-      <button onClick={() => navigate(`/subcategory/edit/${item._id}`)} className="text-blue-500 hover:text-blue-700" title="Edit">
-        <Pencil size={18} />
+      <button onClick={() => navigate(`/subcategory/edit/${item._id}`)} className="text-indigo-500 hover:text-indigo-700" title="Edit">
+        <Pencil size={16} />
       </button>
       <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700" title="Delete">
-        <Trash2 size={18} />
+        <Trash2 size={16} />
       </button>
     </div>
     </td>
