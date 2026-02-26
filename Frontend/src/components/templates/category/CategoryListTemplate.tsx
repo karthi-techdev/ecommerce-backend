@@ -192,9 +192,10 @@ const CategoryListTemplate: React.FC = () => {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S.NO</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
+                
                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MainCategory Name</th>
                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SubCategory Name</th>
+                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
@@ -215,6 +216,14 @@ const CategoryListTemplate: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {truncate(category.name, 40)}
                     </td>
+                    
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {truncate(category.mainCategoryId?.name, 40)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {truncate(category.subCategoryId?.name, 40)}
+                    </td>
+
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <img
   src={`http://localhost:5000${category.image}`}
@@ -222,12 +231,6 @@ const CategoryListTemplate: React.FC = () => {
   className="h-10 w-10 object-cover rounded"
 />
 
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {truncate(category.mainCategoryId?.name, 40)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {truncate(category.subCategoryId?.name, 40)}
                     </td>
                     <td className="px-4 py-2">
                       <button

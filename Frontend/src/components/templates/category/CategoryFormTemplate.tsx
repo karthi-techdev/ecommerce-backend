@@ -7,6 +7,8 @@ import {
   type ValidationErrors
 } from '../../validations/categoryValidation';
 import { useCategoryStore } from '../../../stores/categoryStore';
+import { useMainCategoryStore } from '../../../stores/mainCategoryStore';
+import { useSubCategoryStore } from '../../../stores/subcategoryStore';
 import FormHeader from '../../molecules/FormHeader';
 import FormField from '../../molecules/FormField';
 import type { FieldConfig } from '../../../types/common';
@@ -19,17 +21,76 @@ const CategoryFormTemplate: React.FC = () => {
   const {
     fetchCategoryById,
     addCategory,
-    updateCategory,
-    fetchSubCategory,
-    subCategories,slugEXist,fetchMainCategory,mainCategories
+    updateCategory
+    ,slugEXist
   } = useCategoryStore();
+  const {mainCategories,activeMainCategory,page,
+  totalPages,
+  loading,hasMore}=useMainCategoryStore();
+  const {
+  subCategories,
+  fetchSubCategoryByMainCategoryId,
+  subPage,
+  subHasMore,
+  loading: subLoading
+} = useSubCategoryStore();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
-const imageErrorTimer = useRef<NodeJS.Timeout | null>(null);
+const imageErrorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 const slugRequestId = useRef(0);
+  const [searchTerm, setSearchTerm] = useState('');
+const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+const searchRequestId = useRef(0);
+const subSearchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+const subSearchRequestId = useRef(0);
+const [subSearchTerm, setSubSearchTerm] = useState('');
+const isInitialLoad = useRef(true);
 
+const handleSubCategorySearch = (input: string) => {
+  setSubSearchTerm(input);
 
+  if (!formData.mainCategoryId) return; // safety
+
+  // clear previous timer
+  if (subSearchTimer.current) {
+    clearTimeout(subSearchTimer.current);
+  }
+
+  // debounce
+  subSearchTimer.current = setTimeout(async () => {
+    const reqId = ++subSearchRequestId.current;
+
+    await fetchSubCategoryByMainCategoryId(
+      formData.mainCategoryId,
+      1,
+      5,
+      input,
+      false
+    );
+
+    if (reqId !== subSearchRequestId.current) return;
+  }, 500);
+};
+
+const handleMainCategorySearch = (input: string) => {
+  setSearchTerm(input);
+
+  // clear previous timer
+  if (searchTimer.current) {
+    clearTimeout(searchTimer.current);
+  }
+
+  // debounce
+  searchTimer.current = setTimeout(async () => {
+    const reqId = ++searchRequestId.current;
+
+    await activeMainCategory(1, 5, input, false);
+
+    // race condition protection (optional but pro)
+    if (reqId !== searchRequestId.current) return;
+  }, 500);
+};
   const [formData, setFormData] = useState<CategoryFormData>({
     name: '',
     description: '',
@@ -44,11 +105,21 @@ const slugRequestId = useRef(0);
       label: 'Main Category',
       type: 'select',
       className: 'col-span-6',
+      required:true,
       placeholder: 'Select the main category',
-      options: mainCategories.map(m => ({
-        label: m.name,
-        value: m._id
-      }))
+      options: mainCategories
+  .filter(m => m._id)
+  .map(m => ({
+    label: m.name,
+    value: m._id as string
+  })),
+   onInputChange: handleMainCategorySearch,
+ onMenuScrollToBottom: () => {
+  if (!loading && hasMore) {
+    activeMainCategory(page + 1, 5, searchTerm, true); 
+  }
+},
+
     },
     {
       name: 'subCategoryId',
@@ -56,17 +127,33 @@ const slugRequestId = useRef(0);
       type: 'select',
       className: 'col-span-6',
       placeholder: 'Select the sub category',
-      options: subCategories.map(s => ({
-        label: s.name,
-        value: s._id
-      }))
+      required:true,
+      options: subCategories
+  .filter(s => s._id)
+  .map(s => ({
+    label: s.name,
+    value: s._id as string
+  })), onInputChange: handleSubCategorySearch,
+
+  onMenuScrollToBottom: () => {
+    if (!subLoading && subHasMore) {
+      fetchSubCategoryByMainCategoryId(
+        formData.mainCategoryId,
+        subPage + 1,
+        5,
+        subSearchTerm, 
+        true
+      );
+    }
+  }
     },
     {
       name: 'name',
       label: 'Name',
       type: 'text',
       className: 'col-span-6',
-      placeholder: 'Enter Name...'
+      placeholder: 'Enter Name...',
+      required:true
     },
     {
       name: 'slug',
@@ -81,7 +168,8 @@ const slugRequestId = useRef(0);
       label: 'Description',
       type: 'textarea',
       className: 'col-span-12',
-      placeholder: 'Enter the description...'
+      placeholder: 'Enter the description...',
+      required:true
     },
     {
       name: 'image',
@@ -90,10 +178,10 @@ const slugRequestId = useRef(0);
       className: 'col-span-12'
     }
   ];
-
   useEffect(() => {
-    fetchMainCategory();
+    activeMainCategory(1, 5, '');
   }, []);
+
 
   useEffect(() => {
     if (!id) {
@@ -118,8 +206,10 @@ const slugRequestId = useRef(0);
             ? category.mainCategoryId._id
             : category.mainCategoryId;
         if (mainCatId) {
-          await fetchSubCategory(mainCatId);
-        }
+  await fetchSubCategoryByMainCategoryId(mainCatId, 1, 5, "", false);
+  await new Promise(resolve => setTimeout(resolve, 0));
+}
+
         setFormData({
           name: category.name || '',
           description: category.description || '',
@@ -141,16 +231,28 @@ const slugRequestId = useRef(0);
     };
     loadEditData();
   }, [id]);
- useEffect(() => {
+useEffect(() => {
   if (!formData.mainCategoryId) return;
 
-  fetchSubCategory(formData.mainCategoryId);
+  fetchSubCategoryByMainCategoryId(
+    formData.mainCategoryId,
+    1,
+    5,
+    "",
+    false
+  );
 
-  setFormData(prev => ({
-    ...prev,
-    subCategoryId: ''
-  }));
+  if (!isInitialLoad.current) {
+    setFormData(prev => ({
+      ...prev,
+      subCategoryId: ''
+    }));
+  }
+
+  isInitialLoad.current = false;
 }, [formData.mainCategoryId]);
+
+
 
 
   const generateSlug = (text: string) =>
@@ -161,7 +263,7 @@ const slugRequestId = useRef(0);
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-');
 
-      const slugTimer = useRef<NodeJS.Timeout | null>(null);
+      const slugTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 useEffect(() => {
   setErrors(prev => ({
     ...prev,
@@ -192,9 +294,17 @@ const checkSlugExist = (slug: string) => {
     }));
   }, 500);
 };
+useEffect(() => {
+  if (formData.slug && formData.subCategoryId) {
+    checkSlugExist(formData.slug);
+  }
+}, [formData.subCategoryId]);
 
 
-const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+
+
+const handleChange = (e: any) => {
   const { name, value, files } = e.target;
   let next = { ...formData };
   setErrors(prev => ({
@@ -249,7 +359,7 @@ if (name === 'image') {
 
   const fieldErrors = validateCategoryForm(next);
   setErrors(prev => ({
-    [name]: fieldErrors[name as keyof ValidationErrors]
+    ...prev,[name]: fieldErrors[name as keyof ValidationErrors]
   }));
 };
 
@@ -301,10 +411,21 @@ if (name === 'image') {
           {categoryFields.map(field => (
             <FormField
               key={field.name}
-              field={field}
+              field={{
+                ...field,
+                options:
+                  field.name === 'mainCategoryId'
+                    ? mainCategories.filter(m => m._id).map(m => ({ label: m.name, value: m._id as string }))
+                    : field.name === 'subCategoryId'
+                    ? subCategories.filter(s => s._id).map(s => ({ label: s.name, value: s._id as string }))
+                    : undefined,
+                onMenuScrollToBottom: field.onMenuScrollToBottom,
+                onInputChange: field.onInputChange
+              }}
               value={formData[field.name as keyof CategoryFormData]}
               onChange={handleChange}
               error={errors[field.name as keyof ValidationErrors]}
+              isRequired={field.required}
             />
           ))}
 
@@ -327,7 +448,7 @@ if (name === 'image') {
         <div className="mt-6 flex justify-end">
           <button
             disabled={isSubmitting}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:opacity-50"
+            className="px-4 py-2 bg-amber-600 text-white rounded-md disabled:opacity-50"
           >
             {isSubmitting ? 'Saving...' : id ? 'Update' : 'Save'}
           </button>

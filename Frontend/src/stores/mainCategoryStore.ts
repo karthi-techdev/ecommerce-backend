@@ -18,29 +18,36 @@ interface MainCategoryState {
   error: string | null;
   page: number;
   totalPages: number;
+  hasMore: boolean;
 
-  fetchTrashedCategories: (
+  fetchTrashedMainCategories: (
   page?: number,
   limit?: number
 ) => Promise<void>;
 
 
 
-  fetchCategories: (
+  fetchMainCategories: (
     page?: number,
     limit?: number,
     filter?: 'total' | 'active' | 'inactive'
   ) => Promise<void>;
-  checkCategoryNameExists: (name: string, id?: string) => Promise<boolean>;
-  fetchCategoryById: (id: string) => Promise<MainCategory | null>;
-  addCategory: (category: MainCategory | FormData) => Promise<void>;
-  updateCategory: (id: string, category: MainCategory | FormData) => Promise<void>;
-  deleteCategory: (id: string) => Promise<void>;
-  toggleCategoryStatus: (id: string) => Promise<void>;
-  restoreCategory: (id: string) => Promise<void>;
-permanentDeleteCategory: (id: string) => Promise<void>;
+activeMainCategory: (
+  page?: number,
+  limit?: number,
+  search?: string,
+  append?: boolean
+) => Promise<void>;
+  fetchAllMainCategories: (  ) => Promise<void>;
+  checkMainCategoryNameExists: (name: string, id?: string) => Promise<boolean>;
+  fetchMainCategoryById: (id: string) => Promise<MainCategory | null>;
+  addMainCategory: (category: MainCategory | FormData) => Promise<void>;
+  updateMainCategory: (id: string, category: MainCategory | FormData) => Promise<void>;
+  deleteMainCategory: (id: string) => Promise<void>;
+  toggleMainCategoryStatus: (id: string) => Promise<void>;
+  restoreMainCategory: (id: string) => Promise<void>;
+permanentDeleteMainCategory: (id: string) => Promise<void>;
 }
-
 export const useMainCategoryStore = create<MainCategoryState>((set) => ({
   mainCategories: [],
   stats: { total: 0, active: 0, inactive: 0 },
@@ -48,24 +55,22 @@ export const useMainCategoryStore = create<MainCategoryState>((set) => ({
   error: null,
   page: 1,
   totalPages: 1,
+  hasMore:false,
 
-  fetchCategories: async (page = 1, limit = 20, filter = 'total') => {
+  fetchMainCategories: async (page = 1, limit = 20, filter = 'total') => {
     try {
       set({ loading: true, error: null });
 
       const statusParam =
         filter === 'active'
-          ? 'true'
-          : filter === 'inactive'
-          ? 'false'
-          : '';
+          ? 'true':'';
 
       const res = await axiosInstance.get(
         `${API.listMainCategory}?page=${page}&limit=${limit}${
           statusParam ? `&isActive=${statusParam}` : ''
         }`
       );
-
+      console.log(res,'main category');
       const mainCategories = Array.isArray(res.data?.data)
         ? res.data.data
         : [];
@@ -85,14 +90,78 @@ export const useMainCategoryStore = create<MainCategoryState>((set) => ({
       });
     } catch (error: any) {
       set({
-        error: 'Failed to fetch categories',
+        error: 'Failed to fetch main categories',
         mainCategories: [],
         loading: false,
       });
     }
   },
+ activeMainCategory: async (
+  page = 1,
+  limit = 5,
+  search = "",
+  append = false
+) => {
+  try {
+    set({ loading: true });
 
-  fetchTrashedCategories: async (page = 1, limit = 20) => {
+    const res = await axiosInstance.get(
+      `${API.activeMainCategory}?page=${page}&limit=${limit}${search?`&search=${search}`:""}`);
+
+    const mainCategories = Array.isArray(res.data?.data?.data)
+      ? res.data.data.data
+      : [];
+
+    const meta = res.data?.data?.meta || {};
+
+    set((state) => ({
+      mainCategories: append
+        ? [...state.mainCategories, ...mainCategories]
+        : mainCategories,
+      page: meta.page ?? page,
+      totalPages: meta.totalPages ?? 1,
+      hasMore: meta.hasMore ?? false,
+      loading: false,
+    }));
+  } catch (error: any) {
+    set({
+      error: "Failed to fetch main categories",
+      loading: false,
+    });
+  }
+},
+
+  fetchAllMainCategories: async () => {
+  try {
+    set({ loading: true, error: null });
+
+    const res = await axiosInstance.get(API.listAllMainCategory);
+
+    const mainCategories = Array.isArray(res.data?.data)
+      ? res.data.data
+      : [];
+
+    set({
+      mainCategories,
+      stats: {
+        total: mainCategories.length,
+        active: mainCategories.filter((c: MainCategory) => c.isActive).length,
+        inactive: mainCategories.filter((c: MainCategory) => !c.isActive).length,
+      },
+      page: 1,
+      totalPages: 1,
+      loading: false,
+    });
+
+  } catch (error) {
+    set({
+      error: 'Failed to fetch mainCategories',
+      mainCategories: [],
+      loading: false,
+    });
+  }
+},
+  fetchTrashedMainCategories: async (page = 1, limit = 20) => {
   const res = await axiosInstance.get(
     `${API.getTrashMainCategory}?page=${page}&limit=${limit}`
   );
@@ -105,7 +174,7 @@ export const useMainCategoryStore = create<MainCategoryState>((set) => ({
 
   });
 },
-checkCategoryNameExists: async (name: string, id?: string) => {
+checkMainCategoryNameExists: async (name: string, id?: string) => {
   const res = await axiosInstance.get(
     `${API.listMainCategory}/check-name`,
     { params: { name, id } }
@@ -113,48 +182,44 @@ checkCategoryNameExists: async (name: string, id?: string) => {
   return res.data.exists;
 },
 
-restoreCategory: async (id: string) => {
+restoreMainCategory: async (id: string) => {
   await axiosInstance.patch(`${API.restoreMainCategory}${id}`);
 },
 
-permanentDeleteCategory: async (id: string) => {
+permanentDeleteMainCategory: async (id: string) => {
   await axiosInstance.delete(
     `${API.permanentDeleteMainCategory}${id}`
   );
 },
 
   
-  deleteCategory: async (id: string) => {
+  deleteMainCategory: async (id: string) => {
+  try {
     await axiosInstance.delete(`${API.deleteMainCategory}${id}`);
-  },
-
-
-  toggleCategoryStatus: async (id: string) => {
-  set((state) => ({
-    categories: state.mainCategories.map((cat) =>
-      cat._id === id
-        ? { ...cat, isActive: !cat.isActive }
-        : cat
-    ),
-    stats: {
-      total: state.stats.total,
-      active: state.mainCategories.filter(
-        (c) =>
-          c._id === id ? !c.isActive : c.isActive
-      ).length,
-      inactive: state.mainCategories.filter(
-        (c) =>
-          c._id === id ? c.isActive : !c.isActive
-      ).length,
-    },
-  }));
-  await axiosInstance.patch(
-    `${API.toggleMainCategoryStatus}${id}`
-  );
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message || "Failed to delete Main Category";
+    throw new Error(message);
+  }
 },
 
 
-  fetchCategoryById: async (id: string) => {
+
+ toggleMainCategoryStatus: async (id: string) => {
+  try {
+    await axiosInstance.patch(
+      `${API.toggleMainCategoryStatus}${id}`
+    );
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message || "Failed to update status";
+    throw new Error(message);
+  }
+},
+
+
+
+  fetchMainCategoryById: async (id: string) => {
     try {
       const res = await axiosInstance.get(`${API.getMainCategory}${id}`);
       return res.data?.data || null;
@@ -163,12 +228,17 @@ permanentDeleteCategory: async (id: string) => {
     }
   },
 
-  addCategory: async (category) => {
-    await axiosInstance.post(API.addMainCategory, category);
+  addMainCategory: async (mainCategory) => {
+    await axiosInstance.post(API.addMainCategory, mainCategory);
   },
 
-  updateCategory: async (id, category) => {
-    await axiosInstance.put(`${API.updateMainCategory}${id}`, category);
+  updateMainCategory: async (id, mainCategory) => {
+    await axiosInstance.put(`${API.updateMainCategory}${id}`, mainCategory);
   },
 }));
+
+
+
+
+
 

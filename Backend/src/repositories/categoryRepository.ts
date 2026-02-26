@@ -18,7 +18,7 @@ class categoryRepository{
     
           const skip = (page - 1) * limit;
           const [data, stats,total] = await Promise.all([
-            CategoryModel.find(query).skip(skip).limit(limit).populate('mainCategoryId','name').populate('subCategoryId','name').exec(),
+            CategoryModel.find(query).skip(skip).limit(limit).populate('mainCategoryId','name').populate('subCategoryId','name').sort({createdAt:-1}).exec(),
             this.commonRepository.getStats(),CategoryModel.find({isDeleted:false}).countDocuments()
           ]);
     
@@ -71,29 +71,25 @@ class categoryRepository{
       return await CategoryModel.findOne({slug,subCategoryId});
     }
     async getTrashCategory(page=1,limit=10,filter?:string){
-      try {
-        const query:any={isDeleted:true,};
-        if(filter==='active')query.status='active';
-        if(filter==='inactive')query.status='inactive';
-        const skip=(page-1)*limit;
-        const [data,count,stats]=await Promise.all([
-          CategoryModel.find(query).skip(skip).limit(limit).populate('mainCategoryId','name').populate('subCategoryId','name').exec(),
-          CategoryModel.countDocuments(query).exec(),
-          this.commonRepository.getStats(),
-        ]);
-        const totalPages=Math.max(1,Math.ceil(count/limit));
+      const skip = (page - 1) * limit;
+      
+        const data = await CategoryModel.find({ isDeleted: true })
+          .skip(skip)
+          .limit(limit)
+          .sort({ createdAt: -1 }).populate('mainCategoryId','name').populate('subCategoryId','name');
+      
+        const total = await CategoryModel.countDocuments({ isDeleted: true });
+      
         return {
-          data,meta:{
-            ...stats,
-            totalPages,
-            page,limit
-          }
-        }
-      } catch (error) {
-        console.log("Error in getAllTrashCategories",error)
-        throw error;
+          data,
+          meta: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+          },
+        };
       }
-    }
 }
 
 export default new categoryRepository;

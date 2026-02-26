@@ -41,15 +41,15 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
     previewEnabled,
     withEditor,
   }) => {
-    // 1. Unga Backend URL (Port 5000 illa neenga enna port use panreengalo athu)
+    
     const BACKEND_URL = "http://localhost:5000";
-    const defaultImage = "/preview-image.jpg"; // Public folder-la intha image irukanum
+    const defaultImage = "/preview-image.jpg"; 
 
     const [preview, setPreview] = useState<string>(defaultImage);
     const [fileError, setFileError] = useState<string | null>(null);
     const editorRef = useRef(null);
 
-    // ✅ EDIT LOGIC: Backend-la irunthu vara image path-ah full URL-ah mathuroam
+    // ✅ Image preview setter 
     useEffect(() => {
       if (value) {
         if (typeof value === "string" && value.trim() !== "") {
@@ -164,6 +164,7 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
               placeholder={placeholder}
               required={required}
               disabled={disabled}
+              error={error}
             />
           )
         ) : type === "checkbox" ? (
@@ -172,14 +173,12 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
               !disabled &&
               onChange?.({ target: { name, value: !Boolean(value) } })
             }
-            className={`relative w-12 h-6 rounded-full cursor-pointer transition-all duration-300 ${
-              Boolean(value) ? "bg-green-500" : "bg-gray-300"
-            } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`relative w-12 h-6 rounded-full cursor-pointer transition-all duration-300 ${Boolean(value) ? "bg-green-500" : "bg-gray-300"
+              } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             <div
-              className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 ${
-                Boolean(value) ? "translate-x-6" : ""
-              }`}
+              className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 ${Boolean(value) ? "translate-x-6" : ""
+                }`}
             />
           </div>
         ) : type === "radio" ? (
@@ -215,6 +214,7 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
             onChange={handleInputChange}
             readOnly={readonly}
             placeholder={placeholder}
+            required={required}
             disabled={disabled}
             aria-label={ariaLabel}
             className={error ? 'border-red-500' : ''}

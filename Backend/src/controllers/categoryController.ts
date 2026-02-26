@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import categoryService from '../services/categoryServices';
 import { HTTP_RESPONSE } from "../utils/httpResponse";
-import { ICategory } from "../models/categoryModel";
 import { MainCategoryModel } from "../models/mainCategoryModel";
 import { SubCategoryModel } from "../models/subCategoryModel";
 class categoryController {
@@ -137,21 +136,6 @@ class categoryController {
   }
 }
 
-    async getMainCategory(req:Request,res:Response,next:NextFunction):Promise<void>{
-        const mainCategory=await MainCategoryModel.find();
-        res.status(200).json({status:HTTP_RESPONSE.SUCCESS,data:mainCategory});
-    }
-    async getSubCategory(req:Request,res:Response,next:NextFunction):Promise<void>{
-         const  mainId = req.params.mainCategoryId;
-         console.log(mainId)
-    const subCategory = await SubCategoryModel.find({mainCategoryId:mainId
-    })
-    res.status(200).json({
-      status: true,
-      data: subCategory
-    });
-  } 
-
     async updateCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const id = req.params.id;
@@ -259,17 +243,7 @@ else{
             const result=await categoryService.getTrashCategory(page,limit,filter);
             console.log(result)
             res.status(200).json({status:HTTP_RESPONSE.SUCCESS,
-                data:{
-                    data:result.data,
-                    meta:{
-                        total:result.meta.total,
-                        active:result.meta.active,
-                        inactive:result.meta.inactive,
-                        totalPages:result.meta.totalPages,
-                        page:page,
-                        limit:limit
-                    }
-                }
+                ...result
             })
         } catch (err:any) {
             next(err);

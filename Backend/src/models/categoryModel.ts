@@ -18,7 +18,7 @@ export interface ICategory extends Document{
 
 const categorySchema=new Schema<ICategory>({
     name:{type:String,required:true,trim:true},
-    slug:{type:String,unique:true},
+    slug:{type:String},
     description:{type:String,required:true,trim:true},
     image:{type:String},
     mainCategoryId:{type:mongoose.Schema.Types.ObjectId,ref:"MainCategory"},
@@ -28,4 +28,10 @@ const categorySchema=new Schema<ICategory>({
 },{
     timestamps:true
 })
+
+categorySchema.index(
+  { slug: 1, subCategoryId: 1 },
+  { unique: true }
+);
+
 export const CategoryModel=model<ICategory>('category',categorySchema);

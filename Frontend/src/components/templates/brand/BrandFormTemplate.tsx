@@ -6,6 +6,7 @@ import { useBrandStore } from '../../../stores/brandStore';
 import { validateBrandForm, type BrandFormData, type ValidationErrors } from '../../validations/brandValidation';
 import FormHeader from '../../molecules/FormHeader';
 import FormField from '../../molecules/FormField';
+
 import type { FieldConfig } from '../../../types/common';
 import { useDebounce } from '../../../components/hooks/useDebounce';
 
@@ -64,7 +65,8 @@ const BrandFormTemplate: React.FC = () => {
         setSlug(brand.slug);
 
         if (brand.image) {
-          setPreview(`${import.meta.env.VITE_FILE_URL}default/${brand.image}`);
+          setPreview(`http://localhost:5000/${brand.image}`);
+
         }
       }
     }
@@ -74,7 +76,7 @@ const BrandFormTemplate: React.FC = () => {
 
   if (!debouncedName.trim()) return;
 
-  // ❗ Stop duplicate check if already validation error exists
+ 
   if (errors.name && errors.name !== 'Name already exists') return;
 
   const trimmedValue = debouncedName.trim().toLowerCase();
@@ -231,6 +233,7 @@ const handleImageChange = (
 
       <form
         onSubmit={handleSubmit}
+        noValidate 
         className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6"
       >
 
@@ -291,6 +294,7 @@ const handleImageChange = (
           <button
             type="submit"
             disabled={isSubmitting}
+            
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
           >
             {isSubmitting
