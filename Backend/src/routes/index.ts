@@ -7,7 +7,8 @@ import categoryRoutes from './categoryRoutes'
 import mainCategoryRoutes from './mainCategoryRoutes'
 import brandRoutes from './brandRoutes'
 import subCategoryRoutes from './subCategoryRoutes'
-import adminAuthRoutes from './adminAuthRoutes'
+import adminAuthRoutes from './adminAuthRoutes';
+import shipmentMethodRoutes from './shipmentMethodsRouter';
 import couponRoutes from './couponRoutes'
 import configRoutes from './configRoutes';
 import productRoutes from './productRoutes'
@@ -22,6 +23,7 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/brands", brandRoutes);
   app.use("/api/v1/admin/subcategory", subCategoryRoutes);
   app.use("/api/v1/admin/auth", adminAuthRoutes);
+  app.use("/api/v1/admin/shipment-methods", shipmentMethodRoutes);
   app.use("/api/v1/admin/coupon", couponRoutes);
   app.use("/api/v1/admin/config",configRoutes);
   app.use('/api/v1/admin/products', productRoutes);

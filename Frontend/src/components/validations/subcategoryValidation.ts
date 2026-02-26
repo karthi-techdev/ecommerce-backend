@@ -20,13 +20,13 @@ export const validateSubCategoryForm = (
   const errors: ValidationErrors = {};
 
   if (!data.name) {
-    errors.name = 'Sub category name is required.';
+    errors.name = 'Name is required.';
   } else if (!data.name.trim()) {
-    errors.name = 'Sub category name cannot start with space.';
+    errors.name = 'Name cannot start with space.';
   }else if (data.name.trim().length < 3) {
-    errors.name = 'Sub category name must be at least 3 characters long.';
+    errors.name = 'Name must be at least 3 characters long.';
   } else if (!/[a-zA-Z]/.test(data.name)) {
-    errors.name = 'Sub category name must contain at least one letter.';
+    errors.name = 'Name must contain at least one letter.';
   }
 
   if (data.description) {
@@ -38,7 +38,7 @@ export const validateSubCategoryForm = (
   }
 
   if (!data.mainCategoryId) {
-    errors.mainCategoryId = 'Main category is required.';
+    errors.mainCategoryId = 'Main Category is required.';
   }
   if (!isEdit && !data.image) {
     errors.image = 'Image is required';

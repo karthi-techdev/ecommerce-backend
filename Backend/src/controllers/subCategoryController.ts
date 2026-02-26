@@ -13,14 +13,8 @@ class SubCategoryController {
           });
         return;
       }
-       const image = req.file
-      ? `/uploads/subcategories/${req.file.filename}`
-      : "";
-
-    const payload = {
-      ...req.body,
-      image,
-    };
+       const image = req.file? `/uploads/subcategories/${req.file.filename}`: "";
+      const payload = {...req.body,image,};
       const subCategory = await subCategoryService.createSubCategory(payload);
       res
         .status(201)
@@ -42,12 +36,9 @@ class SubCategoryController {
       const limit = parseInt(req.query.limit as string) || 10;
       const filter = req.query.status as string | undefined;
       const mainCategoryId = req.query.mainCategoryId as string | undefined;
-
       const result = await subCategoryService.getAllSubCategories( page, limit,filter, mainCategoryId
       );
-
-      res.status(200).json({
-      status: HTTP_RESPONSE.SUCCESS,
+      res.status(200).json({status: HTTP_RESPONSE.SUCCESS,
       data: {
         data: result.data,
         meta: {
@@ -64,6 +55,30 @@ class SubCategoryController {
       next(err);
     }
   }
+async getAllActiveMainCategories( req: Request,res: Response,next: NextFunction): Promise<void> {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 5;
+    const search = req.query.search as string | undefined;
+    console.log("search",search);
+    const result =await subCategoryService.getAllActiveMainCategories( page,limit,search);
+    res.status(200).json({
+      status: HTTP_RESPONSE.SUCCESS,
+      data: {
+        data: result.data,
+        meta: {
+          total: result.meta.total,
+          totalPages: result.meta.totalPages,
+          page: result.meta.page,
+          limit: result.meta.limit,
+          hasMore: result.meta.hasMore, 
+        },
+      },
+    });
+  } catch (err: any) {
+    next(err);
+  }
+}
 async getSubCategoryByMainCategory( req: Request, res: Response, next: NextFunction ): Promise<void> {
     try {
      const  mainId = req.params.mainCategoryId;
@@ -93,25 +108,17 @@ res.status(200).json({
   async getSubCategoryById( req: Request, res: Response, next: NextFunction ): Promise<void> {
     try {
       const id = req.params.id;
-
       if (!id) {
-        res
-          .status(400)
-          .json({status: HTTP_RESPONSE.FAIL, message: "SubCategory id is required",});
+        res.status(400).json({status: HTTP_RESPONSE.FAIL, message: "SubCategory id is required",});
         return;
       }
-
       const subCategory = await subCategoryService.getSubCategoryById(id);
       if (!subCategory) {
-        res
-          .status(404)
-          .json({status: HTTP_RESPONSE.FAIL, message: "SubCategory not found", });
+        res.status(404).json({status: HTTP_RESPONSE.FAIL, message: "SubCategory not found", });
         return;
       }
 
-      res
-        .status(200)
-        .json({ status: HTTP_RESPONSE.SUCCESS, data: subCategory });
+      res.status(200).json({ status: HTTP_RESPONSE.SUCCESS, data: subCategory });
     } catch (err: any) {
       next(err);
     }
@@ -122,9 +129,7 @@ res.status(200).json({
       const id = req.params.id;
 
       if (!id) {
-        res
-          .status(400)
-          .json({ status: HTTP_RESPONSE.FAIL,  message: "SubCategory id is required",
+        res.status(400).json({ status: HTTP_RESPONSE.FAIL,  message: "SubCategory id is required",
           });
         return;
       }
@@ -139,10 +144,8 @@ res.status(200).json({
     }
       const subCategory = await subCategoryService.updateSubCategory(id, updateData);
       if (!subCategory) {
-        res
-          .status(404)
-          .json({ status: HTTP_RESPONSE.FAIL,  message: "SubCategory not found",
-          });
+        res.status(404).json({ status: HTTP_RESPONSE.FAIL,  message: "SubCategory not found",
+       });
         return;
       }
 
@@ -152,58 +155,51 @@ res.status(200).json({
     }
   }
 
-  async softDeleteSubCategory( req: Request, res: Response, next: NextFunction): Promise<void> {
+  async softDeleteSubCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const id = req.params.id;
-
       if (!id) {
-        res
-          .status(400)
-          .json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory id is required",});
+        res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory id is required" });
         return;
       }
 
       const subCategory = await subCategoryService.softDeleteSubCategory(id);
       if (!subCategory) {
-        res
-          .status(404)
-          .json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory not found",});
+        res.status(404).json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory not found" });
         return;
       }
 
-      res
-        .status(200)
-        .json({status: HTTP_RESPONSE.SUCCESS, message: "SubCategory deleted successfully", data: subCategory, });
+      res.status(200).json({ status: HTTP_RESPONSE.SUCCESS, message: "SubCategory deleted successfully", data: subCategory });
     } catch (err: any) {
+      if (err.message.includes("currently assigned") || err.message.includes("in use")) {
+        res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: err.message });
+        return;
+      }
       next(err);
     }
   }
 
-  async toggleSubCategoryStatus( req: Request, res: Response, next: NextFunction): Promise<void> {
+  async toggleSubCategoryStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const id = req.params.id;
-
       if (!id) {
-        res
-          .status(400)
-          .json({ status: HTTP_RESPONSE.FAIL,  message: "SubCategory id is required",
-          });
+        res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory id is required" });
         return;
       }
 
       const updated = await subCategoryService.toggleActive(id);
       if (!updated) {
-        res
-          .status(404)
-          .json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory not found",  });
+        res.status(404).json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory not found" });
         return;
       }
 
-      res
-        .status(200)
-        .json({ status: HTTP_RESPONSE.SUCCESS,  message: "SubCategory status toggled", data: updated, });
-    } catch (error) {
-      next(error);
+      res.status(200).json({ status: HTTP_RESPONSE.SUCCESS, message: "SubCategory status toggled", data: updated });
+    } catch (err: any) {
+      if (err.message.includes("in use")) {
+        res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: err.message });
+        return;
+      }
+      next(err);
     }
   }
 
@@ -212,13 +208,7 @@ res.status(200).json({
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const filter = req.query.status as string | undefined;
-      
-
-      const result = await subCategoryService.getAllTrashSubCategories(
-        page,
-        limit,
-        filter
-      );
+      const result = await subCategoryService.getAllTrashSubCategories(page,limit,filter);
       res.status(200).json({
         status: HTTP_RESPONSE.SUCCESS,
         data: {
@@ -241,85 +231,57 @@ res.status(200).json({
       const id = req.params.id;
 
       if (!id) {
-        res
-          .status(400)
-          .json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory id is required", });
+        res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory id is required", });
         return;
       }
 
       const subCategory = await subCategoryService.restoreSubCategory(id);
       if (!subCategory) {
-        res
-          .status(404)
-          .json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory not found",});
+        res.status(404).json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory not found",});
         return;
       }
 
-      res
-        .status(200)
-        .json({ status: HTTP_RESPONSE.SUCCESS,  message: "SubCategory restored successfully",  data: subCategory, });
+      res.status(200).json({ status: HTTP_RESPONSE.SUCCESS,  message: "SubCategory restored successfully",  data: subCategory, });
     } catch (err: any) {
       next(err);
     }
   }
 
-  async deleteSubCategoryPermanently( req: Request, res: Response, next: NextFunction ): Promise<void> {
+  async deleteSubCategoryPermanently(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const id = req.params.id;
-
       if (!id) {
-        res
-          .status(400)
-          .json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory id is required", });
+        res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory id is required" });
         return;
       }
-
+      
       const subCategory = await subCategoryService.deleteSubCategoryPermanently(id);
       if (!subCategory) {
-        res
-          .status(404)
-          .json({  status: HTTP_RESPONSE.FAIL, message: "SubCategory not found",
-          });
+        res.status(404).json({ status: HTTP_RESPONSE.FAIL, message: "SubCategory not found" });
         return;
       }
-
-      res
-        .status(200)
-        .json({ status: HTTP_RESPONSE.SUCCESS, message: "SubCategory permanently deleted",  });
+      res.status(200).json({ status: HTTP_RESPONSE.SUCCESS, message: "SubCategory permanently deleted" });
     } catch (err: any) {
+      if (err.message.includes("assigned") || err.message.includes("in use")) {
+        res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: err.message });
+        return;
+      }
       next(err);
     }
   }
 
-  async checkDuplicate(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
+  async checkDuplicate(req: Request,res: Response,next: NextFunction): Promise<void> {
   try {
     const { slug, mainCategoryId, excludeId } = req.body;
-
     if (!slug || !mainCategoryId) {
-      res.status(400).json({
-        status: HTTP_RESPONSE.FAIL,
-        message: 'Slug and mainCategoryId are required',
-      });
+      res.status(400).json({status: HTTP_RESPONSE.FAIL,message: 'Slug and mainCategoryId are required',});
       return;
     }
-
-    const exists =
-      await subCategoryService.checkDuplicateSubCategory(
-        slug,
-        mainCategoryId,
-        excludeId
-      );
-if (exists) {
-  throw new Error(`Name already exists`);
-}
-
-    res.status(200).json({
-      status: HTTP_RESPONSE.SUCCESS,
-      exists,
+    const exists =await subCategoryService.checkDuplicateSubCategory(slug,mainCategoryId,excludeId);
+    if (exists) {
+      throw new Error(`Name already exists`);
+    }
+    res.status(200).json({status: HTTP_RESPONSE.SUCCESS,exists,
     });
   } catch (err) {
     next(err);

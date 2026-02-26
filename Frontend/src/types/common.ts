@@ -80,6 +80,17 @@ export interface SubCategory {
   createdAt?: string;
   mainCategory?: {_id: string; name: string;};
 }
+export interface ShipmentMethod {
+  _id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  price: string;
+  status?: 'active' | 'inactive';
+  isDeleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 
 
@@ -202,7 +213,8 @@ export interface FieldConfig {
   options? :{label:string , value:string}[];
   onMenuScrollToBottom?: () => void;
   onInputChange?: (value: string) => void;
- }
+}
+
 export type ColumnConfig<T> = {
   key: keyof T;
   label: string;
