@@ -96,7 +96,7 @@ const menuItems: MenuItem[] = [
       label:'Category',
       path:'/trash/category'   
     },
-        { key: 'trash-product', label: 'Product', path: '/trash/product' }
+        { key: 'trash-product', label: 'Products', path: '/trash/products' }
         ],
       },
     ];

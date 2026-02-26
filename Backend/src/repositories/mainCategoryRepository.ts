@@ -55,27 +55,46 @@ class MainCategoryRepository {
   }
 
   async getAllMainCategories(page = 1, limit = 10, filter?: string) {
-    const query: any = { isDeleted: false };
+  const skip = (page - 1) * limit;
 
-    if (filter === "active") query.isActive = true;
-    if (filter === "inactive") query.isActive = false;
+  const baseQuery: any = { isDeleted: false };
 
-    const skip = (page - 1) * limit;
+  const dataQuery: any = { ...baseQuery };
 
-    const [data, total] = await Promise.all([
-      MainCategoryModel.find(query).sort({createdAt: -1}).skip(skip).limit(limit).exec(),
-      MainCategoryModel.countDocuments(query),
-    ]);
-    return {
-      data,
-      meta: {
-        total,
-        totalPages: Math.max(1, Math.ceil(total / limit)),
-        page,
-        limit,
-      },
-    };
-  }
+  if (filter === "active") dataQuery.isActive = true;
+  if (filter === "inactive") dataQuery.isActive = false;
+
+  const data = await MainCategoryModel.find(dataQuery)
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .exec();
+
+  const total = await MainCategoryModel.countDocuments(baseQuery);
+
+  const active = await MainCategoryModel.countDocuments({
+    ...baseQuery,
+    isActive: true,
+  });
+
+  const inactive = await MainCategoryModel.countDocuments({
+    ...baseQuery,
+    isActive: false,
+  });
+
+  return {
+    data,
+    meta: {
+      total,
+      active,
+      inactive,
+      totalPages: Math.max(1, Math.ceil(total / limit)),
+      page,
+      limit,
+    },
+  };
+}
+
   
   async getAllListMainCategories(filter?: string) {
   const query: any = { isDeleted: false };

@@ -113,7 +113,7 @@ class productRepository {
     const data = await ProductModel.find({ isDeleted: true })
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 })
+      .sort({ deletedAt: -1 })
       .populate("mainCategoryId", "name")
       .populate("subCategoryId", "name")
       .populate("categoryId", "name")

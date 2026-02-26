@@ -16,7 +16,7 @@ class productService {
           delete (data as any)[key];
         }
       });
-    const rules = [
+    const rules = [  
       !isUpdate
         ? (
             ValidationHelper.isRequired(data.name, "name") ||
@@ -56,15 +56,9 @@ class productService {
                 )
               : null)
           )
-        : null,
-
+        : null,    
       !isUpdate
-        ? (
-            ValidationHelper.isRequired(data.images, "images") ||
-            (Array.isArray(data.images) && data.images.length === 0
-              ? { field: "images", message: "images is required" }
-              : null)
-          )
+        ? ValidationHelper.isRequired(data.thumbnail, "thumbnail")
         : null,
 
       !isUpdate

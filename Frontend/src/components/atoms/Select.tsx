@@ -14,6 +14,7 @@ interface CustomSelectProps {
   className?: string;
   placeholder?: string;
   isMulti?: boolean;
+  error?: boolean;
 }
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -23,6 +24,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   className = '',
   placeholder = 'Select...',
   isMulti = false,
+  error,
 }) => {
   const handleChange = (
     newValue: MultiValue<SelectOption> | SingleValue<SelectOption>,
@@ -44,6 +46,25 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
       placeholder={placeholder}
       className={className}
       classNamePrefix="react-select"
+        styles={{
+          control: (base, state) => ({
+            ...base,
+            borderColor: error
+              ? "#ef4444" 
+              : state.isFocused
+              ? "#6366f1"
+              : base.borderColor,
+            boxShadow: state.isFocused
+              ? error
+                ? "0 0 0 1px #ef4444"
+                : "0 0 0 1px #6366f1"
+              : "none",
+            "&:hover": {
+              borderColor: error ? "#ef4444" : "#6366f1",
+            },
+            minHeight: "42px",
+          }),
+        }}
     />
   );
 };

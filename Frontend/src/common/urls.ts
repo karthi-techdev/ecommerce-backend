@@ -89,16 +89,16 @@ const API = {
 
 
   // ---------------- Product endpoints ----------------
-  addProduct: `${ROOTURL}products/`,
-  listProduct: `${ROOTURL}products/`,
-  getProductById: `${ROOTURL}products/getProductById/`,
-  updateProduct: `${ROOTURL}products/updateProduct/`,
-  softDeleteProduct: `${ROOTURL}products/softDelete/`,
-  permanentDeleteProduct: `${ROOTURL}products/permanentDelete/`,
-  restoreProduct: `${ROOTURL}products/restore/`,
-  toggleProductStatus: `${ROOTURL}products/toggleStatus/`,
-  trashProducts: `${ROOTURL}products/trash`,
-  checkProductSlug: `${ROOTURL}products/checkSlugExist`,
+  addProduct: `${ROOTURL}admin/products/`,
+  listProduct: `${ROOTURL}admin/products/`,
+  getProductById: `${ROOTURL}admin/products/getProductById/`,
+  updateProduct: `${ROOTURL}admin/products/updateProduct/`,
+  softDeleteProduct: `${ROOTURL}admin/products/softDelete/`,
+  permanentDeleteProduct: `${ROOTURL}admin/products/permanentDelete/`,
+  restoreProduct: `${ROOTURL}admin/products/restore/`,
+  toggleProductStatus: `${ROOTURL}admin/products/toggleStatus/`,
+  trashProducts: `${ROOTURL}admin/products/trash`,
+  checkProductSlug: `${ROOTURL}admin/products/checkSlugExist`,
 
 };
 

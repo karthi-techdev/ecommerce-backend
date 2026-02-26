@@ -15,7 +15,13 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error }) 
   if (field.type === 'select') {
     return (
       <div className={field.className || 'md:col-span-6'}>
-        <label className="block mb-1 font-medium">{field.label}</label>
+        <label className="block mb-1 font-medium">
+          {field.label}
+          {field.required && (
+            <span className="text-red-500 ml-1">*</span>
+          )}
+        </label>
+
 
         <CustomSelect
           options={field.options || []}
@@ -23,6 +29,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error }) 
             field.options?.find(opt => opt.value === value) || null
           }
           placeholder={field.placeholder}
+          error={!!error} 
           onChange={(selected: any) =>
             onChange?.({
               target: {

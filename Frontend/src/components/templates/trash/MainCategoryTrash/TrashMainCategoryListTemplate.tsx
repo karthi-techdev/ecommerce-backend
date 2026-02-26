@@ -6,7 +6,7 @@ import TableHeader from '../../../molecules/TableHeader';
 import Pagination from '../../../atoms/Pagination';
 import { useMainCategoryStore } from '../../../../stores/mainCategoryStore';
 import type { MainCategory } from '../../../../types/common';
-import { RotateCcw, Trash2 } from 'lucide-react';
+import { Trash2, RefreshCw } from 'lucide-react';
 import { PAGINATION_CONFIG } from '../../../../constants/pagination';
 import { useNavigate } from 'react-router-dom';
 
@@ -154,25 +154,26 @@ const TrashMainCategoryListTemplate: React.FC = () => {
                     )}
                   </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap flex gap-3">
-                    <button
-                      className="text-green-600 hover:text-green-700 transition"
-                      onClick={() => handleRestore(mainCategory)}
-                      title="Restore"
-                    >
-                      <RotateCcw size={16} />
-                    </button>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center gap-3">
+                      <button
+                        className="text-green-600 hover:text-green-700 transition"
+                        onClick={() => handleRestore(mainCategory)}
+                        title="Restore"
+                      >
+                        <RefreshCw size={16} />
+                      </button>
 
-                    <button
-                      className="text-red-500 hover:text-red-700 transition"
-                      onClick={() =>
-                        handlePermanentDelete(mainCategory)
-                      }
-                      title="Delete Main Category permanently"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                      <button
+                        className="text-red-500 hover:text-red-700 transition"
+                        onClick={() => handlePermanentDelete(mainCategory)}
+                        title="Delete Main Category permanently"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   </td>
+
                 </tr>
               ))
             )}

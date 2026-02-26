@@ -8,7 +8,9 @@ export interface ProductFormData {
   brandId: string;
   mainCategoryId: string;
   subCategoryId: string;
-  images: File[] | string[];
+  categoryId: string; 
+   images: (File | string)[];
+  thumbnail: File | string | null;   
 }
 
 export interface ProductValidationErrors {
@@ -21,15 +23,17 @@ export interface ProductValidationErrors {
   brandId?: string;
   mainCategoryId?: string;
   subCategoryId?: string;
+  categoryId?: string; 
   images?: string;
+  thumbnail?: string;
 }
 
 export const validateProductForm = (
-  data: ProductFormData
+  data: ProductFormData,
+  isEdit: boolean = false
 ): ProductValidationErrors => {
 
   const errors: ProductValidationErrors = {};
-
 
   if (!data.name) {
     errors.name = "Name is required.";
@@ -62,14 +66,15 @@ export const validateProductForm = (
     errors.price = "Price must be greater than 0.";
   }
 
- 
-  if (data.discountPrice !== undefined && data.discountPrice !== '') {
-    if (Number(data.discountPrice) < 0) {
-      errors.discountPrice = "Discount price cannot be negative.";
-    } else if (Number(data.discountPrice) >= Number(data.price)) {
-      errors.discountPrice =
-        "Discount price must be less than regular price.";
-    }
+
+  if (data.discountPrice === '' || data.discountPrice === null) {
+    errors.discountPrice = "Discount price is required.";
+  } 
+  else if (Number(data.discountPrice) < 0) {
+    errors.discountPrice = "Discount price cannot be negative.";
+  } 
+  else if (Number(data.discountPrice) >= Number(data.price)) {
+    errors.discountPrice = "Discount price must be less than regular price.";
   }
 
   
@@ -78,7 +83,8 @@ export const validateProductForm = (
   } else if (Number(data.stockQuantity) < 0) {
     errors.stockQuantity = "Stock cannot be negative.";
   }
-
+   
+  
   
   if (!data.brandId) {
     errors.brandId = "Brand is required.";
@@ -88,13 +94,8 @@ export const validateProductForm = (
     errors.mainCategoryId = "Main Category is required.";
   }
 
-  if (!data.subCategoryId) {
-    errors.subCategoryId = "Sub Category is required.";
-  }
-
-
-  if (!data.images || data.images.length === 0) {
-    errors.images = "At least one product image is required.";
+  if (!isEdit && !data.thumbnail) {
+    errors.thumbnail = "Thumbnail is required.";
   }
 
   return errors;

@@ -37,7 +37,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
-    children: [
+    children: [  
       {  path: '/', element: <Dashboard /> },
       {  path: 'page',
         children:[
@@ -153,7 +153,7 @@ export const router = createBrowserRouter([
              path: 'category', 
              element: <CategoryTrashListPage /> 
           },
-          { path: 'product', element: <ProductTrashListTemplate /> }, 
+          { path: 'products', element: <ProductTrashListTemplate /> }, 
         ],
       },
       

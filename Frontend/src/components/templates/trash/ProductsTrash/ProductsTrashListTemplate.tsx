@@ -36,7 +36,10 @@ const ProductTrashListTemplate: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (error) toast.error(error);
+    if (error) {
+      toast.error(error);
+      useProductStore.setState({ error: null }); 
+    }
   }, [error]);
 
   if (loading) return <Loader />;
@@ -88,57 +91,71 @@ const ProductTrashListTemplate: React.FC = () => {
   return (
     <div className="p-6">
       <TableHeader
-        managementName="Trash Product"
+        managementName="Trash Products"
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         addButtonLabel="Back to Product"
         addButtonLink="/product"
       />
 
-      <div className="bg-white rounded-xl shadow-sm border overflow-hidden mt-4">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mt-6">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y">
+          <table className="min-w-full divide-y divide-gray-200">
 
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs uppercase">S.NO</th>
-                <th className="px-6 py-3 text-left text-xs uppercase">Name</th>
-                <th className="px-6 py-3 text-left text-xs uppercase">Brand</th>
-                <th className="px-6 py-3 text-left text-xs uppercase">Price</th>
-                <th className="px-6 py-3 text-left text-xs uppercase">Image</th>
-                <th className="px-6 py-3 text-left text-xs uppercase">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  S.NO
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Brand
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Price
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Image
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="bg-white divide-y divide-gray-200">
               {filteredTrashProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-4 text-gray-500">
+                  <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">
                     No trash products available
                   </td>
                 </tr>
               ) : (
                 filteredTrashProducts.map((product, index) => (
-                  <tr key={product._id}>
+                  <tr key={product._id} className="text-sm text-gray-700">
 
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {(trashCurrentPage - 1) *
                         PAGINATION_CONFIG.DEFAULT_LIMIT +
                         index +
                         1}
                     </td>
 
-                    <td className="px-6 py-4 text-sm">{product.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
+                      {product.name}
+                    </td>
 
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-900">
                       {product.brandId?.name}
                     </td>
 
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-900">
                       ₹{product.price}
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <img
                         src={`http://localhost:5000${product.images?.[0]}`}
                         alt={product.name}
@@ -146,22 +163,24 @@ const ProductTrashListTemplate: React.FC = () => {
                       />
                     </td>
 
-                    <td className="px-4 py-2 flex gap-2">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
 
-                      <button
-                        onClick={() => handleRestore(product._id!)}
-                        className="text-green-500 hover:text-green-700 p-2"
-                      >
-                        <RefreshCcw size={16} />
-                      </button>
+                        <button
+                          onClick={() => handleRestore(product._id!)}
+                          className="text-green-500 hover:text-green-700"
+                        >
+                          <RefreshCcw size={16} />
+                        </button>
 
-                      <button
-                        onClick={() => handlePermanentDelete(product._id!)}
-                        className="text-red-500 hover:text-red-700 p-2"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                        <button
+                          onClick={() => handlePermanentDelete(product._id!)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <Trash2 size={16} />
+                        </button>
 
+                      </div>
                     </td>
 
                   </tr>
