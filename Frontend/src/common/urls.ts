@@ -8,14 +8,17 @@ const SETTINGS_ID = '68ad8844bfdf0cec7f623bc2';
 
 const API = {
   // ---------------- FAQ endpoints ----------------
-  addFaq: `${ROOTURL}faqs/`,
-  listFaq: `${ROOTURL}faqs/`,
-  getFaq: `${ROOTURL}faqs/getFaqById/`,
-  updateFaq: `${ROOTURL}faqs/updateFaq/`,
-  deleteFaq: `${ROOTURL}faqs/softDeleteFaq/`,
-  toggleStatusFaq: `${ROOTURL}faqs/togglestatus/`,
-  checkDuplicateFaq: `${ROOTURL}faqs/check-duplicate`,
-
+  addFaq: `${ROOTURL}admin/faqs/`,
+  listFaq: `${ROOTURL}admin/faqs/`,
+  getFaq: `${ROOTURL}admin/faqs/getFaqById/`,
+  updateFaq: `${ROOTURL}admin/faqs/updateFaq/`,
+  softDeleteFaq: `${ROOTURL}admin/faqs/softDeleteFaq/`,
+  toggleStatusFaq: `${ROOTURL}admin/faqs/togglestatus/`,
+  checkDuplicateFaq: `${ROOTURL}admin/faqs/check-duplicate`,
+  restoreFaq:`${ROOTURL}admin/faqs/restore/`,
+  permanantDeleteFaq:`${ROOTURL}admin/faqs/permanentDelete/`,
+  trashFaq:`${ROOTURL}admin/faqs/trash`,
+faqStats:`${ROOTURL}admin/faqs/faqStats`,
   // Testimonial endpoints
   addTestimonial: `${ROOTURL}admin/testimonials/`,
   listTestimonial: `${ROOTURL}admin/testimonials/`,
@@ -51,6 +54,7 @@ const API = {
   getTrashMainCategory: `${ROOTURL}admin/main-categories/trash`,
   restoreMainCategory: `${ROOTURL}admin/main-categories/restore/`,
   permanentDeleteMainCategory: `${ROOTURL}admin/main-categories/permanent-delete/`,
+  activeMainCategory:`${ROOTURL}admin/main-categories//activeMainCategories`,
   listAllMainCategory: `${ROOTURL}admin/main-categories/list`,
   // ---------------- Brand endpoints ----------------
   addBrand: `${ROOTURL}brands/`,
@@ -83,6 +87,33 @@ const API = {
   deleteShipmentMethods: `${ROOTURL}admin/shipment-methods/softDeleteShipmentMethod/`,
   toggleStatusShipmentMethods: `${ROOTURL}admin/shipment-methods/togglestatus/`,
   checkDuplicateShipmentMethods: `${ROOTURL}admin/shipment-methods/check-duplicate/`,
+  subCategoryByMainCategoryId:`${ROOTURL}admin/subcategory/softDeleteSubCategory/`,
+    // ---------------- Coupon endpoints ----------------
+
+  addCoupon: `${ROOTURL}admin/coupon/`,
+  listCoupon: `${ROOTURL}admin/coupon/`,
+  getCoupon: `${ROOTURL}admin/coupon/`,
+  updateCoupon: `${ROOTURL}admin/coupon/`,
+  softDeleteCoupon: `${ROOTURL}admin/coupon/softDelete/`,
+  restoreCoupon: `${ROOTURL}admin/coupon/restore/`,
+  hardDeleteCoupon: `${ROOTURL}admin/coupon/permanentDelete/`,
+  toggleCouponStatus: `${ROOTURL}admin/coupon/togglestatus/`,
+  trashCoupon: `${ROOTURL}admin/coupon/trash`,
+  checkDuplicateCoupon: `${ROOTURL}admin/coupon/check-code`,
+
+
+  
+
+  // Config Endpoints
+  addConfig:`${ROOTURL}admin/config/`,
+  listConfig:`${ROOTURL}admin/config/`,
+  getConfigById:`${ROOTURL}admin/config/getConfigById/`,
+  configStats:`${ROOTURL}admin/config/configStats`,
+  updateConfig:`${ROOTURL}admin/config/editConfig/`,
+  deleteConfig:`${ROOTURL}admin/config/deleteConfig/`,
+  toggleConfigStatus:`${ROOTURL}admin/config/togglestatus/`,
+  
+ 
 
   // Page endpoints
   addPage: `${ROOTURL}admin/page/`,
@@ -95,6 +126,19 @@ const API = {
   toggleStatusPage: `${ROOTURL}admin/page/togglestatus/`,
   checkDuplicatePage: `${ROOTURL}admin/page/check-duplicate`,
   listPageTrash: `${ROOTURL}admin/page/trash/`,
+
+
+  // ---------------- Product endpoints ----------------
+  addProduct: `${ROOTURL}products/`,
+  listProduct: `${ROOTURL}products/`,
+  getProductById: `${ROOTURL}products/getProductById/`,
+  updateProduct: `${ROOTURL}products/updateProduct/`,
+  softDeleteProduct: `${ROOTURL}products/softDelete/`,
+  permanentDeleteProduct: `${ROOTURL}products/permanentDelete/`,
+  restoreProduct: `${ROOTURL}products/restore/`,
+  toggleProductStatus: `${ROOTURL}products/toggleStatus/`,
+  trashProducts: `${ROOTURL}products/trash`,
+  checkProductSlug: `${ROOTURL}products/checkSlugExist`,
 
 };
 

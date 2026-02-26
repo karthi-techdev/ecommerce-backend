@@ -79,6 +79,32 @@ async getAllActiveMainCategories( req: Request,res: Response,next: NextFunction)
     next(err);
   }
 }
+async getSubCategoryByMainCategory( req: Request, res: Response, next: NextFunction ): Promise<void> {
+    try {
+     const  mainId = req.params.mainCategoryId;
+      const page = parseInt(req.query.page as string) || 1;
+const limit = parseInt(req.query.limit as string) || 10;
+const search = req.query.search as string | undefined;
+
+const result =
+  await subCategoryService.getAllSubCategoriesByMainCategoryId(
+    mainId,
+    page,
+    limit,
+    search
+  );
+
+res.status(200).json({
+  status: HTTP_RESPONSE.SUCCESS,
+  data: {
+    data: result.data,
+    meta: result.meta,
+  },
+});
+    } catch (err: any) {
+      next(err);
+    }
+  }
   async getSubCategoryById( req: Request, res: Response, next: NextFunction ): Promise<void> {
     try {
       const id = req.params.id;

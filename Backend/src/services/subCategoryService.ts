@@ -66,6 +66,19 @@ class SubCategoryService {
     }
     return await subCategoryRepository.getSubCategoryById(id);
   }
+    async getAllSubCategoriesByMainCategoryId(
+  id: string,
+  page: number = 1,
+  limit: number = 10,
+  search?: string
+) {
+  return await subCategoryRepository.getAllSubCategoriesByMainCategoryId(
+    id,
+    page,
+    limit,
+    search
+  );
+}
 
   async updateSubCategory(id: string | Types.ObjectId,data: Partial<ISubCategory>): Promise<ISubCategory | null> {
     const error = ValidationHelper.isValidObjectId(id, "id");

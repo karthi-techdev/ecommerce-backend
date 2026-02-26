@@ -13,6 +13,7 @@ interface FaqStats {
 
 interface FaqState {
   faqs: Faq[];
+    trashFaq: Faq[];
   stats: FaqStats;
   loading: boolean;
   error: string | null;
@@ -27,14 +28,19 @@ interface FaqState {
   checkDuplicateFaq: (question: string, excludeId?: string) => Promise<boolean>;
   addFaq: (faq: Faq) => Promise<void>;
   updateFaq: (id: string, faq: Faq) => Promise<void>;
-  deleteFaq: (id: string) => Promise<void>;
+  softDeleteFaq: (id: string) => Promise<void>;
+  permanantDeleteFaq: (id: string) => Promise<void>;
   toggleStatusFaq: (id: string) => Promise<void>;
+  fetchTrashFaq: (page?: number, limit?: number) => Promise<void>;
+    restoreFaq: (id: string) => Promise<void>;
+     faqStats:()=>Promise<void>;
 }
 
 
 
 export const useFaqStore = create<FaqState>((set, get) => ({
   faqs: [],
+  trashFaq:[],
   stats: { total: 0, active: 0, inactive: 0 },
   loading: false,
   error: null,
@@ -101,17 +107,33 @@ export const useFaqStore = create<FaqState>((set, get) => ({
       return null;
     }
   },
-
+faqStats:async()=>{
+  try {
+    const res=await axiosInstance.get(`${API.faqStats}`);
+    set({
+      stats:{
+        total:res.data.data.total,
+        active:res.data.data.active,
+        inactive:res.data.data.inactive
+      }
+    })
+  } catch (error:any) {
+      set({        error:error.message==='Network Error'?'Network Error':error?.response?.data?.message||'Failed to load category stats',
+})
+  }
+},
   addFaq: async (faq: Faq) => {
     try {
       // Check for duplicate FAQ before adding
       const store = get();
       const isDuplicate = await store.checkDuplicateFaq(faq.question);
+       console.log(isDuplicate,'im')
       if (isDuplicate) {
         throw new Error('A FAQ with this question already exists');
       }
 
       const res = await axiosInstance.post(API.addFaq, faq);
+     
       set((state) => ({
         faqs: [...state.faqs, res.data.data],
         error: null
@@ -142,9 +164,9 @@ export const useFaqStore = create<FaqState>((set, get) => ({
     }
   },
 
-  deleteFaq: async (id: string) => {
+  softDeleteFaq: async (id: string) => {
     try {
-      await axiosInstance.delete(`${API.deleteFaq}${id}`);
+      await axiosInstance.delete(`${API.softDeleteFaq}${id}`);
       set((state) => ({
         faqs: state.faqs.filter(f => f._id !== id),
         error: null
@@ -154,6 +176,36 @@ export const useFaqStore = create<FaqState>((set, get) => ({
     }
   },
 
+  permanantDeleteFaq: async (id: string) => {
+    try {
+      await axiosInstance.delete(`${API.permanantDeleteFaq}${id}`);
+      set((state) => ({
+        faqs: state.faqs.filter(f => f._id !== id),
+        error: null
+      }));
+    } catch (error: any) {
+      set({ error: error?.message === 'Network error' ? 'Network error' : error?.message || error?.response?.data?.message || 'Failed to delete FAQ' });
+    }
+  },restoreFaq: async (id: string) => {
+    try {
+      await axiosInstance.patch(
+        `${API.restoreFaq}${id}`
+      );
+
+      set(state => ({
+        trashFaq: state.trashFaq.filter(
+          sc => sc._id !== id
+        ),
+        error: null
+      }));
+    } catch (error: any) {
+      set({
+        error:
+          error?.response?.data?.message ||
+          'Failed to restore Faq'
+      });
+    }
+  },
   toggleStatusFaq: async (id: string) => {
     try {
       const res = await axiosInstance.patch(`${API.toggleStatusFaq}${id}`);
@@ -172,5 +224,29 @@ export const useFaqStore = create<FaqState>((set, get) => ({
     } catch (error: any) {
       set({ error: error?.message === 'Network error' ? 'Network error' : error?.message || error?.response?.data?.message || 'Failed to toggle status' });
     }
-  }
+  },
+   fetchTrashFaq: async (page = 1, limit = 20) => {
+    try {
+      set({ loading: true, error: null });
+
+      const res = await axiosInstance.get(
+        `${API.trashFaq}?page=${page}&limit=${limit}`
+      );
+      const { data, meta } = res.data.data;
+      set({
+        trashFaq: data || [],
+        page,
+        totalPages: meta?.totalPages ?? 1,
+        loading: false
+      });
+    } catch (error: any) {
+      set({
+        loading: false,
+        error:
+          error?.response?.data?.message ||
+          'Failed to fetch Trash Faqs'
+      });
+    }
+  },
+
 }));

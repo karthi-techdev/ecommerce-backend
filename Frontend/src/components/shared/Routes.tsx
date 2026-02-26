@@ -11,6 +11,7 @@ const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
 const TestmonialPage = lazy(() => import('../pages/Testimonials/TestListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
+const FaqTrashPage = lazy(() => import('../pages/trash/FaqTrashListPage'));
 const TestimonialFormPage = lazy(() => import('../pages/Testimonials/TestFormPage'));
 const CategoryPage = lazy(() => import('../pages/category/CategoryListPage'));
 const CategoryFormPage = lazy(() => import('../pages/category/CategoryFormPage'));
@@ -20,6 +21,11 @@ const SubcategoryFormPage = lazy(() => import('../pages/subcategory/SubcategoryF
 const SubcategoryTrashPage = lazy(() => import('../pages/trash/SubcategoryTrashListPage'));
 const ShipmentMethodsFormPage = lazy(()=> import ('../pages/shipmentMethods/ShipmentMethodsFormPage'))
 const ShipmentMethodsListPage = lazy(()=> import ('../pages/shipmentMethods/ShipmentMethodsListPage'))
+const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
+const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
+const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
+const CouponListPage = lazy(() => import('../pages/coupon/CouponListPage'));
+const CouponFormPage = lazy(() => import('../pages/coupon/CouponFormPage'));
 const PageListPage = lazy(() => import('../pages/page/pageListPages'));
 const PageFormPage = lazy(() => import('../pages/page/pageFormPages'));
 
@@ -33,10 +39,11 @@ const PublicRoute = () => {
   return !isAuthenticated ? <Outlet /> : <Navigate to="/dashboard" replace />;
 };
 
-const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
-const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
-const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
 
+
+const ProductListPage = lazy(() => import('../pages/products/ProductsListPage'));
+const ProductFormPage = lazy(() => import('../pages/products/ProductsFormPage'));
+const ProductTrashPage = lazy(() => import('../pages/trash/TrashMainCategoryListPage'));
 
 
 const MainCategoryPage = lazy(
@@ -49,7 +56,8 @@ const TrashMainCategoryPage = lazy(
   () => import('../pages/trash/TrashMainCategoryListPage')
 );
 
-
+const ConfigListPage = lazy(() => import('../pages/config/ConfigListPage'));
+const ConfigFormPage = lazy(() => import('../pages/config/ConfigFormPage'));
 const routes: RouteObject[] = [
   {
     element: <PublicRoute />,
@@ -110,6 +118,14 @@ const routes: RouteObject[] = [
         ],
       },
            {
+        path: 'config',
+        children: [
+          { path: '', element: <ConfigListPage /> }, 
+          { path: 'add', element: <ConfigFormPage /> },   
+          { path: 'edit/:id', element: <ConfigFormPage /> },  
+        ],
+      },
+       {
         path: 'brand',
         children: [
           { path: '', element: <BrandListPage /> }, 
@@ -117,6 +133,26 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <BrandFormPage /> }, 
         ],
       },
+
+      {
+  path: 'coupon',
+  children: [
+    { path: '', element: <CouponListPage /> },
+    { path: 'add', element: <CouponFormPage /> },
+    { path: 'edit/:id', element: <CouponFormPage /> },
+  ],
+},
+
+      {
+        
+        path: 'products',
+        children: [
+          { path: '', element: <ProductListPage /> },
+          { path: 'add', element: <ProductFormPage /> },
+          { path: 'edit/:id', element: <ProductFormPage /> },
+        ],
+      },
+
       {
         path: 'mainCategory',
         children: [
@@ -153,9 +189,10 @@ const routes: RouteObject[] = [
         children: [
           { path: 'subcategory', element: <SubcategoryTrashPage /> },
           { path: 'brand', element: <BrandTrashPage /> },
+          { path: 'product', element: <ProductTrashPage /> },
           {path: 'mainCategory',element: <TrashMainCategoryPage />},
-          {path: 'main-category',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
+          {path: 'faq',element: <FaqTrashPage />,},
         ]
       }
         ],

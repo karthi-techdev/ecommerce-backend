@@ -94,6 +94,41 @@ async getAllActiveMainCategories(page = 1,limit = 5, search?: string) {
   async updateSubCategory( id: string | Types.ObjectId, data: Partial<ISubCategory>): Promise<ISubCategory | null> {
     return await SubCategoryModel.findByIdAndUpdate(id, data, { new: true });
   }
+  async getAllSubCategoriesByMainCategoryId(
+  mainCategoryId: string,
+  page: number = 1,
+  limit: number = 10,
+  search?: string
+) {
+  const query: any = {
+    mainCategoryId,
+    isDeleted: false,
+  };
+
+  if (search) {
+    query.name = { $regex: search, $options: "i" };
+  }
+
+  const skip = (page - 1) * limit;
+
+  const [data, total] = await Promise.all([
+    SubCategoryModel.find(query)
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+    SubCategoryModel.countDocuments(query),
+  ]);
+
+  return {
+    data,
+    meta: {
+      page,
+      limit,
+      total,
+      hasMore: skip + data.length < total,
+    },
+  };
+}
  async softDeleteSubCategory(id: string | Types.ObjectId): Promise<ISubCategory | null> {
   const subcategory = await SubCategoryModel.findById(id);
   if (!subcategory) return null;

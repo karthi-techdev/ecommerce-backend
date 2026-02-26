@@ -18,7 +18,7 @@ class categoryRepository{
     
           const skip = (page - 1) * limit;
           const [data, stats,total] = await Promise.all([
-            CategoryModel.find(query).skip(skip).limit(limit).populate('mainCategoryId','name').populate('subCategoryId','name').exec(),
+            CategoryModel.find(query).skip(skip).limit(limit).populate('mainCategoryId','name').populate('subCategoryId','name').sort({createdAt:-1}).exec(),
             this.commonRepository.getStats(),CategoryModel.find({isDeleted:false}).countDocuments()
           ]);
     

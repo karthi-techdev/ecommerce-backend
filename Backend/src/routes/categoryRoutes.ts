@@ -5,8 +5,6 @@ import { setCategoryUpload } from "../middleware/setManagementName";
 const router=Router();
 router.post('/',setCategoryUpload,upload.single('image'),(req, res, next) => categoryController.createCategory(req, res, next));
 router.get('/',(req,res,next)=>categoryController.getCategory(req,res,next));
-router.get('/mainCategory',(req,res,next)=>categoryController.getMainCategory(req,res,next));
-router.get('/subCategory/:mainCategoryId',(req,res,next)=>categoryController.getSubCategory(req,res,next));
 router.get('/getCategoryById/:id',(req,res,next)=>{categoryController.getCategoryById(req,res,next)});
 router.get('/categoryStats',(req,res,next)=>{categoryController.getCategoryStats(req,res,next)});
 router.get('/getCategoryBySlug/:slug',(req,res,next)=>{categoryController.getCategoryBySlug(req,res,next)});

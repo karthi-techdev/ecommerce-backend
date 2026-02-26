@@ -1,4 +1,5 @@
-import { FiSettings, FiBriefcase,FiTrash2 } from 'react-icons/fi';
+
+import {  FiSettings, FiBriefcase,FiTrash2, FiShoppingCart, FiLayers} from 'react-icons/fi';
 import { BiCategory } from "react-icons/bi";
 import { FiTruck } from "react-icons/fi";
 import {FiTag,FiList} from 'react-icons/fi';
@@ -53,6 +54,25 @@ const menuItems: MenuItem[] = [
     icon: <FiTag />,
     path: '/brand',
   },
+   {
+    key: 'config',
+    label: 'Config',
+    icon: <FiLayers />,
+    path: '/config',
+  },
+  {
+    key: 'product',
+    label: 'Products',
+    icon: <FiShoppingCart />,
+    path: '/products',
+  },
+  {
+  key: 'coupon',
+  label: 'Coupon',
+  icon: <FiLayers />,
+  path: '/coupon',
+},
+
   {
     key: 'category',
     label: 'Manage Categories',
@@ -95,7 +115,13 @@ const menuItems: MenuItem[] = [
       key:'trash-category',
       label:'Category',
       path:'/trash/category'   
-    }
+    },
+        { key: 'trash-product', label: 'Product', path: '/trash/product' },
+        {
+      key:'trash-faq',
+      label:'Faq',
+      path:'/trash/faq'   
+    },
         ],
       },
     ];

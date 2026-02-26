@@ -17,14 +17,24 @@ import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
 
 import BrandTrashPage from '../components/pages/trash/BrandTrashPage';
 
-import SubCategoryListTemplate from '../components/templates/subcategory/SubcategoryListTemplate';
-import SubCategoryFormTemplate from '../components/templates/subcategory/SubcategoryFormTemplate';
-import SubCategoryTrashListTemplate from '../components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
-import AdminLoginTemplate from '../components/templates/loginAuth/adminLoginTemplate';
 import ShipmentMethodListTemplate from '../components/templates/shipmentMethods/shipmentMethodsListTemplate';
 import ShipmentMethodFormTemplate from '../components/templates/shipmentMethods/ShipmentMethodsFormTemplate';
+import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
+import SubCategoryFormTemplate from '@/components/templates/subcategory/SubcategoryFormTemplate';
+import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
+import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
+import CouponListTemplate from '../components/templates/coupon/CouponListTemplate';
+import CouponFormTemplate from '../components/templates/coupon/CouponFormTemplate';
+
+
+import ConfigListTemplate from '../components/templates/config/ConfigListTemplate';
+import ConfigFormTemplate from '../components/templates/config/ConfigFormTemplate';
 import PageFormTemplate from '@/components/templates/page/pageFormTemplate';
 import PageListTemplate from '@/components/templates/page/pageListTemplate';
+
+import ProductListTemplate from '@/components/templates/products/ProductsListTemplate';
+import ProductFormTemplate from '@/components/templates/products/ProductsFormTemplate';
+import ProductTrashListTemplate from '@/components/templates/trash/ProductsTrash/ProductsTrashListTemplate';
 
 export const router = createBrowserRouter([
   {
@@ -83,6 +93,32 @@ export const router = createBrowserRouter([
           { path: 'edit/:id', element: <BrandFormTemplate /> },
         ],
       },
+
+      {
+        path: 'products',
+        children: [
+          { path: '', element: <ProductListTemplate /> },
+          { path: 'add', element: <ProductFormTemplate /> },
+          { path: 'edit/:id', element: <ProductFormTemplate /> },
+        ],
+      },
+      {
+        path: 'config',
+        children: [
+          { path: '', element: <ConfigListTemplate /> },
+           { path: 'add', element: <ConfigFormTemplate /> },
+          { path: 'edit/:id', element: <ConfigFormTemplate /> },
+        ],
+      },
+      {
+  path: 'coupon',
+  children: [
+    { path: '', element: <CouponListTemplate /> },
+    { path: 'add', element: <CouponFormTemplate /> },
+    { path: 'edit/:id', element: <CouponFormTemplate /> },
+  ],
+},
+
       {
         path: 'subcategory',
         children: [
@@ -140,7 +176,8 @@ export const router = createBrowserRouter([
           {
              path: 'category', 
              element: <CategoryTrashListPage /> 
-          }, 
+          },
+          { path: 'product', element: <ProductTrashListTemplate /> }, 
         ],
       },
       

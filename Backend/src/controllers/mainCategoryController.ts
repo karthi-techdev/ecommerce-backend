@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import mainCategoryService from "../services/mainCategoryService";
 import { HTTP_RESPONSE } from "../utils/httpResponse";
 import { processUpload } from "../utils/fileUpload";
+import { CustomError } from "../utils/customError";
+
 
 class MainCategoryController {
 
@@ -109,6 +111,24 @@ class MainCategoryController {
       next(err);
     }
   }
+  async getActiveMainCategories(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+   const page = parseInt(req.query.page as string) || 1;
+const limit = parseInt(req.query.limit as string) || 5;
+const search = (req.query.search as string) || "";
+
+const result = await mainCategoryService.getActiveMainCategories(
+  page,
+  limit,
+  search
+);
+      res.status(200).json({status:HTTP_RESPONSE.SUCCESS,
+        data: result
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 
   async updateMainCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -148,6 +168,7 @@ class MainCategoryController {
     try {
 
       const { id } = req.params;
+     
       const category = await mainCategoryService.softDeleteMainCategory(id);
       
       if (!category) {
@@ -222,7 +243,6 @@ class MainCategoryController {
   async toggleMainCategoryStatus(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-
       const category = await mainCategoryService.toggleMainCategoryStatus(id);
 
       res.status(200).json({

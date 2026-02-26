@@ -105,6 +105,8 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(({
     });
   }}
   placeholder={`Select ${label}`}
+ 
+  
   className={error ? 'react-select-error' : ''}
 />
   ) :(
@@ -114,8 +116,9 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(({
           type={type}
           value={value || ''}
           onChange={handleInputChange}
-          readOnly={readonly}
+          
           placeholder={placeholder}
+           required={required} 
           disabled={disabled}
           aria-label={ariaLabel}
           className={error ? 'border-red-500' : ''}

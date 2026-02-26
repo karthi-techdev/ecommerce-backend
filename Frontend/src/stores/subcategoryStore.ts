@@ -81,6 +81,48 @@ export const useSubCategoryStore = create<SubCategoryState>((set) => ({
       });
     }
   },
+  fetchSubCategoryByMainCategoryId: async (
+  mainCategoryId,
+  page = 1,
+  limit = 5,
+  search = "",
+  append = false
+) => {
+  try {
+    set({ loading: true });
+
+    const res = await axiosInstance.get(
+      `${API.subCategoryByMainCategoryId}${mainCategoryId}`,
+      {
+        params: { page, limit, search }
+      }
+    );
+
+    const subCategories = Array.isArray(res.data?.data?.data)
+      ? res.data.data.data
+      : [];
+
+    const meta = res.data?.data?.meta || {};
+
+    set((state) => ({
+      subCategories: append
+        ? [...state.subCategories, ...subCategories]
+        : subCategories,
+      subPage: meta.page ?? page,
+      subTotalPages: meta.totalPages ?? 1,
+      subHasMore: meta.hasMore ?? false,
+      loading: false,
+    }));
+
+  } catch (error: any) {
+    set({
+      error: "Failed to fetch subcategories",
+      loading: false,
+    });
+  }
+},
+
+
 
  fetchActiveMainCategories: async ( page = 1,limit = 5,search = " ") => {
   try {
