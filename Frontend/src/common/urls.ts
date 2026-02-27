@@ -12,7 +12,7 @@ const API = {
   listNewsLetter: `${ROOTURL}newsLetters/`,
   getNewsLetter: `${ROOTURL}newsLetters/getNewsLetterById/`, // backend expect /newsLetters/:id
   updateNewsLetter: `${ROOTURL}newsLetters/updateNewsLetter/`, // backend expect /newsLetters/:id
-  deleteNewsLetter: `${ROOTURL}newsLetters/deleteNewsLetter/`,
+  deleteNewsLetter: `${ROOTURL}newsLetters/softDeleteNewsLetter/`,
   // ---------------- FAQ endpoints ----------------
   addFaq: `${ROOTURL}admin/faqs/`,
   listFaq: `${ROOTURL}admin/faqs/`,
