@@ -99,7 +99,7 @@ const menuItems: MenuItem[] = [
     key: 'newsletter', 
     label: 'NewsLetter', 
     icon: <FiMail />,
-    path: '/newsletters'
+    path: '/newsLetters'
   },
 
       {

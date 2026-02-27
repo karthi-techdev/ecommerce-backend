@@ -43,12 +43,6 @@ const newsLetterFields: FieldConfig[] = [
     label: 'Whether Newsletter Published?',
     type: 'checkbox',
     placeholder: '',
-  },
-  {
-    name: 'isPublished sss',
-    label: 'Whether Newsletter Published?',
-    type: 'radio',
-    placeholder: '',
   }
 ];
 
@@ -85,7 +79,7 @@ const NewsLetterFormTemplate: React.FC = () => {
             name: newsLetter.name || '',
             slug: newsLetter.slug || '',
             description:newsLetter.description || '',
-            coverImage: `http://localhost:4000${newsLetter.coverImage}` || '',
+            coverImage: `${ImportedURL.LIVEURL}${newsLetter.coverImage}` || '',
             isPublished: newsLetter.isPublished || false,
           });
         } else {

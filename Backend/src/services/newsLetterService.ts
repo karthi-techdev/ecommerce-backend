@@ -1,6 +1,6 @@
 import newsLetterRepository from "../repositories/newsLetterRepository";
 import { INewsLetter } from "../models/newsLetterModel";
-import { Types } from "mongoose";
+import { DeleteResult, Types } from "mongoose";
 import ValidationHelper from "../utils/validationHelper";
 import { NewsLetterModel } from "../models/newsLetterModel";
 import { CommonService } from "./commonService";
@@ -82,6 +82,16 @@ class NewsLetterService {
     }
     return await newsLetterRepository.softDeleteNewsLetter(id);
   }
+
+  //  async deleteNewsLetter(
+  //   id: string | Types.ObjectId,
+  // ): Promise<DeleteResult | null> {
+  //   const error = ValidationHelper.isValidObjectId(id, "id");
+  //   if (error) {
+  //     throw new Error(error.message);
+  //   }
+  //   return await newsLetterRepository.deleteNewsLetter(id);
+  // }
 }
 
 export default new NewsLetterService();

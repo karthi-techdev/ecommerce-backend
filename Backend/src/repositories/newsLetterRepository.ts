@@ -1,5 +1,5 @@
 import { NewsLetterModel, INewsLetter } from "../models/newsLetterModel";
-import { Types } from "mongoose";
+import { DeleteResult, Types } from "mongoose";
 import { CommonRepository } from "./commonRepository";
 
 class NewsLetterRepository {
@@ -53,6 +53,12 @@ class NewsLetterRepository {
   ): Promise<INewsLetter | null> {
     return await NewsLetterModel.findByIdAndUpdate(id, data, { new: true });
   }
+
+  // async deleteNewsLetter(
+  //   id: string | Types.ObjectId,
+  // ): Promise<DeleteResult | null> {
+  //   return await NewsLetterModel.deleteOne({ _id: id });
+  // }
 
   async softDeleteNewsLetter(
     id: string | Types.ObjectId,

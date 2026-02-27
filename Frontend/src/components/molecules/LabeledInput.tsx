@@ -40,6 +40,7 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
     error,
     previewEnabled,
     withEditor,
+    options
   }) => {
     
     const BACKEND_URL = "http://localhost:5000";

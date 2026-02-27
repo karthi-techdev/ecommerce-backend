@@ -198,7 +198,7 @@ const routes: RouteObject[] = [
         ]
       }, 
       {
-            path: 'newsletters',
+            path: 'newsLetters',
             children: [
               { path: '', element: <NewsLetterPage /> },
               { path: 'add', element: <NewsLetterFormPage /> },
