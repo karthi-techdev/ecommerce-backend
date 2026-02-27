@@ -19,6 +19,8 @@ import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
 
 import BrandTrashPage from '../components/pages/trash/BrandTrashPage';
 
+import ShipmentMethodListTemplate from '../components/templates/shipmentMethods/shipmentMethodsListTemplate';
+import ShipmentMethodFormTemplate from '../components/templates/shipmentMethods/ShipmentMethodsFormTemplate';
 import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
 import SubCategoryFormTemplate from '@/components/templates/subcategory/SubcategoryFormTemplate';
 import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
@@ -122,18 +124,9 @@ export const router = createBrowserRouter([
       {
         path: 'subcategory',
         children: [
-          {
-            path: '',
-            element: <SubCategoryListTemplate />,
-          },
-          {
-            path: 'add',
-            element: <SubCategoryFormTemplate />,
-          },
-          {
-            path: 'edit/:id',
-            element: <SubCategoryFormTemplate />,
-          },
+          { path: '', element: <SubCategoryListTemplate />, },
+          { path: 'add', element: <SubCategoryFormTemplate />,},
+          { path: 'edit/:id', element: <SubCategoryFormTemplate />,},
         ],
       },
       {
@@ -162,6 +155,14 @@ export const router = createBrowserRouter([
           { path: 'edit/:id', element: <MainCategoryFormTemplate /> },
         ]
       }, 
+      {
+        path: 'shipment-methods',
+        children: [
+          { path: '', element: <ShipmentMethodListTemplate /> },
+          { path: 'add', element: <ShipmentMethodFormTemplate /> },
+          { path: 'edit/:id', element: <ShipmentMethodFormTemplate /> },
+        ],
+      },
       {
         path: 'trash',
           children : [

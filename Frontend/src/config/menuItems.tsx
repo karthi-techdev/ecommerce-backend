@@ -1,6 +1,6 @@
-import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
+
+import {  FiSettings, FiBriefcase, FiTruck, FiTrash2, FiShoppingCart, FiLayers, FiTag,FiList,FiMail} from 'react-icons/fi';
 import { BiCategory } from "react-icons/bi";
-import {FiLayers,FiTag,FiList,FiMail } from 'react-icons/fi';
 import type { ReactNode } from 'react';
 
 
@@ -40,6 +40,11 @@ const menuItems: MenuItem[] = [
       { key: 'page', label: 'Pages', path: '/page',},
     ],
   },
+      { key: 'shipment-methods',
+         label:'ShipmentMethods',
+         icon:<FiTruck/>,
+          path:'/shipment-methods'
+        },
 
   {
     key: 'brand',

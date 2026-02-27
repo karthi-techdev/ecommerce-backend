@@ -85,6 +85,15 @@ const API = {
   checkDuplicateSubCategory: `${ROOTURL}admin/subcategory/check-duplicate`,
   listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
   subCategoryByMainCategoryId: `${ROOTURL}admin/subcategory/softDeleteSubCategory/`,
+  listActiveMainCategory: `${ROOTURL}admin/subcategory/activemain-categorylist`,
+  //shipmentMethods endpoints
+  addShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
+  listShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
+  getShipmentMethodsById: `${ROOTURL}admin/shipment-methods/getShipmentMethodById/`,
+  updateShipmentMethods: `${ROOTURL}admin/shipment-methods/updateShipmentMethod/`,
+  deleteShipmentMethods: `${ROOTURL}admin/shipment-methods/softDeleteShipmentMethod/`,
+  toggleStatusShipmentMethods: `${ROOTURL}admin/shipment-methods/togglestatus/`,
+  checkDuplicateShipmentMethods: `${ROOTURL}admin/shipment-methods/check-duplicate/`,
   // ---------------- Coupon endpoints ----------------
 
   addCoupon: `${ROOTURL}admin/coupon/`,

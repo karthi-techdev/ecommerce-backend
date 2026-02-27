@@ -14,35 +14,32 @@ interface FormFieldProps {
 const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error,isRequired }) => {
   if (field.type === 'select') {
     return (
-      <div className={`md:col-span-6 flex flex-col`}>
-  <label className="block mb-1 font-medium text-gray-700 text-sm">
-    {field.label}
-    {field.required && <span className="text-red-500 ml-1">*</span>}
-  </label>
+      <div className={field.className || 'md:col-span-6'}>
+        <label className="block mb-1 font-medium">
+        {field.label} 
+        {isRequired && <span className="text-red-500 ml-1">*</span>}
+        </label>
 
-  <div className="w-full">
-    <CustomSelect
-      options={field.options || []}
-      value={field.options?.find(opt => opt.value === value) || null}
-      placeholder={field.placeholder}
-      onChange={(selected: any) =>
-        onChange?.({
-          target: {
-            name: field.name,
-            value: selected ? selected.value : '',
-          },
-        })
-      }
-      className={`w-full text-sm rounded-md 
-        ${error ? 'border-red-400' : 'border-gray-100'} 
-        border`}
-    />
-  </div>
+        <CustomSelect
+        options={field.options || []}
+        value={
+          field.options?.find(opt => opt.value === value) || null
+        }
+        placeholder={field.placeholder}
+        onMenuScrollToBottom={field.onMenuScrollToBottom}
+        onInputChange={field.onInputChange}  
+        onChange={(selected: any) =>
+          onChange?.({
+            target: {
+              name: field.name,
+              value: selected ? selected.value : '',
+            },
+          })
+        }
+      />
 
-  {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-</div>
-
-
+        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      </div>
     );
   }
 
@@ -53,13 +50,10 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error,isR
         label={field.label}
         type={field.type}
         value={value}
-        
-
-         required={field.required}  
         onChange={onChange}
         placeholder={field.placeholder}
         readonly={field.readonly}
-        
+        required={isRequired}
         disabled={field.disabled}
         aria-label={field.ariaLabel} 
         error={error}
@@ -67,10 +61,8 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error,isR
         previewEnabled={field.previewEnabled}
         withEditor={field.withEditor}
       />
-     
     </div>
   );
-
 };
 
 export default FormField;

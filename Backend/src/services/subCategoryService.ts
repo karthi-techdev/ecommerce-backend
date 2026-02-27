@@ -39,7 +39,6 @@ class SubCategoryService {
       throw new Error(errors.map(e => e.message).join(", "));
     }
   }
-
     async createSubCategory(data: ISubCategory): Promise<ISubCategory> {
     this.validateSubCategoryData(data);
     const { name , description } = data;
@@ -47,35 +46,27 @@ class SubCategoryService {
     const capitalizedDescription = description.charAt(0).toUpperCase() + description.slice(1);
     data.name = capitalizedName;
     data.description = capitalizedDescription;
-    const exists = await subCategoryRepository.existsBySlug(
-      data.slug,
-      data.mainCategoryId.toString()
-    );
-
+    const exists = await subCategoryRepository.existsBySlug(data.slug, data.mainCategoryId.toString());
     if (exists) {
-      throw new Error(
-        `Subcategory ${data.slug} already exists under this main category`
-      );
+      throw new Error(`Subcategory ${data.slug} already exists under this main category`);
     }
 
   return await subCategoryRepository.createSubCategory(data);
-}
-
-
-  async getAllSubCategories(
-    page = 1,
-    limit = 10,
-    filter?: string,
-    mainCategoryId?: string
-  ) {
-    return await subCategoryRepository.getAllSubCategories(
-      page,
-      limit,
-      filter,
-      mainCategoryId
-    );
   }
-  async getAllSubCategoriesByMainCategoryId(
+  async getAllSubCategories(page = 1,limit = 10,filter?: string, mainCategoryId?: string) {
+    return await subCategoryRepository.getAllSubCategories( page,limit,filter, mainCategoryId);
+  }
+  async getAllActiveMainCategories(page = 1,limit = 5, search?: string) {
+  return await subCategoryRepository.getAllActiveMainCategories(page,limit,search);
+}
+  async getSubCategoryById(id: string | Types.ObjectId): Promise<ISubCategory | null> {
+    const error = ValidationHelper.isValidObjectId(id, "id");
+    if (error) {
+      throw new Error(error.message);
+    }
+    return await subCategoryRepository.getSubCategoryById(id);
+  }
+    async getAllSubCategoriesByMainCategoryId(
   id: string,
   page: number = 1,
   limit: number = 10,
@@ -89,44 +80,23 @@ class SubCategoryService {
   );
 }
 
-
-  async getSubCategoryById(
-    id: string | Types.ObjectId
-  ): Promise<ISubCategory | null> {
+  async updateSubCategory(id: string | Types.ObjectId,data: Partial<ISubCategory>): Promise<ISubCategory | null> {
     const error = ValidationHelper.isValidObjectId(id, "id");
     if (error) {
       throw new Error(error.message);
     }
-    return await subCategoryRepository.getSubCategoryById(id);
-  }
-
-  async updateSubCategory(
-    id: string | Types.ObjectId,
-    data: Partial<ISubCategory>
-  ): Promise<ISubCategory | null> {
-    const error = ValidationHelper.isValidObjectId(id, "id");
-    if (error) {
-      throw new Error(error.message);
-    }
-
     this.validateSubCategoryData(data, true);
-
     return await subCategoryRepository.updateSubCategory(id, data);
   }
 
-  async softDeleteSubCategory(
-    id: string | Types.ObjectId
-  ): Promise<ISubCategory | null> {
+  async softDeleteSubCategory(id: string | Types.ObjectId): Promise<ISubCategory | null> {
     const error = ValidationHelper.isValidObjectId(id, "id");
     if (error) {
       throw new Error(error.message);
     }
     return await subCategoryRepository.softDeleteSubCategory(id);
   }
-
-  async toggleActive(
-    id: string | Types.ObjectId
-  ): Promise<ISubCategory | null> {
+ async toggleActive(id: string | Types.ObjectId): Promise<ISubCategory | null> {
     const error = ValidationHelper.isValidObjectId(id, "id");
     if (error) {
       throw new Error(error.message);
@@ -134,21 +104,11 @@ class SubCategoryService {
     return await subCategoryRepository.toggleActive(id);
   }
 
-  async getAllTrashSubCategories(
-    page = 1,
-    limit = 10,
-    filter?: string
-  ) {
-    return await subCategoryRepository.getAllTrashSubCategories(
-      page,
-      limit,
-      filter
-    );
+  async getAllTrashSubCategories(page = 1,limit = 10,filter?: string) {
+    return await subCategoryRepository.getAllTrashSubCategories(page,limit,filter);
   }
 
-  async restoreSubCategory(
-    id: string | Types.ObjectId
-  ): Promise<ISubCategory | null> {
+  async restoreSubCategory(id: string | Types.ObjectId ): Promise<ISubCategory | null> {
     const error = ValidationHelper.isValidObjectId(id, "id");
     if (error) {
       throw new Error(error.message);
@@ -156,9 +116,7 @@ class SubCategoryService {
     return await subCategoryRepository.restoreSubCategory(id);
   }
 
-  async deleteSubCategoryPermanently(
-    id: string | Types.ObjectId
-  ): Promise<ISubCategory | null> {
+  async deleteSubCategoryPermanently(id: string | Types.ObjectId): Promise<ISubCategory | null> {
     const error = ValidationHelper.isValidObjectId(id, "id");
     if (error) {
       throw new Error(error.message);
@@ -166,17 +124,8 @@ class SubCategoryService {
     return await subCategoryRepository.deleteSubCategoryPermanently(id);
   }
 
-  async checkDuplicateSubCategory(
-    slug: string,
-    mainCategoryId: string,
-    excludeId?: string
-  ): Promise<boolean> {
-    return await subCategoryRepository.existsBySlug(
-      slug,
-      mainCategoryId,
-      excludeId
-    );
+  async checkDuplicateSubCategory(slug: string, mainCategoryId: string,excludeId?: string): Promise<boolean> {
+    return await subCategoryRepository.existsBySlug(slug,mainCategoryId,excludeId );
   }
 }
-
 export default new SubCategoryService();
