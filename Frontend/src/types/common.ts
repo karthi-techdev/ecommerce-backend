@@ -6,9 +6,14 @@ export interface Faq {
   answer: string;
   status?: 'active' | 'inactive';
 }
-export interface PopulatedCategory{
-  _id:string;
-  name:string;
+export interface NewsLetter {
+  _id?: string;
+  name: string;
+  slug: string;
+  description: string;
+  coverImage?: string | object;
+  isPublished?: boolean;
+}
 }
 export interface Category{
   _id?:string;
@@ -210,6 +215,8 @@ export interface FieldConfig {
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
   accept?: string; 
+  previewEnabled?: boolean;
+  withEditor?: boolean;
   options? :{label:string , value:string}[];
   onMenuScrollToBottom?: () => void;
   onInputChange?: (value: string) => void;

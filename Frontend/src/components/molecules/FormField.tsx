@@ -58,6 +58,8 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error,isR
         aria-label={field.ariaLabel} 
         error={error}
         options={field.options}
+        previewEnabled={field.previewEnabled}
+        withEditor={field.withEditor}
       />
     </div>
   );

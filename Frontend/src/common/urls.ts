@@ -1,12 +1,18 @@
 const LIVE = false;
 
-const SITEURL = 'https://example.com/';
-const LIVEURL = LIVE ? SITEURL : 'http://localhost:5000/';
+const SITEURL = "https://example.com/";
+const LIVEURL = LIVE ? SITEURL : "http://localhost:5000/";
 const ROOTURL = `${LIVEURL}api/v1/`;
 const FILEURL = LIVEURL;
-const SETTINGS_ID = '68ad8844bfdf0cec7f623bc2';
+const SETTINGS_ID = "68ad8844bfdf0cec7f623bc2";
 
 const API = {
+  // ---------- NewsLetter endpoints ----------
+  addNewsLetter: `${ROOTURL}newsLetters/`,
+  listNewsLetter: `${ROOTURL}newsLetters/`,
+  getNewsLetter: `${ROOTURL}newsLetters/getNewsLetterById/`, // backend expect /newsLetters/:id
+  updateNewsLetter: `${ROOTURL}newsLetters/updateNewsLetter/`, // backend expect /newsLetters/:id
+  deleteNewsLetter: `${ROOTURL}newsLetters/softDeleteNewsLetter/`,
   // ---------------- FAQ endpoints ----------------
   addFaq: `${ROOTURL}admin/faqs/`,
   listFaq: `${ROOTURL}admin/faqs/`,
@@ -15,10 +21,10 @@ const API = {
   softDeleteFaq: `${ROOTURL}admin/faqs/softDeleteFaq/`,
   toggleStatusFaq: `${ROOTURL}admin/faqs/togglestatus/`,
   checkDuplicateFaq: `${ROOTURL}admin/faqs/check-duplicate`,
-  restoreFaq:`${ROOTURL}admin/faqs/restore/`,
-  permanantDeleteFaq:`${ROOTURL}admin/faqs/permanentDelete/`,
-  trashFaq:`${ROOTURL}admin/faqs/trash`,
-faqStats:`${ROOTURL}admin/faqs/faqStats`,
+  restoreFaq: `${ROOTURL}admin/faqs/restore/`,
+  permanantDeleteFaq: `${ROOTURL}admin/faqs/permanentDelete/`,
+  trashFaq: `${ROOTURL}admin/faqs/trash`,
+  faqStats: `${ROOTURL}admin/faqs/faqStats`,
   // Testimonial endpoints
   addTestimonial: `${ROOTURL}admin/testimonials/`,
   listTestimonial: `${ROOTURL}admin/testimonials/`,
@@ -34,16 +40,16 @@ faqStats:`${ROOTURL}admin/faqs/faqStats`,
   getCategory: `${ROOTURL}admin/categories/getCategoryById/`,
   updateCategory: `${ROOTURL}admin/categories/updateCategory/`,
   deleteCategory: `${ROOTURL}admin/categories/softDelete/`,
-  toggleStatusCategory:`${ROOTURL}admin/categories/togglestatus/`,
-  trashCategory:`${ROOTURL}admin/categories/trash`,
-  permanentDeleteCategory:`${ROOTURL}admin/categories/permanentDelete/`,
-  restoreCategory:`${ROOTURL}admin/categories/restore/`,
-  categoryStats:`${ROOTURL}admin/categories/categoryStats`,
-  mainCategory:`${ROOTURL}admin/categories/mainCategory`,
-  subCategory:`${ROOTURL}admin/categories/subCategory/`,
-  slugExist:`${ROOTURL}admin/categories/slugExist`,
+  toggleStatusCategory: `${ROOTURL}admin/categories/togglestatus/`,
+  trashCategory: `${ROOTURL}admin/categories/trash`,
+  permanentDeleteCategory: `${ROOTURL}admin/categories/permanentDelete/`,
+  restoreCategory: `${ROOTURL}admin/categories/restore/`,
+  categoryStats: `${ROOTURL}admin/categories/categoryStats`,
+  mainCategory: `${ROOTURL}admin/categories/mainCategory`,
+  subCategory: `${ROOTURL}admin/categories/subCategory/`,
+  slugExist: `${ROOTURL}admin/categories/slugExist`,
 
-    // Main Category endpoints
+  // Main Category endpoints
   listMainCategory: `${ROOTURL}admin/main-categories`,
   addMainCategory: `${ROOTURL}admin/main-categories`,
   getMainCategory: `${ROOTURL}admin/main-categories/`,
@@ -54,7 +60,7 @@ faqStats:`${ROOTURL}admin/faqs/faqStats`,
   getTrashMainCategory: `${ROOTURL}admin/main-categories/trash`,
   restoreMainCategory: `${ROOTURL}admin/main-categories/restore/`,
   permanentDeleteMainCategory: `${ROOTURL}admin/main-categories/permanent-delete/`,
-  activeMainCategory:`${ROOTURL}admin/main-categories//activeMainCategories`,
+  activeMainCategory: `${ROOTURL}admin/main-categories//activeMainCategories`,
   listAllMainCategory: `${ROOTURL}admin/main-categories/list`,
   // ---------------- Brand endpoints ----------------
   addBrand: `${ROOTURL}brands/`,
@@ -62,7 +68,7 @@ faqStats:`${ROOTURL}admin/faqs/faqStats`,
   getBrand: `${ROOTURL}brands/getBrandById/`,
   updateBrand: `${ROOTURL}brands/updateBrand/`,
   softDeleteBrand: `${ROOTURL}brands/softDeleteBrand/`,
-  restoreBrand: `${ROOTURL}brands/restore`, 
+  restoreBrand: `${ROOTURL}brands/restore`,
   hardDeleteBrand: `${ROOTURL}brands/permanentDelete`,
   toggleBrandStatus: `${ROOTURL}brands/togglestatus`,
   trashBrands: `${ROOTURL}brands/trash`,
@@ -73,11 +79,12 @@ faqStats:`${ROOTURL}admin/faqs/faqStats`,
   getSubCategoryById: `${ROOTURL}admin/subcategory/getSubCategoryById/`,
   updateSubCategory: `${ROOTURL}admin/subcategory/updateSubCategory/`,
   deleteSubCategory: `${ROOTURL}admin/subcategory/softDeleteSubCategory/`,
-  hardDeleteSubCategory:`${ROOTURL}admin/subcategory/permanentDelete/`,
-  restoreSubCategory:`${ROOTURL}admin/subcategory/restore/`,
+  hardDeleteSubCategory: `${ROOTURL}admin/subcategory/permanentDelete/`,
+  restoreSubCategory: `${ROOTURL}admin/subcategory/restore/`,
   toggleStatusSubCategory: `${ROOTURL}admin/subcategory/togglestatus/`,
   checkDuplicateSubCategory: `${ROOTURL}admin/subcategory/check-duplicate`,
   listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
+  subCategoryByMainCategoryId: `${ROOTURL}admin/subcategory/softDeleteSubCategory/`,
   listActiveMainCategory: `${ROOTURL}admin/subcategory/activemain-categorylist`,
   //shipmentMethods endpoints
   addShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
@@ -87,8 +94,7 @@ faqStats:`${ROOTURL}admin/faqs/faqStats`,
   deleteShipmentMethods: `${ROOTURL}admin/shipment-methods/softDeleteShipmentMethod/`,
   toggleStatusShipmentMethods: `${ROOTURL}admin/shipment-methods/togglestatus/`,
   checkDuplicateShipmentMethods: `${ROOTURL}admin/shipment-methods/check-duplicate/`,
-  subCategoryByMainCategoryId:`${ROOTURL}admin/subcategory/softDeleteSubCategory/`,
-    // ---------------- Coupon endpoints ----------------
+  // ---------------- Coupon endpoints ----------------
 
   addCoupon: `${ROOTURL}admin/coupon/`,
   listCoupon: `${ROOTURL}admin/coupon/`,
@@ -101,32 +107,26 @@ faqStats:`${ROOTURL}admin/faqs/faqStats`,
   trashCoupon: `${ROOTURL}admin/coupon/trash`,
   checkDuplicateCoupon: `${ROOTURL}admin/coupon/check-code`,
 
-
-  
-
   // Config Endpoints
-  addConfig:`${ROOTURL}admin/config/`,
-  listConfig:`${ROOTURL}admin/config/`,
-  getConfigById:`${ROOTURL}admin/config/getConfigById/`,
-  configStats:`${ROOTURL}admin/config/configStats`,
-  updateConfig:`${ROOTURL}admin/config/editConfig/`,
-  deleteConfig:`${ROOTURL}admin/config/deleteConfig/`,
-  toggleConfigStatus:`${ROOTURL}admin/config/togglestatus/`,
-  
- 
+  addConfig: `${ROOTURL}admin/config/`,
+  listConfig: `${ROOTURL}admin/config/`,
+  getConfigById: `${ROOTURL}admin/config/getConfigById/`,
+  configStats: `${ROOTURL}admin/config/configStats`,
+  updateConfig: `${ROOTURL}admin/config/editConfig/`,
+  deleteConfig: `${ROOTURL}admin/config/deleteConfig/`,
+  toggleConfigStatus: `${ROOTURL}admin/config/togglestatus/`,
 
   // Page endpoints
   addPage: `${ROOTURL}admin/page/`,
   listPage: `${ROOTURL}admin/page/`,
   getPageById: `${ROOTURL}admin/page/`,
   updatePage: `${ROOTURL}admin/page/`,
-  deletePage: `${ROOTURL}admin/page/`, 
-  hardDeletePage:`${ROOTURL}admin/page/permanent/`,
-  restorePage:`${ROOTURL}admin/page/restore/`,
+  deletePage: `${ROOTURL}admin/page/`,
+  hardDeletePage: `${ROOTURL}admin/page/permanent/`,
+  restorePage: `${ROOTURL}admin/page/restore/`,
   toggleStatusPage: `${ROOTURL}admin/page/togglestatus/`,
   checkDuplicatePage: `${ROOTURL}admin/page/check-duplicate`,
   listPageTrash: `${ROOTURL}admin/page/trash/`,
-
 
   // ---------------- Product endpoints ----------------
   addProduct: `${ROOTURL}products/`,
@@ -139,9 +139,7 @@ faqStats:`${ROOTURL}admin/faqs/faqStats`,
   toggleProductStatus: `${ROOTURL}products/toggleStatus/`,
   trashProducts: `${ROOTURL}products/trash`,
   checkProductSlug: `${ROOTURL}products/checkSlugExist`,
-
 };
-
 
 const ImportedURL = { API, LIVEURL, FILEURL, SETTINGS_ID };
 export default ImportedURL;

@@ -1,6 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Layout from '../components/shared/Layout';
 import Dashboard from '../components/templates/dashboard/Dashboard';
+import NewsLetterListTemplate from '../components/templates/newsLetter/NewsLetterListTemplate';
+import NewsLetterFormTemplate from '../components/templates/newsLetter/NewsLetterFormTemplate';
 import FaqListTemplate from '../components/templates/faq/FaqListTemplate';
 import FaqFormTemplate from '../components/templates/faq/FaqFormTemplate';
 import TestimonialFormTemplate from '../components/templates/testimonial/testFormTemplate';
@@ -78,11 +80,11 @@ export const router = createBrowserRouter([
       }
       ,
       {
-        path: 'faq',
+        path: 'newsLetter',
         children: [
-          { path: '', element: <FaqListTemplate /> },
-          { path: 'add', element: <FaqFormTemplate /> },
-          { path: 'edit/:id', element: <FaqFormTemplate /> },
+          { path: '', element: <NewsLetterListTemplate /> },
+          { path: 'add', element: <NewsLetterFormTemplate /> },
+          { path: 'edit/:id', element: <NewsLetterFormTemplate /> },
         ],
       },
       {
@@ -152,7 +154,7 @@ export const router = createBrowserRouter([
           { path: 'add', element: <MainCategoryFormTemplate /> },
           { path: 'edit/:id', element: <MainCategoryFormTemplate /> },
         ]
-      },
+      }, 
       {
         path: 'shipment-methods',
         children: [

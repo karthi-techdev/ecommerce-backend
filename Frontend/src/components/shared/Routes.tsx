@@ -8,6 +8,8 @@ import NotFoundPage from '../utils/notFound';
 
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 
+const NewsLetterPage = lazy(() => import('../pages/newsLetter/NewsLetterListPage'));
+const NewsLetterFormPage = lazy(() => import('../pages/newsLetter/NewsLetterFormPage'));
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
 const TestmonialPage = lazy(() => import('../pages/Testimonials/TestListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
@@ -65,7 +67,7 @@ const routes: RouteObject[] = [
       {
         path: 'login',
         element: <AdminLoginTemplate />,
-      },
+      }, 
    ],
   },
   {
@@ -194,7 +196,15 @@ const routes: RouteObject[] = [
           {path: 'category',element: <CategoryTrashPage />,},
           {path: 'faq',element: <FaqTrashPage />,},
         ]
-      }
+      }, 
+      {
+            path: 'newsLetters',
+            children: [
+              { path: '', element: <NewsLetterPage /> },
+              { path: 'add', element: <NewsLetterFormPage /> },
+              { path: 'edit/:id', element: <NewsLetterFormPage /> },
+            ],
+          }, 
         ],
       },
     ],
