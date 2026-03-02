@@ -78,7 +78,7 @@ faqStats:`${ROOTURL}admin/faqs/faqStats`,
   toggleStatusSubCategory: `${ROOTURL}admin/subcategory/togglestatus/`,
   checkDuplicateSubCategory: `${ROOTURL}admin/subcategory/check-duplicate`,
   listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
-  subCategoryByMainCategoryId:`${ROOTURL}admin/subcategory/softDeleteSubCategory/`,
+  subCategoryByMainCategoryId:`${ROOTURL}admin/subcategory/activeSubCategory/`,
     // ---------------- Coupon endpoints ----------------
 
   addCoupon: `${ROOTURL}admin/coupon/`,

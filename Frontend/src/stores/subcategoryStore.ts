@@ -148,7 +148,7 @@ subHasMore: false,
       : [];
 
     const meta = res.data?.data?.meta || {};
-
+    console.log("Sub category store------------->",subCategories);
     set((state) => ({
       subCategories: append
         ? [...state.subCategories, ...subCategories]

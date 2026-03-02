@@ -106,14 +106,17 @@ export const useMainCategoryStore = create<MainCategoryState>((set) => ({
     set({ loading: true });
 
     const res = await axiosInstance.get(
-      `${API.activeMainCategory}?page=${page}&limit=${limit}${search?`&search=${search}`:""}`);
-
+  `${API.activeMainCategory}`,
+  {
+    params: { page, limit, search }
+  }
+);
     const mainCategories = Array.isArray(res.data?.data?.data)
       ? res.data.data.data
       : [];
 
     const meta = res.data?.data?.meta || {};
-
+      console.log('Main category store--------->',mainCategories);
     set((state) => ({
       mainCategories: append
         ? [...state.mainCategories, ...mainCategories]

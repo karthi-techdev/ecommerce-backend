@@ -50,7 +50,11 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
       className={className}
       classNamePrefix="react-select"
       onMenuScrollToBottom={onMenuScrollToBottom}
-      onInputChange={(value) => onInputChange?.(value)}  
+     onInputChange={(value, actionMeta) => {
+  if (actionMeta.action === "input-change") {
+    onInputChange?.(value);
+  }
+}}
       isClearable
     />
   );

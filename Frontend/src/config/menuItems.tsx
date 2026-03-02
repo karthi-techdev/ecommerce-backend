@@ -1,4 +1,4 @@
-import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
+import { FiPieChart, FiSettings, FiHelpCircle, FiUsers,FiSliders , FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
 import { BiCategory } from "react-icons/bi";
 import {FiLayers,FiTag,FiList} from 'react-icons/fi';
 import type { ReactNode } from 'react';
@@ -50,7 +50,7 @@ const menuItems: MenuItem[] = [
    {
     key: 'config',
     label: 'Config',
-    icon: <FiLayers />,
+    icon: <FiSliders />,
     path: '/config',
   },
   {

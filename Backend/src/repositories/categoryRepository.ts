@@ -41,7 +41,9 @@ class categoryRepository{
         }
       }
     async getCategoryById(id:string|Types.ObjectId):Promise<ICategory|null>{
-      return await CategoryModel.findById(id);
+      return await CategoryModel.findById(id)
+  .populate('mainCategoryId', '_id name')
+  .populate('subCategoryId', '_id name');
     }
     async getCategoryBySlug(slug:string):Promise<ICategory|null>{
       return await CategoryModel.findOne({slug});

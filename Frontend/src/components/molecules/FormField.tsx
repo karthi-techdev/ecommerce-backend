@@ -22,21 +22,23 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error,isR
 
   <div className="w-full">
     <CustomSelect
-      options={field.options || []}
-      value={field.options?.find(opt => opt.value === value) || null}
-      placeholder={field.placeholder}
-      onChange={(selected: any) =>
-        onChange?.({
-          target: {
-            name: field.name,
-            value: selected ? selected.value : '',
-          },
-        })
-      }
-      className={`w-full text-sm rounded-md 
-        ${error ? 'border-red-400' : 'border-gray-100'} 
-        border`}
-    />
+  options={field.options || []}
+  value={field.options?.find(opt => opt.value === value) || null}
+  placeholder={field.placeholder}
+  onChange={(selected: any) =>
+    onChange?.({
+      target: {
+        name: field.name,
+        value: selected ? selected.value : '',
+      },
+    })
+  }
+  onMenuScrollToBottom={field.onMenuScrollToBottom}
+  onInputChange={field.onInputChange}
+  className={`w-full text-sm rounded-md 
+    ${error ? 'border-red-400' : 'border-gray-100'} 
+    border`}
+/>
   </div>
 
   {error && <p className="text-red-500 text-sm mt-1">{error}</p>}

@@ -11,7 +11,7 @@ import { useMainCategoryStore } from '../../../stores/mainCategoryStore';
 import { useSubCategoryStore } from '../../../stores/subcategoryStore';
 import FormHeader from '../../molecules/FormHeader';
 import FormField from '../../molecules/FormField';
-import type { FieldConfig } from '../../../types/common';
+import type { FieldConfig,PopulatedCategory } from '../../../types/common';
 import { handleError } from '../../utils/errorHandler';
 import defaultImage from '../../../assets/images/preview-image.jpg.jpeg'
 const CategoryFormTemplate: React.FC = () => {
@@ -25,10 +25,10 @@ const CategoryFormTemplate: React.FC = () => {
     ,slugEXist
   } = useCategoryStore();
   const {mainCategories,activeMainCategory,page,
-  totalPages,
+  totalPages,fetchMainCategories,
   loading,hasMore}=useMainCategoryStore();
   const {
-  subCategories,
+  subCategories,fetchSubCategories,
   fetchSubCategoryByMainCategoryId,
   subPage,
   subHasMore,
@@ -41,26 +41,28 @@ const imageErrorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 const slugRequestId = useRef(0);
   const [searchTerm, setSearchTerm] = useState('');
 const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-const searchRequestId = useRef(0);
 const subSearchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-const subSearchRequestId = useRef(0);
 const [subSearchTerm, setSubSearchTerm] = useState('');
-const isInitialLoad = useRef(true);
-
+const prevMainCategoryId = useRef<string | null>(null);
+const [mainCategoryLabel, setMainCategoryLabel] = useState('');
+const [subCategoryLabel, setSubCategoryLabel] = useState('');
 const handleSubCategorySearch = (input: string) => {
   setSubSearchTerm(input);
 
-  if (!formData.mainCategoryId) return; // safety
+  if (!formData.mainCategoryId) return;
 
-  // clear previous timer
   if (subSearchTimer.current) {
     clearTimeout(subSearchTimer.current);
   }
 
-  // debounce
   subSearchTimer.current = setTimeout(async () => {
-    const reqId = ++subSearchRequestId.current;
 
+    // Reset before new search
+    useSubCategoryStore.setState({
+      subCategories: [],
+      subPage: 1,
+      subHasMore: true
+    });
     await fetchSubCategoryByMainCategoryId(
       formData.mainCategoryId,
       1,
@@ -68,27 +70,21 @@ const handleSubCategorySearch = (input: string) => {
       input,
       false
     );
-
-    if (reqId !== subSearchRequestId.current) return;
   }, 500);
 };
-
 const handleMainCategorySearch = (input: string) => {
+
+  // IMPORTANT: Ignore empty input triggered by blur
+  if (input === "" && searchTerm === "") return;
+
   setSearchTerm(input);
 
-  // clear previous timer
   if (searchTimer.current) {
     clearTimeout(searchTimer.current);
   }
 
-  // debounce
   searchTimer.current = setTimeout(async () => {
-    const reqId = ++searchRequestId.current;
-
     await activeMainCategory(1, 5, input, false);
-
-    // race condition protection (optional but pro)
-    if (reqId !== searchRequestId.current) return;
   }, 500);
 };
   const [formData, setFormData] = useState<CategoryFormData>({
@@ -161,6 +157,7 @@ const handleMainCategorySearch = (input: string) => {
       type: 'text',
       className: 'col-span-6',
       readonly: true,
+      disabled:true,
       placeholder: 'Slug is auto-generated using name'
     },
     {
@@ -198,58 +195,108 @@ const handleMainCategorySearch = (input: string) => {
     }
 
     const loadEditData = async () => {
-      try {
-        const category = await fetchCategoryById(id);
-        if (!category) return;
-        const mainCatId =
-          typeof category.mainCategoryId === 'object'
-            ? category.mainCategoryId._id
-            : category.mainCategoryId;
-        if (mainCatId) {
-  await fetchSubCategoryByMainCategoryId(mainCatId, 1, 5, "", false);
-  await new Promise(resolve => setTimeout(resolve, 0));
-}
+  try {
+    const category = await fetchCategoryById(id);
+    if (!category) return;
 
-        setFormData({
-          name: category.name || '',
-          description: category.description || '',
-          slug: category.slug || '',
-          mainCategoryId: mainCatId || '',
-          subCategoryId:
-            typeof category.subCategoryId === 'object'
-              ? category.subCategoryId?._id
-              : category.subCategoryId || '',
-          image: category.image||null
-        });
-        console.log(category)
-        if (category.image) {
-          setImagePreview(category.image);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
+    // populated objects
+    const mainCategory = category.mainCategoryId as PopulatedCategory;
+    const subCategory = category.subCategoryId as PopulatedCategory;
+
+    const mainCatId = mainCategory?._id || '';
+    const subCatId = subCategory?._id || '';
+
+    setMainCategoryLabel(mainCategory.name || 'Selected Category');
+setSubCategoryLabel(subCategory.name || 'Selected Subcategory');
+await activeMainCategory(1, 5, '', false);
+     if (mainCatId && !mainCategories.some(m => m._id === mainCatId)) {
+      useMainCategoryStore.setState(state => ({
+        mainCategories: [
+          ...state.mainCategories,
+          {
+            _id: mainCatId,
+            name: mainCategory.name || 'Selected Category',
+            slug: (mainCategory as any).slug || '',
+            description: (mainCategory as any).description || '',
+            image: (mainCategory as any).image || null,
+            isActive: true
+          }
+        ]
+      }));
+    }
+
+    // same for subcategory
+    if (subCatId && !subCategories.some(s => s._id === subCatId)) {
+      useSubCategoryStore.setState(state => ({
+        subCategories: [
+          ...state.subCategories,
+          {
+            _id: subCatId,
+            name: subCategory.name || 'Selected Subcategory',
+            slug: (subCategory as any).slug || '',
+            description: (subCategory as any).description || '',
+            image: (subCategory as any).image,
+            mainCategoryId: mainCatId,
+            isActive: true
+          }
+        ]
+      }));
+    }
+    // if main category not loaded yet, load its page (optional)
+    
+    console.log(mainCategories,'for checking ',subCategories)
+    // load subcategory page of that main (optional)
+    if (mainCatId) {
+      await fetchSubCategoryByMainCategoryId(mainCatId, 1, 5, '', false);
+    }
+    
+    // now set form data using populated ids
+    setFormData({
+      name: category.name || '',
+      description: category.description || '',
+      slug: category.slug || '',
+      mainCategoryId: mainCatId,
+      subCategoryId: subCatId,
+      image: category.image || null
+    });
+
+    if (category.image) {
+      setImagePreview(category.image);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
     loadEditData();
   }, [id]);
+
 useEffect(() => {
   if (!formData.mainCategoryId) return;
 
-  fetchSubCategoryByMainCategoryId(
-    formData.mainCategoryId,
-    1,
-    5,
-    "",
-    false
-  );
+  // Only run if main category really changed
+  if (prevMainCategoryId.current !== formData.mainCategoryId) {
+    prevMainCategoryId.current = formData.mainCategoryId;
 
-  if (!isInitialLoad.current) {
+    useSubCategoryStore.setState({
+      subCategories: [],
+      subPage: 1,
+      subHasMore: true
+    });
+
     setFormData(prev => ({
       ...prev,
       subCategoryId: ''
     }));
+
+    fetchSubCategoryByMainCategoryId(
+      formData.mainCategoryId,
+      1,
+      5,
+      '',
+      false
+    );
   }
 
-  isInitialLoad.current = false;
 }, [formData.mainCategoryId]);
 
 
@@ -300,10 +347,6 @@ useEffect(() => {
   }
 }, [formData.subCategoryId]);
 
-
-
-
-
 const handleChange = (e: any) => {
   const { name, value, files } = e.target;
   let next = { ...formData };
@@ -348,6 +391,7 @@ if (name === 'image') {
   setFormData(next);
   return;
 }
+
   if (name === 'name') {
     next.name = value;
     next.slug = generateSlug(value);
@@ -415,9 +459,33 @@ if (name === 'image') {
                 ...field,
                 options:
                   field.name === 'mainCategoryId'
-                    ? mainCategories.filter(m => m._id).map(m => ({ label: m.name, value: m._id as string }))
-                    : field.name === 'subCategoryId'
-                    ? subCategories.filter(s => s._id).map(s => ({ label: s.name, value: s._id as string }))
+    ? [
+        ...mainCategories.map(m => ({
+          label: m.name,
+          value: m._id as string
+        })),
+        ...(formData.mainCategoryId &&
+        !mainCategories.some(m => m._id === formData.mainCategoryId)
+          ? [{
+              label: mainCategoryLabel || 'Selected Category',
+              value: formData.mainCategoryId
+            }]
+          : [])
+      ]
+                    :  field.name === 'subCategoryId'
+    ? [
+        ...subCategories.map(s => ({
+          label: s.name,
+          value: s._id as string
+        })),
+        ...(formData.subCategoryId &&
+        !subCategories.some(s => s._id === formData.subCategoryId)
+          ? [{
+              label: subCategoryLabel || 'Selected Subcategory',
+              value: formData.subCategoryId
+            }]
+          : [])
+      ]
                     : undefined,
                 onMenuScrollToBottom: field.onMenuScrollToBottom,
                 onInputChange: field.onInputChange
