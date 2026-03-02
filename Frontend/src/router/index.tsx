@@ -1,6 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Layout from '../components/shared/Layout';
 import Dashboard from '../components/templates/dashboard/Dashboard';
+import NewsLetterListTemplate from '../components/templates/newsLetter/NewsLetterListTemplate';
+import NewsLetterFormTemplate from '../components/templates/newsLetter/NewsLetterFormTemplate';
 import FaqListTemplate from '../components/templates/faq/FaqListTemplate';
 import FaqFormTemplate from '../components/templates/faq/FaqFormTemplate';
 import TestimonialFormTemplate from '../components/templates/testimonial/testFormTemplate';
@@ -17,6 +19,8 @@ import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
 
 import BrandTrashPage from '../components/pages/trash/BrandTrashPage';
 
+import ShipmentMethodListTemplate from '../components/templates/shipmentMethods/shipmentMethodsListTemplate';
+import ShipmentMethodFormTemplate from '../components/templates/shipmentMethods/ShipmentMethodsFormTemplate';
 import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
 import SubCategoryFormTemplate from '@/components/templates/subcategory/SubcategoryFormTemplate';
 import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
@@ -76,11 +80,11 @@ export const router = createBrowserRouter([
       }
       ,
       {
-        path: 'faq',
+        path: 'newsLetter',
         children: [
-          { path: '', element: <FaqListTemplate /> },
-          { path: 'add', element: <FaqFormTemplate /> },
-          { path: 'edit/:id', element: <FaqFormTemplate /> },
+          { path: '', element: <NewsLetterListTemplate /> },
+          { path: 'add', element: <NewsLetterFormTemplate /> },
+          { path: 'edit/:id', element: <NewsLetterFormTemplate /> },
         ],
       },
       {
@@ -120,18 +124,9 @@ export const router = createBrowserRouter([
       {
         path: 'subcategory',
         children: [
-          {
-            path: '',
-            element: <SubCategoryListTemplate />,
-          },
-          {
-            path: 'add',
-            element: <SubCategoryFormTemplate />,
-          },
-          {
-            path: 'edit/:id',
-            element: <SubCategoryFormTemplate />,
-          },
+          { path: '', element: <SubCategoryListTemplate />, },
+          { path: 'add', element: <SubCategoryFormTemplate />,},
+          { path: 'edit/:id', element: <SubCategoryFormTemplate />,},
         ],
       },
       {
@@ -159,6 +154,14 @@ export const router = createBrowserRouter([
           { path: 'add', element: <MainCategoryFormTemplate /> },
           { path: 'edit/:id', element: <MainCategoryFormTemplate /> },
         ]
+      }, 
+      {
+        path: 'shipment-methods',
+        children: [
+          { path: '', element: <ShipmentMethodListTemplate /> },
+          { path: 'add', element: <ShipmentMethodFormTemplate /> },
+          { path: 'edit/:id', element: <ShipmentMethodFormTemplate /> },
+        ],
       },
       {
         path: 'trash',

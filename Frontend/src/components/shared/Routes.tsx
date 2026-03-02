@@ -8,6 +8,8 @@ import NotFoundPage from '../utils/notFound';
 
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 
+const NewsLetterPage = lazy(() => import('../pages/newsLetter/NewsLetterListPage'));
+const NewsLetterFormPage = lazy(() => import('../pages/newsLetter/NewsLetterFormPage'));
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
 const TestmonialPage = lazy(() => import('../pages/Testimonials/TestListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
@@ -19,6 +21,8 @@ const CategoryTrashPage = lazy(() => import('../pages/trash/CategoryTrashListPag
 const SubcategoryPage = lazy(() => import('../pages/subcategory/SubcategoryListPage'));
 const SubcategoryFormPage = lazy(() => import('../pages/subcategory/SubcategoryFormPage'));
 const SubcategoryTrashPage = lazy(() => import('../pages/trash/SubcategoryTrashListPage'));
+const ShipmentMethodsFormPage = lazy(()=> import ('../pages/shipmentMethods/ShipmentMethodsFormPage'))
+const ShipmentMethodsListPage = lazy(()=> import ('../pages/shipmentMethods/ShipmentMethodsListPage'))
 const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
 const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
 const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
@@ -63,7 +67,7 @@ const routes: RouteObject[] = [
       {
         path: 'login',
         element: <AdminLoginTemplate />,
-      },
+      }, 
    ],
   },
   {
@@ -174,6 +178,14 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <SubcategoryFormPage /> },
         ],
       },
+       {
+        path: 'shipment-methods',
+        children: [
+          { path: '', element: <ShipmentMethodsListPage /> },
+          { path: 'add', element: <ShipmentMethodsFormPage /> },
+          { path: 'edit/:id', element: <ShipmentMethodsFormPage /> },
+        ],
+      },
       {
         path: 'trash',
         children: [
@@ -184,7 +196,15 @@ const routes: RouteObject[] = [
           {path: 'category',element: <CategoryTrashPage />,},
           {path: 'faq',element: <FaqTrashPage />,},
         ]
-      }
+      }, 
+      {
+            path: 'newsLetters',
+            children: [
+              { path: '', element: <NewsLetterPage /> },
+              { path: 'add', element: <NewsLetterFormPage /> },
+              { path: 'edit/:id', element: <NewsLetterFormPage /> },
+            ],
+          }, 
         ],
       },
     ],

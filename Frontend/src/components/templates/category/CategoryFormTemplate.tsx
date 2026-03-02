@@ -29,10 +29,9 @@ const CategoryFormTemplate: React.FC = () => {
   loading,hasMore}=useMainCategoryStore();
   const {
   subCategories,fetchSubCategories,
-  fetchSubCategoryByMainCategoryId,
   subPage,
   subHasMore,
-  loading: subLoading
+  loading: subLoading,fetchSubCategoryByMainCategoryId
 } = useSubCategoryStore();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,6 +45,7 @@ const [subSearchTerm, setSubSearchTerm] = useState('');
 const prevMainCategoryId = useRef<string | null>(null);
 const [mainCategoryLabel, setMainCategoryLabel] = useState('');
 const [subCategoryLabel, setSubCategoryLabel] = useState('');
+const [originalImage, setOriginalImage] = useState<string | null>(null);
 const handleSubCategorySearch = (input: string) => {
   setSubSearchTerm(input);
 
@@ -74,9 +74,6 @@ const handleSubCategorySearch = (input: string) => {
 };
 const handleMainCategorySearch = (input: string) => {
 
-  // IMPORTANT: Ignore empty input triggered by blur
-  if (input === "" && searchTerm === "") return;
-
   setSearchTerm(input);
 
   if (searchTimer.current) {
@@ -84,7 +81,14 @@ const handleMainCategorySearch = (input: string) => {
   }
 
   searchTimer.current = setTimeout(async () => {
+
+    if (!input) {
+      await activeMainCategory(1, 5, '', false);
+      return;
+    }
+
     await activeMainCategory(1, 5, input, false);
+
   }, 500);
 };
   const [formData, setFormData] = useState<CategoryFormData>({
@@ -208,6 +212,7 @@ const handleMainCategorySearch = (input: string) => {
 
     setMainCategoryLabel(mainCategory.name || 'Selected Category');
 setSubCategoryLabel(subCategory.name || 'Selected Subcategory');
+console.log(mainCategory.name,"             ",subCategory.name,'category',category)
 await activeMainCategory(1, 5, '', false);
      if (mainCatId && !mainCategories.some(m => m._id === mainCatId)) {
       useMainCategoryStore.setState(state => ({
@@ -259,10 +264,11 @@ await activeMainCategory(1, 5, '', false);
       subCategoryId: subCatId,
       image: category.image || null
     });
+if (category.image) {
+  setImagePreview(category.image);
+  setOriginalImage(category.image); 
+}
 
-    if (category.image) {
-      setImagePreview(category.image);
-    }
   } catch (err) {
     console.error(err);
   }
@@ -271,7 +277,24 @@ await activeMainCategory(1, 5, '', false);
   }, [id]);
 
 useEffect(() => {
-  if (!formData.mainCategoryId) return;
+  if (!formData.mainCategoryId) {
+
+    // Clear subcategory store completely
+    useSubCategoryStore.setState({
+      subCategories: [],
+      subPage: 1,
+      subHasMore: true
+    });
+
+    prevMainCategoryId.current = null; // 🔥 IMPORTANT FIX
+
+    setFormData(prev => ({
+      ...prev,
+      subCategoryId: ''
+    }));
+
+    return;
+  };
 
   // Only run if main category really changed
   if (prevMainCategoryId.current !== formData.mainCategoryId) {
@@ -355,7 +378,9 @@ const handleChange = (e: any) => {
     [name]: undefined
   }));
 if (name === 'image') {
-  const file = files?.[0];
+
+  const file = value instanceof File ? value : files?.[0];
+
   if (!file) return;
 
   const allowedTypes = [
@@ -365,33 +390,52 @@ if (name === 'image') {
     'image/webp'
   ];
 
-  if (!allowedTypes.includes(file.type)) {
-    setErrors(prev => ({
-      ...prev,
-      image: 'Only JPG, JPEG, PNG, WEBP images are allowed'
-    }));
-    e.target.value = '';
-    if (imageErrorTimer.current) {
-      clearTimeout(imageErrorTimer.current);
-    }
-    imageErrorTimer.current = setTimeout(() => {
-      setErrors(prev => ({
-        ...prev,
-        image: undefined
-      }));
-    }, 5000);
-    return;
-  }
-  next.image = file;
-  setImagePreview(URL.createObjectURL(file));
+if (!allowedTypes.includes(file.type)) {
+  e.target.value = '';
+
   setErrors(prev => ({
     ...prev,
-    image: undefined
+    image: 'Only JPG, PNG or WEBP images are allowed'
   }));
-  setFormData(next);
+
+  // Restore preview
+  setImagePreview(id && originalImage ? originalImage : null);
+
+  if (imageErrorTimer.current) {
+    clearTimeout(imageErrorTimer.current);
+  }
+
+  imageErrorTimer.current = setTimeout(() => {
+    setErrors(prev => {
+      const updated = { ...prev };
+      delete updated.image;
+      return updated;
+    });
+  }, 5000);
+
   return;
 }
 
+  // ✅ valid file
+  setFormData(prev => ({ ...prev, image: file }));
+  setImagePreview(URL.createObjectURL(file));
+
+  setErrors(prev => {
+    const updated = { ...prev };
+    delete updated.image;
+    return updated;
+  });
+
+  if (imageErrorTimer.current) {
+    clearTimeout(imageErrorTimer.current);
+  }
+
+  return;
+}
+if (name === "mainCategoryId" && !value) {
+    setSearchTerm('');
+    activeMainCategory(1, 5, '', false);
+  }
   if (name === 'name') {
     next.name = value;
     next.slug = generateSlug(value);
