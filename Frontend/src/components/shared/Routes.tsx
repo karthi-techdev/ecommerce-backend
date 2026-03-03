@@ -18,7 +18,7 @@ const SubcategoryFormPage = lazy(() => import('../pages/subcategory/SubcategoryF
 const SubcategoryTrashPage = lazy(() => import('../pages/trash/SubcategoryTrashListPage'));
 const PageListPage = lazy(() => import('../pages/page/pageListPages'));
 const PageFormPage = lazy(() => import('../pages/page/pageFormPages'));
-
+const OrderListPage = lazy(()=>import('../templates/order/orderListTemplate'));
 const PrivateRoute = () => {
   const { isAuthenticated } = useAuthStore();
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
@@ -85,6 +85,23 @@ const routes: RouteObject[] = [
               { 
                 path: 'edit/:id', 
                 element: <PageFormPage /> 
+              },
+            ]
+          }, 
+          {
+            path: 'orders',
+            children:[
+              {
+                path:"",
+                element:<OrderListPage/>
+              }
+              ,{
+                path: 'add',
+                element: <OrderListPage />,
+              },
+              { 
+                path: 'edit/:id', 
+                element: <OrderListPage /> 
               },
             ]
           }, 

@@ -20,6 +20,7 @@ import SubCategoryTrashListTemplate from '@/components/templates/trash/Subcatego
 import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
 import PageFormTemplate from '@/components/templates/page/pageFormTemplate';
 import PageListTemplate from '@/components/templates/page/pageListTemplate';
+import OrderListTemplate from '@/components/templates/order/orderListTemplate';
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +45,18 @@ export const router = createBrowserRouter([
           },
         ]
        }, 
+      {  path: 'orders',
+        children:[
+          {
+            path:"",
+            element:<OrderListTemplate/>
+          }
+          ,{
+            path: 'add',
+            element: <OrderListTemplate />,
+          },
+        ]
+      }, 
       {
         path:'/category',
         children:[

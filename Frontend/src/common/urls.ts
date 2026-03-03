@@ -77,6 +77,13 @@ const API = {
   checkDuplicatePage: `${ROOTURL}admin/page/check-duplicate`,
   listPageTrash: `${ROOTURL}admin/page/trash/`,
 
+  // Order endpoints
+  listOrder: `${ROOTURL}admin/orders/`,
+  getOrderById: `${ROOTURL}admin/orders/`,
+  updateOrderStatus: `${ROOTURL}admin/orders/orderstatus`,
+  updatePaymentStatus: `${ROOTURL}admin/orders/paymentstatus`,
+  deleteOrder: `${ROOTURL}admin/orders/`, 
+
 };
 
 

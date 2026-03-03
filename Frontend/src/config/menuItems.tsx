@@ -1,6 +1,7 @@
 import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase,FiTrash2 } from 'react-icons/fi';
 import { BiCategory } from "react-icons/bi";
 import {FiLayers,FiTag,FiList} from 'react-icons/fi';
+import { PiShoppingCartLight } from "react-icons/pi";
 import type { ReactNode } from 'react';
 
 
@@ -41,6 +42,12 @@ const menuItems: MenuItem[] = [
     label: 'Brand',
     icon: <FiTag />,
     path: '/brand',
+  },
+  {
+    key: 'orders',
+    label: 'Orders',
+    icon: <PiShoppingCartLight />,
+    path: '/orders',
   },
   {
     key: 'category',
