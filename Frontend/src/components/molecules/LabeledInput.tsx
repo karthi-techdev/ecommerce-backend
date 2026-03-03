@@ -49,7 +49,7 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
     const [preview, setPreview] = useState<string>(defaultImage);
     const [fileError, setFileError] = useState<string | null>(null);
     const editorRef = useRef(null);
-
+  const errorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     // ✅ Image preview setter 
     useEffect(() => {
       if (value) {
@@ -77,11 +77,21 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
         const file = e.target.files?.[0];
         if (!file) return;
 
-        if (!file.type.startsWith("image/")) {
-          setFileError("Only image files are allowed (jpg, png, jpeg)");
-          setPreview(defaultImage);
-          return;
-        }
+       if (!file.type.startsWith("image/")) {
+
+  setFileError("Only image files are allowed (jpg, png, jpeg)");
+  setPreview(defaultImage);
+
+  if (errorTimer.current) {
+    clearTimeout(errorTimer.current);
+  }
+
+  errorTimer.current = setTimeout(() => {
+    setFileError(null);
+  }, 2000);
+
+  return;
+}
 
         setFileError(null);
         const imageUrl = URL.createObjectURL(file);

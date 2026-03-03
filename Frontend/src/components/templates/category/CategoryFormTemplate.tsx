@@ -33,7 +33,6 @@ const CategoryFormTemplate: React.FC = () => {
   subHasMore,
   loading: subLoading,fetchSubCategoryByMainCategoryId
 } = useSubCategoryStore();
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
 const imageErrorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -45,7 +44,6 @@ const [subSearchTerm, setSubSearchTerm] = useState('');
 const prevMainCategoryId = useRef<string | null>(null);
 const [mainCategoryLabel, setMainCategoryLabel] = useState('');
 const [subCategoryLabel, setSubCategoryLabel] = useState('');
-const [originalImage, setOriginalImage] = useState<string | null>(null);
 const handleSubCategorySearch = (input: string) => {
   setSubSearchTerm(input);
 
@@ -57,17 +55,17 @@ const handleSubCategorySearch = (input: string) => {
 
   subSearchTimer.current = setTimeout(async () => {
 
-    // Reset before new search
     useSubCategoryStore.setState({
       subCategories: [],
       subPage: 1,
       subHasMore: true
     });
+
     await fetchSubCategoryByMainCategoryId(
       formData.mainCategoryId,
       1,
       5,
-      input,
+      input || '',   // 🔥 important
       false
     );
   }, 500);
@@ -176,7 +174,8 @@ const handleMainCategorySearch = (input: string) => {
       name: 'image',
       label: 'Image',
       type: 'file',
-      className: 'col-span-12'
+      className: 'col-span-12',
+      previewEnabled:true,
     }
   ];
   useEffect(() => {
@@ -194,7 +193,6 @@ const handleMainCategorySearch = (input: string) => {
         subCategoryId: '',
         image: null
       });
-      setImagePreview(null);
       return;
     }
 
@@ -264,10 +262,6 @@ await activeMainCategory(1, 5, '', false);
       subCategoryId: subCatId,
       image: category.image || null
     });
-if (category.image) {
-  setImagePreview(category.image);
-  setOriginalImage(category.image); 
-}
 
   } catch (err) {
     console.error(err);
@@ -275,7 +269,26 @@ if (category.image) {
 };
     loadEditData();
   }, [id]);
+useEffect(() => {
+  if (!formData.subCategoryId && formData.mainCategoryId) {
 
+    setSubSearchTerm('');
+
+    useSubCategoryStore.setState({
+      subCategories: [],
+      subPage: 1,
+      subHasMore: true
+    });
+
+    fetchSubCategoryByMainCategoryId(
+      formData.mainCategoryId,
+      1,
+      5,
+      '',
+      false
+    );
+  }
+}, [formData.subCategoryId]);
 useEffect(() => {
   if (!formData.mainCategoryId) {
 
@@ -372,64 +385,19 @@ useEffect(() => {
 
 const handleChange = (e: any) => {
   const { name, value, files } = e.target;
+  console.log(name,value,files)
   let next = { ...formData };
   setErrors(prev => ({
     ...prev,
     [name]: undefined
   }));
 if (name === 'image') {
-
-  const file = value instanceof File ? value : files?.[0];
-
-  if (!file) return;
-
-  const allowedTypes = [
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'image/webp'
-  ];
-
-if (!allowedTypes.includes(file.type)) {
-  e.target.value = '';
-
-  setErrors(prev => ({
+ setTimeout(()=>{
+   setFormData(prev => ({
     ...prev,
-    image: 'Only JPG, PNG or WEBP images are allowed'
+    image: value
   }));
-
-  // Restore preview
-  setImagePreview(id && originalImage ? originalImage : null);
-
-  if (imageErrorTimer.current) {
-    clearTimeout(imageErrorTimer.current);
-  }
-
-  imageErrorTimer.current = setTimeout(() => {
-    setErrors(prev => {
-      const updated = { ...prev };
-      delete updated.image;
-      return updated;
-    });
-  }, 5000);
-
-  return;
-}
-
-  // ✅ valid file
-  setFormData(prev => ({ ...prev, image: file }));
-  setImagePreview(URL.createObjectURL(file));
-
-  setErrors(prev => {
-    const updated = { ...prev };
-    delete updated.image;
-    return updated;
-  });
-
-  if (imageErrorTimer.current) {
-    clearTimeout(imageErrorTimer.current);
-  }
-
+ },500)
   return;
 }
 if (name === "mainCategoryId" && !value) {
@@ -541,19 +509,6 @@ if (name === "mainCategoryId" && !value) {
             />
           ))}
 
-         <div className="col-span-12">
-  <img
-    src={
-      imagePreview
-        ? imagePreview.startsWith('blob:')
-          ? imagePreview
-          : `http://localhost:5000${imagePreview}`
-        : defaultImage
-    }
-    className="h-32 w-32 rounded-lg object-cover "
-    alt="Preview"
-  />
-</div>
 
         </div>
 
