@@ -1,5 +1,5 @@
+import { FiPieChart, FiSettings, FiHelpCircle,FiTruck, FiUsers,FiLayers,FiTag,FiMail,FiList,FiSliders , FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
 
-import {  FiSettings, FiBriefcase, FiTruck, FiTrash2, FiShoppingCart, FiLayers, FiTag,FiList,FiMail} from 'react-icons/fi';
 import { BiCategory } from "react-icons/bi";
 import type { ReactNode } from 'react';
 
@@ -55,7 +55,7 @@ const menuItems: MenuItem[] = [
    {
     key: 'config',
     label: 'Config',
-    icon: <FiLayers />,
+    icon: <FiSliders />,
     path: '/config',
   },
   {

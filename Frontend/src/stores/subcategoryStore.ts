@@ -19,7 +19,9 @@ interface SubCategoryState {
   page: number;
   totalPages: number;
   hasMore: boolean;
-
+  subPage: number;
+  subTotalPages: number;
+  subHasMore: boolean;
   fetchSubCategories: (page?: number,limit?: number,filter?: "total" | "active" | "inactive") => Promise<void>;
   fetchActiveMainCategories: (page?: number, limit?: number,search?: string,isLoadMore?: boolean) => Promise<void>;
   fetchTrashSubCategories: ( page?: number, limit?: number) => Promise<void>;
@@ -31,6 +33,13 @@ interface SubCategoryState {
   hardDeleteSubCategory: (id: string) => Promise<void>;
   toggleStatusSubCategory: (id: string) => Promise<void>;
   checkDuplicateSubCategory: ( slug: string, mainCategoryId: string, excludeId?: string) => Promise<boolean>;
+  fetchSubCategoryByMainCategoryId: (
+  mainCategoryId: string,
+  page?: number,
+  limit?: number,
+  search?: string,
+  append?: boolean
+) => Promise<void>;
 }
 
 export const useSubCategoryStore = create<SubCategoryState>((set) => ({
@@ -42,7 +51,9 @@ export const useSubCategoryStore = create<SubCategoryState>((set) => ({
   page: 1,
   totalPages: 1,
   hasMore: false,
-
+subPage: 1,
+subTotalPages: 1,
+subHasMore: true,
   checkDuplicateSubCategory: async ( slug,mainCategoryId, excludeId) => {
     try {
       const res = await axiosInstance.post(
@@ -82,7 +93,7 @@ export const useSubCategoryStore = create<SubCategoryState>((set) => ({
     }
   },
   fetchSubCategoryByMainCategoryId: async (
-  mainCategoryId,
+  mainCategoryId:any,
   page = 1,
   limit = 5,
   search = "",
@@ -103,7 +114,7 @@ export const useSubCategoryStore = create<SubCategoryState>((set) => ({
       : [];
 
     const meta = res.data?.data?.meta || {};
-
+    console.log("Sub category store------------->",subCategories);
     set((state) => ({
       subCategories: append
         ? [...state.subCategories, ...subCategories]

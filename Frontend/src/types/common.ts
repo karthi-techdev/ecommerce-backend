@@ -14,6 +14,9 @@ export interface NewsLetter {
   coverImage?: string | object;
   isPublished?: boolean;
 }
+export interface PopulatedCategory{
+  _id:string;
+  name:string;
 }
 export interface Category{
   _id?:string;

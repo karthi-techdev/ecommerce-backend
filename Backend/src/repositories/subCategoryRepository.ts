@@ -97,12 +97,13 @@ async getAllActiveMainCategories(page = 1,limit = 5, search?: string) {
   async getAllSubCategoriesByMainCategoryId(
   mainCategoryId: string,
   page: number = 1,
-  limit: number = 10,
+  limit: number = 5,
   search?: string
 ) {
   const query: any = {
     mainCategoryId,
     isDeleted: false,
+    isActive:true
   };
 
   if (search) {

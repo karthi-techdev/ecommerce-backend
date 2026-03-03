@@ -84,8 +84,10 @@ const API = {
   toggleStatusSubCategory: `${ROOTURL}admin/subcategory/togglestatus/`,
   checkDuplicateSubCategory: `${ROOTURL}admin/subcategory/check-duplicate`,
   listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
-  subCategoryByMainCategoryId: `${ROOTURL}admin/subcategory/softDeleteSubCategory/`,
+  subCategoryByMainCategoryId:`${ROOTURL}admin/subcategory/activeSubCategory/`,
   listActiveMainCategory: `${ROOTURL}admin/subcategory/activemain-categorylist`,
+    // ---------------- Coupon endpoints ----------------
+  
   //shipmentMethods endpoints
   addShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
   listShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
