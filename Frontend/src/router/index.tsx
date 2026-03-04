@@ -38,6 +38,15 @@ import ProductListTemplate from '@/components/templates/products/ProductsListTem
 import ProductFormTemplate from '@/components/templates/products/ProductsFormTemplate';
 import ProductTrashListTemplate from '@/components/templates/trash/ProductsTrash/ProductsTrashListTemplate';
 
+import BlogCategoryListTemplate from '@/components/templates/blogCategory/BlogCategoryListTemplate';
+import BlogCategoryFormTemplate from '@/components/templates/blogCategory/BlogCategoryFormTemplate';
+import BlogTrashListPage from '@/components/templates/trash/BlogTrash/TrashBlogTemplate';
+
+import BlogListTemplate from '@/components/templates//blogs/BlogListTemplate';
+import BlogFormTemplate from '@/components/templates/blogs/BlogFormTemplate';
+
+
+
 export const router = createBrowserRouter([
   {
         path: '/login',
@@ -113,13 +122,32 @@ export const router = createBrowserRouter([
         ],
       },
       {
-  path: 'coupon',
-  children: [
-    { path: '', element: <CouponListTemplate /> },
-    { path: 'add', element: <CouponFormTemplate /> },
-    { path: 'edit/:id', element: <CouponFormTemplate /> },
-  ],
+        path: 'coupon',
+        children: [
+          { path: '', element: <CouponListTemplate /> },
+          { path: 'add', element: <CouponFormTemplate /> },
+          { path: 'edit/:id', element: <CouponFormTemplate /> },
+        ],
+      },
+
+      {
+        path: 'blog-category', 
+        children: [
+          { path: '', element: <BlogCategoryListTemplate /> },      
+          { path: 'add', element: <BlogCategoryFormTemplate /> }, 
+          { path: 'edit/:id', element: <BlogCategoryFormTemplate /> }, 
+        ]
+      },
+
+      {
+      path: 'blog',                 
+      children: [
+    { path: '', element: <BlogListTemplate /> },     
+    { path: 'add', element: <BlogFormTemplate /> },  
+    { path: 'edit/:id', element: <BlogFormTemplate /> }, 
+  ]
 },
+
 
       {
         path: 'subcategory',
@@ -179,7 +207,10 @@ export const router = createBrowserRouter([
              path: 'category', 
              element: <CategoryTrashListPage /> 
           },
-          { path: 'product', element: <ProductTrashListTemplate /> }, 
+          { path: 'product', element: <ProductTrashListTemplate /> },
+
+           { path: 'blog-category', 
+            element: <BlogTrashListPage /> }
         ],
       },
       

@@ -75,7 +75,7 @@ class AuthenticationService {
     menus: IMenuItem[];
   }> {
     this.validateLoginData(data);
-    return await authenticationRepository.authLogin(data);
+    return await authenticationRepository.authLogin(data) as any;
   }
 
   async refreshToken(token: string): Promise<{
@@ -84,7 +84,7 @@ class AuthenticationService {
     expiresIn: StringValue;
     menus: IMenuItem[];
   }> {
-    return await authenticationRepository.refreshToken(token);
+    return await authenticationRepository.refreshToken(token) as any;
   }
 
   async forgotPassword(email: string): Promise<boolean> {
