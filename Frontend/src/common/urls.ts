@@ -131,8 +131,21 @@ faqStats:`${ROOTURL}admin/faqs/faqStats`,
   trashProducts: `${ROOTURL}products/trash`,
   checkProductSlug: `${ROOTURL}products/checkSlugExist`,
 
-};
+  
+   //  BlogCategory endpoints
+    addBlogCategory: `${ROOTURL}admin/blog-category/`,
+    listBlogCategory: `${ROOTURL}admin/blog-category/`,
+    getBlogCategory: `${ROOTURL}admin/blog-category/getBlogCategoryById/`,
+    updateBlogCategory: `${ROOTURL}admin/blog-category/updateBlogCategory/`,
+    softDeleteBlogCategory: `${ROOTURL}admin/blog-category/softDeleteBlogCategory/`,
+    restoreBlogCategory: `${ROOTURL}admin/blog-category/restore/`,
+    hardDeleteBlogCategory: `${ROOTURL}admin/blog-category/permanentDelete/`,
+    toggleBlogCategoryStatus: `${ROOTURL}admin/blog-category/toggleStatus/`,
+    trashBlogCategory: `${ROOTURL}admin/blog-category/trash`,
+    checkDuplicateBlogCategory: `${ROOTURL}admin/blog-category/check-duplicate`,
 
+
+};
 
 const ImportedURL = { API, LIVEURL, FILEURL, SETTINGS_ID };
 export default ImportedURL;

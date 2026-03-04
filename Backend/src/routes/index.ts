@@ -13,6 +13,8 @@ import configRoutes from './configRoutes';
 import productRoutes from './productRoutes'
 import pageRoutes from "./pageRoutes"
 import testimonialRoutes from "./testimonialRoutes";
+import blogCategoryRoutes from './blogCategoryRoutes';
+
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
@@ -27,6 +29,7 @@ export default function registerRoutes(app: Express) {
   app.use('/api/v1/admin/products', productRoutes);
   app.use("/api/v1/admin/page", pageRoutes);
   app.use('/api/v1/admin/testimonials', testimonialRoutes)
-
+  app.use('/api/v1/admin/blog-category', blogCategoryRoutes);
+  
 }
 

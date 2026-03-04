@@ -1,5 +1,5 @@
 import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
-import { BiCategory } from "react-icons/bi";
+import { BiCategory, BiBook } from "react-icons/bi";
 import {FiLayers,FiTag,FiList} from 'react-icons/fi';
 import type { ReactNode } from 'react';
 
@@ -66,6 +66,25 @@ const menuItems: MenuItem[] = [
   path: '/coupon',
 },
 
+{
+  key: 'blogs',
+  label: 'Manage Blogs',
+  icon: <BiBook />,
+  path: '/blog',
+  submenu: [
+    {
+      key: 'blogCategory',
+      label: 'Blog Categories',
+      path: '/blog-category', 
+      icon: <FiList />,
+    },
+  
+
+
+  ],
+},
+
+
   {
     key: 'category',
     label: 'Manage Categories',
@@ -104,17 +123,24 @@ const menuItems: MenuItem[] = [
             label: 'Subcategory',
             path: '/trash/subcategory'
           },  
-          {
-      key:'trash-category',
-      label:'Category',
-      path:'/trash/category'   
-    },
+                {
+            key:'trash-category',
+            label:'Category',
+            path:'/trash/category'   
+          },
         { key: 'trash-product', label: 'Product', path: '/trash/product' },
         {
       key:'trash-faq',
       label:'Faq',
       path:'/trash/faq'   
     },
+
+    { 
+      key: 'trash-blog',
+       label: 'Blog', 
+       path: '/trash/blog-category' 
+    }, 
+
         ],
       },
     ];

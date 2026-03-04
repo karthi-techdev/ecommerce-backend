@@ -130,6 +130,7 @@ export interface PageFormData {
   isActive?: boolean;
 }
 
+
 export interface Testimonial {
   _id?: string;
   name: string;
@@ -203,6 +204,17 @@ export interface FieldConfig {
   onMenuScrollToBottom?: () => void;
   onInputChange?: (value: string) => void;
  }
+
+ export interface BlogCategory {
+  _id: string;
+  name: string;
+  slug: string;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+
 export type ColumnConfig<T> = {
   key: keyof T;
   label: string;
