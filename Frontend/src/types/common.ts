@@ -6,6 +6,14 @@ export interface Faq {
   answer: string;
   status?: 'active' | 'inactive';
 }
+export interface NewsLetter {
+  _id?: string;
+  name: string;
+  slug: string;
+  description: string;
+  coverImage?: string | object;
+  isPublished?: boolean;
+}
 export interface PopulatedCategory{
   _id:string;
   name:string;
@@ -79,6 +87,17 @@ export interface SubCategory {
   isDeleted?: boolean;
   createdAt?: string;
   mainCategory?: {_id: string; name: string;};
+}
+export interface ShipmentMethod {
+  _id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  price: string;
+  status?: 'active' | 'inactive';
+  isDeleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 
@@ -200,6 +219,8 @@ export interface FieldConfig {
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
   accept?: string; 
+  previewEnabled?: boolean;
+  withEditor?: boolean;
   options? :{label:string , value:string}[];
   onMenuScrollToBottom?: () => void;
   onInputChange?: (value: string) => void;

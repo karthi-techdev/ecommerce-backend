@@ -87,21 +87,6 @@ class MainCategoryController {
       next(err);
     }
   }
-  async getAllListMainCategories(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const filter = req.query.filter as string;
-
-      const result = await mainCategoryService.getAllListMainCategories(filter);
-
-      res.status(200).json({
-        status: HTTP_RESPONSE.SUCCESS,
-        data: result.data,
-        total: result.total
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
 
   async getMainCategoryById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {

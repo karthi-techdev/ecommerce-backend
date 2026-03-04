@@ -57,8 +57,6 @@ const CategoryListTemplate: React.FC = () => {
     setCurrentPage(selectedItem.selected + 1);
   };
   const filteredCategories = categories.filter((category) => {
-    if (selectedFilter === 'active' && category.status !== 'active') return false;
-    if (selectedFilter === 'inactive' && category.status !== 'inactive') return false;
     return category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       category.mainCategoryId.name.toLowerCase().includes(searchTerm.toLowerCase())||
       category.subCategoryId.name.toLowerCase().includes(searchTerm.toLowerCase());
