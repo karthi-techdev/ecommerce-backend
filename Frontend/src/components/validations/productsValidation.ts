@@ -37,9 +37,14 @@ export const validateProductForm = (
 
   if (!data.name) {
     errors.name = "Name is required.";
-  } else if (data.name.trim().length < 3) {
+  } 
+  else if (data.name.startsWith(" ")) {
+    errors.name = "Name should not start with space.";
+  }
+  else if (data.name.trim().length < 3) {
     errors.name = "Name must be at least 3 characters long.";
-  } else if (!/[a-zA-Z]/.test(data.name)) {
+  } 
+  else if (!/[a-zA-Z]/.test(data.name)) {
     errors.name = "Name must contain at least one letter.";
   }
 
@@ -52,24 +57,21 @@ export const validateProductForm = (
     errors.description = "Description must contain at least one letter.";
   }
 
-  
-  if (!data.slug) {
-    errors.slug = "Slug is required.";
-  } else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(data.slug)) {
+  if (data.slug && !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(data.slug)) {
     errors.slug = "Invalid slug format.";
   }
 
  
-  if (data.price === '' || data.price === null) {
+  if (data.price === '' || data.price === undefined) {
     errors.price = "Price is required.";
   } else if (Number(data.price) <= 0) {
     errors.price = "Price must be greater than 0.";
   }
 
 
-  if (data.discountPrice === '' || data.discountPrice === null) {
+  if (data.discountPrice === '' || data.discountPrice === undefined) {
     errors.discountPrice = "Discount price is required.";
-  } 
+  }
   else if (Number(data.discountPrice) < 0) {
     errors.discountPrice = "Discount price cannot be negative.";
   } 
@@ -78,7 +80,7 @@ export const validateProductForm = (
   }
 
   
-  if (data.stockQuantity === '' || data.stockQuantity === null) {
+  if (data.stockQuantity === '' || data.stockQuantity === undefined) {
     errors.stockQuantity = "Stock quantity is required.";
   } else if (Number(data.stockQuantity) < 0) {
     errors.stockQuantity = "Stock cannot be negative.";

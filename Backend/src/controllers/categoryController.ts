@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import categoryService from '../services/categoryServices';
 import { HTTP_RESPONSE } from "../utils/httpResponse";
-import { ICategory } from "../models/categoryModel";
 import { MainCategoryModel } from "../models/mainCategoryModel";
 import { SubCategoryModel } from "../models/subCategoryModel";
 class categoryController {
@@ -136,21 +135,6 @@ class categoryController {
     next(err);
   }
 }
-
-    async getMainCategory(req:Request,res:Response,next:NextFunction):Promise<void>{
-        const mainCategory=await MainCategoryModel.find();
-        res.status(200).json({status:HTTP_RESPONSE.SUCCESS,data:mainCategory});
-    }
-    async getSubCategory(req:Request,res:Response,next:NextFunction):Promise<void>{
-         const  mainId = req.params.mainCategoryId;
-         console.log(mainId)
-    const subCategory = await SubCategoryModel.find({mainCategoryId:mainId
-    })
-    res.status(200).json({
-      status: true,
-      data: subCategory
-    });
-  } 
 
     async updateCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {

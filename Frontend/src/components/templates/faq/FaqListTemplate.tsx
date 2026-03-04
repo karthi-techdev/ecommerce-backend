@@ -25,8 +25,8 @@ const FaqListTemplate: React.FC = () => {
   const {
     faqs,
     fetchFaqs,
-    deleteFaq,
-    toggleStatusFaq,
+    softDeleteFaq,
+    toggleStatusFaq,faqStats,stats,
     totalPages,
     loading,
     error,
@@ -42,6 +42,7 @@ const FaqListTemplate: React.FC = () => {
     const loadData = async () => {
       try {
         await fetchFaqs(currentPage, PAGINATION_CONFIG.DEFAULT_LIMIT, selectedFilter);
+        await faqStats();
       } catch (err: any) {
         toast.error(err?.message || 'Failed to load FAQs. Please try again.');
       }
@@ -75,9 +76,9 @@ const FaqListTemplate: React.FC = () => {
    * @returns {StatFilter[]} Array of stat objects for display
    */
   const calculateStats = (): StatFilter[] => {
-    const total = faqs.length;
-    const active = faqs.filter(faq => faq.status === 'active').length;
-    const inactive = total - active;
+    const total = stats.total;
+    const active = stats.active;
+    const inactive = stats.inactive;
 
     // Calculate percentages with validation
     const activePercent = total > 0 ? Math.round((active / total) * 100) : 0;
@@ -133,6 +134,7 @@ const FaqListTemplate: React.FC = () => {
         await toggleStatusFaq(faq._id!);
         // Refresh the data to ensure UI is in sync with backend
         await fetchFaqs(currentPage, PAGINATION_CONFIG.DEFAULT_LIMIT, selectedFilter);
+        await faqStats();
         toast.success(`FAQ ${action}d successfully!`);
       } catch (error) {
         toast.error('Failed to update status. Please try again.');
@@ -153,7 +155,7 @@ const FaqListTemplate: React.FC = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await deleteFaq(faq._id!);
+          await softDeleteFaq(faq._id!);
 
           const updatedLength = filteredFaqs.length - 1;
           const newTotalItems = faqs.length - 1;
@@ -165,9 +167,11 @@ const FaqListTemplate: React.FC = () => {
             setCurrentPage(newPage);
             // Fetch data for the new page
             await fetchFaqs(newPage, PAGINATION_CONFIG.DEFAULT_LIMIT, selectedFilter);
+            await faqStats();
           } else {
             // Fetch updated data for current page
             await fetchFaqs(currentPage, PAGINATION_CONFIG.DEFAULT_LIMIT, selectedFilter);
+             await faqStats();
           }
 
           Swal.fire('Deleted!', 'The FAQ has been removed.', 'success');

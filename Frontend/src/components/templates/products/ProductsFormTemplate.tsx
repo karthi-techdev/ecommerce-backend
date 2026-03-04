@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
+import axiosInstance from '../../utils/axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {validateProductForm,type ProductFormData,type ProductValidationErrors} from '../../validations/productsValidation';
 import ImportedURL from '../../../common/urls';
 import { useProductStore } from '../../../stores/productStore';
+import { useMainCategoryStore } from '../../../stores/mainCategoryStore';
 import { useCategoryStore } from '../../../stores/categoryStore';
 import { useBrandStore } from '../../../stores/brandStore';
+import { useSubCategoryStore } from '../../../stores/subcategoryStore';
 import type { ProductPayload } from '../../../types/common';
 import FormHeader from '../../molecules/FormHeader';
 import FormField from '../../molecules/FormField';
@@ -27,13 +30,16 @@ const ProductFormTemplate: React.FC = () => {
     slugExist
   } = useProductStore();
 
-  const {
-    fetchMainCategory,
-    mainCategories,
-    fetchSubCategory,
-    subCategories
-  } = useCategoryStore();
+  const { 
+  fetchAllMainCategories, 
+  mainCategories 
+} = useMainCategoryStore();
 
+  const { fetchCategories, categories } = useCategoryStore();
+  const {subCategories} = useSubCategoryStore();
+  useEffect(() => {
+  console.log("SUBCATEGORIES FROM STORE:", subCategories);
+}, [subCategories]);
   const { fetchBrands, brands } = useBrandStore();
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -61,7 +67,7 @@ const [formData, setFormData] = useState<ProductFormData>({
   });
 
 
-  const productFields: FieldConfig[] = [
+  const productFields: FieldConfig[] = React.useMemo(() => [
   {
     name: 'brandId',
     label: 'Brand ',
@@ -79,43 +85,85 @@ const [formData, setFormData] = useState<ProductFormData>({
     className: 'col-span-6',
     required: true,
     placeholder: 'Select main category',
-    options: mainCategories.map(m => ({ label: m.name, value: m._id }))
+    options: mainCategories.map((m:any) => ({ label: m.name, value: m._id }))
   },
   {
-    name: 'subCategoryId',
-    label: 'Sub Category',
-    type: 'select',
-    className: 'col-span-6',
-    placeholder: 'Select sub category',
-    required: false,
-    options: subCategories.map(s => ({ label: s.name, value: s._id }))
-  },
+  name: 'subCategoryId',
+  label: 'Sub Category',
+  type: 'select',
+  className: 'col-span-6',
+  placeholder: 'Select sub category',
+  required: false,
+  options: Array.isArray(subCategories)
+  ? subCategories.map((sc:any) => ({
+      label: sc.name,
+      value: sc._id
+    }))
+  : []
+ },
   {
   name: 'categoryId',
   label: 'Category',
   type: 'select',
   className: 'col-span-6',
   placeholder: 'Select category',
-  options: subCategories.map(s => ({ label: s.name, value: s._id }))
+  options: categories.map((c: any) => ({ label: c.name, value: c._id }))
 },
 
 
   { name: 'name', label: 'Name', type: 'text', className: 'col-span-6', required: true, placeholder: 'Enter name'},
-  { name: 'slug', label: 'Slug', type: 'text', className: 'col-span-6', readonly: true , placeholder: 'Slug generated automatically',},
+  { name: 'slug', label: 'Slug', type: 'text', className: 'col-span-6', readonly: true, placeholder: 'Slug generated automatically',},
   { name: 'price', label: 'Price', type: 'number', className: 'col-span-4', required: true, placeholder: 'Enter price' },
   { name: 'discountPrice', label: 'Discount Price', type: 'number', className: 'col-span-4', required: true, placeholder: 'Enter discount price' },
   { name: 'stockQuantity', label: 'Stock', type: 'number', className: 'col-span-4', required: true, placeholder: 'Enter stock quantity' },
   { name: 'description', label: 'Description', type: 'textarea', className: 'col-span-12', required: true, placeholder: 'Enter description' },
   { name: 'images', label: 'Images', type: 'file', className: 'col-span-12', required: false},
-  {name: 'thumbnail',label: 'Thumbnail',type: 'file',className: 'col-span-12',required: !id },
-];
+  {name: 'thumbnail',label: 'Thumbnail',type: 'file',className: 'col-span-12',required: true },
+], [brands, mainCategories, subCategories, categories, id]);
 
 
   useEffect(() => {
-    fetchMainCategory();
+    fetchAllMainCategories();
+    fetchCategories(1, 100);
     fetchBrands();
   }, []);
 
+  useEffect(() => {
+  const fetchSubCategories = async () => {
+    if (!formData.mainCategoryId) {
+      useSubCategoryStore.setState({ subCategories: [] });
+      return;
+    }
+
+    try {
+      const res = await axiosInstance.get(
+        `/admin/subcategory`,
+        {
+          params: { mainCategory: formData.mainCategoryId }
+        }
+      );
+
+      console.log("SUBCATEGORY API RESPONSE:", res.data);
+
+      // VERY IMPORTANT: handle all possible response formats
+      const list =
+        res.data?.data?.data ||
+        res.data?.data ||
+        res.data ||
+        [];
+
+      useSubCategoryStore.setState({
+        subCategories: Array.isArray(list) ? list : []
+      });
+
+    } catch (error) {
+      console.log("Subcategory fetch error", error);
+      useSubCategoryStore.setState({ subCategories: [] });
+    }
+  };
+
+  fetchSubCategories();
+}, [formData.mainCategoryId]);
   useEffect(() => {
     if (!id) return;
 
@@ -143,10 +191,6 @@ const [formData, setFormData] = useState<ProductFormData>({
         typeof product.categoryId === 'string'
           ? product.categoryId
           : product.categoryId?._id ;
-
-
-      await fetchSubCategory(mainCategoryId);
-
       setFormData({
         name: product.name || '',
         description: product.description || '',
@@ -180,7 +224,7 @@ const [formData, setFormData] = useState<ProductFormData>({
           img.startsWith("/") ? `${base}${img}` : `${base}/${img}`
         );
 
-        setExistingImages(dbImages); 
+        setExistingImages(product.images || []);
         setImagePreviews(dbImages);  
       }
 
@@ -190,20 +234,9 @@ const [formData, setFormData] = useState<ProductFormData>({
   }, [id]);
 
   useEffect(() => {
-    if (!formData.mainCategoryId) return;
-
-    fetchSubCategory(formData.mainCategoryId);
-    if (!id) {
-      setFormData((prev: ProductFormData) => ({
-        ...prev,
-        subCategoryId: ''
-  }));
-    }
-  }, [formData.mainCategoryId, id]);
-
-  useEffect(() => {
     return () => {
       if (slugTimer.current) clearTimeout(slugTimer.current);
+      if (imageErrorTimer.current) clearTimeout(imageErrorTimer.current);
     };
   }, []);
 
@@ -216,24 +249,30 @@ const [formData, setFormData] = useState<ProductFormData>({
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-');
 
-  const checkSlugExist = (slug: string) => {
+  const checkNameExist = (slug: string) => {
     if (!slug) return;
 
-    if (slugTimer.current) clearTimeout(slugTimer.current);
+    if (slugTimer.current) {
+      clearTimeout(slugTimer.current);
+    }
 
     slugTimer.current = setTimeout(async () => {
       const currentReq = ++slugRequestId.current;
-      const exists = await slugExist({ slug, _id: id });
+
+      const exists = await slugExist({
+        slug,
+        _id: id   
+      });
 
       if (currentReq !== slugRequestId.current) return;
 
       setErrors(prev => ({
         ...prev,
-        slug: exists ? 'Slug already exists' : undefined
+        name: exists ? "Name already exists" : undefined
       }));
-    }, 500);
-  };
 
+    }, 500); // 500ms debounce
+  };
   const removeImage = (index: number) => {
     if (index < existingImages.length) {
       // Remove from existing images
@@ -249,46 +288,58 @@ const [formData, setFormData] = useState<ProductFormData>({
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const files = e.target.files ? Array.from(e.target.files) : [];
-  if (files.length === 0) return;
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    if (files.length === 0) return;
 
-  // Add new files to newImages
-  setNewImages(prev => [...prev, ...files]);
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/webp"
+    ];
 
-  // Add new previews (keep existing previews)
-  const newPreviews = files.map(file => URL.createObjectURL(file));
-  setImagePreviews(prev => [...prev, ...newPreviews]);
-};
+    const invalidFile = files.find(file => !allowedTypes.includes(file.type));
 
-  const handleChange = (
-  e: { target: { name: string; value: any } }
-)=> {
-      console.log("HANDLE CHANGE CALLED");   
-  console.log("FIELD:", e.target.name);  
-  console.log("VALUE:", e.target.value); 
-    const { name, value } = e.target as { name: string; value: any };
+    if (invalidFile) {
       setErrors(prev => ({
-      ...prev,
-      [name]: undefined
-    }));
-
-  setFormData((prev: ProductFormData) => {
-    if (name === 'name') {
-      const slug = generateSlug(value);
-      checkSlugExist(slug);
-      return { ...prev, name: value, slug };
-    }
-
-    if (name === 'price' || name === 'discountPrice' || name === 'stockQuantity') {
-      return {
         ...prev,
-        [name]: Number(value)
-      };
+        images: "Only JPG, JPEG, PNG, WEBP images are allowed"
+      }));
+
+      e.target.value = "";
+
+      if (imageErrorTimer.current) {
+        clearTimeout(imageErrorTimer.current);
+      }
+
+      imageErrorTimer.current = setTimeout(() => {
+        setErrors(prev => ({
+          ...prev,
+          images: undefined
+        }));
+      }, 5000);
+
+      return;
     }
+
+    setNewImages(prev => [...prev, ...files]);
+
+    const newPreviews = files.map(file => URL.createObjectURL(file));
+    setImagePreviews(prev => [...prev, ...newPreviews]);
+
+    setErrors(prev => ({
+      ...prev,
+      images: undefined
+    }));
+  };
+
+  const handleChange = async (e: any) => {
+    const { name, value, files } = e.target;
+    let next = { ...formData };
+
     if (name === "thumbnail") {
-      const input = e.target as HTMLInputElement;
-      const file = input.files?.[0];
-      if (!file) return prev;
+      const file = files?.[0];
+      if (!file) return;
 
       const allowedTypes = [
         "image/jpeg",
@@ -300,10 +351,10 @@ const [formData, setFormData] = useState<ProductFormData>({
       if (!allowedTypes.includes(file.type)) {
         setErrors(prev => ({
           ...prev,
-          thumbnail: "Only JPG, JPEG, PNG, WEBP allowed"
+          thumbnail: "Only JPG, JPEG, PNG, WEBP images are allowed"
         }));
 
-        input.value = "";
+        e.target.value = "";
 
         if (imageErrorTimer.current) {
           clearTimeout(imageErrorTimer.current);
@@ -314,60 +365,119 @@ const [formData, setFormData] = useState<ProductFormData>({
             ...prev,
             thumbnail: undefined
           }));
-        }, 5000); 
+        }, 5000);
 
-        return prev;
-    }
-
-    setImagePreview(URL.createObjectURL(file));
-    return { ...prev, thumbnail: file };
-  }
-
-    return { ...prev, [name]: value };
-  });
-};
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const formPayload = new FormData();
-
-      formPayload.append("name", formData.name);
-      formPayload.append("description", formData.description);
-      formPayload.append("slug", formData.slug);
-      formPayload.append("price", String(formData.price));
-      formPayload.append("discountPrice", String(formData.discountPrice));
-      formPayload.append("stockQuantity", String(formData.stockQuantity));
-      formPayload.append("brandId", formData.brandId);
-      formPayload.append("mainCategoryId", formData.mainCategoryId);
-      if (formData.subCategoryId) formPayload.append("subCategoryId", formData.subCategoryId);
-      if (formData.categoryId) formPayload.append("categoryId", formData.categoryId);
-
-      // ✅ Append old images paths (existingImages)
-      existingImages.forEach(img =>
-        formPayload.append("existingImages", img.replace(FILEURL, ""))
-      );
-
-      // ✅ Append new files
-      newImages.forEach(file => formPayload.append("images", file));
-
-      // ✅ Thumbnail (only new file)
-      if (formData.thumbnail instanceof File) {
-        formPayload.append("thumbnail", formData.thumbnail);
+        return;
       }
 
-      if (id) await updateProduct(id, formPayload);
-      else await addProduct(formPayload);
+      next.thumbnail = file;
+      setImagePreview(URL.createObjectURL(file));
 
-      toast.success(`Product ${id ? "updated" : "added"} successfully`);
-      navigate("/products");
-    } catch (error) {
-      handleError(error).forEach(msg => toast.error(msg));
-    } finally {
-      setIsSubmitting(false);
+      setErrors(prev => ({
+        ...prev,
+        thumbnail: undefined
+      }));
+    } else if (name === "images") {
+      handleImageChange(e);
+    }else {
+      if (name === "name") {
+        next.name = value;
+        const slug = generateSlug(value);
+        next.slug = slug;
+        if (!value.trim()) {
+          setErrors(prev => ({ ...prev, name: "Name is required" }));
+          setFormData(next);
+          return;
+        }
+
+        if (value.trim().length < 3) {
+          setErrors(prev => ({ ...prev, name: "Name must be at least 3 characters long." }));
+          setFormData(next);
+          return;
+        }
+        checkNameExist(slug);
+      }
+
+      next[name as keyof ProductFormData] = 
+        name === "price" || name === "discountPrice" || name === "stockQuantity"
+          ? Number(value)
+          : value;
+
+      const fieldError = validateProductForm(next, !!id)[name as keyof ProductValidationErrors];
+      setErrors(prev => ({ ...prev, [name]: fieldError }));
     }
+
+    setFormData(next);
   };
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const validationErrors = validateProductForm(formData, !!id);
+
+  // preserve duplicate error
+  const finalErrors = {
+    ...validationErrors,
+    name: errors.name === "Name already exists"
+      ? "Name already exists"
+      : validationErrors.name
+  };
+
+  setErrors(finalErrors);
+
+  if (
+    Object.keys(validationErrors).length > 0 ||
+    finalErrors.name === "Name already exists"
+  ) {
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  try {
+    const formPayload = new FormData();
+
+    formPayload.append("name", formData.name);
+    formPayload.append("description", formData.description);
+    formPayload.append("slug", formData.slug);
+    formPayload.append("price", String(formData.price));
+    formPayload.append("discountPrice", String(formData.discountPrice));
+    formPayload.append("stockQuantity", String(formData.stockQuantity));
+    formPayload.append("brandId", formData.brandId);
+    formPayload.append("mainCategoryId", formData.mainCategoryId);
+
+    if (formData.subCategoryId)
+      formPayload.append("subCategoryId", formData.subCategoryId);
+
+    if (formData.categoryId)
+      formPayload.append("categoryId", formData.categoryId);
+
+    if (formData.thumbnail instanceof File) {
+      formPayload.append("thumbnail", formData.thumbnail);
+    }
+
+    existingImages.forEach((img) => {
+      formPayload.append("existingImages", img);
+    });
+
+    newImages.forEach((file) => {
+      formPayload.append("images", file);
+    });
+
+    if (id) {
+      await updateProduct(id, formPayload);
+    } else {
+      await addProduct(formPayload);
+    }
+
+    toast.success(`Product ${id ? "updated" : "added"} successfully`);
+    navigate("/products");
+
+  } catch (error) {
+    handleError(error).forEach(msg => toast.error(msg));
+  } finally {
+    setIsSubmitting(false);
+  }
+};
   return (
     <div className="p-6">
       <FormHeader
@@ -383,10 +493,13 @@ const [formData, setFormData] = useState<ProductFormData>({
               <FormField
                 field={field}
                 value={formData[field.name as keyof ProductFormData]}
-                onChange={field.name === "images" ? (e) => {
-                    const inputEvent = e as unknown as React.ChangeEvent<HTMLInputElement>;
-                    handleImageChange(inputEvent);
-                  } : handleChange}
+                onChange={
+                  field.name === "images"
+                    ? (e) => handleImageChange(e as React.ChangeEvent<HTMLInputElement>)
+                    : field.name === "slug"
+                    ? () => {} 
+                    : handleChange
+                }
                 error={errors[field.name as keyof ProductValidationErrors]}
               />
               {field.name === "images" && imagePreviews.length > 0 && (

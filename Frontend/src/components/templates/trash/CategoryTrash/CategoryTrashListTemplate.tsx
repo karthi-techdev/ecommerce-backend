@@ -56,6 +56,7 @@ category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     if (result.isConfirmed) {
       try {
         await restoreCategory(categoryID);
+        
         toast.success('Category restored successfully!');
       } catch {
         toast.error('Failed to restore Category.');
@@ -76,6 +77,7 @@ category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       try {
         await permanentDeleteCategory(categoryId);
         toast.success('Category permanently deleted!');
+        await trashCategory();
       } catch {
         toast.error('Failed to delete Category.');
       }

@@ -300,20 +300,29 @@ export const useProductStore = create<ProductState>((set) => ({
 
 
   slugExist: async (data) => {
-    try {
-      await axiosInstance.post(
-        API.checkProductSlug,
-        data
-      );
-      return false;
-    } catch (error: any) {
-      if (
-        error?.response?.status === 400 &&
-        error?.response?.data?.code === 'SLUG_EXISTS'
-      ) {
-        return true;
-      }
-      return false;
+  try {
+    const res = await axiosInstance.post(
+      API.checkProductSlug,
+      data
+    );
+
+    // If backend sends { exists: true }
+    if (res.data?.exists === true) {
+      return true;
     }
-  },
+
+    return false;
+
+  } catch (error: any) {
+    // If backend throws error for duplicate
+    if (
+      error?.response?.status === 400 &&
+      error?.response?.data?.code === "SLUG_EXISTS"
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+},
 }));

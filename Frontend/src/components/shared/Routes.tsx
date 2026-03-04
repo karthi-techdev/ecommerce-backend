@@ -11,6 +11,7 @@ const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
 const TestmonialPage = lazy(() => import('../pages/Testimonials/TestListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
+const FaqTrashPage = lazy(() => import('../pages/trash/FaqTrashListPage'));
 const TestimonialFormPage = lazy(() => import('../pages/Testimonials/TestFormPage'));
 const CategoryPage = lazy(() => import('../pages/category/CategoryListPage'));
 const CategoryFormPage = lazy(() => import('../pages/category/CategoryFormPage'));
@@ -18,6 +19,11 @@ const CategoryTrashPage = lazy(() => import('../pages/trash/CategoryTrashListPag
 const SubcategoryPage = lazy(() => import('../pages/subcategory/SubcategoryListPage'));
 const SubcategoryFormPage = lazy(() => import('../pages/subcategory/SubcategoryFormPage'));
 const SubcategoryTrashPage = lazy(() => import('../pages/trash/SubcategoryTrashListPage'));
+const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
+const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
+const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
+const CouponListPage = lazy(() => import('../pages/coupon/CouponListPage'));
+const CouponFormPage = lazy(() => import('../pages/coupon/CouponFormPage'));
 const PageListPage = lazy(() => import('../pages/page/pageListPages'));
 const PageFormPage = lazy(() => import('../pages/page/pageFormPages'));
 
@@ -31,9 +37,7 @@ const PublicRoute = () => {
   return !isAuthenticated ? <Outlet /> : <Navigate to="/dashboard" replace />;
 };
 
-const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
-const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
-const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
+
 
 const ProductListPage = lazy(() => import('../pages/products/ProductsListPage'));
 const ProductFormPage = lazy(() => import('../pages/products/ProductsFormPage'));
@@ -50,7 +54,8 @@ const TrashMainCategoryPage = lazy(
   () => import('../pages/trash/TrashMainCategoryListPage')
 );
 
-
+const ConfigListPage = lazy(() => import('../pages/config/ConfigListPage'));
+const ConfigFormPage = lazy(() => import('../pages/config/ConfigFormPage'));
 const routes: RouteObject[] = [
   {
     element: <PublicRoute />,
@@ -111,6 +116,14 @@ const routes: RouteObject[] = [
         ],
       },
            {
+        path: 'config',
+        children: [
+          { path: '', element: <ConfigListPage /> }, 
+          { path: 'add', element: <ConfigFormPage /> },   
+          { path: 'edit/:id', element: <ConfigFormPage /> },  
+        ],
+      },
+       {
         path: 'brand',
         children: [
           { path: '', element: <BrandListPage /> }, 
@@ -120,6 +133,16 @@ const routes: RouteObject[] = [
       },
 
       {
+  path: 'coupon',
+  children: [
+    { path: '', element: <CouponListPage /> },
+    { path: 'add', element: <CouponFormPage /> },
+    { path: 'edit/:id', element: <CouponFormPage /> },
+  ],
+},
+
+      {
+        
         path: 'products',
         children: [
           { path: '', element: <ProductListPage /> },
@@ -159,6 +182,7 @@ const routes: RouteObject[] = [
           { path: 'products', element: <ProductTrashPage /> },
           {path: 'mainCategory',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
+          {path: 'faq',element: <FaqTrashPage />,},
         ]
       }
         ],

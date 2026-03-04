@@ -82,6 +82,41 @@ class SubCategoryRepository {
   ): Promise<ISubCategory | null> {
     return await SubCategoryModel.findById(id);
   }
+async getAllSubCategoriesByMainCategoryId(
+  mainCategoryId: string,
+  page: number = 1,
+  limit: number = 10,
+  search?: string
+) {
+  const query: any = {
+    mainCategoryId,
+    isDeleted: false,
+  };
+
+  if (search) {
+    query.name = { $regex: search, $options: "i" };
+  }
+
+  const skip = (page - 1) * limit;
+
+  const [data, total] = await Promise.all([
+    SubCategoryModel.find(query)
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+    SubCategoryModel.countDocuments(query),
+  ]);
+
+  return {
+    data,
+    meta: {
+      page,
+      limit,
+      total,
+      hasMore: skip + data.length < total,
+    },
+  };
+}
 
   async updateSubCategory(
     id: string | Types.ObjectId,

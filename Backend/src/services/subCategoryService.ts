@@ -75,6 +75,20 @@ class SubCategoryService {
       mainCategoryId
     );
   }
+  async getAllSubCategoriesByMainCategoryId(
+  id: string,
+  page: number = 1,
+  limit: number = 10,
+  search?: string
+) {
+  return await subCategoryRepository.getAllSubCategoriesByMainCategoryId(
+    id,
+    page,
+    limit,
+    search
+  );
+}
+
 
   async getSubCategoryById(
     id: string | Types.ObjectId

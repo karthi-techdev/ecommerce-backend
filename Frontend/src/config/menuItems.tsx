@@ -47,12 +47,25 @@ const menuItems: MenuItem[] = [
     icon: <FiTag />,
     path: '/brand',
   },
+   {
+    key: 'config',
+    label: 'Config',
+    icon: <FiLayers />,
+    path: '/config',
+  },
   {
     key: 'product',
     label: 'Products',
     icon: <FiShoppingCart />,
     path: '/products',
   },
+  {
+  key: 'coupon',
+  label: 'Coupon',
+  icon: <FiLayers />,
+  path: '/coupon',
+},
+
   {
     key: 'category',
     label: 'Manage Categories',
@@ -96,7 +109,12 @@ const menuItems: MenuItem[] = [
       label:'Category',
       path:'/trash/category'   
     },
-        { key: 'trash-product', label: 'Products', path: '/trash/products' }
+        { key: 'trash-product', label: 'Product', path: '/trash/products' },
+        {
+      key:'trash-faq',
+      label:'Faq',
+      path:'/trash/faq'   
+    },
         ],
       },
     ];

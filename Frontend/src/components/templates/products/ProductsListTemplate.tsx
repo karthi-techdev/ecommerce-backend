@@ -7,7 +7,7 @@ import Loader from '../../atoms/Loader';
 import Pagination from '../../atoms/Pagination';
 import { useProductStore } from '../../../stores/productStore';
 import type { Product } from '../../../types/common';
-import {Package,CheckCircle,XCircle,Pencil,Trash2,ToggleLeft,ToggleRight,} from 'lucide-react';
+import {Package,CheckCircle,XCircle,Pencil,Trash2,ToggleLeft,HelpCircle,ToggleRight,} from 'lucide-react';
 import { truncate } from '../../utils/helper';
 import { PAGINATION_CONFIG } from '../../../constants/pagination';
 
@@ -101,7 +101,7 @@ const ProductListTemplate: React.FC = () => {
         value: total,
         trend: 'up',
         change: '100%',
-        icon: <Package size={20} />,
+        icon: <HelpCircle size={20} />,
       },
       {
         id: 'active',

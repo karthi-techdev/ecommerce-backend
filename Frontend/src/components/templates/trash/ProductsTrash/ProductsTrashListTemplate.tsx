@@ -152,12 +152,16 @@ const ProductTrashListTemplate: React.FC = () => {
                     </td>
 
                     <td className="px-6 py-4 whitespace-nowrap text-gray-900">
-                      ₹{product.price}
+                      {product.price}
                     </td>
 
                     <td className="px-6 py-4 whitespace-nowrap">
                       <img
-                        src={`http://localhost:5000${product.images?.[0]}`}
+                        src={
+                          product.thumbnail
+                            ? `http://localhost:5000${product.thumbnail}`
+                            : "/no-image.png"
+                        }
                         alt={product.name}
                         className="w-12 h-12 object-cover rounded-md"
                       />

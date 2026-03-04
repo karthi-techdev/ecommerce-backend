@@ -14,7 +14,8 @@ interface CustomSelectProps {
   className?: string;
   placeholder?: string;
   isMulti?: boolean;
-  error?: boolean;
+  onMenuScrollToBottom?: () => void;
+  onInputChange?: (value: string) => void;   
 }
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -24,8 +25,10 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   className = '',
   placeholder = 'Select...',
   isMulti = false,
-  error,
+  onMenuScrollToBottom,
+  onInputChange,   
 }) => {
+
   const handleChange = (
     newValue: MultiValue<SelectOption> | SingleValue<SelectOption>,
     _: ActionMeta<SelectOption>
@@ -40,31 +43,15 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   return (
     <Select
       options={options}
-      value={value as any} 
+      value={value as any}
       onChange={handleChange}
       isMulti={isMulti}
       placeholder={placeholder}
       className={className}
       classNamePrefix="react-select"
-        styles={{
-          control: (base, state) => ({
-            ...base,
-            borderColor: error
-              ? "#ef4444" 
-              : state.isFocused
-              ? "#6366f1"
-              : base.borderColor,
-            boxShadow: state.isFocused
-              ? error
-                ? "0 0 0 1px #ef4444"
-                : "0 0 0 1px #6366f1"
-              : "none",
-            "&:hover": {
-              borderColor: error ? "#ef4444" : "#6366f1",
-            },
-            minHeight: "42px",
-          }),
-        }}
+      onMenuScrollToBottom={onMenuScrollToBottom}
+      onInputChange={(value) => onInputChange?.(value)}  
+      isClearable
     />
   );
 };

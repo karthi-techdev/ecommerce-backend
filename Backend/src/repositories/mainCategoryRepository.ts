@@ -54,6 +54,47 @@ class MainCategoryRepository {
     });
   }
 
+  async getAllActiveMainCategories(
+  page = 1,
+  limit = 5,
+  search?: string
+) {
+  const skip = (page - 1) * limit;
+
+  const query: any = {
+    isDeleted: false,
+    isActive: true,
+  };
+
+  if (search && search.trim() !== "") {
+    query.name = {
+      $regex: search.trim(),
+      $options: "i",
+    };
+  }
+
+  const [data, total] = await Promise.all([
+    MainCategoryModel.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .exec(),
+
+    MainCategoryModel.countDocuments(query),
+  ]);
+
+  return {
+    data,
+    meta: {
+      total,
+      totalPages: Math.ceil(total / limit),
+      page,
+      limit,
+      hasMore: skip + data.length < total,
+    },
+  };
+}
+
   async getAllMainCategories(page = 1, limit = 10, filter?: string) {
   const skip = (page - 1) * limit;
 

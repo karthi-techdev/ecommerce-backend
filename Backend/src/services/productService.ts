@@ -194,7 +194,6 @@ class productService {
 
   const existingProduct = await productRepository.isExistSlug(
     data.slug,
-    data.categoryId
   );
 
   if (existingProduct) {
@@ -263,7 +262,6 @@ class productService {
 
     const duplicate = await productRepository.isExistSlug(
       slugToCheck,
-      categoryToCheck
     );
 
     if (duplicate && duplicate._id.toString() !== id.toString()) {
@@ -331,9 +329,8 @@ class productService {
 
   async isExistSlug(
     slug: string,
-    categoryId: Types.ObjectId
   ): Promise<IProduct | null> {
-    return await productRepository.isExistSlug(slug, categoryId);
+    return await productRepository.isExistSlug(slug);
   }
 }
 

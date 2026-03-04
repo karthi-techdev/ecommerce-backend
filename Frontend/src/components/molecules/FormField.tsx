@@ -11,37 +11,39 @@ interface FormFieldProps {
   isRequired?: boolean;
 }
 
-const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error }) => {
+const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error,isRequired }) => {
   if (field.type === 'select') {
     return (
-      <div className={field.className || 'md:col-span-6'}>
-        <label className="block mb-1 font-medium">
-          {field.label}
-          {field.required && (
-            <span className="text-red-500 ml-1">*</span>
-          )}
-        </label>
+      <div className={`md:col-span-6 flex flex-col`}>
+  <label className="block mb-1 font-medium text-gray-700 text-sm">
+    {field.label}
+    {field.required && <span className="text-red-500 ml-1">*</span>}
+  </label>
+
+  <div className="w-full">
+    <CustomSelect
+      options={field.options || []}
+      value={field.options?.find(opt => opt.value === value) || null}
+      placeholder={field.placeholder}
+      onChange={(selected: any) =>
+        onChange?.({
+          target: {
+            name: field.name,
+            value: selected ? selected.value : '',
+          },
+        })
+      }
+      
+      className={`w-full text-sm rounded-md 
+        ${error ? 'border-red-400' : 'border-gray-100'} 
+        border`}
+    />
+  </div>
+
+  {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+</div>
 
 
-        <CustomSelect
-          options={field.options || []}
-          value={
-            field.options?.find(opt => opt.value === value) || null
-          }
-          placeholder={field.placeholder}
-          error={!!error} 
-          onChange={(selected: any) =>
-            onChange?.({
-              target: {
-                name: field.name,
-                value: selected ? selected.value : '',
-              },
-            })
-          }
-        />
-
-        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-      </div>
     );
   }
 
@@ -52,6 +54,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error }) 
         label={field.label}
         type={field.type}
         value={value}
+        required={field.required}
         onChange={onChange}
         placeholder={field.placeholder}
         readonly={field.readonly}
@@ -59,10 +62,11 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error }) 
         aria-label={field.ariaLabel} 
         error={error}
         options={field.options}
-        required={field.required} 
       />
+     
     </div>
   );
+
 };
 
 export default FormField;

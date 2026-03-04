@@ -108,9 +108,9 @@ class productController {
 
   async checkSlugExist(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { slug, categoryId, _id } = req.body;
+      const { slug, _id} = req.body;
 
-      if (!slug || !categoryId) {
+      if (!slug) {
         res.status(200).json({
           status: HTTP_RESPONSE.SUCCESS
         });
@@ -118,7 +118,7 @@ class productController {
       }
 
       const existingProduct: any =
-        await productService.isExistSlug(slug, categoryId);
+        await productService.isExistSlug(slug);
 
       if (
         existingProduct &&
@@ -296,15 +296,28 @@ async toggleStatus(req: Request, res: Response, next: NextFunction): Promise<voi
 
 async getAllTrash(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const products = await productService.getTrashProducts();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    const result = await productService.getTrashProducts(page, limit);
 
     res.status(200).json({
       status: HTTP_RESPONSE.SUCCESS,
-      data: products
+      data: {
+        data: result.data,
+        meta: {
+          total: result.meta.total,
+          totalPages: result.meta.totalPages,
+          page: result.meta.page,
+          limit: result.meta.limit
+        }
+      }
     });
+
   } catch (err) {
     next(err);
   }
 }
+
 }
 export default new productController();

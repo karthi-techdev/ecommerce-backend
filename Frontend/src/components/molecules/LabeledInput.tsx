@@ -93,20 +93,22 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(({
           options={options}
         />
       ) :  type === 'select' ? (
-            <CustomSelect
-            options={options}
-            value={options.find(opt => opt.value === value) || null}
-            onChange={(selected) => {
-              onChange?.({
-                target: {
-                  name,
-                  value: (selected as any)?.value || ''
-                }
-              });
-        }}
-        placeholder={`Select ${label}`}
-        className={error ? 'react-select-error' : ''}
-      />
+   <CustomSelect
+  options={options}
+  value={options.find(opt => opt.value === value) || null}
+  onChange={(selected) => {
+    onChange?.({
+      target: {
+        name,
+        value: (selected as any)?.value || ''
+      }
+    });
+  }}
+  placeholder={`Select ${label}`}
+ 
+  
+  className={error ? 'react-select-error' : ''}
+/>
   ) :(
         <Input
           id={name}
@@ -114,7 +116,6 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(({
           type={type}
           {...(type !== 'file' && { value: value || '' })} 
           onChange={handleInputChange}
-          readOnly={readonly}
           placeholder={placeholder}
           disabled={disabled}
           aria-label={ariaLabel}

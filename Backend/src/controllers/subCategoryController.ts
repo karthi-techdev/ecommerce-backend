@@ -64,7 +64,32 @@ class SubCategoryController {
       next(err);
     }
   }
+async getSubCategoryByMainCategory( req: Request, res: Response, next: NextFunction ): Promise<void> {
+    try {
+     const  mainId = req.params.mainCategoryId;
+      const page = parseInt(req.query.page as string) || 1;
+const limit = parseInt(req.query.limit as string) || 10;
+const search = req.query.search as string | undefined;
 
+const result =
+  await subCategoryService.getAllSubCategoriesByMainCategoryId(
+    mainId,
+    page,
+    limit,
+    search
+  );
+
+res.status(200).json({
+  status: HTTP_RESPONSE.SUCCESS,
+  data: {
+    data: result.data,
+    meta: result.meta,
+  },
+});
+    } catch (err: any) {
+      next(err);
+    }
+  }
   async getSubCategoryById( req: Request, res: Response, next: NextFunction ): Promise<void> {
     try {
       const id = req.params.id;
@@ -184,11 +209,10 @@ class SubCategoryController {
 
   async getAllTrashSubCategories( req: Request, res: Response, next: NextFunction ): Promise<void> {
     try {
-      console.log("2222")
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const filter = req.query.status as string | undefined;
-      console.log("333")
+      
 
       const result = await subCategoryService.getAllTrashSubCategories(
         page,
