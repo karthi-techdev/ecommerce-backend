@@ -100,5 +100,6 @@ export const validateProductForm = (
     errors.thumbnail = "Thumbnail is required.";
   }
 
+
   return errors;
 };
