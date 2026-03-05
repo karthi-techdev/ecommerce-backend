@@ -1,6 +1,7 @@
-import { FiPieChart, FiSettings, FiHelpCircle,FiTruck, FiUsers,FiLayers,FiTag,FiMail,FiList,FiSliders , FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
+import { PiShoppingCartLight } from "react-icons/pi";
+import { FiSettings,FiTruck,FiLayers,FiTag,FiMail,FiList,FiSliders , FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
 
-import { BiCategory } from "react-icons/bi";
+import { BiCategory, BiBook } from "react-icons/bi";
 import type { ReactNode } from 'react';
 
 
@@ -71,6 +72,31 @@ const menuItems: MenuItem[] = [
   path: '/coupon',
 },
 
+{
+  key: 'blogs',
+  label: 'Manage Blogs',
+  icon: <BiBook />,
+  path: '/blog',
+  submenu: [
+    {
+      key: 'blogCategory',
+      label: 'Blog Categories',
+      path: '/blog-category', 
+      icon: <FiList />,
+    },
+  
+
+
+  ],
+},
+
+
+  {
+    key: 'orders',
+    label: 'Orders',
+    icon: <PiShoppingCartLight />,
+    path: '/orders',
+  },
   {
     key: 'category',
     label: 'Manage Categories',
@@ -121,11 +147,23 @@ const menuItems: MenuItem[] = [
       path:'/trash/category'   
     },
         { key: 'trash-product', label: 'Product', path: '/trash/products' },
+                {
+            key:'trash-category',
+            label:'Category',
+            path:'/trash/category'   
+          },
         {
       key:'trash-faq',
       label:'Faq',
       path:'/trash/faq'   
     },
+
+    { 
+      key: 'trash-blog',
+       label: 'Blog', 
+       path: '/trash/blog-category' 
+    }, 
+
         ],
       },
     ];

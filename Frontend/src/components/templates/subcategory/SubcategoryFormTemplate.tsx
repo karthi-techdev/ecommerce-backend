@@ -211,7 +211,7 @@ const SubCategoryFormTemplate: React.FC = () => {
         </div>
 
         <div className="mt-6 flex justify-end">
-          <button type="submit" disabled={isSubmitting} className="px-4 py-2 bg-amber-600 text-white rounded">
+          <button type="submit" disabled={isSubmitting} className="px-4 py-2 bg-amber-500 text-white rounded">
             {isSubmitting ? 'Saving...' : id ? 'Update' : 'Save'}
           </button>
         </div>

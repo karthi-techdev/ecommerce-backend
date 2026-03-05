@@ -136,6 +136,28 @@ export interface Page {
     createdAt? : Date
 }
 
+export interface OrderProduct {
+  productId: string;
+  productName: string;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  _id?: string;
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  shippingAddress: string;
+  products: OrderProduct[];
+  totalAmount: number;
+  paymentMethod: string;
+  paymentStatus: 'Paid' | 'Unpaid' | 'Failed';
+  orderStatus: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+  createdAt: Date;
+}
+
 export interface PageFormData {
   name: string;
   slug: string;
@@ -144,6 +166,7 @@ export interface PageFormData {
   url?: string;
   isActive?: boolean;
 }
+
 
 export interface Testimonial {
   _id?: string;
@@ -230,7 +253,17 @@ export interface FieldConfig {
   options? :{label:string , value:string}[];
   onMenuScrollToBottom?: () => void;
   onInputChange?: (value: string) => void;
+ }
+
+ export interface BlogCategory {
+  _id: string;
+  name: string;
+  slug: string;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
+
 
 export type ColumnConfig<T> = {
   key: keyof T;

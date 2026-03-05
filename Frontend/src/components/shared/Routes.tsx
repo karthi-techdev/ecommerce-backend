@@ -30,6 +30,11 @@ const CouponListPage = lazy(() => import('../pages/coupon/CouponListPage'));
 const CouponFormPage = lazy(() => import('../pages/coupon/CouponFormPage'));
 const PageListPage = lazy(() => import('../pages/page/pageListPages'));
 const PageFormPage = lazy(() => import('../pages/page/pageFormPages'));
+const OrderListPage = lazy(()=>import('../templates/order/orderListTemplate'));
+const BlogListPage = lazy(() => import('../pages/blogCategory/BlogListPage'));
+const BlogFormPage = lazy(() => import('../pages/blogCategory/BlogFormPage'));
+const BlogTrashPage = lazy(() => import('../pages/trash/BlogTrashPage'));
+
 
 const PrivateRoute = () => {
   const { isAuthenticated } = useAuthStore();
@@ -102,6 +107,23 @@ const routes: RouteObject[] = [
               },
             ]
           }, 
+          {
+            path: 'orders',
+            children:[
+              {
+                path:"",
+                element:<OrderListPage/>
+              }
+              ,{
+                path: 'add',
+                element: <OrderListPage />,
+              },
+              { 
+                path: 'edit/:id', 
+                element: <OrderListPage /> 
+              },
+            ]
+          }, 
     
           {
             path: 'faq',
@@ -144,6 +166,17 @@ const routes: RouteObject[] = [
     { path: 'edit/:id', element: <CouponFormPage /> },
   ],
 },
+      
+
+{
+  path: 'blog-category',
+  children: [
+    { path: '', element: <BlogListPage /> },
+    { path: 'add', element: <BlogFormPage /> },
+    { path: 'edit/:id', element: <BlogFormPage /> },
+  ]
+},
+
 
       {
         
@@ -162,7 +195,9 @@ const routes: RouteObject[] = [
           { path: 'add', element: <MainCategoryFormPage /> },
           { path: 'edit/:id', element: <MainCategoryFormPage /> },
         ],
-      },{
+      },
+
+      {
         path:'category',
        children:[
         {path:'',element:<CategoryPage/>},
@@ -195,6 +230,7 @@ const routes: RouteObject[] = [
           {path: 'mainCategory',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
           {path: 'faq',element: <FaqTrashPage />,},
+          { path: 'blog-category', element: <BlogTrashPage /> }
         ]
       }, 
       {
