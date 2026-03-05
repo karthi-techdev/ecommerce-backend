@@ -1,7 +1,7 @@
-import { FiPieChart, FiSettings, FiHelpCircle, FiUsers, FiBriefcase,FiTrash2 } from 'react-icons/fi';
-import { BiCategory } from "react-icons/bi";
-import {FiLayers,FiTag,FiList} from 'react-icons/fi';
 import { PiShoppingCartLight } from "react-icons/pi";
+import { FiSettings,FiTruck,FiLayers,FiTag,FiMail,FiList,FiSliders , FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
+
+import { BiCategory, BiBook } from "react-icons/bi";
 import type { ReactNode } from 'react';
 
 
@@ -33,9 +33,19 @@ const menuItems: MenuItem[] = [
     icon: <FiSettings />,
     submenu: [
       { key: 'faq', label: 'FAQ', path: '/faq' },
+       {
+        key: 'testimonial',
+        label: 'Testimonial',
+        path: '/testimonial'
+      },
       { key: 'page', label: 'Pages', path: '/page',},
     ],
   },
+      { key: 'shipment-methods',
+         label:'ShipmentMethods',
+         icon:<FiTruck/>,
+          path:'/shipment-methods'
+        },
 
   {
     key: 'brand',
@@ -43,6 +53,44 @@ const menuItems: MenuItem[] = [
     icon: <FiTag />,
     path: '/brand',
   },
+   {
+    key: 'config',
+    label: 'Config',
+    icon: <FiSliders />,
+    path: '/config',
+  },
+  {
+    key: 'product',
+    label: 'Products',
+    icon: <FiShoppingCart />,
+    path: '/products',
+  },
+  {
+  key: 'coupon',
+  label: 'Coupon',
+  icon: <FiLayers />,
+  path: '/coupon',
+},
+
+{
+  key: 'blogs',
+  label: 'Manage Blogs',
+  icon: <BiBook />,
+  path: '/blog',
+  submenu: [
+    {
+      key: 'blogCategory',
+      label: 'Blog Categories',
+      path: '/blog-category', 
+      icon: <FiList />,
+    },
+  
+
+
+  ],
+},
+
+
   {
     key: 'orders',
     label: 'Orders',
@@ -55,7 +103,8 @@ const menuItems: MenuItem[] = [
     icon: <BiCategory />,
     path: '#',
     submenu: [
-      {
+{
+
         key: 'mainCategory',
         label: 'Main Category',
         path: '/mainCategory',
@@ -72,6 +121,12 @@ const menuItems: MenuItem[] = [
       }
     ]
   },
+  {
+    key: 'newsletter', 
+    label: 'NewsLetter', 
+    icon: <FiMail />,
+    path: '/newsLetters'
+  },
 
       {
         key: 'trash',
@@ -86,11 +141,24 @@ const menuItems: MenuItem[] = [
             label: 'Subcategory',
             path: '/trash/subcategory'
           },  
-          {
-      key:'trash-category',
-      label:'Category',
-      path:'/trash/category'   
-    }
+                {
+            key:'trash-category',
+            label:'Category',
+            path:'/trash/category'   
+          },
+        { key: 'trash-product', label: 'Product', path: '/trash/product' },
+        {
+      key:'trash-faq',
+      label:'Faq',
+      path:'/trash/faq'   
+    },
+
+    { 
+      key: 'trash-blog',
+       label: 'Blog', 
+       path: '/trash/blog-category' 
+    }, 
+
         ],
       },
     ];

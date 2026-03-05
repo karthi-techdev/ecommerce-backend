@@ -7,9 +7,11 @@ import {
   type ValidationErrors
 } from '../../validations/categoryValidation';
 import { useCategoryStore } from '../../../stores/categoryStore';
+import { useMainCategoryStore } from '../../../stores/mainCategoryStore';
+import { useSubCategoryStore } from '../../../stores/subcategoryStore';
 import FormHeader from '../../molecules/FormHeader';
 import FormField from '../../molecules/FormField';
-import type { FieldConfig } from '../../../types/common';
+import type { FieldConfig,PopulatedCategory } from '../../../types/common';
 import { handleError } from '../../utils/errorHandler';
 import defaultImage from '../../../assets/images/preview-image.jpg.jpeg'
 const CategoryFormTemplate: React.FC = () => {
@@ -19,17 +21,74 @@ const CategoryFormTemplate: React.FC = () => {
   const {
     fetchCategoryById,
     addCategory,
-    updateCategory,
-    fetchSubCategory,
-    subCategories,slugEXist,fetchMainCategory,mainCategories
+    updateCategory
+    ,slugEXist
   } = useCategoryStore();
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const {mainCategories,activeMainCategory,page,
+  totalPages,fetchMainCategories,
+  loading,hasMore}=useMainCategoryStore();
+  const {
+  subCategories,fetchSubCategories,
+  subPage,
+  subHasMore,
+  loading: subLoading,fetchSubCategoryByMainCategoryId
+} = useSubCategoryStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
-const imageErrorTimer = useRef<NodeJS.Timeout | null>(null);
+const imageErrorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 const slugRequestId = useRef(0);
+  const [searchTerm, setSearchTerm] = useState('');
+const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+const subSearchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+const [subSearchTerm, setSubSearchTerm] = useState('');
+const prevMainCategoryId = useRef<string | null>(null);
+const [mainCategoryLabel, setMainCategoryLabel] = useState('');
+const [subCategoryLabel, setSubCategoryLabel] = useState('');
+const handleSubCategorySearch = (input: string) => {
+  setSubSearchTerm(input);
 
+  if (!formData.mainCategoryId) return;
 
+  if (subSearchTimer.current) {
+    clearTimeout(subSearchTimer.current);
+  }
+
+  subSearchTimer.current = setTimeout(async () => {
+
+    useSubCategoryStore.setState({
+      subCategories: [],
+      subPage: 1,
+      subHasMore: true
+    });
+
+    await fetchSubCategoryByMainCategoryId(
+      formData.mainCategoryId,
+      1,
+      5,
+      input || '',   // 🔥 important
+      false
+    );
+  }, 500);
+};
+const handleMainCategorySearch = (input: string) => {
+
+  setSearchTerm(input);
+
+  if (searchTimer.current) {
+    clearTimeout(searchTimer.current);
+  }
+
+  searchTimer.current = setTimeout(async () => {
+
+    if (!input) {
+      await activeMainCategory(1, 5, '', false);
+      return;
+    }
+
+    await activeMainCategory(1, 5, input, false);
+
+  }, 500);
+};
   const [formData, setFormData] = useState<CategoryFormData>({
     name: '',
     description: '',
@@ -44,11 +103,21 @@ const slugRequestId = useRef(0);
       label: 'Main Category',
       type: 'select',
       className: 'col-span-6',
+      required:true,
       placeholder: 'Select the main category',
-      options: mainCategories.map(m => ({
-        label: m.name,
-        value: m._id
-      }))
+      options: mainCategories
+  .filter(m => m._id)
+  .map(m => ({
+    label: m.name,
+    value: m._id as string
+  })),
+   onInputChange: handleMainCategorySearch,
+ onMenuScrollToBottom: () => {
+  if (!loading && hasMore) {
+    activeMainCategory(page + 1, 5, searchTerm, true); 
+  }
+},
+
     },
     {
       name: 'subCategoryId',
@@ -56,17 +125,33 @@ const slugRequestId = useRef(0);
       type: 'select',
       className: 'col-span-6',
       placeholder: 'Select the sub category',
-      options: subCategories.map(s => ({
-        label: s.name,
-        value: s._id
-      }))
+      required:true,
+      options: subCategories
+  .filter(s => s._id)
+  .map(s => ({
+    label: s.name,
+    value: s._id as string
+  })), onInputChange: handleSubCategorySearch,
+
+  onMenuScrollToBottom: () => {
+    if (!subLoading && subHasMore) {
+      fetchSubCategoryByMainCategoryId(
+        formData.mainCategoryId,
+        subPage + 1,
+        5,
+        subSearchTerm, 
+        true
+      );
+    }
+  }
     },
     {
       name: 'name',
       label: 'Name',
       type: 'text',
       className: 'col-span-6',
-      placeholder: 'Enter Name...'
+      placeholder: 'Enter Name...',
+      required:true
     },
     {
       name: 'slug',
@@ -74,6 +159,7 @@ const slugRequestId = useRef(0);
       type: 'text',
       className: 'col-span-6',
       readonly: true,
+      disabled:true,
       placeholder: 'Slug is auto-generated using name'
     },
     {
@@ -81,19 +167,21 @@ const slugRequestId = useRef(0);
       label: 'Description',
       type: 'textarea',
       className: 'col-span-12',
-      placeholder: 'Enter the description...'
+      placeholder: 'Enter the description...',
+      required:true
     },
     {
       name: 'image',
       label: 'Image',
       type: 'file',
-      className: 'col-span-12'
+      className: 'col-span-12',
+      previewEnabled:true,
     }
   ];
-
   useEffect(() => {
-    fetchMainCategory();
+    activeMainCategory(1, 5, '');
   }, []);
+
 
   useEffect(() => {
     if (!id) {
@@ -105,52 +193,149 @@ const slugRequestId = useRef(0);
         subCategoryId: '',
         image: null
       });
-      setImagePreview(null);
       return;
     }
 
     const loadEditData = async () => {
-      try {
-        const category = await fetchCategoryById(id);
-        if (!category) return;
-        const mainCatId =
-          typeof category.mainCategoryId === 'object'
-            ? category.mainCategoryId._id
-            : category.mainCategoryId;
-        if (mainCatId) {
-          await fetchSubCategory(mainCatId);
-        }
-        setFormData({
-          name: category.name || '',
-          description: category.description || '',
-          slug: category.slug || '',
-          mainCategoryId: mainCatId || '',
-          subCategoryId:
-            typeof category.subCategoryId === 'object'
-              ? category.subCategoryId?._id
-              : category.subCategoryId || '',
-          image: category.image||null
-        });
-        console.log(category)
-        if (category.image) {
-          setImagePreview(category.image);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
+  try {
+    const category = await fetchCategoryById(id);
+    if (!category) return;
+
+    // populated objects
+    const mainCategory = category.mainCategoryId as PopulatedCategory;
+    const subCategory = category.subCategoryId as PopulatedCategory;
+
+    const mainCatId = mainCategory?._id || '';
+    const subCatId = subCategory?._id || '';
+
+    setMainCategoryLabel(mainCategory.name || 'Selected Category');
+setSubCategoryLabel(subCategory.name || 'Selected Subcategory');
+console.log(mainCategory.name,"             ",subCategory.name,'category',category)
+await activeMainCategory(1, 5, '', false);
+     if (mainCatId && !mainCategories.some(m => m._id === mainCatId)) {
+      useMainCategoryStore.setState(state => ({
+        mainCategories: [
+          ...state.mainCategories,
+          {
+            _id: mainCatId,
+            name: mainCategory.name || 'Selected Category',
+            slug: (mainCategory as any).slug || '',
+            description: (mainCategory as any).description || '',
+            image: (mainCategory as any).image || null,
+            isActive: true
+          }
+        ]
+      }));
+    }
+
+    // same for subcategory
+    if (subCatId && !subCategories.some(s => s._id === subCatId)) {
+      useSubCategoryStore.setState(state => ({
+        subCategories: [
+          ...state.subCategories,
+          {
+            _id: subCatId,
+            name: subCategory.name || 'Selected Subcategory',
+            slug: (subCategory as any).slug || '',
+            description: (subCategory as any).description || '',
+            image: (subCategory as any).image,
+            mainCategoryId: mainCatId,
+            isActive: true
+          }
+        ]
+      }));
+    }
+    // if main category not loaded yet, load its page (optional)
+    
+    console.log(mainCategories,'for checking ',subCategories)
+    // load subcategory page of that main (optional)
+    if (mainCatId) {
+      await fetchSubCategoryByMainCategoryId(mainCatId, 1, 5, '', false);
+    }
+    
+    // now set form data using populated ids
+    setFormData({
+      name: category.name || '',
+      description: category.description || '',
+      slug: category.slug || '',
+      mainCategoryId: mainCatId,
+      subCategoryId: subCatId,
+      image: category.image || null
+    });
+
+  } catch (err) {
+    console.error(err);
+  }
+};
     loadEditData();
   }, [id]);
- useEffect(() => {
-  if (!formData.mainCategoryId) return;
+useEffect(() => {
+  if (!formData.subCategoryId && formData.mainCategoryId) {
 
-  fetchSubCategory(formData.mainCategoryId);
+    setSubSearchTerm('');
 
-  setFormData(prev => ({
-    ...prev,
-    subCategoryId: ''
-  }));
+    useSubCategoryStore.setState({
+      subCategories: [],
+      subPage: 1,
+      subHasMore: true
+    });
+
+    fetchSubCategoryByMainCategoryId(
+      formData.mainCategoryId,
+      1,
+      5,
+      '',
+      false
+    );
+  }
+}, [formData.subCategoryId]);
+useEffect(() => {
+  if (!formData.mainCategoryId) {
+
+    // Clear subcategory store completely
+    useSubCategoryStore.setState({
+      subCategories: [],
+      subPage: 1,
+      subHasMore: true
+    });
+
+    prevMainCategoryId.current = null; // 🔥 IMPORTANT FIX
+
+    setFormData(prev => ({
+      ...prev,
+      subCategoryId: ''
+    }));
+
+    return;
+  };
+
+  // Only run if main category really changed
+  if (prevMainCategoryId.current !== formData.mainCategoryId) {
+    prevMainCategoryId.current = formData.mainCategoryId;
+
+    useSubCategoryStore.setState({
+      subCategories: [],
+      subPage: 1,
+      subHasMore: true
+    });
+
+    setFormData(prev => ({
+      ...prev,
+      subCategoryId: ''
+    }));
+
+    fetchSubCategoryByMainCategoryId(
+      formData.mainCategoryId,
+      1,
+      5,
+      '',
+      false
+    );
+  }
+
 }, [formData.mainCategoryId]);
+
+
 
 
   const generateSlug = (text: string) =>
@@ -161,7 +346,7 @@ const slugRequestId = useRef(0);
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-');
 
-      const slugTimer = useRef<NodeJS.Timeout | null>(null);
+      const slugTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 useEffect(() => {
   setErrors(prev => ({
     ...prev,
@@ -192,52 +377,33 @@ const checkSlugExist = (slug: string) => {
     }));
   }, 500);
 };
+useEffect(() => {
+  if (formData.slug && formData.subCategoryId) {
+    checkSlugExist(formData.slug);
+  }
+}, [formData.subCategoryId]);
 
-
-const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleChange = (e: any) => {
   const { name, value, files } = e.target;
+  console.log(name,value,files)
   let next = { ...formData };
   setErrors(prev => ({
     ...prev,
     [name]: undefined
   }));
 if (name === 'image') {
-  const file = files?.[0];
-  if (!file) return;
-
-  const allowedTypes = [
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'image/webp'
-  ];
-
-  if (!allowedTypes.includes(file.type)) {
-    setErrors(prev => ({
-      ...prev,
-      image: 'Only JPG, JPEG, PNG, WEBP images are allowed'
-    }));
-    e.target.value = '';
-    if (imageErrorTimer.current) {
-      clearTimeout(imageErrorTimer.current);
-    }
-    imageErrorTimer.current = setTimeout(() => {
-      setErrors(prev => ({
-        ...prev,
-        image: undefined
-      }));
-    }, 5000);
-    return;
-  }
-  next.image = file;
-  setImagePreview(URL.createObjectURL(file));
-  setErrors(prev => ({
+ setTimeout(()=>{
+   setFormData(prev => ({
     ...prev,
-    image: undefined
+    image: value
   }));
-  setFormData(next);
+ },500)
   return;
 }
+if (name === "mainCategoryId" && !value) {
+    setSearchTerm('');
+    activeMainCategory(1, 5, '', false);
+  }
   if (name === 'name') {
     next.name = value;
     next.slug = generateSlug(value);
@@ -301,33 +467,55 @@ if (name === 'image') {
           {categoryFields.map(field => (
             <FormField
               key={field.name}
-              field={field}
+              field={{
+                ...field,
+                options:
+                  field.name === 'mainCategoryId'
+    ? [
+        ...mainCategories.map(m => ({
+          label: m.name,
+          value: m._id as string
+        })),
+        ...(formData.mainCategoryId &&
+        !mainCategories.some(m => m._id === formData.mainCategoryId)
+          ? [{
+              label: mainCategoryLabel || 'Selected Category',
+              value: formData.mainCategoryId
+            }]
+          : [])
+      ]
+                    :  field.name === 'subCategoryId'
+    ? [
+        ...subCategories.map(s => ({
+          label: s.name,
+          value: s._id as string
+        })),
+        ...(formData.subCategoryId &&
+        !subCategories.some(s => s._id === formData.subCategoryId)
+          ? [{
+              label: subCategoryLabel || 'Selected Subcategory',
+              value: formData.subCategoryId
+            }]
+          : [])
+      ]
+                    : undefined,
+                onMenuScrollToBottom: field.onMenuScrollToBottom,
+                onInputChange: field.onInputChange
+              }}
               value={formData[field.name as keyof CategoryFormData]}
               onChange={handleChange}
               error={errors[field.name as keyof ValidationErrors]}
+              isRequired={field.required}
             />
           ))}
 
-         <div className="col-span-12">
-  <img
-    src={
-      imagePreview
-        ? imagePreview.startsWith('blob:')
-          ? imagePreview
-          : `http://localhost:5000${imagePreview}`
-        : defaultImage
-    }
-    className="h-32 w-32 rounded-lg object-cover "
-    alt="Preview"
-  />
-</div>
 
         </div>
 
         <div className="mt-6 flex justify-end">
           <button
             disabled={isSubmitting}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:opacity-50"
+            className="px-4 py-2 bg-amber-600 text-white rounded-md disabled:opacity-50"
           >
             {isSubmitting ? 'Saving...' : id ? 'Update' : 'Save'}
           </button>

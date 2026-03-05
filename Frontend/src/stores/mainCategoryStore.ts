@@ -18,6 +18,7 @@ interface MainCategoryState {
   error: string | null;
   page: number;
   totalPages: number;
+  hasMore: boolean;
 
   fetchTrashedMainCategories: (
   page?: number,
@@ -31,6 +32,12 @@ interface MainCategoryState {
     limit?: number,
     filter?: 'total' | 'active' | 'inactive'
   ) => Promise<void>;
+activeMainCategory: (
+  page?: number,
+  limit?: number,
+  search?: string,
+  append?: boolean
+) => Promise<void>;
   fetchAllMainCategories: (  ) => Promise<void>;
   checkMainCategoryNameExists: (name: string, id?: string) => Promise<boolean>;
   fetchMainCategoryById: (id: string) => Promise<MainCategory | null>;
@@ -41,7 +48,6 @@ interface MainCategoryState {
   restoreMainCategory: (id: string) => Promise<void>;
 permanentDeleteMainCategory: (id: string) => Promise<void>;
 }
-
 export const useMainCategoryStore = create<MainCategoryState>((set) => ({
   mainCategories: [],
   stats: { total: 0, active: 0, inactive: 0 },
@@ -49,6 +55,7 @@ export const useMainCategoryStore = create<MainCategoryState>((set) => ({
   error: null,
   page: 1,
   totalPages: 1,
+  hasMore:false,
 
   fetchMainCategories: async (page = 1, limit = 20, filter = 'total') => {
     try {
@@ -56,17 +63,14 @@ export const useMainCategoryStore = create<MainCategoryState>((set) => ({
 
       const statusParam =
         filter === 'active'
-          ? 'true'
-          : filter === 'inactive'
-          ? 'false'
-          : '';
+          ? 'true':'';
 
       const res = await axiosInstance.get(
         `${API.listMainCategory}?page=${page}&limit=${limit}${
           statusParam ? `&isActive=${statusParam}` : ''
         }`
       );
-
+      console.log(res,'main category');
       const mainCategories = Array.isArray(res.data?.data)
         ? res.data.data
         : [];
@@ -86,12 +90,50 @@ export const useMainCategoryStore = create<MainCategoryState>((set) => ({
       });
     } catch (error: any) {
       set({
-        error: 'Failed to fetch mainCategories',
+        error: 'Failed to fetch main categories',
         mainCategories: [],
         loading: false,
       });
     }
   },
+ activeMainCategory: async (
+  page = 1,
+  limit = 5,
+  search = "",
+  append = false
+) => {
+  try {
+    set({ loading: true });
+
+    const res = await axiosInstance.get(
+  `${API.activeMainCategory}`,
+  {
+    params: { page, limit, search }
+  }
+);
+    const mainCategories = Array.isArray(res.data?.data?.data)
+      ? res.data.data.data
+      : [];
+
+    const meta = res.data?.data?.meta || {};
+      console.log('Main category store--------->',mainCategories);
+    set((state) => ({
+      mainCategories: append
+        ? [...state.mainCategories, ...mainCategories]
+        : mainCategories,
+      page: meta.page ?? page,
+      totalPages: meta.totalPages ?? 1,
+      hasMore: meta.hasMore ?? false,
+      loading: false,
+    }));
+  } catch (error: any) {
+    set({
+      error: "Failed to fetch main categories",
+      loading: false,
+    });
+  }
+},
+
   fetchAllMainCategories: async () => {
   try {
     set({ loading: true, error: null });
@@ -155,33 +197,29 @@ permanentDeleteMainCategory: async (id: string) => {
 
   
   deleteMainCategory: async (id: string) => {
+  try {
     await axiosInstance.delete(`${API.deleteMainCategory}${id}`);
-  },
-
-
-  toggleMainCategoryStatus: async (id: string) => {
-  set((state) => ({
-    mainCategories: state.mainCategories.map((cat) =>
-      cat._id === id
-        ? { ...cat, isActive: !cat.isActive }
-        : cat
-    ),
-    stats: {
-      total: state.stats.total,
-      active: state.mainCategories.filter(
-        (c) =>
-          c._id === id ? !c.isActive : c.isActive
-      ).length,
-      inactive: state.mainCategories.filter(
-        (c) =>
-          c._id === id ? c.isActive : !c.isActive
-      ).length,
-    },
-  }));
-  await axiosInstance.patch(
-    `${API.toggleMainCategoryStatus}${id}`
-  );
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message || "Failed to delete Main Category";
+    throw new Error(message);
+  }
 },
+
+
+
+ toggleMainCategoryStatus: async (id: string) => {
+  try {
+    await axiosInstance.patch(
+      `${API.toggleMainCategoryStatus}${id}`
+    );
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message || "Failed to update status";
+    throw new Error(message);
+  }
+},
+
 
 
   fetchMainCategoryById: async (id: string) => {

@@ -1,8 +1,9 @@
 import express from "express";
 import path from 'path';
-import registerRoutes from "./routes";
-import { setupMiddleware } from "./middleware/setup";
 import { errorHandler } from "./middleware/errorHandler";
+import { setupMiddleware } from "./middleware/setup";
+import registerRoutes from "./routes";
+
 
 const app = express();
 
@@ -12,7 +13,6 @@ setupMiddleware(app);
 
 // Register routes
 registerRoutes(app);
-
 
 app.use(
   "/uploads",

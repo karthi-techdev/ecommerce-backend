@@ -45,18 +45,6 @@ export const validateCategoryForm = (data: CategoryFormData): ValidationErrors =
    if (!data.subCategoryId) {
     errors.subCategoryId = 'Sub Category name  is required.';
   }
-   if(data.image instanceof File){
-    const allowedTypes = [
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'image/webp',
-  ];
-
-  if (!allowedTypes.includes(data.image.type)) {
-    errors.image = 'Only JPG, JPEG, PNG, WEBP images are allowed';
-  }
-  }
   
   if(data.slug){
    if(!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(data.slug)){

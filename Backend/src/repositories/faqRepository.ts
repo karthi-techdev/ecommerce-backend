@@ -21,7 +21,7 @@ class FaqRepository {
 
       const skip = (page - 1) * limit;
       const [data, stats] = await Promise.all([
-        FaqModel.find(query).skip(skip).limit(limit).exec(),
+        FaqModel.find(query).skip(skip).limit(limit).sort({createdAt:-1}).exec(),
         this.commonRepository.getStats(),
       ]);
 
@@ -42,7 +42,7 @@ class FaqRepository {
   }
 
   async getFaqById(id: string | Types.ObjectId): Promise<IFaq | null> {
-    return await FaqModel.findById(id);
+    return await FaqModel.findOne({_id:id,isDeleted:false});
   }
 
   async updateFaq(id: string | Types.ObjectId, data: Partial<IFaq>): Promise<IFaq | null> {
@@ -103,6 +103,12 @@ class FaqRepository {
       throw error;
     }
   }
+  async getStats(){
+        const total=await FaqModel.find({isDeleted:false}).countDocuments();
+        const active=await FaqModel.find({isDeleted:false,status:'active'}).countDocuments();
+        const inactive=total-active;
+        return {total,active,inactive};
+      }
   async existsByQuestion(question: string, excludeId?: string | Types.ObjectId): Promise<boolean> {
     const query: any = {
       question: { $regex: new RegExp(`^${question.trim()}$`, "i") },

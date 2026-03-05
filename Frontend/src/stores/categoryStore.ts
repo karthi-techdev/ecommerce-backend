@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import axiosInstance from '../components/utils/axios';
-import type { Category,mainCategory, subCategory } from '../types/common';
+import type { Category } from '../types/common';
 import ImportedURL from '../common/urls';
 import { data } from 'react-router-dom';
 
@@ -19,14 +19,10 @@ export interface CategoryPayload {
   subCategoryId: string;    
   image: File |string| null;
   status?:string;
-
-   
 }
 
 interface CategoryState {
   categories: Category[];
-  mainCategories:mainCategory[];
-  subCategories:subCategory[];
   stats: CategoryStats;
   loading: boolean;
   error: string | null;
@@ -50,8 +46,6 @@ interface CategoryState {
   restoreCategory:(id:string)=>Promise<void>;
   permanentDeleteCategory:(id:string)=>Promise<void>;
   categorystats:()=>Promise<void>;
-  fetchMainCategory:()=>Promise<void>;
-  fetchSubCategory:(mainCategoryId:string)=>Promise<void>;
   slugEXist:(data:any)=>Promise<Boolean>;
 }
 
@@ -93,40 +87,6 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
         stats: { total: 0, active: 0, inactive: 0 },
         loading: false
       });
-    }
-  },
-  fetchMainCategory:async()=>{
-    try {
-      const res=await axiosInstance.get(`${API.mainCategory}`);
-      const mainCategoriesData=res.data.data;
-      set({
-        mainCategories:Array.isArray(mainCategoriesData)?mainCategoriesData:[],
-        error:null,
-        loading:false
-      })
-    } catch (error:any) {
-      set({
-        error:error.message==='Network Error'?'Network Error':error?.response?.data?.message||'Failed to load main category',
-        loading:false,
-        mainCategories:[],
-      })
-    }
-  },
-  fetchSubCategory:async(mainCategoryId:string)=>{
-    try {
-      const res=await axiosInstance.get(`${API.subCategory}${mainCategoryId}`);
-      const subCategoriesData=res.data.data;
-      set({
-        subCategories:Array.isArray(subCategoriesData)?subCategoriesData:[],
-        error:null,
-        loading:false
-      })
-    } catch (error:any) {
-      set({
-        error:error.message==='Network Error'?'Network Error':error?.response?.data?.message||'Failed to load sub category',
-        loading:false,
-        subCategories:[],
-      })
     }
   },
   trashCategory:async(page=1,limit=5,filter='total')=>{

@@ -6,6 +6,14 @@ export interface Faq {
   answer: string;
   status?: 'active' | 'inactive';
 }
+export interface NewsLetter {
+  _id?: string;
+  name: string;
+  slug: string;
+  description: string;
+  coverImage?: string | object;
+  isPublished?: boolean;
+}
 export interface PopulatedCategory{
   _id:string;
   name:string;
@@ -20,12 +28,12 @@ export interface Category{
   subCategoryId:PopulatedCategory;
   status:'active'|'inactive';
 }
-export interface mainCategory{
+export  interface Config{
   _id:string;
   name:string;
   slug:string;
-  description:string;
-  image:string;
+  options:{key:string,value:string}[];
+  status:'active'|'inactive';
 }
 
 export interface MainCategory {
@@ -48,6 +56,26 @@ export interface Brand {
   createdAt?: string;     
   updatedAt?: string;
 }
+
+
+export interface Coupon {
+  _id?: string;
+  code: string;
+  description?: string;
+  discountType: 'percentage' | 'flat';
+  discountValue: number;
+  minOrderValue?: number;
+  maxDiscountAmount?: number;
+  startDate: string;
+  endDate: string;
+  usageLimit?: number;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+
 export interface SubCategory {
   _id?: string;
   name: string;
@@ -59,6 +87,46 @@ export interface SubCategory {
   isDeleted?: boolean;
   createdAt?: string;
   mainCategory?: {_id: string; name: string;};
+}
+export interface ShipmentMethod {
+  _id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  price: string;
+  status?: 'active' | 'inactive';
+  isDeleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+
+
+export interface PopulatedProduct {
+  _id: string;
+  name: string;
+}
+
+export interface Product {
+  _id?: string;
+
+  name: string;
+  slug: string;
+  description: string;
+
+  images: string[];
+
+  price: number;
+  discountPrice?: number;
+  stockQuantity: number;
+
+  brandId: PopulatedProduct;
+  mainCategoryId: PopulatedProduct;
+  subCategoryId: PopulatedProduct;
+  categoryId: PopulatedProduct;
+
+  status: 'active' | 'inactive';
+  isDeleted?: boolean;
 }
 
 export interface Page {
@@ -103,6 +171,40 @@ export interface PageFormData {
   isActive?: boolean;
 }
 
+
+export interface Testimonial {
+  _id?: string;
+  name: string;
+  designation?: string;
+  message?: string;
+  image?: string;
+  rating?: number;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ProductPayload {
+  name: string;
+  slug?: string;
+  description: string;
+
+  images: File[] | string[];
+
+  price: number;
+  discountPrice?: number;
+  stockQuantity: number;
+
+  brandId: string;
+  mainCategoryId: string;
+  subCategoryId: string;
+  categoryId: string;
+
+  status?: 'active' | 'inactive';
+}
+
+
 export type InputType =
   | 'text'
   | 'email'
@@ -139,9 +241,21 @@ export interface FieldConfig {
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
   accept?: string; 
+  previewEnabled?: boolean;
+  withEditor?: boolean;
   options? :{label:string , value:string}[];
+  onMenuScrollToBottom?: () => void;
+  onInputChange?: (value: string) => void;
  }
- 
+
+ export interface BlogCategory {
+  _id: string;
+  name: string;
+  slug: string;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 
 export type ColumnConfig<T> = {

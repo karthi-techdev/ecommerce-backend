@@ -5,6 +5,7 @@ const router = Router();
 router.post("/", (req, res, next) => faqController.createFaq(req, res, next));
 router.get("/", (req, res, next) => faqController.getAllFaqs(req, res, next));
 router.get("/getFaqById/:id", (req, res, next) => faqController.getFaqById(req, res, next));
+router.get('/faqStats',(req,res,next)=>{faqController.getFaqStats(req,res,next)});
 router.put("/updateFaq/:id", (req, res, next) => faqController.updateFaq(req, res, next));
 router.delete("/softDeleteFaq/:id", (req, res, next) => faqController.softDeleteFaq(req, res, next));
 router.patch('/togglestatus/:id', (req, res, next) => faqController.toggleFaqStatus(req, res, next));

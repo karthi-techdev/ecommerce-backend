@@ -8,17 +8,34 @@ import NotFoundPage from '../utils/notFound';
 
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 
+const NewsLetterPage = lazy(() => import('../pages/newsLetter/NewsLetterListPage'));
+const NewsLetterFormPage = lazy(() => import('../pages/newsLetter/NewsLetterFormPage'));
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
+const TestmonialPage = lazy(() => import('../pages/Testimonials/TestListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
+const FaqTrashPage = lazy(() => import('../pages/trash/FaqTrashListPage'));
+const TestimonialFormPage = lazy(() => import('../pages/Testimonials/TestFormPage'));
 const CategoryPage = lazy(() => import('../pages/category/CategoryListPage'));
 const CategoryFormPage = lazy(() => import('../pages/category/CategoryFormPage'));
 const CategoryTrashPage = lazy(() => import('../pages/trash/CategoryTrashListPage'));
 const SubcategoryPage = lazy(() => import('../pages/subcategory/SubcategoryListPage'));
 const SubcategoryFormPage = lazy(() => import('../pages/subcategory/SubcategoryFormPage'));
 const SubcategoryTrashPage = lazy(() => import('../pages/trash/SubcategoryTrashListPage'));
+const ShipmentMethodsFormPage = lazy(()=> import ('../pages/shipmentMethods/ShipmentMethodsFormPage'))
+const ShipmentMethodsListPage = lazy(()=> import ('../pages/shipmentMethods/ShipmentMethodsListPage'))
+const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
+const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
+const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
+const CouponListPage = lazy(() => import('../pages/coupon/CouponListPage'));
+const CouponFormPage = lazy(() => import('../pages/coupon/CouponFormPage'));
 const PageListPage = lazy(() => import('../pages/page/pageListPages'));
 const PageFormPage = lazy(() => import('../pages/page/pageFormPages'));
 const OrderListPage = lazy(()=>import('../templates/order/orderListTemplate'));
+const BlogListPage = lazy(() => import('../pages/blogCategory/BlogListPage'));
+const BlogFormPage = lazy(() => import('../pages/blogCategory/BlogFormPage'));
+const BlogTrashPage = lazy(() => import('../pages/trash/BlogTrashPage'));
+
+
 const PrivateRoute = () => {
   const { isAuthenticated } = useAuthStore();
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
@@ -29,10 +46,11 @@ const PublicRoute = () => {
   return !isAuthenticated ? <Outlet /> : <Navigate to="/dashboard" replace />;
 };
 
-const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
-const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
-const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
 
+
+const ProductListPage = lazy(() => import('../pages/products/ProductsListPage'));
+const ProductFormPage = lazy(() => import('../pages/products/ProductsFormPage'));
+const ProductTrashPage = lazy(() => import('../pages/trash/TrashMainCategoryListPage'));
 
 
 const MainCategoryPage = lazy(
@@ -45,7 +63,8 @@ const TrashMainCategoryPage = lazy(
   () => import('../pages/trash/TrashMainCategoryListPage')
 );
 
-
+const ConfigListPage = lazy(() => import('../pages/config/ConfigListPage'));
+const ConfigFormPage = lazy(() => import('../pages/config/ConfigFormPage'));
 const routes: RouteObject[] = [
   {
     element: <PublicRoute />,
@@ -53,8 +72,8 @@ const routes: RouteObject[] = [
       {
         path: 'login',
         element: <AdminLoginTemplate />,
-      },
-    ],
+      }, 
+   ],
   },
   {
     element: <PrivateRoute />,
@@ -114,7 +133,23 @@ const routes: RouteObject[] = [
               { path: 'edit/:id', element: <FaqFormPage /> },
             ],
           }, 
+          {
+        path: 'testimonial',
+        children: [
+          { path: '', element: < TestmonialPage /> },
+          { path: 'add', element: <TestimonialFormPage /> },
+          { path: 'edit/:id', element: < TestimonialFormPage /> },
+        ],
+      },
            {
+        path: 'config',
+        children: [
+          { path: '', element: <ConfigListPage /> }, 
+          { path: 'add', element: <ConfigFormPage /> },   
+          { path: 'edit/:id', element: <ConfigFormPage /> },  
+        ],
+      },
+       {
         path: 'brand',
         children: [
           { path: '', element: <BrandListPage /> }, 
@@ -122,6 +157,37 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <BrandFormPage /> }, 
         ],
       },
+
+      {
+  path: 'coupon',
+  children: [
+    { path: '', element: <CouponListPage /> },
+    { path: 'add', element: <CouponFormPage /> },
+    { path: 'edit/:id', element: <CouponFormPage /> },
+  ],
+},
+      
+
+{
+  path: 'blog-category',
+  children: [
+    { path: '', element: <BlogListPage /> },
+    { path: 'add', element: <BlogFormPage /> },
+    { path: 'edit/:id', element: <BlogFormPage /> },
+  ]
+},
+
+
+      {
+        
+        path: 'products',
+        children: [
+          { path: '', element: <ProductListPage /> },
+          { path: 'add', element: <ProductFormPage /> },
+          { path: 'edit/:id', element: <ProductFormPage /> },
+        ],
+      },
+
       {
         path: 'mainCategory',
         children: [
@@ -129,7 +195,9 @@ const routes: RouteObject[] = [
           { path: 'add', element: <MainCategoryFormPage /> },
           { path: 'edit/:id', element: <MainCategoryFormPage /> },
         ],
-      },{
+      },
+
+      {
         path:'category',
        children:[
         {path:'',element:<CategoryPage/>},
@@ -145,16 +213,34 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <SubcategoryFormPage /> },
         ],
       },
+       {
+        path: 'shipment-methods',
+        children: [
+          { path: '', element: <ShipmentMethodsListPage /> },
+          { path: 'add', element: <ShipmentMethodsFormPage /> },
+          { path: 'edit/:id', element: <ShipmentMethodsFormPage /> },
+        ],
+      },
       {
         path: 'trash',
         children: [
           { path: 'subcategory', element: <SubcategoryTrashPage /> },
           { path: 'brand', element: <BrandTrashPage /> },
+          { path: 'product', element: <ProductTrashPage /> },
           {path: 'mainCategory',element: <TrashMainCategoryPage />},
-          {path: 'main-category',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
+          {path: 'faq',element: <FaqTrashPage />,},
+          { path: 'blog-category', element: <BlogTrashPage /> }
         ]
-      }
+      }, 
+      {
+            path: 'newsLetters',
+            children: [
+              { path: '', element: <NewsLetterPage /> },
+              { path: 'add', element: <NewsLetterFormPage /> },
+              { path: 'edit/:id', element: <NewsLetterFormPage /> },
+            ],
+          }, 
         ],
       },
     ],

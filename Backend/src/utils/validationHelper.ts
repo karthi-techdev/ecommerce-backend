@@ -66,6 +66,16 @@ class ValidationHelper {
     }
     return null;
   }
+  
+ static isValidName(value: any, field: string): ValidationResult | null {
+  if (value !== undefined && typeof value === "string") {
+    const nameRegex = /^[A-Za-z ]+$/; // only letters + space
+    if (!nameRegex.test(value)) {
+      return { field, message: `${field} must contain only letters `};
+    }
+  }
+  return null;
+}
 
   static isValidEmail(value: any, field: string): ValidationResult | null {
     if (value !== undefined && typeof value === "string") {
