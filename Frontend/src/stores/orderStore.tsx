@@ -93,34 +93,10 @@ export const useOrderStore = create<OrderState>((set) => ({
         }
     },
 
-    // updateOrderStatus: async (id: string, status: Order['orderStatus']) => {
-    //     try {
-    //     set({ loading: true });
-    //     await axiosInstance.put(`${API.updateOrderStatus}${id}/status`, { status });
-        
-    //     set(state => ({
-    //         orders: state.orders.map(o => o._id === id ? { ...o, orderStatus: status } : o),
-    //         currentOrder: state.currentOrder?._id === id ? { ...state.currentOrder, orderStatus: status } : state.currentOrder,
-    //         loading: false,
-    //         error: null
-    //     }));
-    //     } catch (error: any) {
-    //     set({
-    //         loading: false,
-    //         error: error?.response?.data?.message || 'Failed to update order status'
-    //     });
-    //     throw error;
-    //     }
-    // },
-
-    // --- Inside useOrderStore ---
     updateOrderStatus: async (id: string, status: Order['orderStatus']) => {
         try {
             set({ loading: true });
-            // 1. Call the API to update the database
-            await axiosInstance.put(`${API.updateOrderStatus}${id}/status`, { status });
-            
-            // 2. Update the local store state immediately
+            await axiosInstance.put(`${API.updateOrderStatus}/${id}`, { status });
             set(state => ({
                 orders: state.orders.map(o => o._id === id ? { ...o, orderStatus: status } : o),
                 currentOrder: state.currentOrder?._id === id ? { ...state.currentOrder, orderStatus: status } : state.currentOrder,
@@ -135,7 +111,7 @@ export const useOrderStore = create<OrderState>((set) => ({
             });
             throw error;
         }
-    },
+    }, 
 
     updatePaymentStatus: async (id: string, status: Order['paymentStatus']) => {
         try {
