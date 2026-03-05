@@ -4,11 +4,11 @@ import { toast } from 'react-toastify';
 import FormHeader from '../../molecules/FormHeader';
 import FormField from '../../molecules/FormField';
 import type { FieldConfig } from '../../../types/common';
-import { handleError } from '../../utils/errorHandler';
 import { validateMainCategoryForm, type MainCategoryFormData, type ValidationErrors } from '../../validations/mainCategoryValidation';
 import { useMainCategoryStore } from '../../../stores/mainCategoryStore';
 import placeholderImage from '../../../assets/placeholder-image.jpeg';
 import { useDebounce } from '../../hooks/useDebounce';
+
 
 const mainCategoryFields: FieldConfig[] = [
   {
@@ -25,7 +25,6 @@ const mainCategoryFields: FieldConfig[] = [
     type: 'text',
     placeholder: 'Slug generated automatically',
     disabled: true,
-    required: true,
   },
   {
     name: 'description',
@@ -41,6 +40,13 @@ const mainCategoryFields: FieldConfig[] = [
     placeholder: 'https://example.com/image.png',
   },
 ];
+const generateSlug = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
 
 const MainCategoryFormTemplate: React.FC = () => {
   const { id } = useParams();
@@ -60,7 +66,6 @@ const { fetchMainCategoryById, addMainCategory, updateMainCategory } =
   const [imagePreview, setImagePreview] = useState<string>(placeholderImage);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [pdfError, setPdfError] = useState(false);
 
   useEffect(() => {
     if (!debouncedName || debouncedName.trim().length < 3) {
@@ -84,19 +89,7 @@ const { fetchMainCategoryById, addMainCategory, updateMainCategory } =
 
     checkName();
   }, [debouncedName, id]);
-
-  useEffect(() => {
-  if (
-    errors.image &&
-    errors.image === 'Only JPG, JPEG, PNG images are allowed'
-  ) {
-    const timer = setTimeout(() => {
-      setErrors(prev => ({ ...prev, image: undefined }));
-    }, 5000);
-
-    return () => clearTimeout(timer);
-  }
-}, [errors.image]);
+  
 
 
   useEffect(() => {
@@ -128,78 +121,96 @@ const { fetchMainCategoryById, addMainCategory, updateMainCategory } =
 
 
   const handleChange = (e: any) => {
-  const { name, value, files } = e.target;
+  const { name, value } = e.target;
 
   setErrors(prev => ({
     ...prev,
     [name]: undefined,
   }));
 
-  if (name === 'image' && files && files[0]) {
-  const file = files[0];
+  if (name === "image") {
 
-  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    const input = document.querySelector(
+      'input[name="image"]'
+    ) as HTMLInputElement;
 
-  if (!allowedTypes.includes(file.type)) {
-    setErrors({
-      image: 'Only JPG, JPEG, PNG images are allowed',
-    });
+    if (!input?.files || input.files.length === 0) {
+      setFormData(prev => ({
+        ...prev,
+        image: null
+      }));
 
-    setPdfError(true);
-    e.target.value = '';
+      setImagePreview(placeholderImage);
+      return;
+    }
+
+    const file = input.files[0];
+
+    const previewUrl = URL.createObjectURL(file);
+
+    setFormData(prev => ({
+      ...prev,
+      image: file
+    }));
+
+    setImagePreview(previewUrl);
 
     return;
   }
 
-  setPdfError(false);
-  setErrors(prev => ({ ...prev, image: undefined }));
+  if (name === "name") {
 
-  setFormData(prev => ({ ...prev, image: file }));
-  setImagePreview(URL.createObjectURL(file));
-  return;
-}
+  const slug = generateSlug(value);
 
-
-  if (name === 'name') {
-  let updatedValue = value;
-
-  if (updatedValue.length > 0 && updatedValue[0] !== ' ') {
-    updatedValue =
-      updatedValue.charAt(0).toUpperCase() + updatedValue.slice(1);
-  }
-  if (updatedValue.startsWith(' ')) {
+  if (value.startsWith(" ")) {
     setErrors(prev => ({
       ...prev,
-      name: 'Name should not contain spaces',
+      name: "Name should not start with space"
     }));
-  } else if (updatedValue.trim().length === 0) {
-    setErrors(prev => ({
+
+    setFormData(prev => ({
       ...prev,
-      name: 'Name is required',
+      name: value,
+      slug: slug
     }));
-  } else if (updatedValue.length < 3) {
-    setErrors(prev => ({
-      ...prev,
-      name: 'Name must contain at least 3 characters',
-    }));
-  } else {
-    setErrors(prev => ({
-      ...prev,
-      name: undefined,
-    }));
+
+    return;
   }
 
-  const slug = updatedValue
-    .toLowerCase()
-    .replace(/'/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
+  if (!value) {
+    setErrors(prev => ({
+      ...prev,
+      name: "Name is required"
+    }));
+
+    setFormData(prev => ({
+      ...prev,
+      name: value,
+      slug: ""
+    }));
+
+    return;
+  }
+
+  if (value.trim().length < 3) {
+    setErrors(prev => ({
+      ...prev,
+      name: "Name must be at least 3 characters"
+    }));
+
+    setFormData(prev => ({
+      ...prev,
+      name: value,
+      slug: slug
+    }));
+
+    return;
+  }
 
   setFormData(prev => ({
     ...prev,
-    name: updatedValue,
-    slug,
+    name: value,
+    slug: slug
   }));
 
   return;
@@ -219,9 +230,12 @@ const { fetchMainCategoryById, addMainCategory, updateMainCategory } =
 
  
   if (Object.keys(validationErrors).length > 0) {
-    setErrors(validationErrors);
-    return;
-  }
+  setErrors(prev => ({
+    ...prev,
+    ...validationErrors
+  }));
+  return;
+}
 
   setIsSubmitting(true);
 
@@ -285,6 +299,7 @@ const { fetchMainCategoryById, addMainCategory, updateMainCategory } =
         value={formData[field.name as keyof MainCategoryFormData]}
         onChange={handleChange}
         error={errors[field.name as keyof ValidationErrors]}
+        isRequired={field.required}  
       />
   ))}
   <FormField
@@ -293,27 +308,28 @@ const { fetchMainCategoryById, addMainCategory, updateMainCategory } =
       label: 'Image',
       type: 'file',
       className: 'w-full',
-      required: !id, 
+      required: true,
+      previewEnabled: false, 
       accept: 'image/jpeg,image/jpg,image/png',
     }}
-    value=""
+    value={formData.image}
     onChange={handleChange}
     error={errors.image}
+    isRequired={true}
+
   />
-  {imagePreview && (
-    <div className="w-40 h-40  rounded-md  overflow-hidden">
-      <img
-        src={imagePreview}
-        alt="Preview"
-        className="w-full h-full object-cover"
-      />
-    </div>
-  )}
+  <div className="mt-3">
+  <img
+  src={imagePreview}
+  alt="Preview"
+  className="w-32 h-32 object-cover rounded-md border"
+/>
+</div>
   <div className="flex justify-end">
     <button
       type="submit"
       disabled={isSubmitting}
-      className="inline-flex justify-center py-2 px-4 rounded-md text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50"
+      className="inline-flex justify-center py-2 px-4 rounded-md text-white bg-orange-500 hover:bg-orange-500 disabled:opacity-50"
     >
       {isSubmitting ? 'Saving...' : id ? 'Update' : 'Save'}
     </button>

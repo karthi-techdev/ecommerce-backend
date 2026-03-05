@@ -141,12 +141,17 @@ const menuItems: MenuItem[] = [
             label: 'Subcategory',
             path: '/trash/subcategory'
           },  
+          {
+      key:'trash-category',
+      label:'Category',
+      path:'/trash/category'   
+    },
+        { key: 'trash-product', label: 'Product', path: '/trash/products' },
                 {
             key:'trash-category',
             label:'Category',
             path:'/trash/category'   
           },
-        { key: 'trash-product', label: 'Product', path: '/trash/product' },
         {
       key:'trash-faq',
       label:'Faq',

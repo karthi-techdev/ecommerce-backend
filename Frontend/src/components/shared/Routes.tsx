@@ -50,7 +50,7 @@ const PublicRoute = () => {
 
 const ProductListPage = lazy(() => import('../pages/products/ProductsListPage'));
 const ProductFormPage = lazy(() => import('../pages/products/ProductsFormPage'));
-const ProductTrashPage = lazy(() => import('../pages/trash/TrashMainCategoryListPage'));
+const ProductTrashPage = lazy(() => import('../pages/trash/ProductsTrashListPage'));
 
 
 const MainCategoryPage = lazy(
@@ -226,7 +226,7 @@ const routes: RouteObject[] = [
         children: [
           { path: 'subcategory', element: <SubcategoryTrashPage /> },
           { path: 'brand', element: <BrandTrashPage /> },
-          { path: 'product', element: <ProductTrashPage /> },
+          { path: 'products', element: <ProductTrashPage /> },
           {path: 'mainCategory',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
           {path: 'faq',element: <FaqTrashPage />,},

@@ -8,7 +8,7 @@ interface FormFieldProps {
   value: any;
   onChange?: (e: { target: { name: string; value: any; } }) => void;
   error?: string;
-  isRequired?: boolean;
+  isRequired?: boolean; 
 }
 
 const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error,isRequired }) => {
@@ -26,6 +26,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error,isR
           field.options?.find(opt => opt.value === value) || null
         }
         placeholder={field.placeholder}
+        className={error ? "react-select-error" : ""}
         onMenuScrollToBottom={field.onMenuScrollToBottom}
         onInputChange={field.onInputChange}  
         onChange={(selected: any) =>

@@ -7,7 +7,7 @@ import CustomSelect from "../atoms/Select";
 import type { InputType } from "../../types/common";
 
 interface LabeledInputProps {
-  name: string;
+  name: string; 
   label?: string;
   type: InputType;
   value?: any;
@@ -136,8 +136,10 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
               name={name}
               type="file"
               accept="image/*"
+              multiple
               onChange={handleInputChange}
               disabled={disabled}
+              className={error ? "border-red-500" : ""}
             />
 
             {previewEnabled && (
@@ -199,12 +201,12 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
             onChange={handleInputChange}
             disabled={disabled}
             label={ariaLabel}
-            options={options}
+            options={options || []}
           />
         ) : type === "select" ? (
           <CustomSelect
-            options={options}
-            value={options.find((opt) => opt.value === value) || null}
+            options={options || []}
+            value={(options || []).find((opt) => opt.value === value) || null}
             onChange={(selected) => {
               onChange?.({
                 target: {
