@@ -53,6 +53,7 @@ const API = {
   permanentDeleteMainCategory: `${ROOTURL}admin/main-categories/permanent-delete/`,
   activeMainCategory:`${ROOTURL}admin/main-categories//activeMainCategories`,
   listAllMainCategory: `${ROOTURL}admin/main-categories/list`,
+  
   // ---------------- Brand endpoints ----------------
   addBrand: `${ROOTURL}admin/brands/`,
   listBrand: `${ROOTURL}admin/brands/`,
