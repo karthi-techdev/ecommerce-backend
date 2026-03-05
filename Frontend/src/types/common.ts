@@ -140,6 +140,28 @@ export interface Page {
     createdAt? : Date
 }
 
+export interface OrderProduct {
+  productId: string;
+  productName: string;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  _id?: string;
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  shippingAddress: string;
+  products: OrderProduct[];
+  totalAmount: number;
+  paymentMethod: string;
+  paymentStatus: 'Paid' | 'Unpaid' | 'Failed';
+  orderStatus: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+  createdAt: Date;
+}
+
 export interface PageFormData {
   name: string;
   slug: string;

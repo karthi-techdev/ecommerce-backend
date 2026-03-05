@@ -33,6 +33,7 @@ import ConfigListTemplate from '../components/templates/config/ConfigListTemplat
 import ConfigFormTemplate from '../components/templates/config/ConfigFormTemplate';
 import PageFormTemplate from '@/components/templates/page/pageFormTemplate';
 import PageListTemplate from '@/components/templates/page/pageListTemplate';
+import OrderListTemplate from '@/components/templates/order/orderListTemplate';
 
 import ProductListTemplate from '@/components/templates/products/ProductsListTemplate';
 import ProductFormTemplate from '@/components/templates/products/ProductsFormTemplate';
@@ -70,6 +71,18 @@ export const router = createBrowserRouter([
           },
         ]
        }, 
+      {  path: 'orders',
+        children:[
+          {
+            path:"",
+            element:<OrderListTemplate/>
+          }
+          ,{
+            path: 'add',
+            element: <OrderListTemplate />,
+          },
+        ]
+      }, 
       {
         path:'/category',
         children:[

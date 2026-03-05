@@ -130,7 +130,14 @@ const API = {
   checkDuplicatePage: `${ROOTURL}admin/page/check-duplicate`,
   listPageTrash: `${ROOTURL}admin/page/trash/`,
 
-  // ---------------- Product endpoints ----------------
+  // Order endpoints
+  listOrder: `${ROOTURL}admin/orders/`,
+  getOrderById: `${ROOTURL}admin/orders/`,
+  updateOrderStatus: `${ROOTURL}admin/orders/orderstatus`, 
+  updatePaymentStatus: `${ROOTURL}admin/orders/paymentstatus`,
+  deleteOrder: `${ROOTURL}admin/orders/`, 
+
+   // ---------------- Product endpoints ----------------
   addProduct: `${ROOTURL}products/`,
   listProduct: `${ROOTURL}products/`,
   getProductById: `${ROOTURL}products/getProductById/`,
@@ -157,6 +164,7 @@ const API = {
 
 
 };
+ 
 
 const ImportedURL = { API, LIVEURL, FILEURL, SETTINGS_ID };
 export default ImportedURL;
