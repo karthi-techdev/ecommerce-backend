@@ -137,6 +137,17 @@ const API = {
   updatePaymentStatus: `${ROOTURL}admin/orders/paymentstatus`,
   deleteOrder: `${ROOTURL}admin/orders/`, 
 
+  // Offer Management
+  addOffer: `${ROOTURL}admin/offer/`,
+  listOffer: `${ROOTURL}admin/offer/`,
+  getOfferById: `${ROOTURL}admin/offer/`,
+  updateOffer: `${ROOTURL}admin/offer/`,
+  toggleOfferStatus: `${ROOTURL}admin/offer/toggle-status/`,
+  // softDeleteOffer: `${ROOTURL}admin/offer/soft/`,
+  // restoreOffer: `${ROOTURL}admin/offer/restore/`,
+  permanentDeleteOffer: `${ROOTURL}admin/offer/permanent/`,
+  checkOfferDuplicate: `${ROOTURL}admin/offer/check-duplicate`,
+
    // ---------------- Product endpoints ----------------
   addProduct: `${ROOTURL}products/`,
   listProduct: `${ROOTURL}products/`,
