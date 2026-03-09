@@ -6,6 +6,14 @@ export interface Faq {
   answer: string;
   status?: 'active' | 'inactive';
 }
+export interface NewsLetter {
+  _id?: string;
+  name: string;
+  slug: string;
+  description: string;
+  coverImage?: string | object;
+  isPublished?: boolean;
+}
 export interface PopulatedCategory{
   _id:string;
   name:string;
@@ -80,6 +88,17 @@ export interface SubCategory {
   createdAt?: string;
   mainCategory?: {_id: string; name: string;};
 }
+export interface ShipmentMethod {
+  _id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  price: string;
+  status?: 'active' | 'inactive';
+  isDeleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 
 
@@ -129,6 +148,7 @@ export interface PageFormData {
   url?: string;
   isActive?: boolean;
 }
+
 
 export interface Testimonial {
   _id?: string;
@@ -199,10 +219,23 @@ export interface FieldConfig {
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
   accept?: string; 
+  previewEnabled?: boolean;
+  withEditor?: boolean;
   options? :{label:string , value:string}[];
   onMenuScrollToBottom?: () => void;
   onInputChange?: (value: string) => void;
  }
+
+ export interface BlogCategory {
+  _id: string;
+  name: string;
+  slug: string;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+
 export type ColumnConfig<T> = {
   key: keyof T;
   label: string;

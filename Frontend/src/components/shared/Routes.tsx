@@ -8,9 +8,12 @@ import NotFoundPage from '../utils/notFound';
 
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 
+const NewsLetterPage = lazy(() => import('../pages/newsLetter/NewsLetterListPage'));
+const NewsLetterFormPage = lazy(() => import('../pages/newsLetter/NewsLetterFormPage'));
 const FaqPage = lazy(() => import('../pages/faq/FaqListPage'));
 const TestmonialPage = lazy(() => import('../pages/Testimonials/TestListPage'));
 const FaqFormPage = lazy(() => import('../pages/faq/FaqFormPage'));
+const FaqTrashPage = lazy(() => import('../pages/trash/FaqTrashListPage'));
 const TestimonialFormPage = lazy(() => import('../pages/Testimonials/TestFormPage'));
 const CategoryPage = lazy(() => import('../pages/category/CategoryListPage'));
 const CategoryFormPage = lazy(() => import('../pages/category/CategoryFormPage'));
@@ -18,6 +21,8 @@ const CategoryTrashPage = lazy(() => import('../pages/trash/CategoryTrashListPag
 const SubcategoryPage = lazy(() => import('../pages/subcategory/SubcategoryListPage'));
 const SubcategoryFormPage = lazy(() => import('../pages/subcategory/SubcategoryFormPage'));
 const SubcategoryTrashPage = lazy(() => import('../pages/trash/SubcategoryTrashListPage'));
+const ShipmentMethodsFormPage = lazy(()=> import ('../pages/shipmentMethods/ShipmentMethodsFormPage'))
+const ShipmentMethodsListPage = lazy(()=> import ('../pages/shipmentMethods/ShipmentMethodsListPage'))
 const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
 const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
 const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
@@ -25,6 +30,10 @@ const CouponListPage = lazy(() => import('../pages/coupon/CouponListPage'));
 const CouponFormPage = lazy(() => import('../pages/coupon/CouponFormPage'));
 const PageListPage = lazy(() => import('../pages/page/pageListPages'));
 const PageFormPage = lazy(() => import('../pages/page/pageFormPages'));
+const BlogListPage = lazy(() => import('../pages/blogCategory/BlogListPage'));
+const BlogFormPage = lazy(() => import('../pages/blogCategory/BlogFormPage'));
+const BlogTrashPage = lazy(() => import('../pages/trash/BlogTrashPage'));
+
 
 const PrivateRoute = () => {
   const { isAuthenticated } = useAuthStore();
@@ -62,7 +71,7 @@ const routes: RouteObject[] = [
       {
         path: 'login',
         element: <AdminLoginTemplate />,
-      },
+      }, 
    ],
   },
   {
@@ -139,6 +148,17 @@ const routes: RouteObject[] = [
     { path: 'edit/:id', element: <CouponFormPage /> },
   ],
 },
+      
+
+{
+  path: 'blog-category',
+  children: [
+    { path: '', element: <BlogListPage /> },
+    { path: 'add', element: <BlogFormPage /> },
+    { path: 'edit/:id', element: <BlogFormPage /> },
+  ]
+},
+
 
       {
         
@@ -157,7 +177,9 @@ const routes: RouteObject[] = [
           { path: 'add', element: <MainCategoryFormPage /> },
           { path: 'edit/:id', element: <MainCategoryFormPage /> },
         ],
-      },{
+      },
+
+      {
         path:'category',
        children:[
         {path:'',element:<CategoryPage/>},
@@ -173,6 +195,14 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <SubcategoryFormPage /> },
         ],
       },
+       {
+        path: 'shipment-methods',
+        children: [
+          { path: '', element: <ShipmentMethodsListPage /> },
+          { path: 'add', element: <ShipmentMethodsFormPage /> },
+          { path: 'edit/:id', element: <ShipmentMethodsFormPage /> },
+        ],
+      },
       {
         path: 'trash',
         children: [
@@ -181,8 +211,18 @@ const routes: RouteObject[] = [
           { path: 'product', element: <ProductTrashPage /> },
           {path: 'mainCategory',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
+          {path: 'faq',element: <FaqTrashPage />,},
+          { path: 'blog-category', element: <BlogTrashPage /> }
         ]
-      }
+      }, 
+      {
+            path: 'newsLetters',
+            children: [
+              { path: '', element: <NewsLetterPage /> },
+              { path: 'add', element: <NewsLetterFormPage /> },
+              { path: 'edit/:id', element: <NewsLetterFormPage /> },
+            ],
+          }, 
         ],
       },
     ],

@@ -41,8 +41,6 @@ class categoryController {
                     data: result.data,
                     meta: {
                         total: result.meta.total,
-                        active: result.meta.active,
-                        inactive: result.meta.inactive,
                         totalPages: result.meta.totalPages,
                         page: result.meta.page,
                         limit: result.meta.limit

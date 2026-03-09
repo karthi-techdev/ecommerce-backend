@@ -5,7 +5,7 @@ export class CommonService<T extends Document> {
   repository: CommonRepository<T>;
 
   constructor(model: Model<T>) {
-    this.repository = new CommonRepository(model);
+    this.repository = new CommonRepository(model as any);
   }
 
   // Toggle status

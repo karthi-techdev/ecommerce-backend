@@ -1,6 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Layout from '../components/shared/Layout';
 import Dashboard from '../components/templates/dashboard/Dashboard';
+import NewsLetterListTemplate from '../components/templates/newsLetter/NewsLetterListTemplate';
+import NewsLetterFormTemplate from '../components/templates/newsLetter/NewsLetterFormTemplate';
 import FaqListTemplate from '../components/templates/faq/FaqListTemplate';
 import FaqFormTemplate from '../components/templates/faq/FaqFormTemplate';
 import TestimonialFormTemplate from '../components/templates/testimonial/testFormTemplate';
@@ -17,6 +19,8 @@ import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
 
 import BrandTrashPage from '../components/pages/trash/BrandTrashPage';
 
+import ShipmentMethodListTemplate from '../components/templates/shipmentMethods/shipmentMethodsListTemplate';
+import ShipmentMethodFormTemplate from '../components/templates/shipmentMethods/ShipmentMethodsFormTemplate';
 import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
 import SubCategoryFormTemplate from '@/components/templates/subcategory/SubcategoryFormTemplate';
 import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
@@ -33,6 +37,15 @@ import PageListTemplate from '@/components/templates/page/pageListTemplate';
 import ProductListTemplate from '@/components/templates/products/ProductsListTemplate';
 import ProductFormTemplate from '@/components/templates/products/ProductsFormTemplate';
 import ProductTrashListTemplate from '@/components/templates/trash/ProductsTrash/ProductsTrashListTemplate';
+
+import BlogCategoryListTemplate from '@/components/templates/blogCategory/BlogCategoryListTemplate';
+import BlogCategoryFormTemplate from '@/components/templates/blogCategory/BlogCategoryFormTemplate';
+import BlogTrashListPage from '@/components/templates/trash/BlogTrash/TrashBlogTemplate';
+
+import BlogListTemplate from '@/components/templates//blogs/BlogListTemplate';
+import BlogFormTemplate from '@/components/templates/blogs/BlogFormTemplate';
+
+
 
 export const router = createBrowserRouter([
   {
@@ -76,11 +89,11 @@ export const router = createBrowserRouter([
       }
       ,
       {
-        path: 'faq',
+        path: 'newsLetter',
         children: [
-          { path: '', element: <FaqListTemplate /> },
-          { path: 'add', element: <FaqFormTemplate /> },
-          { path: 'edit/:id', element: <FaqFormTemplate /> },
+          { path: '', element: <NewsLetterListTemplate /> },
+          { path: 'add', element: <NewsLetterFormTemplate /> },
+          { path: 'edit/:id', element: <NewsLetterFormTemplate /> },
         ],
       },
       {
@@ -109,29 +122,39 @@ export const router = createBrowserRouter([
         ],
       },
       {
-  path: 'coupon',
-  children: [
-    { path: '', element: <CouponListTemplate /> },
-    { path: 'add', element: <CouponFormTemplate /> },
-    { path: 'edit/:id', element: <CouponFormTemplate /> },
-  ],
+        path: 'coupon',
+        children: [
+          { path: '', element: <CouponListTemplate /> },
+          { path: 'add', element: <CouponFormTemplate /> },
+          { path: 'edit/:id', element: <CouponFormTemplate /> },
+        ],
+      },
+
+      {
+        path: 'blog-category', 
+        children: [
+          { path: '', element: <BlogCategoryListTemplate /> },      
+          { path: 'add', element: <BlogCategoryFormTemplate /> }, 
+          { path: 'edit/:id', element: <BlogCategoryFormTemplate /> }, 
+        ]
+      },
+
+      {
+      path: 'blog',                 
+      children: [
+    { path: '', element: <BlogListTemplate /> },     
+    { path: 'add', element: <BlogFormTemplate /> },  
+    { path: 'edit/:id', element: <BlogFormTemplate /> }, 
+  ]
 },
+
 
       {
         path: 'subcategory',
         children: [
-          {
-            path: '',
-            element: <SubCategoryListTemplate />,
-          },
-          {
-            path: 'add',
-            element: <SubCategoryFormTemplate />,
-          },
-          {
-            path: 'edit/:id',
-            element: <SubCategoryFormTemplate />,
-          },
+          { path: '', element: <SubCategoryListTemplate />, },
+          { path: 'add', element: <SubCategoryFormTemplate />,},
+          { path: 'edit/:id', element: <SubCategoryFormTemplate />,},
         ],
       },
       {
@@ -159,6 +182,14 @@ export const router = createBrowserRouter([
           { path: 'add', element: <MainCategoryFormTemplate /> },
           { path: 'edit/:id', element: <MainCategoryFormTemplate /> },
         ]
+      }, 
+      {
+        path: 'shipment-methods',
+        children: [
+          { path: '', element: <ShipmentMethodListTemplate /> },
+          { path: 'add', element: <ShipmentMethodFormTemplate /> },
+          { path: 'edit/:id', element: <ShipmentMethodFormTemplate /> },
+        ],
       },
       {
         path: 'trash',
@@ -176,7 +207,10 @@ export const router = createBrowserRouter([
              path: 'category', 
              element: <CategoryTrashListPage /> 
           },
-          { path: 'product', element: <ProductTrashListTemplate /> }, 
+          { path: 'product', element: <ProductTrashListTemplate /> },
+
+           { path: 'blog-category', 
+            element: <BlogTrashListPage /> }
         ],
       },
       
