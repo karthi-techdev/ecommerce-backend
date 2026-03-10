@@ -50,17 +50,15 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
     const [fileError, setFileError] = useState<string | null>(null);
     const editorRef = useRef(null);
   const errorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-    // ✅ Image preview setter 
+    //  Image preview setter 
     useEffect(() => {
       if (value) {
         if (typeof value === "string" && value.trim() !== "") {
-          // Path munnadi http iruntha athaiye use pannum, illana backend URL sethukum
           const fullImageUrl = value.startsWith("http")
             ? value
             : `${BACKEND_URL}${value}`;
           setPreview(fullImageUrl);
         } else if (value instanceof File) {
-          // Puthusa upload panna local preview kaatum
           const objectUrl = URL.createObjectURL(value);
           setPreview(objectUrl);
           return () => URL.revokeObjectURL(objectUrl);
@@ -71,42 +69,54 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
     }, [value]);
 
     const handleInputChange = (
-      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    ) => {
-      if (type === "file" && e.target instanceof HTMLInputElement) {
-        const file = e.target.files?.[0];
-        if (!file) return;
+  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+) => {
+  if (type === "file" && e.target instanceof HTMLInputElement) {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-       if (!file.type.startsWith("image/")) {
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/webp"
+    ];
 
-  setFileError("Only image files are allowed (jpg, png, jpeg)");
-  setPreview(defaultImage);
+    if (!allowedTypes.includes(file.type)) {
 
-  if (errorTimer.current) {
-    clearTimeout(errorTimer.current);
+      setFileError("Only image files are allowed (jpg, jpeg, png, webp)");
+      setPreview(defaultImage);
+
+      e.target.value = ""; // reset file input
+
+      if (errorTimer.current) {
+        clearTimeout(errorTimer.current);
+      }
+
+      errorTimer.current = setTimeout(() => {
+        setFileError(null);
+      }, 5000);
+
+      return;
+    }
+
+    setFileError(null);
+
+    const imageUrl = URL.createObjectURL(file);
+    setPreview(imageUrl);
+
+    onChange?.({
+      target: {
+        name,
+        value: file,
+      },
+    });
+
+    return;
   }
 
-  errorTimer.current = setTimeout(() => {
-    setFileError(null);
-  }, 2000);
-
-  return;
-}
-
-        setFileError(null);
-        const imageUrl = URL.createObjectURL(file);
-        setPreview(imageUrl);
-
-        onChange?.({
-          target: {
-            name,
-            value: file,
-          },
-        });
-        return;
-      }
-      onChange?.(e as any);
-    };
+  onChange?.(e as any);
+};
 
     const handleEditorChange = (content: string) => {
       onChange?.({
@@ -135,7 +145,7 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
               id={name}
               name={name}
               type="file"
-              accept="image/*"
+              accept="image/png,image/jpeg,image/jpg,image/webp"
               multiple
               onChange={handleInputChange}
               disabled={disabled}
@@ -149,7 +159,6 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
                   alt="Preview"
                   className="w-40 h-40 object-cover rounded border bg-gray-100"
                   onError={(e) => {
-                    // URL thappa iruntha default image-ah switch pannum
                     (e.target as HTMLImageElement).src = defaultImage;
                   }}
                 />

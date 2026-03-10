@@ -44,6 +44,9 @@ import BlogCategoryFormTemplate from '@/components/templates/blogCategory/BlogCa
 import BlogTrashListPage from '@/components/templates/trash/BlogTrash/TrashBlogTemplate';
 
 
+import PromotionsListTemplate from '../components/templates/promotions/PromotionsListTemplate';
+import PromotionsFormTemplate from '../components/templates/promotions/PromotionsFormTemplate';
+
 
 
 export const router = createBrowserRouter([
@@ -212,6 +215,15 @@ export const router = createBrowserRouter([
 
            { path: 'blog-category', 
             element: <BlogTrashListPage /> }
+        ],
+      },
+
+      {
+        path: 'promotions',
+        children: [
+          { path: '', element: <PromotionsListTemplate /> },
+          { path: 'add', element: <PromotionsFormTemplate /> },
+          { path: 'edit/:id', element: <PromotionsFormTemplate /> },
         ],
       },
       
