@@ -22,6 +22,7 @@ interface LabeledInputProps {
   error?: string;
   previewEnabled?: boolean;
   withEditor?: boolean;
+  allowedFileTypes?: string[];
 }
 
 const LabeledInput: React.FC<LabeledInputProps> = memo(
@@ -40,7 +41,8 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
     error,
     previewEnabled,
     withEditor,
-    options
+    options,
+    allowedFileTypes 
   }) => {
     
     const BACKEND_URL = "http://localhost:5000";
@@ -75,35 +77,19 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const allowedTypes = [
-      "image/jpeg",
-      "image/jpg",
-      "image/png",
-      "image/webp"
-    ];
-
-    if (!allowedTypes.includes(file.type)) {
-
-      setFileError("Only image files are allowed (jpg, jpeg, png, webp)");
+    if (allowedFileTypes && !allowedFileTypes.includes(file.type)) {
+      setFileError(`Please upload valid file. Allowed types: ${allowedFileTypes.toString()}`);
       setPreview(defaultImage);
-
       e.target.value = ""; // reset file input
-
-      if (errorTimer.current) {
-        clearTimeout(errorTimer.current);
-      }
-
-      errorTimer.current = setTimeout(() => {
-        setFileError(null);
-      }, 5000);
-
       return;
     }
 
     setFileError(null);
 
-    const imageUrl = URL.createObjectURL(file);
-    setPreview(imageUrl);
+    if(previewEnabled) {
+      const imageUrl = URL.createObjectURL(file);
+      setPreview(imageUrl);
+    }
 
     onChange?.({
       target: {
@@ -145,11 +131,11 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
               id={name}
               name={name}
               type="file"
-              accept="image/png,image/jpeg,image/jpg,image/webp"
               multiple
               onChange={handleInputChange}
               disabled={disabled}
               className={error ? "border-red-500" : ""}
+              {...(allowedFileTypes && {accept: allowedFileTypes?.toString()})}
             />
 
             {previewEnabled && (

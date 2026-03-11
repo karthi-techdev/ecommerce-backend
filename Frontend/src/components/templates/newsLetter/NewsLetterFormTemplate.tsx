@@ -36,7 +36,8 @@ const newsLetterFields: FieldConfig[] = [
     name: 'coverImage',
     label: 'Cover image',
     type: 'file',
-    previewEnabled: true
+    previewEnabled: true,
+    allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp"]
   },
   {
     name: 'isPublished',
@@ -61,14 +62,14 @@ const NewsLetterFormTemplate: React.FC = () => {
   const [formData, setFormData] = useState<NewsLetterFormData>({
     name: '',
     slug: '',
-    description:'',
-    coverImage:'',
+    description: '',
+    coverImage: '',
     isPublished: false,
   });
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,7 +79,7 @@ const NewsLetterFormTemplate: React.FC = () => {
           setFormData({
             name: newsLetter.name || '',
             slug: newsLetter.slug || '',
-            description:newsLetter.description || '',
+            description: newsLetter.description || '',
             coverImage: `${ImportedURL.LIVEURL}${newsLetter.coverImage}` || '',
             isPublished: newsLetter.isPublished || false,
           });
@@ -90,59 +91,56 @@ const NewsLetterFormTemplate: React.FC = () => {
     fetchData();
   }, [id, fetchNewsLetterById]);
 
-  console.log("coverImage",formData)
-
   const handleChange = (e: { target: { name: string; value: any } }) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      ...name === 'name' && {slug:  generateSlug(value)},
+      ...name === 'name' && { slug: generateSlug(value) },
       [name]: value
     }));
-    console.log("nnnn", name, formData)
 
     // Validate the specific field that changed
     const fieldValidationErrors = validateNewsLetterForm({
       ...formData,
-      ...name === 'name' && {slug:  generateSlug(value)},
+      ...name === 'name' && { slug: generateSlug(value) },
       [name]: value
     });
 
     // Update only the error for the changed field
     setErrors(prev => ({
       ...prev,
-       ...name === 'name' && {slug:  fieldValidationErrors['slug']},
+      ...name === 'name' && { slug: fieldValidationErrors['slug'] },
       [name]: fieldValidationErrors[name as keyof ValidationErrors]
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const validationErrors = validateNewsLetterForm(formData);
-  if (Object.keys(validationErrors).length > 0) {
-    setErrors(validationErrors);
-    return;
-  }
-
-  setIsSubmitting(true);
-  try {
-    if (id) {
-      // ✅ update
-      console.log("")
-      await updateNewsLetter(id, formData);
-      toast.success("NewsLetter updated successfully!");
-    } else {
-      // ✅ add
-      await addNewsLetter(formData);
-      toast.success("NewsLetter added successfully!");
+    e.preventDefault();
+    const validationErrors = validateNewsLetterForm(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
     }
-    navigate("/newsLetters");
-  } catch (error: any) {
-    toast.error("Failed to save NewsLetter!");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+
+    setIsSubmitting(true);
+    try {
+      if (id) {
+        // ✅ update
+        console.log("")
+        await updateNewsLetter(id, formData);
+        toast.success("NewsLetter updated successfully!");
+      } else {
+        // ✅ add
+        await addNewsLetter(formData);
+        toast.success("NewsLetter added successfully!");
+      }
+      navigate("/newsLetters");
+    } catch (error: any) {
+      toast.error("Failed to save NewsLetter!");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
 
   return (

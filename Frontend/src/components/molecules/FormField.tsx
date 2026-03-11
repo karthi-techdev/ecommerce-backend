@@ -61,6 +61,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error,isR
         options={field.options}
         previewEnabled={field.previewEnabled}
         withEditor={field.withEditor}
+        allowedFileTypes={field.allowedFileTypes}
       />
     </div>
   );
