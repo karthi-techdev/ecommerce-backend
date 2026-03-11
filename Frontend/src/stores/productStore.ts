@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import axiosInstance from '../components/utils/axios';
-import type { Product } from '../types/common';
+import type { Product, ProductPayload  } from '../types/common';
 import ImportedURL from '../common/urls';
 
 const { API } = ImportedURL;
@@ -11,18 +11,6 @@ interface ProductStats {
   inactive: number;
 }
 
-export interface ProductPayload {
-  name: string;
-  description: string;
-  slug: string;
-  brandId: string;
-  mainCategoryId: string;
-  subCategoryId: string;
-  categoryId: string;
-  price: number;
-  image: File | string | null;
-  status?: string;
-}
 
 interface ProductState {
   products: Product[];
@@ -45,8 +33,8 @@ interface ProductState {
 
   fetchProductById: (id: string) => Promise<Product | null>;
 
-  addProduct: (product: ProductPayload) => Promise<void>;
-  updateProduct: (id: string, product: ProductPayload) => Promise<void>;
+  addProduct: (formData: FormData) => Promise<void>;
+  updateProduct: (id: string, formData: FormData) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
   toggleProduct: (id: string) => Promise<void>;
 
@@ -89,14 +77,20 @@ export const useProductStore = create<ProductState>((set) => ({
         }`
       );
 
-      const { data, meta } = res.data.data;
+      const { data, meta } = res.data;
 
       set({
         products: Array.isArray(data) ? data : [],
+        stats: {
+          total: meta.total,
+          active: meta.active,
+          inactive: meta.inactive,
+        },
         page,
         totalPages: meta?.totalPages ?? 1,
         loading: false,
       });
+
     } catch (error: any) {
       set({
         error:
@@ -141,86 +135,47 @@ export const useProductStore = create<ProductState>((set) => ({
   },
 
  
-  addProduct: async (product) => {
-    try {
-      const formData = new FormData();
+  addProduct: async (formData: FormData) => {
+  try {
+    const res = await axiosInstance.post(API.addProduct, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
 
-      formData.append('name', product.name);
-      formData.append('description', product.description);
-      formData.append('slug', product.slug);
-      formData.append('brandId', product.brandId);
-      formData.append('mainCategoryId', product.mainCategoryId);
-      formData.append('subCategoryId', product.subCategoryId);
-      formData.append('categoryId', product.categoryId);
-      formData.append('price', String(product.price));
-
-      if (product.image instanceof File) {
-        formData.append('image', product.image);
-      }
-
-      const res = await axiosInstance.post(
-        API.addProduct,
-        formData
-      );
-
-      set((state) => ({
-        products: [...state.products, res.data.data],
-      }));
-    } catch (error: any) {
-      set({
-        error:
-          error?.response?.data?.message ||
-          'Failed to add product',
-      });
-      throw error;
-    }
-  },
+    set((state) => ({
+      products: [...state.products, res.data.data],
+    }));
+  } catch (error: any) {
+    set({
+      error: error?.response?.data?.message || 'Failed to add product',
+    });
+    throw error;
+  }
+},
 
 
-  updateProduct: async (id, product) => {
-    try {
-      const formData = new FormData();
+  updateProduct: async (id: string, formData: FormData) => {
+  try {
+    const res = await axiosInstance.put(`${API.updateProduct}${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
 
-      formData.append('name', product.name);
-      formData.append('description', product.description);
-      formData.append('slug', product.slug);
-      formData.append('brandId', product.brandId);
-      formData.append('mainCategoryId', product.mainCategoryId);
-      formData.append('subCategoryId', product.subCategoryId);
-      formData.append('categoryId', product.categoryId);
-      formData.append('price', String(product.price));
-
-      if (product.image instanceof File) {
-        formData.append('image', product.image);
-      }
-
-      if (product.status) {
-        formData.append('status', product.status);
-      }
-
-      const res = await axiosInstance.put(
-        `${API.updateProduct}${id}`,
-        formData
-      );
-
-      set((state) => ({
-        products: state.products.map((p) =>
-          p._id === id ? { ...p, ...res.data.data } : p
-        ),
-      }));
-    } catch (error: any) {
-      set({
-        error:
-          error?.response?.data?.message ||
-          'Failed to update product',
-      });
-      throw error;
-    }
-  },
+    set((state) => ({
+      products: state.products.map((p) =>
+        p._id === id ? { ...p, ...res.data.data } : p
+      ),
+    }));
+  } catch (error: any) {
+    set({
+      error: error?.response?.data?.message || 'Failed to update product',
+    });
+    throw error;
+  }
+},
 
   
   deleteProduct: async (id) => {
     try {
+      set({ error: null });
       await axiosInstance.patch(
         `${API.softDeleteProduct}${id}`
       );
@@ -242,6 +197,7 @@ export const useProductStore = create<ProductState>((set) => ({
   
   toggleProduct: async (id) => {
     try {
+      set({ error: null });
       const res = await axiosInstance.patch(
         `${API.toggleProductStatus}${id}`
       );
@@ -263,36 +219,45 @@ export const useProductStore = create<ProductState>((set) => ({
   },
 
 
-  trashProduct: async (page = 1, limit = 10) => {
-    try {
-      set({ loading: true });
+ trashProduct: async (page = 1, limit = 10) => {
+  try {
+    set({ loading: true, error: null });
 
-      const res = await axiosInstance.get(
-        `${API.trashProducts}?page=${page}&limit=${limit}`
-      );
+    const res = await axiosInstance.get(
+      `${API.trashProducts}?page=${page}&limit=${limit}`
+    );
 
-      const { data, meta } = res.data;
+    console.log("Trash API response:", res.data);
 
-      set({
-        products: Array.isArray(data) ? data : [],
-        trashCurrentPage: meta.page,
-        trashTotalPages: meta.totalPages,
-        totalTrashProducts: meta.total,
-        loading: false,
-      });
-    } catch (error: any) {
-      set({
-        error:
-          error?.response?.data?.message ||
-          'Failed to load trash',
-        loading: false,
-      });
-    }
+    const responseData = res.data.data; 
+    const products = responseData?.data || [];
+    const meta = responseData?.meta || {};
+
+    set({
+      products: Array.isArray(products) ? products : [],
+      trashCurrentPage: meta.page || 1,
+      trashTotalPages: meta.totalPages || 1,
+      totalTrashProducts: meta.total || 0,
+      loading: false,
+      error: null,
+    });
+
+  } catch (error: any) {
+    console.error("Trash error:", error);
+
+    set({
+      error:
+        error?.response?.data?.message ||
+        error?.message ||
+        'Failed to load trash',
+      loading: false,
+    });
+  }
   },
-
   
   restoreProduct: async (id) => {
     try {
+      set({ error: null });
       await axiosInstance.patch(
         `${API.restoreProduct}${id}`
       );
@@ -314,6 +279,7 @@ export const useProductStore = create<ProductState>((set) => ({
 
   permanentDeleteProduct: async (id) => {
     try {
+      set({ error: null });
       await axiosInstance.delete(
         `${API.permanentDeleteProduct}${id}`
       );
@@ -334,20 +300,29 @@ export const useProductStore = create<ProductState>((set) => ({
 
 
   slugExist: async (data) => {
-    try {
-      await axiosInstance.post(
-        API.checkProductSlug,
-        data
-      );
-      return false;
-    } catch (error: any) {
-      if (
-        error?.response?.status === 400 &&
-        error?.response?.data?.code === 'SLUG_EXISTS'
-      ) {
-        return true;
-      }
-      return false;
+  try {
+    const res = await axiosInstance.post(
+      API.checkProductSlug,
+      data
+    );
+
+    // If backend sends { exists: true }
+    if (res.data?.exists === true) {
+      return true;
     }
-  },
+
+    return false;
+
+  } catch (error: any) {
+    // If backend throws error for duplicate
+    if (
+      error?.response?.status === 400 &&
+      error?.response?.data?.code === "SLUG_EXISTS"
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+},
 }));

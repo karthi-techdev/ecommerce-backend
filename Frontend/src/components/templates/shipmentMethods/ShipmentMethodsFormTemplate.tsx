@@ -152,7 +152,7 @@ const ShipmentMethodFormTemplate: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-4 py-2 bg-amber-600 text-white rounded"
+            className="px-4 py-2 bg-amber-500 text-white rounded"
           >
             {isSubmitting ? 'Saving...' : id ? 'Update' : 'Save'}
           </button>

@@ -18,7 +18,7 @@ import BrandListTemplate from '../components/templates/brand/BrandListTemplate';
 import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
 
 import BrandTrashPage from '../components/pages/trash/BrandTrashPage';
-
+   
 import ShipmentMethodListTemplate from '../components/templates/shipmentMethods/shipmentMethodsListTemplate';
 import ShipmentMethodFormTemplate from '../components/templates/shipmentMethods/ShipmentMethodsFormTemplate';
 import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
@@ -33,6 +33,7 @@ import ConfigListTemplate from '../components/templates/config/ConfigListTemplat
 import ConfigFormTemplate from '../components/templates/config/ConfigFormTemplate';
 import PageFormTemplate from '@/components/templates/page/pageFormTemplate';
 import PageListTemplate from '@/components/templates/page/pageListTemplate';
+import OrderListTemplate from '@/components/templates/order/orderListTemplate';
 
 import ProductListTemplate from '@/components/templates/products/ProductsListTemplate';
 import ProductFormTemplate from '@/components/templates/products/ProductsFormTemplate';
@@ -42,8 +43,6 @@ import BlogCategoryListTemplate from '@/components/templates/blogCategory/BlogCa
 import BlogCategoryFormTemplate from '@/components/templates/blogCategory/BlogCategoryFormTemplate';
 import BlogTrashListPage from '@/components/templates/trash/BlogTrash/TrashBlogTemplate';
 
-import BlogListTemplate from '@/components/templates//blogs/BlogListTemplate';
-import BlogFormTemplate from '@/components/templates/blogs/BlogFormTemplate';
 
 
 
@@ -56,7 +55,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
-    children: [
+    children: [  
       {  path: '/', element: <Dashboard /> },
       {  path: 'page',
         children:[
@@ -70,6 +69,18 @@ export const router = createBrowserRouter([
           },
         ]
        }, 
+      {  path: 'orders',
+        children:[
+          {
+            path:"",
+            element:<OrderListTemplate/>
+          }
+          ,{
+            path: 'add',
+            element: <OrderListTemplate />,
+          },
+        ]
+      }, 
       {
         path:'/category',
         children:[
@@ -140,16 +151,6 @@ export const router = createBrowserRouter([
       },
 
       {
-      path: 'blog',                 
-      children: [
-    { path: '', element: <BlogListTemplate /> },     
-    { path: 'add', element: <BlogFormTemplate /> },  
-    { path: 'edit/:id', element: <BlogFormTemplate /> }, 
-  ]
-},
-
-
-      {
         path: 'subcategory',
         children: [
           { path: '', element: <SubCategoryListTemplate />, },
@@ -207,7 +208,7 @@ export const router = createBrowserRouter([
              path: 'category', 
              element: <CategoryTrashListPage /> 
           },
-          { path: 'product', element: <ProductTrashListTemplate /> },
+          { path: 'products', element: <ProductTrashListTemplate /> }, 
 
            { path: 'blog-category', 
             element: <BlogTrashListPage /> }

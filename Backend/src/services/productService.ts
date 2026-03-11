@@ -16,7 +16,7 @@ class productService {
           delete (data as any)[key];
         }
       });
-    const rules = [
+    const rules = [  
       !isUpdate
         ? (
             ValidationHelper.isRequired(data.name, "name") ||
@@ -56,15 +56,9 @@ class productService {
                 )
               : null)
           )
-        : null,
-
+        : null,    
       !isUpdate
-        ? (
-            ValidationHelper.isRequired(data.images, "images") ||
-            (Array.isArray(data.images) && data.images.length === 0
-              ? { field: "images", message: "images is required" }
-              : null)
-          )
+        ? ValidationHelper.isRequired(data.thumbnail, "thumbnail")
         : null,
 
       !isUpdate
@@ -200,7 +194,6 @@ class productService {
 
   const existingProduct = await productRepository.isExistSlug(
     data.slug,
-    data.categoryId
   );
 
   if (existingProduct) {
@@ -269,7 +262,6 @@ class productService {
 
     const duplicate = await productRepository.isExistSlug(
       slugToCheck,
-      categoryToCheck
     );
 
     if (duplicate && duplicate._id.toString() !== id.toString()) {
@@ -337,9 +329,8 @@ class productService {
 
   async isExistSlug(
     slug: string,
-    categoryId: Types.ObjectId
   ): Promise<IProduct | null> {
-    return await productRepository.isExistSlug(slug, categoryId);
+    return await productRepository.isExistSlug(slug);
   }
 }
 

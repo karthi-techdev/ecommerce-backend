@@ -109,24 +109,20 @@ export interface PopulatedProduct {
 
 export interface Product {
   _id?: string;
-
   name: string;
   slug: string;
   description: string;
-
-  images: string[];
-
   price: number;
-  discountPrice?: number;
+  discountPrice: number;
   stockQuantity: number;
-
   brandId: PopulatedProduct;
   mainCategoryId: PopulatedProduct;
   subCategoryId: PopulatedProduct;
   categoryId: PopulatedProduct;
-
   status: 'active' | 'inactive';
   isDeleted?: boolean;
+  images: string[];       
+  thumbnail?: string;  
 }
 
 export interface Page {
@@ -138,6 +134,28 @@ export interface Page {
     url? : string,
     isActive? : boolean,
     createdAt? : Date
+}
+
+export interface OrderProduct {
+  productId: string;
+  productName: string;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  _id?: string;
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  shippingAddress: string;
+  products: OrderProduct[];
+  totalAmount: number;
+  paymentMethod: string;
+  paymentStatus: 'Paid' | 'Unpaid' | 'Failed';
+  orderStatus: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+  createdAt: Date;
 }
 
 export interface PageFormData {
@@ -167,19 +185,30 @@ export interface ProductPayload {
   name: string;
   slug?: string;
   description: string;
-
-  images: File[] | string[];
-
+  images?: File[];   
+  thumbnail?: File; 
   price: number;
   discountPrice?: number;
   stockQuantity: number;
-
   brandId: string;
   mainCategoryId: string;
   subCategoryId: string;
   categoryId: string;
-
   status?: 'active' | 'inactive';
+}
+export interface ProductFormData {
+  name: string;
+  description: string;
+  slug: string;
+  price: string;
+  discountPrice: string;
+  stockQuantity: string;
+  brandId: string;
+  mainCategoryId: string;
+  subCategoryId: string;
+  categoryId: string;
+  images: (File | string)[];
+  thumbnail: File | string | null;
 }
 
 

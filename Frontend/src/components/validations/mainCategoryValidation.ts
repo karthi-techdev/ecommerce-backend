@@ -37,8 +37,15 @@ export const validateMainCategoryForm = (
   errors.description = 'Description must not exceed 255 characters';
 }
 
- if (!isEdit && !data.image) {
-  errors.image = 'Image is required';
+ if (!isEdit) {
+  if (!data.image) {
+    errors.image = 'Image is required';
+  } else if (data.image instanceof File) {
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!allowedTypes.includes(data.image.type)) {
+      errors.image = 'Only JPG, JPEG, PNG files allowed';
+    }
+  }
 }
 
 

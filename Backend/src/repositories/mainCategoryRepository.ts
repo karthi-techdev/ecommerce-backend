@@ -54,54 +54,35 @@ class MainCategoryRepository {
     });
   }
 
-  async getAllMainCategories(page = 1, limit = 10, filter?: string) {
-    const query: any = { isDeleted: false };
-
-    if (filter === "active") query.isActive = true;
-    if (filter === "inactive") query.isActive = false;
-
-    const skip = (page - 1) * limit;
-
-    const [data, total] = await Promise.all([
-      MainCategoryModel.find(query).sort({createdAt: -1}).skip(skip).limit(limit).exec(),
-      MainCategoryModel.countDocuments(query),
-    ]);
-    return {
-      data,
-      meta: {
-        total,
-        totalPages: Math.max(1, Math.ceil(total / limit)),
-        page,
-        limit,
-      },
-    };
-  }
- async getAllActiveMainCategories(page = 1,limit = 5, search?: string) {
+  async getAllActiveMainCategories(
+  page = 1,
+  limit = 5,
+  search?: string
+) {
   const skip = (page - 1) * limit;
-  const matchStage: any = {isDeleted: false, isActive: true,};
+
+  const query: any = {
+    isDeleted: false,
+    isActive: true,
+  };
+
   if (search && search.trim() !== "") {
-    matchStage.name = {
+    query.name = {
       $regex: search.trim(),
       $options: "i",
     };
   }
-  const pipeline = [
-    { $match: matchStage },
-    { $sort: { createdAt: -1 as -1 } },
-    {
-      $facet: {
-        data: [
-          { $skip: skip },
-          { $limit: limit },
-        ],
-        totalCount: [{ $count: "count" }],
-      },
-    },
-  ];
 
-  const result = await MainCategoryModel.aggregate(pipeline);
-  const data = result[0]?.data || [];
-  const total = result[0]?.totalCount[0]?.count || 0;
+  const [data, total] = await Promise.all([
+    MainCategoryModel.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .exec(),
+
+    MainCategoryModel.countDocuments(query),
+  ]);
+
   return {
     data,
     meta: {
@@ -114,8 +95,64 @@ class MainCategoryRepository {
   };
 }
 
+  async getAllMainCategories(page = 1, limit = 10, filter?: string) {
+  const skip = (page - 1) * limit;
+
+  const baseQuery: any = { isDeleted: false };
+
+  const dataQuery: any = { ...baseQuery };
+
+  if (filter === "active") dataQuery.isActive = true;
+  if (filter === "inactive") dataQuery.isActive = false;
+
+  const data = await MainCategoryModel.find(dataQuery)
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .exec();
+
+  const total = await MainCategoryModel.countDocuments(baseQuery);
+
+  const active = await MainCategoryModel.countDocuments({
+    ...baseQuery,
+    isActive: true,
+  });
+
+  const inactive = await MainCategoryModel.countDocuments({
+    ...baseQuery,
+    isActive: false,
+  });
+
+  return {
+    data,
+    meta: {
+      total,
+      active,
+      inactive,
+      totalPages: Math.max(1, Math.ceil(total / limit)),
+      page,
+      limit,
+    },
+  };
+}
 
   
+  async getAllListMainCategories(filter?: string) {
+  const query: any = { isDeleted: false };
+
+  if (filter === "active") query.isActive = true;
+  if (filter === "inactive") query.isActive = false;
+
+  const data = await MainCategoryModel
+    .find(query)
+    .sort({ createdAt: -1 })
+    .exec();
+
+  return {
+    data,
+    total: data.length
+  };
+}
   async getMainCategoryById(id: string | Types.ObjectId) {
     return await MainCategoryModel.findOne({
       _id: id,
