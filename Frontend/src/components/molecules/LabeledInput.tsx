@@ -7,11 +7,11 @@ import CustomSelect from "../atoms/Select";
 import type { InputType } from "../../types/common";
 
 interface LabeledInputProps {
-  name: string; 
+  name: string;
   label?: string;
   type: InputType;
   value?: any;
-  onChange?: (e: { target: { name: string; value: any } }) => void;
+  onChange?: (e: { target: { name: string; value: any, type?: string, files?: any } }) => void;
   placeholder?: string;
   readonly?: boolean;
   required?: boolean;
@@ -22,6 +22,7 @@ interface LabeledInputProps {
   error?: string;
   previewEnabled?: boolean;
   withEditor?: boolean;
+  accept?: string;
 }
 
 const LabeledInput: React.FC<LabeledInputProps> = memo(
@@ -40,83 +41,72 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
     error,
     previewEnabled,
     withEditor,
-    options
+    options,
+    accept
   }) => {
-    
+
     const BACKEND_URL = "http://localhost:5000";
-    const defaultImage = "/preview-image.jpg"; 
+    const defaultImage = "/preview-image.jpg";
 
     const [preview, setPreview] = useState<string>(defaultImage);
     const [fileError, setFileError] = useState<string | null>(null);
     const editorRef = useRef(null);
-  const errorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const errorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     //  Image preview setter 
     useEffect(() => {
-      if (value) {
-        if (typeof value === "string" && value.trim() !== "") {
-          const fullImageUrl = value.startsWith("http")
-            ? value
-            : `${BACKEND_URL}${value}`;
-          setPreview(fullImageUrl);
-        } else if (value instanceof File) {
-          const objectUrl = URL.createObjectURL(value);
-          setPreview(objectUrl);
-          return () => URL.revokeObjectURL(objectUrl);
+      if (previewEnabled) {
+        if (value) {
+          if (typeof value === "string" && value.trim() !== "") {
+            const fullImageUrl = value.startsWith("http")
+              ? value
+              : `${BACKEND_URL}${value}`;
+            setPreview(fullImageUrl);
+          } else if (value instanceof File) {
+            const objectUrl = URL.createObjectURL(value);
+            setPreview(objectUrl);
+            return () => URL.revokeObjectURL(objectUrl);
+          }
+        } else {
+          setPreview(defaultImage);
         }
-      } else {
-        setPreview(defaultImage);
       }
-    }, [value]);
+    }, [previewEnabled, value]);
 
     const handleInputChange = (
-  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-) => {
-  if (type === "file" && e.target instanceof HTMLInputElement) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
 
-    const allowedTypes = [
-      "image/jpeg",
-      "image/jpg",
-      "image/png",
-      "image/webp"
-    ];
+      if (type === "file" && e.target instanceof HTMLInputElement) {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (accept && !accept.split(',').includes(file.type)) {
+          setFileError(`Please upload valid file. Allowed types: ${accept}`);
+          setPreview(defaultImage);
+          e.target.value = ""; // reset file input
+          return;
+        }
 
-    if (!allowedTypes.includes(file.type)) {
+        setFileError(null);
 
-      setFileError("Only image files are allowed (jpg, jpeg, png, webp)");
-      setPreview(defaultImage);
+        if (previewEnabled) {
+          const imageUrl = URL.createObjectURL(file);
+          setPreview(imageUrl);
+        }
 
-      e.target.value = ""; // reset file input
+        onChange?.({
+          target: {
+            name,
+            value: file,
+            type,
+            ...(file && { files: e.target.files })
+          },
+        });
 
-      if (errorTimer.current) {
-        clearTimeout(errorTimer.current);
+        return;
       }
 
-      errorTimer.current = setTimeout(() => {
-        setFileError(null);
-      }, 5000);
-
-      return;
-    }
-
-    setFileError(null);
-
-    const imageUrl = URL.createObjectURL(file);
-    setPreview(imageUrl);
-
-    onChange?.({
-      target: {
-        name,
-        value: file,
-      },
-    });
-
-    return;
-  }
-
-  onChange?.(e as any);
-};
+      onChange?.(e as any);
+    };
 
     const handleEditorChange = (content: string) => {
       onChange?.({
@@ -145,11 +135,11 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
               id={name}
               name={name}
               type="file"
-              accept="image/png,image/jpeg,image/jpg,image/webp"
               multiple
               onChange={handleInputChange}
               disabled={disabled}
               className={error ? "border-red-500" : ""}
+              {...(accept && { accept })}
             />
 
             {previewEnabled && (
