@@ -8,36 +8,36 @@ interface FormFieldProps {
   value: any;
   onChange?: (e: { target: { name: string; value: any; } }) => void;
   error?: string;
-  isRequired?: boolean; 
+  isRequired?: boolean;
 }
 
-const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error,isRequired }) => {
+const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error, isRequired }) => {
   if (field.type === 'select') {
     return (
       <div className={field.className || 'md:col-span-6'}>
         <label className="block mb-1 font-medium">
-        {field.label} 
-        {isRequired && <span className="text-red-500 ml-1">*</span>}
+          {field.label}
+          {isRequired && <span className="text-red-500 ml-1">*</span>}
         </label>
 
         <CustomSelect
-        options={field.options || []}
-        value={
-          field.options?.find(opt => opt.value === value) || null
-        }
-        placeholder={field.placeholder}
-        className={error ? "react-select-error" : ""}
-        onMenuScrollToBottom={field.onMenuScrollToBottom}
-        onInputChange={field.onInputChange}  
-        onChange={(selected: any) =>
-          onChange?.({
-            target: {
-              name: field.name,
-              value: selected ? selected.value : '',
-            },
-          })
-        }
-      />
+          options={field.options || []}
+          value={
+            field.options?.find(opt => opt.value === value) || null
+          }
+          placeholder={field.placeholder}
+          className={error ? "react-select-error" : ""}
+          onMenuScrollToBottom={field.onMenuScrollToBottom}
+          onInputChange={field.onInputChange}
+          onChange={(selected: any) =>
+            onChange?.({
+              target: {
+                name: field.name,
+                value: selected ? selected.value : '',
+              },
+            })
+          }
+        />
 
         {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
       </div>
@@ -56,12 +56,12 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error,isR
         readonly={field.readonly}
         required={isRequired}
         disabled={field.disabled}
-        aria-label={field.ariaLabel} 
+        aria-label={field.ariaLabel}
         error={error}
         options={field.options}
         previewEnabled={field.previewEnabled}
         withEditor={field.withEditor}
-        allowedFileTypes={field.allowedFileTypes}
+        accept={field.accept}
       />
     </div>
   );

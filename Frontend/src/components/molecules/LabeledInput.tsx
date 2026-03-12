@@ -7,11 +7,11 @@ import CustomSelect from "../atoms/Select";
 import type { InputType } from "../../types/common";
 
 interface LabeledInputProps {
-  name: string; 
+  name: string;
   label?: string;
   type: InputType;
   value?: any;
-  onChange?: (e: { target: { name: string; value: any } }) => void;
+  onChange?: (e: { target: { name: string; value: any, type?: string, files?: any } }) => void;
   placeholder?: string;
   readonly?: boolean;
   required?: boolean;
@@ -22,7 +22,7 @@ interface LabeledInputProps {
   error?: string;
   previewEnabled?: boolean;
   withEditor?: boolean;
-  allowedFileTypes?: string[];
+  accept?: string;
 }
 
 const LabeledInput: React.FC<LabeledInputProps> = memo(
@@ -42,67 +42,71 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
     previewEnabled,
     withEditor,
     options,
-    allowedFileTypes 
+    accept
   }) => {
-    
+
     const BACKEND_URL = "http://localhost:5000";
-    const defaultImage = "/preview-image.jpg"; 
+    const defaultImage = "/preview-image.jpg";
 
     const [preview, setPreview] = useState<string>(defaultImage);
     const [fileError, setFileError] = useState<string | null>(null);
     const editorRef = useRef(null);
-  const errorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const errorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     //  Image preview setter 
     useEffect(() => {
-      if (value) {
-        if (typeof value === "string" && value.trim() !== "") {
-          const fullImageUrl = value.startsWith("http")
-            ? value
-            : `${BACKEND_URL}${value}`;
-          setPreview(fullImageUrl);
-        } else if (value instanceof File) {
-          const objectUrl = URL.createObjectURL(value);
-          setPreview(objectUrl);
-          return () => URL.revokeObjectURL(objectUrl);
+      if (previewEnabled) {
+        if (value) {
+          if (typeof value === "string" && value.trim() !== "") {
+            const fullImageUrl = value.startsWith("http")
+              ? value
+              : `${BACKEND_URL}${value}`;
+            setPreview(fullImageUrl);
+          } else if (value instanceof File) {
+            const objectUrl = URL.createObjectURL(value);
+            setPreview(objectUrl);
+            return () => URL.revokeObjectURL(objectUrl);
+          }
+        } else {
+          setPreview(defaultImage);
         }
-      } else {
-        setPreview(defaultImage);
       }
-    }, [value]);
+    }, [previewEnabled, value]);
 
     const handleInputChange = (
-  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-) => {
-  if (type === "file" && e.target instanceof HTMLInputElement) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
 
-    if (allowedFileTypes && !allowedFileTypes.includes(file.type)) {
-      setFileError(`Please upload valid file. Allowed types: ${allowedFileTypes.toString()}`);
-      setPreview(defaultImage);
-      e.target.value = ""; // reset file input
-      return;
-    }
+      if (type === "file" && e.target instanceof HTMLInputElement) {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (accept && !accept.split(',').includes(file.type)) {
+          setFileError(`Please upload valid file. Allowed types: ${accept}`);
+          setPreview(defaultImage);
+          e.target.value = ""; // reset file input
+          return;
+        }
 
-    setFileError(null);
+        setFileError(null);
 
-    if(previewEnabled) {
-      const imageUrl = URL.createObjectURL(file);
-      setPreview(imageUrl);
-    }
+        if (previewEnabled) {
+          const imageUrl = URL.createObjectURL(file);
+          setPreview(imageUrl);
+        }
 
-    onChange?.({
-      target: {
-        name,
-        value: file,
-      },
-    });
+        onChange?.({
+          target: {
+            name,
+            value: file,
+            type,
+            ...(file && { files: e.target.files })
+          },
+        });
 
-    return;
-  }
+        return;
+      }
 
-  onChange?.(e as any);
-};
+      onChange?.(e as any);
+    };
 
     const handleEditorChange = (content: string) => {
       onChange?.({
@@ -135,7 +139,7 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
               onChange={handleInputChange}
               disabled={disabled}
               className={error ? "border-red-500" : ""}
-              {...(allowedFileTypes && {accept: allowedFileTypes?.toString()})}
+              {...(accept && { accept })}
             />
 
             {previewEnabled && (

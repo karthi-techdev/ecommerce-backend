@@ -247,7 +247,7 @@ export interface FieldConfig {
   defaultValue?: any;
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
-  allowedFileTypes?: string[];
+  accept?: string;
   previewEnabled?: boolean;
   withEditor?: boolean;
   options? :{label:string , value:string}[];

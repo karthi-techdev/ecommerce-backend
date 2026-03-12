@@ -37,7 +37,7 @@ const newsLetterFields: FieldConfig[] = [
     label: 'Cover image',
     type: 'file',
     previewEnabled: true,
-    allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp"]
+    accept: "image/png,image/jpeg,image/jpg,image/webp"
   },
   {
     name: 'isPublished',

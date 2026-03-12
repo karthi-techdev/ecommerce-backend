@@ -20,7 +20,7 @@ const promotionsFields: FieldConfig[] = [
     label: 'Image',
     type: 'file',
     previewEnabled: true,
-    allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp"]
+    accept: "image/png,image/jpeg,image/jpg,image/webp"
   },
   // {
   //   name: 'isActive',
