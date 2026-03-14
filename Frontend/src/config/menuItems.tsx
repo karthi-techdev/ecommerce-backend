@@ -163,11 +163,6 @@ const menuItems: MenuItem[] = [
       },
       { key: 'trash-product', label: 'Products', path: '/trash/products' },
       {
-        key: 'trash-category',
-        label: 'Category',
-        path: '/trash/category'
-      },
-      {
         key: 'trash-faq',
         label: 'Faq',
         path: '/trash/faq'
