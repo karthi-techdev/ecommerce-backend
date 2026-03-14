@@ -53,31 +53,14 @@ const menuItems: MenuItem[] = [
       },
     ],
   },
-  {
-    key: 'shipment-methods',
-    label: 'ShipmentMethods',
-    icon: <FiTruck />,
-    path: '/shipment-methods'
-  },
-
-  {
-    key: 'brand',
-    label: 'Brand',
-    icon: <FiTag />,
-    path: '/brand',
-  },
+  
   {
     key: 'config',
     label: 'Config',
     icon: <FiSliders />,
     path: '/config',
   },
-  {
-    key: 'product',
-    label: 'Products',
-    icon: <FiShoppingCart />,
-    path: '/products',
-  },
+  
   {
     key: 'coupon',
     label: 'Coupon',
@@ -135,6 +118,32 @@ const menuItems: MenuItem[] = [
     ]
   },
   {
+    key: 'manage-products',
+    label: 'Manage Products',
+    icon: <FiShoppingCart />,
+    path: '#',
+    submenu: [
+      {
+        key: 'brand',
+        label: 'Brand',
+        path: '/brand',
+        icon: <FiTag />,
+      },
+      {
+        key: 'products',
+        label: 'Products',
+        path: '/products',
+        icon: <FiShoppingCart />,
+      },
+      {
+        key: 'shipment-methods',
+        label: 'Shipment Methods',
+        path: '/shipment-methods',
+        icon: <FiTruck />,
+      }
+    ]
+  },
+  {
     key: 'trash',
     label: 'Trash',
     icon: <FiTrash2 />,
@@ -152,7 +161,7 @@ const menuItems: MenuItem[] = [
         label: 'Category',
         path: '/trash/category'
       },
-      { key: 'trash-product', label: 'Product', path: '/trash/products' },
+      { key: 'trash-product', label: 'Products', path: '/trash/products' },
       {
         key: 'trash-category',
         label: 'Category',

@@ -1,21 +1,6 @@
-export interface ProductFormData {
-  name: string;
-  description: string;
-  slug: string;
-  price: number | '';
-  discountPrice?: number | '';
-  stockQuantity: number | '';
-  brandId: string;
-  mainCategoryId: string;
-  subCategoryId: string;
-  categoryId: string; 
-   images: (File | string)[];
-  thumbnail: File | string | null;   
-}
-
+import type { ProductFormData } from "../../types/common";
 export interface ProductValidationErrors {
-  name?: string;
-  description?: string;
+  name?: string;         
   slug?: string;
   price?: string;
   discountPrice?: string;
@@ -26,6 +11,7 @@ export interface ProductValidationErrors {
   categoryId?: string; 
   images?: string;
   thumbnail?: string;
+  title?: string;
 }
 
 export const validateProductForm = (
@@ -48,14 +34,6 @@ export const validateProductForm = (
     errors.name = "Name must contain at least one letter.";
   }
 
-
-  if (!data.description) {
-    errors.description = "Description is required.";
-  } else if (data.description.trim().length < 10) {
-    errors.description = "Description must be at least 10 characters long.";
-  } else if (!/[a-zA-Z]/.test(data.description)) {
-    errors.description = "Description must contain at least one letter.";
-  }
 
   if (data.slug && !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(data.slug)) {
     errors.slug = "Invalid slug format.";
@@ -100,6 +78,13 @@ export const validateProductForm = (
     errors.thumbnail = "Thumbnail is required.";
   }
 
-
+  if (!data.title) {
+    errors.title = "Title is required";
+  }
+  else if (data.title.trim().length < 30) {
+    errors.title = "Title must be minimum 30 characters";
+  }
   return errors;
+
+  
 };
