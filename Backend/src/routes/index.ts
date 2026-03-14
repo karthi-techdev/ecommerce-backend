@@ -16,7 +16,7 @@ import productRoutes from "./productRoutes";
 import shipmentMethodRoutes from "./shipmentMethodsRouter";
 import testimonialRoutes from "./testimonialRoutes";
 import blogCategoryRoutes from './blogCategoryRoutes';
-
+import settingsRoutes from "./settingsRoutes";
 import newsLetterRoutes from "./newsLetterRoutes";
 
 export default function registerRoutes(app: Express) {
@@ -33,6 +33,7 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/products", productRoutes);
   app.use("/api/v1/admin/page", pageRoutes);
   app.use("/api/v1/admin/orders", orderRoutes);
+  app.use("/api/v1/admin/settings", settingsRoutes);
 
   app.use('/api/v1/admin/testimonials', testimonialRoutes)
   app.use('/api/v1/admin/blog-category', blogCategoryRoutes);

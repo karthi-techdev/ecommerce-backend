@@ -270,3 +270,9 @@ export type ColumnConfig<T> = {
   label: string;
   render?: (value: any, row: T) => React.ReactNode;
 };
+export interface Promotions {
+  _id?: string;
+  name: string;
+  image?: string;
+  isActive: boolean;
+}

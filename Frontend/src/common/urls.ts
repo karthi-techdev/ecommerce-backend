@@ -87,10 +87,12 @@ const API = {
   toggleStatusSubCategory: `${ROOTURL}admin/subcategory/togglestatus/`,
   checkDuplicateSubCategory: `${ROOTURL}admin/subcategory/check-duplicate`,
   listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
-  subCategoryByMainCategoryId:`${ROOTURL}admin/subcategory/activeSubCategory/`,
+  subCategoryByMainCategoryId: `${ROOTURL}admin/subcategory/activeSubCategory/`,
   listActiveMainCategory: `${ROOTURL}admin/subcategory/activemain-categorylist`,
   
   
+  // ---------------- Coupon endpoints ----------------
+
   //shipmentMethods endpoints
   addShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
   listShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
@@ -147,23 +149,34 @@ const API = {
   // Order endpoints
   listOrder: `${ROOTURL}admin/orders/`,
   getOrderById: `${ROOTURL}admin/orders/`,
-  updateOrderStatus: `${ROOTURL}admin/orders/orderstatus`, 
+  updateOrderStatus: `${ROOTURL}admin/orders/orderstatus`,
   updatePaymentStatus: `${ROOTURL}admin/orders/paymentstatus`,
-  deleteOrder: `${ROOTURL}admin/orders/`, 
+  deleteOrder: `${ROOTURL}admin/orders/`,
 
-   //  BlogCategory endpoints
-    addBlogCategory: `${ROOTURL}admin/blog-category/`,
-    listBlogCategory: `${ROOTURL}admin/blog-category/`,
-    getBlogCategory: `${ROOTURL}admin/blog-category/getBlogCategoryById/`,
-    updateBlogCategory: `${ROOTURL}admin/blog-category/updateBlogCategory/`,
-    softDeleteBlogCategory: `${ROOTURL}admin/blog-category/softDeleteBlogCategory/`,
-    restoreBlogCategory: `${ROOTURL}admin/blog-category/restore/`,
-    hardDeleteBlogCategory: `${ROOTURL}admin/blog-category/permanentDelete/`,
-    toggleBlogCategoryStatus: `${ROOTURL}admin/blog-category/toggleStatus/`,
-    trashBlogCategory: `${ROOTURL}admin/blog-category/trash`,
-    checkDuplicateBlogCategory: `${ROOTURL}admin/blog-category/check-duplicate`,
+  //  BlogCategory endpoints
+  addBlogCategory: `${ROOTURL}admin/blog-category/`,
+  listBlogCategory: `${ROOTURL}admin/blog-category/`,
+  getBlogCategory: `${ROOTURL}admin/blog-category/getBlogCategoryById/`,
+  updateBlogCategory: `${ROOTURL}admin/blog-category/updateBlogCategory/`,
+  softDeleteBlogCategory: `${ROOTURL}admin/blog-category/softDeleteBlogCategory/`,
+  restoreBlogCategory: `${ROOTURL}admin/blog-category/restore/`,
+  hardDeleteBlogCategory: `${ROOTURL}admin/blog-category/permanentDelete/`,
+  toggleBlogCategoryStatus: `${ROOTURL}admin/blog-category/toggleStatus/`,
+  trashBlogCategory: `${ROOTURL}admin/blog-category/trash`,
+  checkDuplicateBlogCategory: `${ROOTURL}admin/blog-category/check-duplicate`,
 
-
+  // ---------- Promotions endpoints ----------
+  addPromotions: `${ROOTURL}admin/promotions`,
+  listPromotions: `${ROOTURL}admin/promotions`,
+  getPromotions: `${ROOTURL}admin/promotions/getPromotionsById/`,
+  updatePromotions: `${ROOTURL}admin/promotions/updatePromotions/`,
+  softDeletePromotions: `${ROOTURL}admin/promotions/softDeletePromotions/`,
+  permanantDeletePromotions: `${ROOTURL}admin/promotions/permanentDelete/`,
+  restorePromotions: `${ROOTURL}admin/promotions/restore/`,
+  toggleStatusPromotions: `${ROOTURL}admin/promotions/togglestatus/`,
+  trashPromotions: `${ROOTURL}admin/promotions/trash`,
+  promotionsStats: `${ROOTURL}admin/promotions/stats`,
+  checkDuplicatePromotions: `${ROOTURL}admin/promotions/check-duplicate`,
 };
  
 
