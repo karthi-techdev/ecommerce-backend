@@ -11,16 +11,13 @@ interface ProductStats {
   inactive: number;
 }
 
-
 interface ProductState {
   products: Product[];
   stats: ProductStats;
   loading: boolean;
   error: string | null;
-
   page: number;
   totalPages: number;
-
   trashCurrentPage: number;
   trashTotalPages: number;
   totalTrashProducts: number;

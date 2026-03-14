@@ -31,32 +31,14 @@ class productService {
               : null)
           )
         : null,
-
-      !isUpdate
-        ? (
-            ValidationHelper.isRequired(data.description, "description") ||
-            (data.description !== undefined
-              ? ValidationHelper.isNonEmptyString(
-                  data.description?.trim(),
-                  "description"
-                )
-              : null) ||
-            (data.description !== undefined
-              ? ValidationHelper.minLength(
-                  data.description.trim(),
-                  "description",
-                  5
-                )
-              : null) ||
-            (data.description !== undefined
-              ? ValidationHelper.maxLength(
-                  data.description.trim(),
-                  "description",
-                  5000
-                )
-              : null)
-          )
-        : null,    
+        !isUpdate
+          ? (
+              ValidationHelper.isRequired(data.title, "title") ||
+              (data.title !== undefined
+                ? ValidationHelper.minLength(data.title.trim(), "title", 30)
+                : null)
+            )
+          : null,
       !isUpdate
         ? ValidationHelper.isRequired(data.thumbnail, "thumbnail")
         : null,
@@ -180,7 +162,9 @@ class productService {
       if (data.stockQuantity !== undefined) {
         data.stockQuantity = Number(data.stockQuantity as any);
       }
-
+      if (data.sku) {
+        data.sku = data.sku.toUpperCase();
+      }
       this.validateProductData(data);
       
 
@@ -201,9 +185,6 @@ class productService {
   }
 
   data.name = data.name[0].toUpperCase() + data.name.slice(1);
-  data.description =
-    data.description[0].toUpperCase() + data.description.slice(1);
-
   return await productRepository.createProduct(data);
 }
 
@@ -273,10 +254,9 @@ class productService {
     data.name = data.name[0].toUpperCase() + data.name.slice(1);
   }
 
-  if (data.description) {
-    data.description =
-      data.description[0].toUpperCase() + data.description.slice(1);
-  }
+  if (data.sku) {
+  data.sku = data.sku.toUpperCase();
+}
   if (data.price !== undefined) {
     data.price = Number(data.price as any);
   }

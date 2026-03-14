@@ -4,7 +4,14 @@ export interface IProduct extends Document {
   _id: Types.ObjectId;
   name: string;
   slug: string;
-  description: string;
+  title: string;
+  shortDescription?: string;
+  longDescription?: string;
+  sku?: string;
+  colors?: string[];
+  sizes?: string;
+  highlights?: string;
+  relatedTags?: string[]; 
   images: string[];
   thumbnail: string;
   price: number;
@@ -25,12 +32,19 @@ const productSchema = new Schema<IProduct>(
   {   
     name: { type: String, required: true, trim: true  },
     slug: { type: String ,required: true },
-    description: { type: String, required: true, trim: true },
+    title: { type: String,required: true,minlength: 30,trim: true},
+    shortDescription: {type: String,trim: true},
+    longDescription: {type: String,trim: true},
+    sku: {type: String},
+    colors: {type: [String],default: []},
+    sizes: {type: String},
+    highlights: {type: String},
+    relatedTags: { type: [String], default: [] },
     images: {type: [String],default: []},
     thumbnail: {type: String,required: true},
     price: { type: Number, required: true },
     discountPrice: { type: Number, required: true },
-    stockQuantity: { type: Number, default: 0, required: true },
+    stockQuantity: { type: Number, default: 1, required: true },
     brandId: {type: mongoose.Schema.Types.ObjectId,ref: "Brand",required: true},
     mainCategoryId: {type: mongoose.Schema.Types.ObjectId,ref: "MainCategory",required: true},
     subCategoryId: {type: mongoose.Schema.Types.ObjectId,ref: "subcategories"},
