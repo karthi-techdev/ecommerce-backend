@@ -28,12 +28,6 @@ export const validatePromotionsForm = (
   if (!data.image) {
     errors.image = "Cover image is required.";
   } else if (data.image instanceof File) {
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-
-    if (!allowedTypes.includes(data.image.type)) {
-      errors.image = "Only image files (jpg, jpeg, png, webp) are allowed.";
-    }
-
     // Optional: File size validation (2MB)
     const maxSize = 2 * 1024 * 1024;
 
