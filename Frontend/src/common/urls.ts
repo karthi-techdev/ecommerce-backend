@@ -8,11 +8,11 @@ const SETTINGS_ID = "68ad8844bfdf0cec7f623bc2";
 
 const API = {
   // ---------- NewsLetter endpoints ----------
-  addNewsLetter: `${ROOTURL}newsLetters/`,
-  listNewsLetter: `${ROOTURL}newsLetters/`,
-  getNewsLetter: `${ROOTURL}newsLetters/getNewsLetterById/`, // backend expect /newsLetters/:id
-  updateNewsLetter: `${ROOTURL}newsLetters/updateNewsLetter/`, // backend expect /newsLetters/:id
-  deleteNewsLetter: `${ROOTURL}newsLetters/softDeleteNewsLetter/`,
+  addNewsLetter: `${ROOTURL}admin/newsLetters/`,
+  listNewsLetter: `${ROOTURL}admin/newsLetters/`,
+  getNewsLetter: `${ROOTURL}admin/newsLetters/getNewsLetterById/`, // backend expect /newsLetters/:id
+  updateNewsLetter: `${ROOTURL}admin/newsLetters/updateNewsLetter/`, // backend expect /newsLetters/:id
+  deleteNewsLetter: `${ROOTURL}admin/newsLetters/softDeleteNewsLetter/`,
   // ---------------- FAQ endpoints ----------------
   addFaq: `${ROOTURL}admin/faqs/`,
   listFaq: `${ROOTURL}admin/faqs/`,
