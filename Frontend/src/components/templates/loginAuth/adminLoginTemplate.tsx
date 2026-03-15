@@ -30,8 +30,8 @@ const LoginFormTemplate: React.FC = () => {
   const { login } = useAuthStore();
 
   const [formData, setFormData] = useState<LoginFormData>({
-    email: '',
-    password: ''
+    email: 'admin@company.com',
+    password: 'Admin@123'
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});

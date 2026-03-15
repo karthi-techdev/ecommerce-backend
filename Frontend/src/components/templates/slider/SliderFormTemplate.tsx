@@ -111,31 +111,30 @@ const { name, value, files } = e.target;
   setErrors(prev => ({ ...prev, [name]: undefined }));
   setFileError(null);
 
-  if (name === "image") {
-  const file = value;
+ if (name === "image") {
+  const file = files?.[0] ?? (value instanceof File ? value : null);
+  
   if (!file) {
-    console.log("im in ",file)
-    setFormData(prev => ({ ...prev, image: null }));
-    setPreview(id ? preview : defaultImg);
-    return;
-  }
-  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-    setFileError("Only JPG, PNG or WEBP images are allowed");
-    setTimeout(() => setFileError(null), 4000);
     setFormData(prev => ({ ...prev, image: null }));
     setPreview(id ? existingImageUrl.current : defaultImg);
     return;
   }
 
-  const imageUrl = URL.createObjectURL(file);
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
 
-  setPreview(imageUrl);
+    setFileError("Only JPG, PNG or WEBP images are allowed");
+    setTimeout(() => setFileError(null), 4000);
+   if (!id) {
+    setFormData(prev => ({ ...prev, image: null }));
+  }
+    setPreview(id ? existingImageUrl.current : defaultImg);
+    return;
+  }
 
-  setFormData(prev => ({
-    ...prev,
-    image: file
-  }));
-
+  setPreview(URL.createObjectURL(file));
+  setFormData(prev => ({ ...prev, image: file }));
   return;
 }
 
@@ -204,7 +203,7 @@ const { name, value, files } = e.target;
         type={id ? 'Edit' : 'Add'}
       />
       <form onSubmit={handleSubmit}  className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="space-y-6">
+        <div className="grid grid-cols-12 gap-6">
           {sliderFields.map((field) => (
             <FormField
               key={field.name}
@@ -213,18 +212,19 @@ const { name, value, files } = e.target;
               }}
               value={formData[field.name as keyof SliderFormData]}
               onChange={handleChange}
-              error={errors[field.name as keyof ValidationErrors]}
+            error={field.name === 'image' ? fileError || errors[field.name as keyof ValidationErrors] : errors[field.name as keyof ValidationErrors]}
               isRequired={field.required}
             />
           ))}
-          <div className="mt-4">
-
-  <img
-    src={preview}
-    alt="Preview"
-    className="w-40 h-40 object-cover rounded-md border"
-  />
-</div>
+          <div className="col-span-12">
+    <div className="h-24 w-24 border border-gray-300 rounded flex items-center justify-center">
+      <img
+        src={preview}
+        className="h-full w-full object-cover rounded"
+        
+      />
+    </div>
+  </div>
         </div>
 
         <div className="mt-6 flex justify-end">

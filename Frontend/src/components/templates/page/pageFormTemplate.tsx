@@ -224,8 +224,8 @@ const PageFormTemplate: React.FC = () => {
         <div className="flex justify-end mt-8">
           <button
             disabled={isSubmitting}
-            className={`px-6 py-2 bg-indigo-600 text-white rounded transition-all ${
-              isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-indigo-700 active:scale-95"
+            className={`px-6 py-2 bg-amber-500 text-white rounded transition-all ${
+              isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-amber-600 active:scale-95"
             }`}
           >
             {isSubmitting ? "Saving..." : id ? "Update" : "Save"}

@@ -18,7 +18,7 @@ import BrandListTemplate from '../components/templates/brand/BrandListTemplate';
 import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
 
 import BrandTrashPage from '../components/pages/trash/BrandTrashPage';
-
+   
 import ShipmentMethodListTemplate from '../components/templates/shipmentMethods/shipmentMethodsListTemplate';
 import ShipmentMethodFormTemplate from '../components/templates/shipmentMethods/ShipmentMethodsFormTemplate';
 import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
@@ -34,12 +34,26 @@ import ConfigListTemplate from '../components/templates/config/ConfigListTemplat
 import ConfigFormTemplate from '../components/templates/config/ConfigFormTemplate';
 import PageFormTemplate from '@/components/templates/page/pageFormTemplate';
 import PageListTemplate from '@/components/templates/page/pageListTemplate';
+import OrderListTemplate from '@/components/templates/order/orderListTemplate';
 
 import ProductListTemplate from '@/components/templates/products/ProductsListTemplate';
 import ProductFormTemplate from '@/components/templates/products/ProductsFormTemplate';
 import ProductTrashListTemplate from '@/components/templates/trash/ProductsTrash/ProductsTrashListTemplate';
 import SliderListTemplate from '../components/templates/slider/SliderListTemplate';
 import SliderFormTemplate from '../components/templates/slider/SliderFormTemplate'
+
+import BlogCategoryListTemplate from '@/components/templates/blogCategory/BlogCategoryListTemplate';
+import BlogCategoryFormTemplate from '@/components/templates/blogCategory/BlogCategoryFormTemplate';
+import BlogTrashListPage from '@/components/templates/trash/BlogTrash/TrashBlogTemplate';
+import OfferListTemplate from '@/components/templates/offer/offerListTemplate';
+import OfferFormTemplate from '@/components/templates/offer/offerFormTemplate';
+
+
+import PromotionsListTemplate from '../components/templates/promotions/PromotionsListTemplate';
+import PromotionsFormTemplate from '../components/templates/promotions/PromotionsFormTemplate';
+
+
+
 export const router = createBrowserRouter([
   {
         path: '/login',
@@ -53,7 +67,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
-    children: [
+    children: [  
       {  path: '/', element: <Dashboard /> },
       {  path: 'page',
         children:[
@@ -67,6 +81,18 @@ export const router = createBrowserRouter([
           },
         ]
        }, 
+      {  path: 'orders',
+        children:[
+          {
+            path:"",
+            element:<OrderListTemplate/>
+          }
+          ,{
+            path: 'add',
+            element: <OrderListTemplate />,
+          },
+        ]
+      }, 
       {
         path:'/category',
         children:[
@@ -133,7 +159,23 @@ export const router = createBrowserRouter([
     { path: 'add', element: <CouponFormTemplate /> },
     { path: 'edit/:id', element: <CouponFormTemplate /> },
   ],
-},
+},{
+        path: 'coupon',
+        children: [
+          { path: '', element: <CouponListTemplate /> },
+          { path: 'add', element: <CouponFormTemplate /> },
+          { path: 'edit/:id', element: <CouponFormTemplate /> },
+        ],
+      },
+
+      {
+        path: 'blog-category', 
+        children: [
+          { path: '', element: <BlogCategoryListTemplate /> },      
+          { path: 'add', element: <BlogCategoryFormTemplate /> }, 
+          { path: 'edit/:id', element: <BlogCategoryFormTemplate /> }, 
+        ]
+      },
 
       {
         path: 'subcategory',
@@ -142,6 +184,23 @@ export const router = createBrowserRouter([
           { path: 'add', element: <SubCategoryFormTemplate />,},
           { path: 'edit/:id', element: <SubCategoryFormTemplate />,},
         ],
+      },
+      {
+        path:'/offer',
+        children:[
+          {
+            path:"",
+            element:<OfferListTemplate/>
+          }
+           ,{
+            path: 'add',
+            element: <OfferFormTemplate />,
+          },
+          {
+            path: 'edit/:id',
+            element: <OfferFormTemplate />,
+          },
+        ]
       },
       {
         path: 'testimonial',
@@ -193,7 +252,19 @@ export const router = createBrowserRouter([
              path: 'category', 
              element: <CategoryTrashListPage /> 
           },
-          { path: 'product', element: <ProductTrashListTemplate /> }, 
+          { path: 'products', element: <ProductTrashListTemplate /> }, 
+
+           { path: 'blog-category', 
+            element: <BlogTrashListPage /> }
+        ],
+      },
+
+      {
+        path: 'promotions',
+        children: [
+          { path: '', element: <PromotionsListTemplate /> },
+          { path: 'add', element: <PromotionsFormTemplate /> },
+          { path: 'edit/:id', element: <PromotionsFormTemplate /> },
         ],
       },
       

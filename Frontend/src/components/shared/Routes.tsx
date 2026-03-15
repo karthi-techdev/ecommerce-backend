@@ -31,6 +31,15 @@ const CouponListPage = lazy(() => import('../pages/coupon/CouponListPage'));
 const CouponFormPage = lazy(() => import('../pages/coupon/CouponFormPage'));
 const PageListPage = lazy(() => import('../pages/page/pageListPages'));
 const PageFormPage = lazy(() => import('../pages/page/pageFormPages'));
+const OrderListPage = lazy(()=>import('../templates/order/orderListTemplate'));
+const BlogListPage = lazy(() => import('../pages/blogCategory/BlogListPage'));
+const BlogFormPage = lazy(() => import('../pages/blogCategory/BlogFormPage'));
+const BlogTrashPage = lazy(() => import('../pages/trash/BlogTrashPage'));
+const OfferListPage = lazy(() => import('../pages/offer/offerListPage'));
+const OfferFormPage = lazy(() => import('../pages/offer/offerFormPage'));
+
+const PromotionsListPage = lazy(() => import('../pages/promotions/PromotionsListPage'));
+const PromotionsFormPage = lazy(() => import('../pages/promotions/PromotionsFormPage'));
 
 const PrivateRoute = () => {
   const { isAuthenticated } = useAuthStore();
@@ -46,7 +55,7 @@ const PublicRoute = () => {
 
 const ProductListPage = lazy(() => import('../pages/products/ProductsListPage'));
 const ProductFormPage = lazy(() => import('../pages/products/ProductsFormPage'));
-const ProductTrashPage = lazy(() => import('../pages/trash/TrashMainCategoryListPage'));
+const ProductTrashPage = lazy(() => import('../pages/trash/ProductsTrashListPage'));
 
 
 const MainCategoryPage = lazy(
@@ -109,6 +118,23 @@ const routes: RouteObject[] = [
               },
             ]
           }, 
+          {
+            path: 'orders',
+            children:[
+              {
+                path:"",
+                element:<OrderListPage/>
+              }
+              ,{
+                path: 'add',
+                element: <OrderListPage />,
+              },
+              { 
+                path: 'edit/:id', 
+                element: <OrderListPage /> 
+              },
+            ]
+          }, 
     
           {
             path: 'faq',
@@ -159,6 +185,17 @@ const routes: RouteObject[] = [
     { path: 'edit/:id', element: <CouponFormPage /> },
   ],
 },
+      
+
+{
+  path: 'blog-category',
+  children: [
+    { path: '', element: <BlogListPage /> },
+    { path: 'add', element: <BlogFormPage /> },
+    { path: 'edit/:id', element: <BlogFormPage /> },
+  ]
+},
+
 
       {
         
@@ -177,7 +214,9 @@ const routes: RouteObject[] = [
           { path: 'add', element: <MainCategoryFormPage /> },
           { path: 'edit/:id', element: <MainCategoryFormPage /> },
         ],
-      },{
+      },
+
+      {
         path:'category',
        children:[
         {path:'',element:<CategoryPage/>},
@@ -193,6 +232,15 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <SubcategoryFormPage /> },
         ],
       },
+      {
+        
+        path: 'offer',
+        children: [
+          { path: '', element: <OfferListPage /> },
+          { path: 'add', element: <OfferFormPage /> },
+          { path: 'edit/:id', element: <OfferFormPage /> },
+        ],
+      },
        {
         path: 'shipment-methods',
         children: [
@@ -206,10 +254,11 @@ const routes: RouteObject[] = [
         children: [
           { path: 'subcategory', element: <SubcategoryTrashPage /> },
           { path: 'brand', element: <BrandTrashPage /> },
-          { path: 'product', element: <ProductTrashPage /> },
+          { path: 'products', element: <ProductTrashPage /> },
           {path: 'mainCategory',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
           {path: 'faq',element: <FaqTrashPage />,},
+          { path: 'blog-category', element: <BlogTrashPage /> }
         ]
       }, 
       {
@@ -218,6 +267,14 @@ const routes: RouteObject[] = [
               { path: '', element: <NewsLetterPage /> },
               { path: 'add', element: <NewsLetterFormPage /> },
               { path: 'edit/:id', element: <NewsLetterFormPage /> },
+            ],
+          },
+          {
+            path: 'promotions',
+            children: [
+              { path: '', element: <PromotionsListPage /> },
+              { path: 'add', element: <PromotionsFormPage /> },
+              { path: 'edit/:id', element: <PromotionsFormPage /> },
             ],
           }, 
         ],
