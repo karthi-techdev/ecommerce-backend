@@ -202,6 +202,25 @@ export interface ProductPayload {
   status?: 'active' | 'inactive';
 }
 
+export interface Offer {
+  _id?: string;
+  name: string;
+  banner: string;
+  description?: string;
+  buttonName: string;
+  products: string[] | any[]; 
+  isActive: boolean;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+}
+
+export interface OfferProduct {
+  _id: string;
+  name: string;
+  price: number;
+  thumbnail: string;
+}
 export interface ProductFormData {
   name: string
   title: string
@@ -262,10 +281,11 @@ export interface FieldConfig {
   accept?: string;
   previewEnabled?: boolean;
   withEditor?: boolean;
+  options? :{label:string , value:string , isDisabled? : boolean}[];
   multiple?: boolean;
-  options? :{label:string , value:string}[];
   onMenuScrollToBottom?: () => void;
   onInputChange?: (value: string) => void;
+  isMulti?: boolean;
  }
 
  export interface BlogCategory {

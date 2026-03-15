@@ -95,6 +95,12 @@ const menuItems: MenuItem[] = [
     path: '/orders',
   },
   {
+    key: 'offer',
+    label: 'Offers',
+    icon: <PiShoppingCartLight />,
+    path: '/offer',
+  },
+  {
     key: 'category',
     label: 'Manage Categories',
     icon: <BiCategory />,

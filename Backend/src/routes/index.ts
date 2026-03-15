@@ -20,6 +20,7 @@ import settingsRoutes from "./settingsRoutes";
 
 
 import newsLetterRoutes from "./newsLetterRoutes";
+import offerRoutes from "./offerRoutes";
 import promotionRoutes from "./promotionRoutes";
 
 export default function registerRoutes(app: Express) {
@@ -36,6 +37,11 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/products", productRoutes);
   app.use("/api/v1/admin/page", pageRoutes);
   app.use("/api/v1/admin/orders", orderRoutes);
+  app.use("/api/v1/admin/offers", offerRoutes);
+  app.use('/api/v1/admin/testimonials', testimonialRoutes)
+  app.use('/api/v1/admin/blog-category', blogCategoryRoutes);
+  
+  app.use("/api/v1/newsletters", newsLetterRoutes);
   app.use("/api/v1/admin/settings", settingsRoutes);
 
   app.use("/api/v1/admin/testimonials", testimonialRoutes);

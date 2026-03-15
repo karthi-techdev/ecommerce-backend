@@ -151,20 +151,31 @@ const API = {
   getOrderById: `${ROOTURL}admin/orders/`,
   updateOrderStatus: `${ROOTURL}admin/orders/orderstatus`,
   updatePaymentStatus: `${ROOTURL}admin/orders/paymentstatus`,
-  deleteOrder: `${ROOTURL}admin/orders/`,
+  deleteOrder: `${ROOTURL}admin/orders/`, 
 
-  //  BlogCategory endpoints
-  addBlogCategory: `${ROOTURL}admin/blog-category/`,
-  listBlogCategory: `${ROOTURL}admin/blog-category/`,
-  getBlogCategory: `${ROOTURL}admin/blog-category/getBlogCategoryById/`,
-  updateBlogCategory: `${ROOTURL}admin/blog-category/updateBlogCategory/`,
-  softDeleteBlogCategory: `${ROOTURL}admin/blog-category/softDeleteBlogCategory/`,
-  restoreBlogCategory: `${ROOTURL}admin/blog-category/restore/`,
-  hardDeleteBlogCategory: `${ROOTURL}admin/blog-category/permanentDelete/`,
-  toggleBlogCategoryStatus: `${ROOTURL}admin/blog-category/toggleStatus/`,
-  trashBlogCategory: `${ROOTURL}admin/blog-category/trash`,
-  checkDuplicateBlogCategory: `${ROOTURL}admin/blog-category/check-duplicate`,
+  // Offer Management
+  addOffer: `${ROOTURL}admin/offers/`, 
+  listOffer: `${ROOTURL}admin/offers/`,
+  getOfferById: `${ROOTURL}admin/offers/`,
+  updateOffer: `${ROOTURL}admin/offers/`,
+  toggleOfferStatus: `${ROOTURL}admin/offers/toggle-status/`,
+  // softDeleteOffer: `${ROOTURL}admin/offer/soft/`,
+  // restoreOffer: `${ROOTURL}admin/offer/restore/`,
+  permanentDeleteOffer: `${ROOTURL}admin/offers/permanent/`,
+  checkOfferDuplicate: `${ROOTURL}admin/offers/check-duplicate`, 
 
+   //  BlogCategory endpoints
+    addBlogCategory: `${ROOTURL}admin/blog-category/`,
+    listBlogCategory: `${ROOTURL}admin/blog-category/`,
+    getBlogCategory: `${ROOTURL}admin/blog-category/getBlogCategoryById/`,
+    updateBlogCategory: `${ROOTURL}admin/blog-category/updateBlogCategory/`,
+    softDeleteBlogCategory: `${ROOTURL}admin/blog-category/softDeleteBlogCategory/`,
+    restoreBlogCategory: `${ROOTURL}admin/blog-category/restore/`,
+    hardDeleteBlogCategory: `${ROOTURL}admin/blog-category/permanentDelete/`,
+    toggleBlogCategoryStatus: `${ROOTURL}admin/blog-category/toggleStatus/`,
+    trashBlogCategory: `${ROOTURL}admin/blog-category/trash`,
+    checkDuplicateBlogCategory: `${ROOTURL}admin/blog-category/check-duplicate`,
+    
   // ---------- Promotions endpoints ----------
   addPromotions: `${ROOTURL}admin/promotions`,
   listPromotions: `${ROOTURL}admin/promotions`,

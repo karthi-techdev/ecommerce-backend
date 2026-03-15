@@ -34,6 +34,9 @@ const OrderListPage = lazy(()=>import('../templates/order/orderListTemplate'));
 const BlogListPage = lazy(() => import('../pages/blogCategory/BlogListPage'));
 const BlogFormPage = lazy(() => import('../pages/blogCategory/BlogFormPage'));
 const BlogTrashPage = lazy(() => import('../pages/trash/BlogTrashPage'));
+const OfferListPage = lazy(() => import('../pages/offer/offerListPage'));
+const OfferFormPage = lazy(() => import('../pages/offer/offerFormPage'));
+
 const PromotionsListPage = lazy(() => import('../pages/promotions/PromotionsListPage'));
 const PromotionsFormPage = lazy(() => import('../pages/promotions/PromotionsFormPage'));
 
@@ -212,6 +215,15 @@ const routes: RouteObject[] = [
           { path: '', element: <SubcategoryPage /> },
           { path: 'add', element: <SubcategoryFormPage /> },
           { path: 'edit/:id', element: <SubcategoryFormPage /> },
+        ],
+      },
+      {
+        
+        path: 'offer',
+        children: [
+          { path: '', element: <OfferListPage /> },
+          { path: 'add', element: <OfferFormPage /> },
+          { path: 'edit/:id', element: <OfferFormPage /> },
         ],
       },
        {
