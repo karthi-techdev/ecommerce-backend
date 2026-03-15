@@ -8,11 +8,11 @@ const SETTINGS_ID = "68ad8844bfdf0cec7f623bc2";
 
 const API = {
   // ---------- NewsLetter endpoints ----------
-  addNewsLetter: `${ROOTURL}newsLetters/`,
-  listNewsLetter: `${ROOTURL}newsLetters/`,
-  getNewsLetter: `${ROOTURL}newsLetters/getNewsLetterById/`, // backend expect /newsLetters/:id
-  updateNewsLetter: `${ROOTURL}newsLetters/updateNewsLetter/`, // backend expect /newsLetters/:id
-  deleteNewsLetter: `${ROOTURL}newsLetters/softDeleteNewsLetter/`,
+  addNewsLetter: `${ROOTURL}admin/newsLetters/`,
+  listNewsLetter: `${ROOTURL}admin/newsLetters/`,
+  getNewsLetter: `${ROOTURL}admin/newsLetters/getNewsLetterById/`, // backend expect /newsLetters/:id
+  updateNewsLetter: `${ROOTURL}admin/newsLetters/updateNewsLetter/`, // backend expect /newsLetters/:id
+  deleteNewsLetter: `${ROOTURL}admin/newsLetters/softDeleteNewsLetter/`,
   // ---------------- FAQ endpoints ----------------
   addFaq: `${ROOTURL}admin/faqs/`,
   listFaq: `${ROOTURL}admin/faqs/`,
@@ -60,19 +60,22 @@ const API = {
   getTrashMainCategory: `${ROOTURL}admin/main-categories/trash`,
   restoreMainCategory: `${ROOTURL}admin/main-categories/restore/`,
   permanentDeleteMainCategory: `${ROOTURL}admin/main-categories/permanent-delete/`,
-  activeMainCategory: `${ROOTURL}admin/main-categories//activeMainCategories`,
-  listAllMainCategory: `${ROOTURL}admin/main-categories/list`,
+  activeMainCategory: `${ROOTURL}admin/main-categories/activeMainCategories`,
+  listAllMainCategory: `${ROOTURL}admin/main-categories`,
+  
   // ---------------- Brand endpoints ----------------
-  addBrand: `${ROOTURL}brands/`,
-  listBrand: `${ROOTURL}brands/`,
-  getBrand: `${ROOTURL}brands/getBrandById/`,
-  updateBrand: `${ROOTURL}brands/updateBrand/`,
-  softDeleteBrand: `${ROOTURL}brands/softDeleteBrand/`,
-  restoreBrand: `${ROOTURL}brands/restore`,
-  hardDeleteBrand: `${ROOTURL}brands/permanentDelete`,
-  toggleBrandStatus: `${ROOTURL}brands/togglestatus`,
-  trashBrands: `${ROOTURL}brands/trash`,
-  checkDuplicateBrand: `${ROOTURL}brands/check-duplicate`,
+  addBrand: `${ROOTURL}admin/brands/`,
+  listBrand: `${ROOTURL}admin/brands/`,
+  getBrand: `${ROOTURL}admin/brands/getBrandById/`,
+  updateBrand: `${ROOTURL}admin/brands/updateBrand/`,
+  softDeleteBrand: `${ROOTURL}admin/brands/softDeleteBrand/`,
+  restoreBrand: `${ROOTURL}admin/brands/restore`, 
+  hardDeleteBrand: `${ROOTURL}admin/brands/permanentDelete`,
+  toggleBrandStatus: `${ROOTURL}admin/brands/togglestatus`,
+  trashBrands: `${ROOTURL}admin/brands/trash`,
+  checkDuplicateBrand: `${ROOTURL}admin/brands/check-duplicate`,
+
+
   //subcategory endpoints
   addSubCategory: `${ROOTURL}admin/subcategory/`,
   listSubCategory: `${ROOTURL}admin/subcategory/`,
@@ -84,10 +87,12 @@ const API = {
   toggleStatusSubCategory: `${ROOTURL}admin/subcategory/togglestatus/`,
   checkDuplicateSubCategory: `${ROOTURL}admin/subcategory/check-duplicate`,
   listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
-  subCategoryByMainCategoryId:`${ROOTURL}admin/subcategory/activeSubCategory/`,
+  subCategoryByMainCategoryId: `${ROOTURL}admin/subcategory/activeSubCategory/`,
   listActiveMainCategory: `${ROOTURL}admin/subcategory/activemain-categorylist`,
-    // ---------------- Coupon endpoints ----------------
   
+  
+  // ---------------- Coupon endpoints ----------------
+
   //shipmentMethods endpoints
   addShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
   listShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
@@ -131,18 +136,34 @@ const API = {
   listPageTrash: `${ROOTURL}admin/page/trash/`,
 
   // ---------------- Product endpoints ----------------
-  addProduct: `${ROOTURL}products/`,
-  listProduct: `${ROOTURL}products/`,
-  getProductById: `${ROOTURL}products/getProductById/`,
-  updateProduct: `${ROOTURL}products/updateProduct/`,
-  softDeleteProduct: `${ROOTURL}products/softDelete/`,
-  permanentDeleteProduct: `${ROOTURL}products/permanentDelete/`,
-  restoreProduct: `${ROOTURL}products/restore/`,
-  toggleProductStatus: `${ROOTURL}products/toggleStatus/`,
-  trashProducts: `${ROOTURL}products/trash`,
-  checkProductSlug: `${ROOTURL}products/checkSlugExist`,
+  addProduct: `${ROOTURL}admin/products/`,
+  listProduct: `${ROOTURL}admin/products/`,
+  getProductById: `${ROOTURL}admin/products/getProductById/`,
+  updateProduct: `${ROOTURL}admin/products/updateProduct/`,
+  softDeleteProduct: `${ROOTURL}admin/products/softDelete/`,
+  permanentDeleteProduct: `${ROOTURL}admin/products/permanentDelete/`,
+  restoreProduct: `${ROOTURL}admin/products/restore/`,
+  toggleProductStatus: `${ROOTURL}admin/products/toggleStatus/`,
+  trashProducts: `${ROOTURL}admin/products/trash`,
+  checkProductSlug: `${ROOTURL}admin/products/checkSlugExist`,
+  // Order endpoints
+  listOrder: `${ROOTURL}admin/orders/`,
+  getOrderById: `${ROOTURL}admin/orders/`,
+  updateOrderStatus: `${ROOTURL}admin/orders/orderstatus`,
+  updatePaymentStatus: `${ROOTURL}admin/orders/paymentstatus`,
+  deleteOrder: `${ROOTURL}admin/orders/`, 
 
-  
+  // Offer Management
+  addOffer: `${ROOTURL}admin/offers/`, 
+  listOffer: `${ROOTURL}admin/offers/`,
+  getOfferById: `${ROOTURL}admin/offers/`,
+  updateOffer: `${ROOTURL}admin/offers/`,
+  toggleOfferStatus: `${ROOTURL}admin/offers/toggle-status/`,
+  // softDeleteOffer: `${ROOTURL}admin/offer/soft/`,
+  // restoreOffer: `${ROOTURL}admin/offer/restore/`,
+  permanentDeleteOffer: `${ROOTURL}admin/offers/permanent/`,
+  checkOfferDuplicate: `${ROOTURL}admin/offers/check-duplicate`, 
+
    //  BlogCategory endpoints
     addBlogCategory: `${ROOTURL}admin/blog-category/`,
     listBlogCategory: `${ROOTURL}admin/blog-category/`,
@@ -166,7 +187,21 @@ const API = {
   restoreBlog: (id: string) => `${ROOTURL}admin/blogs/restore/${id}`,
   permanentDelete: (id: string) => `${ROOTURL}admin/blogs/permanentDelete/${id}`,
   checkDuplicate: `${ROOTURL}admin/blogs/check-duplicate`,
+    
+  // ---------- Promotions endpoints ----------
+  addPromotions: `${ROOTURL}admin/promotions`,
+  listPromotions: `${ROOTURL}admin/promotions`,
+  getPromotions: `${ROOTURL}admin/promotions/getPromotionsById/`,
+  updatePromotions: `${ROOTURL}admin/promotions/updatePromotions/`,
+  softDeletePromotions: `${ROOTURL}admin/promotions/softDeletePromotions/`,
+  permanantDeletePromotions: `${ROOTURL}admin/promotions/permanentDelete/`,
+  restorePromotions: `${ROOTURL}admin/promotions/restore/`,
+  toggleStatusPromotions: `${ROOTURL}admin/promotions/togglestatus/`,
+  trashPromotions: `${ROOTURL}admin/promotions/trash`,
+  promotionsStats: `${ROOTURL}admin/promotions/stats`,
+  checkDuplicatePromotions: `${ROOTURL}admin/promotions/check-duplicate`,
 };
+ 
 
 const ImportedURL = { API, LIVEURL, FILEURL, SETTINGS_ID };
 export default ImportedURL;

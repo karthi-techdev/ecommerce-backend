@@ -41,9 +41,9 @@ const MainCategoryListTemplate: React.FC = () => {
     fetchMainCategories(
       currentPage,
       PAGINATION_CONFIG.DEFAULT_LIMIT,
-      selectedFilter
+      'total'
     );
-  }, [currentPage, selectedFilter]);
+  }, [currentPage]);
 
   useEffect(() => {
     if (error) toast.error(error);
@@ -53,6 +53,12 @@ const MainCategoryListTemplate: React.FC = () => {
     setCurrentPage(selectedItem.selected + 1);
   };
 
+  const filteredMainCategories = mainCategories.filter((item) => {
+    if (selectedFilter === 'active' && !item.isActive) return false;
+    if (selectedFilter === 'inactive' && item.isActive) return false;
+
+    return item.name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   const handleToggleStatus = async (mainCategory: MainCategory) => {
   const action = mainCategory.isActive ? 'hide' : 'show';
@@ -99,7 +105,7 @@ const MainCategoryListTemplate: React.FC = () => {
     try {
       await deleteMainCategory(mainCategory._id!);
 
-      toast.success('Main Category deleted');
+      Swal.fire('Deleted!', 'The Main Category has been removed.', 'success');
 
       setCurrentPage(1);
 
@@ -149,12 +155,7 @@ const statFilters: {
   },
 ];
 
-  const filteredMainCategories = mainCategories.filter((mainCategory) => {
-  if (selectedFilter === 'active') return mainCategory.isActive === true;
-  if (selectedFilter === 'inactive') return mainCategory.isActive === false;
-  return true; 
-});
-
+ 
 
   return (
     <div className="p-6">
@@ -199,7 +200,7 @@ const statFilters: {
           </thead>
 
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredMainCategories.length === 0 ? (
+            {mainCategories.length === 0 ? (
               <tr>
                 <td
                   colSpan={6}
@@ -241,30 +242,33 @@ const statFilters: {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button onClick={() => handleToggleStatus(mainCategory)}>
                       {mainCategory.isActive ? (
-                        <ToggleRight className="text-green-500" />
+                        <ToggleRight size={20} className="text-green-500" />
                       ) : (
-                        <ToggleLeft className="text-gray-400" />
+                        <ToggleLeft size={20} className="text-gray-400" />
                       )}
                     </button>
                   </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap flex gap-3">
-                    <button
-                      className="text-indigo-500 hover:text-indigo-700"
-                      onClick={() =>
-                        navigate(`/mainCategory/edit/${mainCategory._id}`)
-                      }
-                    >
-                      <Pencil size={16} />
-                    </button>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center gap-5">
+                      <button
+                        className="text-indigo-500 hover:text-indigo-700"
+                        onClick={() =>
+                          navigate(`/mainCategory/edit/${mainCategory._id}`)
+                        }
+                      >
+                        <Pencil size={16} />
+                      </button>
 
-                    <button
-                      className="text-red-500 hover:text-red-700"
-                      onClick={() => handleDelete(mainCategory)}
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => handleDelete(mainCategory)}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   </td>
+
                 </tr>
               ))
             )}

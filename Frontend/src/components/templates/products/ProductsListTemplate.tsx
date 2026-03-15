@@ -7,15 +7,7 @@ import Loader from '../../atoms/Loader';
 import Pagination from '../../atoms/Pagination';
 import { useProductStore } from '../../../stores/productStore';
 import type { Product } from '../../../types/common';
-import {
-  Package,
-  CheckCircle,
-  XCircle,
-  Pencil,
-  Trash2,
-  ToggleLeft,
-  ToggleRight,
-} from 'lucide-react';
+import {Package,CheckCircle,XCircle,Pencil,Trash2,ToggleLeft,HelpCircle,ToggleRight,} from 'lucide-react';
 import { truncate } from '../../utils/helper';
 import { PAGINATION_CONFIG } from '../../../constants/pagination';
 
@@ -36,7 +28,6 @@ const ProductListTemplate: React.FC = () => {
     fetchProducts,
     deleteProduct,
     toggleProduct,
-    productStats,
     stats,
     totalPages,
     loading,
@@ -60,7 +51,6 @@ const ProductListTemplate: React.FC = () => {
           PAGINATION_CONFIG.DEFAULT_LIMIT,
           selectedFilter
         );
-        await productStats();
       } catch (err: any) {
         toast.error(err?.message || 'Failed to load Products.');
       }
@@ -111,7 +101,7 @@ const ProductListTemplate: React.FC = () => {
         value: total,
         trend: 'up',
         change: '100%',
-        icon: <Package size={20} />,
+        icon: <HelpCircle size={20} />,
       },
       {
         id: 'active',
@@ -155,7 +145,6 @@ const ProductListTemplate: React.FC = () => {
           PAGINATION_CONFIG.DEFAULT_LIMIT,
           selectedFilter
         );
-        await productStats();
         toast.success(`Product ${action}d successfully!`);
       } catch {
         toast.error('Failed to update status.');
@@ -179,8 +168,7 @@ const ProductListTemplate: React.FC = () => {
             PAGINATION_CONFIG.DEFAULT_LIMIT,
             selectedFilter
           );
-          await productStats();
-          Swal.fire('Deleted!', 'Product removed.', 'success');
+          Swal.fire('Deleted!', 'The Prodcut has been removed.', 'success');
         } catch {
           toast.error('Failed to delete Product.');
         }
@@ -193,11 +181,11 @@ const ProductListTemplate: React.FC = () => {
   return (
     <div className="p-6">
       <TableHeader
-        managementName="Product"
+        managementName="Products"
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         addButtonLabel="Add"
-        addButtonLink="/product/add"
+        addButtonLink="/products/add"
         statFilters={statFilters}
         selectedFilterId={selectedFilter}
         onSelectFilter={(id) => {
@@ -209,110 +197,91 @@ const ProductListTemplate: React.FC = () => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
+
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  S.NO
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Brand
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Price
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Stock
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Image
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S.NO</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thumbnail</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
-            </thead>
+           </thead>
 
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-6 py-4 text-center text-gray-500">
+                  <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
                     No data available
                   </td>
                 </tr>
               ) : (
                 filteredProducts.map((product: Product, index: number) => (
                   <tr key={product._id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {(currentPage - 1) *
-                        PAGINATION_CONFIG.DEFAULT_LIMIT +
-                        index +
-                        1}
+
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      {(currentPage - 1) * PAGINATION_CONFIG.DEFAULT_LIMIT + index + 1}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 text-sm text-gray-900">
                       {truncate(product.name, 40)}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {product.brandId?.name}
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      {product.price}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      ₹{product.price}
-                    </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 text-sm text-gray-900">
                       {product.stockQuantity}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      <img
-                        src={`http://localhost:5000${product.images?.[0]}`}
-                        alt={product.name}
-                        className="h-10 w-10 object-cover rounded"
-                      />
+                    <td className="px-6 py-4">
+                      {product.thumbnail ? (
+                        <img
+                          src={`http://localhost:5000${product.thumbnail}`}
+                          alt={product.name}
+                          className="h-12 w-12 object-cover rounded border"
+                        />
+                      ) : "-"}
                     </td>
 
-                    <td className="px-4 py-2">
+                    <td className="px-6 py-4">
                       <button
                         onClick={() => handleToggleStatus(product)}
-                        className={`${
-                          product.status === 'active'
-                            ? 'text-green-500 hover:text-green-700'
-                            : 'text-gray-400 hover:text-gray-600'
-                        } transition`}
+                        className={product.status === 'active'
+                          ? 'text-green-600'
+                          : 'text-gray-400'}
                       >
-                        {product.status === 'active' ? (
-                          <ToggleRight size={18} />
-                        ) : (
-                          <ToggleLeft size={18} />
-                        )}
+                        {product.status === 'active'
+                          ? <ToggleRight size={20} />
+                          : <ToggleLeft size={20} />}
                       </button>
                     </td>
 
-                    <td className="px-4 py-2 flex gap-3 items-center">
-                      <button
-                        onClick={() =>
-                          navigate(`/product/edit/${product._id}`)
-                        }
-                        className="bg-transparent text-indigo-500 hover:text-indigo-700 p-2 rounded"
-                      >
-                        <Pencil size={16} />
-                      </button>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-5">
 
-                      <button
-                        onClick={() => handleDelete(product)}
-                        className="bg-transparent text-red-500 hover:text-red-700 p-2 rounded"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                        <button
+                          onClick={() => navigate(`/products/edit/${product._id}`)}
+                          className="text-indigo-600 hover:text-indigo-800"
+                          title="Edit"
+                        >
+                          <Pencil size={15} />
+                        </button>
+
+                        <button
+                          onClick={() => handleDelete(product)}
+                          className="text-red-600 hover:text-red-800"
+                          title="Delete"
+                        >
+                          <Trash2 size={15} />
+                        </button>
+
+                      </div>
                     </td>
+
                   </tr>
                 ))
               )}
@@ -329,7 +298,7 @@ const ProductListTemplate: React.FC = () => {
             onPageChange={handlePageChange}
           />
         </div>
-      )}
+      )}  
     </div>
   );
 };

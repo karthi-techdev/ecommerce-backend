@@ -18,7 +18,7 @@ import BrandListTemplate from '../components/templates/brand/BrandListTemplate';
 import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
 
 import BrandTrashPage from '../components/pages/trash/BrandTrashPage';
-
+   
 import ShipmentMethodListTemplate from '../components/templates/shipmentMethods/shipmentMethodsListTemplate';
 import ShipmentMethodFormTemplate from '../components/templates/shipmentMethods/ShipmentMethodsFormTemplate';
 import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
@@ -33,6 +33,7 @@ import ConfigListTemplate from '../components/templates/config/ConfigListTemplat
 import ConfigFormTemplate from '../components/templates/config/ConfigFormTemplate';
 import PageFormTemplate from '@/components/templates/page/pageFormTemplate';
 import PageListTemplate from '@/components/templates/page/pageListTemplate';
+import OrderListTemplate from '@/components/templates/order/orderListTemplate';
 
 import ProductListTemplate from '@/components/templates/products/ProductsListTemplate';
 import ProductFormTemplate from '@/components/templates/products/ProductsFormTemplate';
@@ -41,10 +42,16 @@ import ProductTrashListTemplate from '@/components/templates/trash/ProductsTrash
 import BlogCategoryListTemplate from '@/components/templates/blogCategory/BlogCategoryListTemplate';
 import BlogCategoryFormTemplate from '@/components/templates/blogCategory/BlogCategoryFormTemplate';
 import BlogTrashListPage from '@/components/templates/trash/BlogTrash/TrashBlogTemplate';
+import OfferListTemplate from '@/components/templates/offer/offerListTemplate';
+import OfferFormTemplate from '@/components/templates/offer/offerFormTemplate';
 
 import BlogListTemplate from '@/components/templates/blog/BlogListTemplate';
 import BlogFormTemplate from '@/components/templates/blog/BlogFormTemplate';
 import BlogTrashTemplate from '@/components/templates/trash/BlogsTrash/BlogTrashTemplate';
+
+import PromotionsListTemplate from '../components/templates/promotions/PromotionsListTemplate';
+import PromotionsFormTemplate from '../components/templates/promotions/PromotionsFormTemplate';
+
 
 
 export const router = createBrowserRouter([
@@ -56,7 +63,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
-    children: [
+    children: [  
       {  path: '/', element: <Dashboard /> },
       {  path: 'page',
         children:[
@@ -70,6 +77,18 @@ export const router = createBrowserRouter([
           },
         ]
        }, 
+      {  path: 'orders',
+        children:[
+          {
+            path:"",
+            element:<OrderListTemplate/>
+          }
+          ,{
+            path: 'add',
+            element: <OrderListTemplate />,
+          },
+        ]
+      }, 
       {
         path:'/category',
         children:[
@@ -159,6 +178,23 @@ export const router = createBrowserRouter([
         ],
       },
       {
+        path:'/offer',
+        children:[
+          {
+            path:"",
+            element:<OfferListTemplate/>
+          }
+           ,{
+            path: 'add',
+            element: <OfferFormTemplate />,
+          },
+          {
+            path: 'edit/:id',
+            element: <OfferFormTemplate />,
+          },
+        ]
+      },
+      {
         path: 'testimonial',
         children: [
           {
@@ -208,13 +244,22 @@ export const router = createBrowserRouter([
              path: 'category', 
              element: <CategoryTrashListPage /> 
           },
-          { path: 'product', element: <ProductTrashListTemplate /> },
+          { path: 'products', element: <ProductTrashListTemplate /> }, 
 
            { path: 'blog-category', 
             element: <BlogTrashListPage /> },
 
             { path: 'blogs', element: 
             <BlogTrashTemplate /> },
+        ],
+      },
+
+      {
+        path: 'promotions',
+        children: [
+          { path: '', element: <PromotionsListTemplate /> },
+          { path: 'add', element: <PromotionsFormTemplate /> },
+          { path: 'edit/:id', element: <PromotionsFormTemplate /> },
         ],
       },
       

@@ -16,7 +16,7 @@ class productService {
           delete (data as any)[key];
         }
       });
-    const rules = [
+    const rules = [  
       !isUpdate
         ? (
             ValidationHelper.isRequired(data.name, "name") ||
@@ -31,40 +31,16 @@ class productService {
               : null)
           )
         : null,
-
+        !isUpdate
+          ? (
+              ValidationHelper.isRequired(data.title, "title") ||
+              (data.title !== undefined
+                ? ValidationHelper.minLength(data.title.trim(), "title", 30)
+                : null)
+            )
+          : null,
       !isUpdate
-        ? (
-            ValidationHelper.isRequired(data.description, "description") ||
-            (data.description !== undefined
-              ? ValidationHelper.isNonEmptyString(
-                  data.description?.trim(),
-                  "description"
-                )
-              : null) ||
-            (data.description !== undefined
-              ? ValidationHelper.minLength(
-                  data.description.trim(),
-                  "description",
-                  5
-                )
-              : null) ||
-            (data.description !== undefined
-              ? ValidationHelper.maxLength(
-                  data.description.trim(),
-                  "description",
-                  5000
-                )
-              : null)
-          )
-        : null,
-
-      !isUpdate
-        ? (
-            ValidationHelper.isRequired(data.images, "images") ||
-            (Array.isArray(data.images) && data.images.length === 0
-              ? { field: "images", message: "images is required" }
-              : null)
-          )
+        ? ValidationHelper.isRequired(data.thumbnail, "thumbnail")
         : null,
 
       !isUpdate
@@ -186,7 +162,9 @@ class productService {
       if (data.stockQuantity !== undefined) {
         data.stockQuantity = Number(data.stockQuantity as any);
       }
-
+      if (data.sku) {
+        data.sku = data.sku.toUpperCase();
+      }
       this.validateProductData(data);
       
 
@@ -200,7 +178,6 @@ class productService {
 
   const existingProduct = await productRepository.isExistSlug(
     data.slug,
-    data.categoryId
   );
 
   if (existingProduct) {
@@ -208,9 +185,6 @@ class productService {
   }
 
   data.name = data.name[0].toUpperCase() + data.name.slice(1);
-  data.description =
-    data.description[0].toUpperCase() + data.description.slice(1);
-
   return await productRepository.createProduct(data);
 }
 
@@ -269,7 +243,6 @@ class productService {
 
     const duplicate = await productRepository.isExistSlug(
       slugToCheck,
-      categoryToCheck
     );
 
     if (duplicate && duplicate._id.toString() !== id.toString()) {
@@ -281,10 +254,9 @@ class productService {
     data.name = data.name[0].toUpperCase() + data.name.slice(1);
   }
 
-  if (data.description) {
-    data.description =
-      data.description[0].toUpperCase() + data.description.slice(1);
-  }
+  if (data.sku) {
+  data.sku = data.sku.toUpperCase();
+}
   if (data.price !== undefined) {
     data.price = Number(data.price as any);
   }
@@ -337,9 +309,8 @@ class productService {
 
   async isExistSlug(
     slug: string,
-    categoryId: Types.ObjectId
   ): Promise<IProduct | null> {
-    return await productRepository.isExistSlug(slug, categoryId);
+    return await productRepository.isExistSlug(slug);
   }
 }
 
