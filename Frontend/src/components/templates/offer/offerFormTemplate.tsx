@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { validateOfferForm, type OfferFormData, type OfferValidationErrors } from '../../validations/offerValidation';
 import { useOfferStore } from '../../../stores/offerStore';
-import { useProductStore } from '../../../stores/productStore'; // Assuming you have a product store
+import { useProductStore } from '../../../stores/productStore';
 import FormHeader from '../../molecules/FormHeader';
 import FormField from '../../molecules/FormField';
 import type { FieldConfig } from '../../../types/common';
@@ -10,28 +10,30 @@ import { toast } from 'react-toastify';
 import { handleError } from '../../utils/errorHandler';
 
 const OfferFormTemplate: React.FC = () => {
+
   const { id } = useParams();
   const navigate = useNavigate();
-  
-  // Stores
-  const { fetchOfferById, addOffer, updateOffer, checkDuplicateOffer } = useOfferStore();
-  const { fetchActiveProducts, products, hasMore, loading, page } = useProductStore();
 
-  const offerFields: FieldConfig[] = [
-    { name: 'name', label: 'Offer Name', type: 'text', placeholder: 'Enter Offer Name' },
-    { name: 'description', label: 'Description', type: 'textarea', placeholder: 'Enter offer description' },
-    { name: 'buttonName', label: 'Button Text', type: 'text', placeholder: 'e.g., Shop Now, Claim Offer' },
-    { 
-      name: 'products', 
-      label: 'Select Products', 
-      type: 'select', 
-      placeholder: 'Select multiple products', 
-      isMulti: true 
-    },
-  ];
+  const {
+    fetchOfferById,
+    addOffer,
+    updateOffer,
+    checkDuplicateOffer,
+    offers,
+    fetchOffers
+  } = useOfferStore();
+
+  const {
+    fetchProducts,
+    products,
+    totalPages,
+    loading,
+    page
+  } = useProductStore();
 
   const [formData, setFormData] = useState<OfferFormData>({
     name: '',
+    banner: '',
     description: '',
     buttonName: '',
     products: [],
@@ -43,20 +45,20 @@ const OfferFormTemplate: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const nameCheckTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const debounceNameCheck = (fn: () => void, delay = 400) => {
-    if (nameCheckTimer.current) clearTimeout(nameCheckTimer.current);
-    nameCheckTimer.current = setTimeout(() => fn(), delay);
+  const getBannerUsage = (bannerName: string) => {
+    return offers.filter(o => o.banner === bannerName && o._id !== id).length;
   };
 
-  // Fetch products for the dropdown with search/pagination
   useEffect(() => {
-    const delay = setTimeout(() => {
-      fetchActiveProducts(1, 10, searchTerm);
-    }, 400);
-    return () => clearTimeout(delay);
-  }, [searchTerm, fetchActiveProducts]);
+    fetchOffers();
+  }, [fetchOffers]);
 
-  // Load existing data for Edit mode
+  useEffect(() => {
+    if (!id && offers.length >= 6) {
+      toast.error('Maximum 6 offers allowed (3 per banner)');
+      navigate('/offer');
+    }
+  }, [offers, id, navigate]);
   useEffect(() => {
     if (!id) return;
     const loadData = async () => {
@@ -64,6 +66,7 @@ const OfferFormTemplate: React.FC = () => {
       if (!offer) return;
       setFormData({
         name: offer.name || '',
+        banner: offer.banner || '',
         description: offer.description || '',
         buttonName: offer.buttonName || '',
         products: offer.products?.map((p: any) => p._id || p) || [],
@@ -72,72 +75,42 @@ const OfferFormTemplate: React.FC = () => {
     };
     loadData();
   }, [id, fetchOfferById]);
-
-//   const handleChange = (e: any) => {
-//     // Handling both standard inputs and Select components
-//     const name = e.target ? e.target.name : e.name;
-//     const value = e.target ? e.target.value : e.value;
-
-//     const updatedFormData = { ...formData, [name]: value };
-//     setFormData(updatedFormData);
-
-//     // Clear error on change
-//     if (errors[name as keyof OfferValidationErrors]) {
-//       setErrors(prev => ({ ...prev, [name]: undefined }));
-//     }
-
-//     // Duplicate Name Check
-//     if (name === 'name' && value.trim()) {
-//       debounceNameCheck(async () => {
-//         try {
-//           const exists = await checkDuplicateOffer(value, id);
-//           if (exists) {
-//             setErrors(prev => ({ ...prev, name: 'Offer name already exists' }));
-//           }
-//         } catch (error: any) {
-//           setErrors(prev => ({ ...prev, name: handleError(error)?.[0] }));
-//         }
-//       });
-//     }
-//   };
+  useEffect(() => {
+    fetchProducts(1, 10, 'active');
+  }, [fetchProducts]);
   const handleChange = (e: any) => {
-    // Handling both standard inputs and Select components
     const name = e.target ? e.target.name : e.name;
-    const value = e.target ? e.target.value : e.value;
-
-    const updatedFormData = { ...formData, [name]: value };
-    setFormData(updatedFormData);
-
-    // Clear error on change - FIXED: Typed 'prev'
-    if (errors[name as keyof OfferValidationErrors]) {
-      setErrors((prev: OfferValidationErrors) => ({ ...prev, [name]: undefined }));
-    }
-
-    // Duplicate Name Check
+    let value = e.target ? e.target.value : e.value;
     if (name === 'name' && value.trim()) {
-      debounceNameCheck(async () => {
-        try {
-          const exists = await checkDuplicateOffer(value, id);
-          if (exists) {
-            // FIXED: Typed 'prev'
-            setErrors((prev: OfferValidationErrors) => ({ ...prev, name: 'Offer name already exists' }));
-          }
-        } catch (error: any) {
-          // FIXED: Typed 'prev'
-          setErrors((prev: OfferValidationErrors) => ({ ...prev, name: handleError(error)?.[0] }));
+      if (nameCheckTimer.current) clearTimeout(nameCheckTimer.current);
+      nameCheckTimer.current = setTimeout(async () => {
+        const exists = await checkDuplicateOffer(value, id);
+        if (exists) {
+          setErrors(prev => ({
+            ...prev,
+            name: 'Offer name already exists'
+          }));
         }
-      });
+      }, 400);
+    }
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    if (errors[name as keyof OfferValidationErrors]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: undefined
+      }));
     }
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validateOfferForm(formData);
-    
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-
     setIsSubmitting(true);
     try {
       if (id) {
@@ -147,66 +120,121 @@ const OfferFormTemplate: React.FC = () => {
         await addOffer(formData);
         toast.success('Offer added successfully');
       }
-      navigate('/offers');
+      navigate('/offer');
     } catch (error: any) {
       handleError(error).forEach(msg => toast.error(msg));
     } finally {
       setIsSubmitting(false);
     }
   };
-
+  const offerFields: FieldConfig[] = [
+    {
+      name: 'name',
+      label: 'Name',
+      type: 'text',
+      placeholder: 'Enter Offer Name'
+    },
+    {
+      name: 'banner',
+      label: 'Banner',
+      type: 'select',
+      placeholder: 'Select Banner',
+      options: [
+        {
+          label: 'Banner 1',
+          value: 'Banner 1',
+          isDisabled: getBannerUsage('Banner 1') >= 3
+        },
+        {
+          label: 'Banner 2',
+          value: 'Banner 2',
+          isDisabled: getBannerUsage('Banner 2') >= 3
+        }
+      ]
+    },
+    {
+      name: 'description',
+      label: 'Description',
+      type: 'textarea',
+      placeholder: 'Enter description'
+    },
+    {
+      name: 'buttonName',
+      label: 'Button',
+      type: 'text',
+      placeholder: 'Shop Now'
+    },
+    {
+      name: 'products',
+      label: 'Products',
+      type: 'select',
+      placeholder: 'Select products',
+      isMulti: true as any
+    }
+  ];
   return (
     <div className="p-6">
-      <FormHeader 
-        managementName="Offer" 
-        addButtonLink="/offers" 
-        type={id ? 'Edit' : 'Add'} 
+      <FormHeader
+        managementName="Offer"
+        addButtonLink="/offer"
+        type={id ? 'Edit' : 'Add'}
       />
-      
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <form
+        onSubmit={handleSubmit}
+        noValidate
+        className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-4"
+      >
         <div className="space-y-6">
           {offerFields.map(field => {
-            const isRequired = ['name', 'buttonName', 'products'].includes(field.name);
-            
+            let fieldOptions = field.options;
+            if (field.name === 'products') {
+              fieldOptions = products?.map(p => ({
+                label: p.name,
+                value: p._id ?? ''
+              }));
+            }
             return (
               <FormField
                 key={field.name}
                 field={{
                   ...field,
-                  options: field.name === 'products' 
-                    ? products?.map(prod => ({ label: prod.name, value: prod._id })) 
-                    : undefined,
+                  options: fieldOptions,
                   onMenuScrollToBottom: () => {
-                    if (hasMore && !loading) fetchActiveProducts(page + 1, 10, searchTerm);
+                    if (page < totalPages && !loading) {
+                      fetchProducts(page + 1, 10, 'active');
+                    }
                   },
-                  onInputChange: (value: string) => setSearchTerm(value)
+                  onInputChange: (val) => setSearchTerm(val)
                 }}
-                isRequired={isRequired}
-                value={formData[field.name as keyof OfferFormData] ?? ''}
+                isRequired={[
+                  'name',
+                  'banner',
+                  'description',
+                  'buttonName',
+                  'products'
+                ].includes(field.name)}
+                value={formData[field.name as keyof OfferFormData]}
                 onChange={handleChange}
                 error={errors[field.name as keyof OfferValidationErrors]}
               />
             );
           })}
-
-          {/* Product Count Preview (Requirement) */}
-          <div className="text-sm text-gray-500 italic">
-            Selected Products: {formData.products.length}
-          </div>
         </div>
-
-        <div className="mt-6 flex justify-end">
-          <button 
-            type="submit" 
-            disabled={isSubmitting} 
-            className="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-lg transition-colors disabled:bg-gray-400"
+        <div className="mt-8 flex justify-end">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="px-10 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg shadow-md disabled:bg-gray-400"
           >
-            {isSubmitting ? 'Saving...' : id ? 'Update Offer' : 'Save Offer'}
+            {isSubmitting
+              ? 'Saving...'
+              : id
+                ? 'Update'
+                : 'Save'}
           </button>
         </div>
       </form>
     </div>
   );
 };
-
 export default OfferFormTemplate;

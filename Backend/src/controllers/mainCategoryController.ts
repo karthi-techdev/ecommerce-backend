@@ -72,16 +72,41 @@ class MainCategoryController {
 }
 
   async getAllMainCategories(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 10;
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 1000;
 
-      const result = await mainCategoryService.getAllMainCategories(page, limit);
+    let filter: string | undefined;
+
+    if (req.query.isActive === "true") filter = "active";
+    if (req.query.isActive === "false") filter = "inactive";
+
+    const result = await mainCategoryService.getAllMainCategories(
+      page,
+      limit,
+      filter
+    );
+
+    res.status(200).json({
+      status: HTTP_RESPONSE.SUCCESS,
+      data: result.data,
+      meta: result.meta,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+  async getAllListMainCategories(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const filter = req.query.filter as string;
+
+      const result = await mainCategoryService.getAllListMainCategories(filter);
 
       res.status(200).json({
         status: HTTP_RESPONSE.SUCCESS,
         data: result.data,
-        meta: result.meta,
+        total: result.total
       });
     } catch (err) {
       next(err);

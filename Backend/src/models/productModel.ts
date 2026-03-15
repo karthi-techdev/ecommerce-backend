@@ -6,6 +6,7 @@ export interface IProduct extends Document {
   slug: string;
   description: string;
   images: string[];
+  thumbnail: string;
   price: number;
   discountPrice?: number;
   stockQuantity: number;
@@ -17,6 +18,7 @@ export interface IProduct extends Document {
   isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt?: Date | null;
 }
 
 const productSchema = new Schema<IProduct>(
@@ -24,7 +26,8 @@ const productSchema = new Schema<IProduct>(
     name: { type: String, required: true, trim: true  },
     slug: { type: String ,required: true },
     description: { type: String, required: true, trim: true },
-    images: [{ type: String, required: true }],
+    images: {type: [String],default: []},
+    thumbnail: {type: String,required: true},
     price: { type: Number, required: true },
     discountPrice: { type: Number, required: true },
     stockQuantity: { type: Number, default: 0, required: true },
@@ -33,13 +36,14 @@ const productSchema = new Schema<IProduct>(
     subCategoryId: {type: mongoose.Schema.Types.ObjectId,ref: "subcategories"},
     categoryId: {type: mongoose.Schema.Types.ObjectId,ref: "category"},
     status: {type: String,enum: ['active', 'inactive'],default: 'active'},
-    isDeleted: {type: Boolean,default: false}
+    isDeleted: {type: Boolean,default: false},
+    deletedAt: {type: Date,default: null}
   },
   {
     timestamps: true
   }
 );
-
+   
 productSchema.index(
   { slug: 1, categoryId: 1 },
   { unique: true }

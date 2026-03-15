@@ -102,9 +102,8 @@ class productRepository {
 
   async isExistSlug(
     slug: string,
-    categoryId: Types.ObjectId
   ): Promise<IProduct | null> {
-    return await ProductModel.findOne({ slug, categoryId });
+    return await ProductModel.findOne({ slug});
   }
 
   async getTrashProducts(page = 1, limit = 10) {
@@ -113,7 +112,7 @@ class productRepository {
     const data = await ProductModel.find({ isDeleted: true })
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 })
+      .sort({ deletedAt: -1, _id: -1 })
       .populate("mainCategoryId", "name")
       .populate("subCategoryId", "name")
       .populate("categoryId", "name")

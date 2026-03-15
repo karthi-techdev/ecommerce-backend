@@ -8,7 +8,9 @@ export interface ProductFormData {
   brandId: string;
   mainCategoryId: string;
   subCategoryId: string;
-  images: File[] | string[];
+  categoryId: string; 
+   images: (File | string)[];
+  thumbnail: File | string | null;   
 }
 
 export interface ProductValidationErrors {
@@ -21,21 +23,28 @@ export interface ProductValidationErrors {
   brandId?: string;
   mainCategoryId?: string;
   subCategoryId?: string;
+  categoryId?: string; 
   images?: string;
+  thumbnail?: string;
 }
 
 export const validateProductForm = (
-  data: ProductFormData
+  data: ProductFormData,
+  isEdit: boolean = false
 ): ProductValidationErrors => {
 
   const errors: ProductValidationErrors = {};
 
-
   if (!data.name) {
     errors.name = "Name is required.";
-  } else if (data.name.trim().length < 3) {
+  } 
+  else if (data.name.startsWith(" ")) {
+    errors.name = "Name should not start with space.";
+  }
+  else if (data.name.trim().length < 3) {
     errors.name = "Name must be at least 3 characters long.";
-  } else if (!/[a-zA-Z]/.test(data.name)) {
+  } 
+  else if (!/[a-zA-Z]/.test(data.name)) {
     errors.name = "Name must contain at least one letter.";
   }
 
@@ -48,37 +57,36 @@ export const validateProductForm = (
     errors.description = "Description must contain at least one letter.";
   }
 
-  
-  if (!data.slug) {
-    errors.slug = "Slug is required.";
-  } else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(data.slug)) {
+  if (data.slug && !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(data.slug)) {
     errors.slug = "Invalid slug format.";
   }
 
  
-  if (data.price === '' || data.price === null) {
+  if (data.price === '' || data.price === undefined) {
     errors.price = "Price is required.";
   } else if (Number(data.price) <= 0) {
     errors.price = "Price must be greater than 0.";
   }
 
- 
-  if (data.discountPrice !== undefined && data.discountPrice !== '') {
-    if (Number(data.discountPrice) < 0) {
-      errors.discountPrice = "Discount price cannot be negative.";
-    } else if (Number(data.discountPrice) >= Number(data.price)) {
-      errors.discountPrice =
-        "Discount price must be less than regular price.";
-    }
+
+  if (data.discountPrice === '' || data.discountPrice === undefined) {
+    errors.discountPrice = "Discount price is required.";
+  }
+  else if (Number(data.discountPrice) < 0) {
+    errors.discountPrice = "Discount price cannot be negative.";
+  } 
+  else if (Number(data.discountPrice) >= Number(data.price)) {
+    errors.discountPrice = "Discount price must be less than regular price.";
   }
 
   
-  if (data.stockQuantity === '' || data.stockQuantity === null) {
+  if (data.stockQuantity === '' || data.stockQuantity === undefined) {
     errors.stockQuantity = "Stock quantity is required.";
   } else if (Number(data.stockQuantity) < 0) {
     errors.stockQuantity = "Stock cannot be negative.";
   }
-
+   
+  
   
   if (!data.brandId) {
     errors.brandId = "Brand is required.";
@@ -88,14 +96,10 @@ export const validateProductForm = (
     errors.mainCategoryId = "Main Category is required.";
   }
 
-  if (!data.subCategoryId) {
-    errors.subCategoryId = "Sub Category is required.";
+  if (!isEdit && !data.thumbnail) {
+    errors.thumbnail = "Thumbnail is required.";
   }
 
-
-  if (!data.images || data.images.length === 0) {
-    errors.images = "At least one product image is required.";
-  }
 
   return errors;
 };

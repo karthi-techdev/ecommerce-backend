@@ -60,8 +60,8 @@ const API = {
   getTrashMainCategory: `${ROOTURL}admin/main-categories/trash`,
   restoreMainCategory: `${ROOTURL}admin/main-categories/restore/`,
   permanentDeleteMainCategory: `${ROOTURL}admin/main-categories/permanent-delete/`,
-  activeMainCategory: `${ROOTURL}admin/main-categories//activeMainCategories`,
-  listAllMainCategory: `${ROOTURL}admin/main-categories/list`,
+  activeMainCategory: `${ROOTURL}admin/main-categories/activeMainCategories`,
+  listAllMainCategory: `${ROOTURL}admin/main-categories`,
   // ---------------- Brand endpoints ----------------
   addBrand: `${ROOTURL}brands/`,
   listBrand: `${ROOTURL}brands/`,
@@ -130,6 +130,17 @@ const API = {
   checkDuplicatePage: `${ROOTURL}admin/page/check-duplicate`,
   listPageTrash: `${ROOTURL}admin/page/trash/`,
 
+  // ---------------- Product endpoints ----------------
+  addProduct: `${ROOTURL}admin/products/`,
+  listProduct: `${ROOTURL}admin/products/`,
+  getProductById: `${ROOTURL}admin/products/getProductById/`,
+  updateProduct: `${ROOTURL}admin/products/updateProduct/`,
+  softDeleteProduct: `${ROOTURL}admin/products/softDelete/`,
+  permanentDeleteProduct: `${ROOTURL}admin/products/permanentDelete/`,
+  restoreProduct: `${ROOTURL}admin/products/restore/`,
+  toggleProductStatus: `${ROOTURL}admin/products/toggleStatus/`,
+  trashProducts: `${ROOTURL}admin/products/trash`,
+  checkProductSlug: `${ROOTURL}admin/products/checkSlugExist`,
   // Order endpoints
   listOrder: `${ROOTURL}admin/orders/`,
   getOrderById: `${ROOTURL}admin/orders/`,
@@ -138,29 +149,16 @@ const API = {
   deleteOrder: `${ROOTURL}admin/orders/`, 
 
   // Offer Management
-  addOffer: `${ROOTURL}admin/offer/`,
-  listOffer: `${ROOTURL}admin/offer/`,
-  getOfferById: `${ROOTURL}admin/offer/`,
-  updateOffer: `${ROOTURL}admin/offer/`,
-  toggleOfferStatus: `${ROOTURL}admin/offer/toggle-status/`,
+  addOffer: `${ROOTURL}admin/offers/`, 
+  listOffer: `${ROOTURL}admin/offers/`,
+  getOfferById: `${ROOTURL}admin/offers/`,
+  updateOffer: `${ROOTURL}admin/offers/`,
+  toggleOfferStatus: `${ROOTURL}admin/offers/toggle-status/`,
   // softDeleteOffer: `${ROOTURL}admin/offer/soft/`,
   // restoreOffer: `${ROOTURL}admin/offer/restore/`,
-  permanentDeleteOffer: `${ROOTURL}admin/offer/permanent/`,
-  checkOfferDuplicate: `${ROOTURL}admin/offer/check-duplicate`,
+  permanentDeleteOffer: `${ROOTURL}admin/offers/permanent/`,
+  checkOfferDuplicate: `${ROOTURL}admin/offers/check-duplicate`, 
 
-   // ---------------- Product endpoints ----------------
-  addProduct: `${ROOTURL}products/`,
-  listProduct: `${ROOTURL}products/`,
-  getProductById: `${ROOTURL}products/getProductById/`,
-  updateProduct: `${ROOTURL}products/updateProduct/`,
-  softDeleteProduct: `${ROOTURL}products/softDelete/`,
-  permanentDeleteProduct: `${ROOTURL}products/permanentDelete/`,
-  restoreProduct: `${ROOTURL}products/restore/`,
-  toggleProductStatus: `${ROOTURL}products/toggleStatus/`,
-  trashProducts: `${ROOTURL}products/trash`,
-  checkProductSlug: `${ROOTURL}products/checkSlugExist`,
-
-  
    //  BlogCategory endpoints
     addBlogCategory: `${ROOTURL}admin/blog-category/`,
     listBlogCategory: `${ROOTURL}admin/blog-category/`,

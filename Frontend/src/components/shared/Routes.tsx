@@ -34,6 +34,8 @@ const OrderListPage = lazy(()=>import('../templates/order/orderListTemplate'));
 const BlogListPage = lazy(() => import('../pages/blogCategory/BlogListPage'));
 const BlogFormPage = lazy(() => import('../pages/blogCategory/BlogFormPage'));
 const BlogTrashPage = lazy(() => import('../pages/trash/BlogTrashPage'));
+const OfferListPage = lazy(() => import('../pages/offer/offerListPage'));
+const OfferFormPage = lazy(() => import('../pages/offer/offerFormPage'));
 
 
 const PrivateRoute = () => {
@@ -50,7 +52,7 @@ const PublicRoute = () => {
 
 const ProductListPage = lazy(() => import('../pages/products/ProductsListPage'));
 const ProductFormPage = lazy(() => import('../pages/products/ProductsFormPage'));
-const ProductTrashPage = lazy(() => import('../pages/trash/TrashMainCategoryListPage'));
+const ProductTrashPage = lazy(() => import('../pages/trash/ProductsTrashListPage'));
 
 
 const MainCategoryPage = lazy(
@@ -213,6 +215,15 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <SubcategoryFormPage /> },
         ],
       },
+      {
+        
+        path: 'offer',
+        children: [
+          { path: '', element: <OfferListPage /> },
+          { path: 'add', element: <OfferFormPage /> },
+          { path: 'edit/:id', element: <OfferFormPage /> },
+        ],
+      },
        {
         path: 'shipment-methods',
         children: [
@@ -226,7 +237,7 @@ const routes: RouteObject[] = [
         children: [
           { path: 'subcategory', element: <SubcategoryTrashPage /> },
           { path: 'brand', element: <BrandTrashPage /> },
-          { path: 'product', element: <ProductTrashPage /> },
+          { path: 'products', element: <ProductTrashPage /> },
           {path: 'mainCategory',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
           {path: 'faq',element: <FaqTrashPage />,},

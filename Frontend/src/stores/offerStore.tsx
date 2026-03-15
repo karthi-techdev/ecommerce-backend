@@ -8,6 +8,7 @@ const { API } = ImportedURL;
 export interface Offer {
   _id: string;
   name: string;
+  banner : string;
   description?: string;
   buttonName: string;
   products: any[]; // IDs or Populated Product objects
@@ -42,7 +43,7 @@ interface OfferState {
   totalPages: number;
 
   // Actions
-  fetchOffers: () => Promise<void>;
+  fetchOffers: (page?: number, limit?: number, status?: string) => Promise<void>;
   fetchOfferById: (id: string) => Promise<Offer | null>;
   addOffer: (offer: OfferPayload) => Promise<void>;
   updateOffer: (id: string, offer: OfferPayload) => Promise<void>;
@@ -57,7 +58,7 @@ interface OfferState {
   checkDuplicateOffer: (name: string, excludeId?: string) => Promise<boolean>;
 }
 
-export const useOfferStore = create<OfferState>((set, get) => ({
+export const useOfferStore = create<OfferState>((set) => ({
   offers: [],
   stats: { total: 0, active: 0, inactive: 0 },
   loading: false,
@@ -65,29 +66,69 @@ export const useOfferStore = create<OfferState>((set, get) => ({
   page: 1,
   totalPages: 1,
 
-  fetchOffers: async () => {
-    try {
-      set({ loading: true, error: null });
-      const res = await axiosInstance.get(API.listOffer);
-      
-      const { data, meta } = res.data.data;
+//   fetchOffers: async (page?: number, limit?: number, status?: string) => {
+//   try {
+//     set({ loading: true, error: null });
 
-      set({
-        offers: Array.isArray(data) ? data : [],
-        stats: {
-          total: meta?.total || 0,
-          active: meta?.active || 0,
-          inactive: meta?.inactive || 0,
-        },
-        loading: false,
-      });
-    } catch (error: any) {
-      set({
-        error: error?.response?.data?.message || 'Failed to fetch offers',
-        loading: false,
-      });
-    }
-  },
+//     const res = await axiosInstance.get(API.listOffer);
+
+//     console.log("response", res.data);
+
+//     const data = res?.data?.data?.data || [];
+//     const meta = res?.data?.data?.meta || {};
+
+//     set({
+//       offers: Array.isArray(data) ? data : [],
+//       stats: {
+//         total: meta?.total || 0,
+//         active: meta?.active || 0,
+//         inactive: meta?.inactive || 0,
+//       },
+//       loading: false,
+//     });
+
+//   } catch (error: any) {
+//     set({
+//       error: error?.response?.data?.message || "Failed to fetch offers",
+//       loading: false,
+//     });
+//   }
+// },
+
+fetchOffers: async (page = 1, limit = 10, status?: string) => {
+  try {
+    set({ loading: true, error: null });
+
+    const res = await axiosInstance.get(API.listOffer, {
+      params: {
+        page,
+        limit,
+        status
+      }
+    });
+
+    const data = res?.data?.data?.data || [];
+    const meta = res?.data?.data?.meta || {};
+
+    set({
+      offers: Array.isArray(data) ? data : [],
+      stats: {
+        total: meta?.total || 0,
+        active: meta?.active || 0,
+        inactive: meta?.inactive || 0,
+      },
+      page: meta?.page || 1,
+      totalPages: meta?.totalPages || 1,
+      loading: false,
+    });
+
+  } catch (error: any) {
+    set({
+      error: error?.response?.data?.message || "Failed to fetch offers",
+      loading: false,
+    });
+  }
+},
 
   fetchOfferById: async (id: string) => {
     try {
@@ -139,23 +180,48 @@ export const useOfferStore = create<OfferState>((set, get) => ({
     }
   },
 
-  toggleOfferStatus: async (id) => {
+permanentDeleteOffer: async (id: string) => {
     try {
-      const res = await axiosInstance.patch(`${API.toggleOfferStatus}${id}`);
-      const updatedOffer = res.data.data;
-
-      set((state) => ({
-        offers: state.offers.map((o) =>
-          o._id === id ? { ...o, isActive: updatedOffer.isActive } : o
-        ),
-      }));
-      
-      // Refresh stats after toggle
-      get().fetchOffers(); 
+        const repo = await axiosInstance.delete(`${API.permanentDeleteOffer}${id}`);
+        console.log("repo", repo);
+        set((state) => ({
+            offers: state.offers.filter((o) => o._id !== id),
+            error: null
+        }));
     } catch (error: any) {
-      set({ error: error?.response?.data?.message || 'Toggle failed' });
+        set({ error: error?.response?.data?.message || 'Permanent deletion failed' });
+        throw error;
+    }
+},
+
+// 2. Toggle Status
+toggleOfferStatus: async (id: string) => {
+    try {
+        // Using PATCH as defined in your route
+        const response = await axiosInstance.patch(`${API.toggleOfferStatus}${id}`);
+        set((state) => ({
+            offers: state.offers.map((o) => 
+                o._id === id ? { ...o, isActive: !o.isActive } : o
+            ),
+            error: null
+        }));
+        return response.data;
+    } catch (error: any) {
+        set({ error: error?.response?.data?.message || 'Failed to toggle status' });
+        throw error;
+    }
+},
+
+  checkDuplicateOffer: async (name, excludeId) => {
+    try {
+      const res = await axiosInstance.post(API.checkOfferDuplicate, { name, excludeId });
+      return res.data.exists;
+    } catch (error) {
+      return false;
     }
   },
+}));
+
 
 //   softDeleteOffer: async (id) => {
 //     try {
@@ -178,23 +244,26 @@ export const useOfferStore = create<OfferState>((set, get) => ({
 //     }
 //   },
 
-  permanentDeleteOffer: async (id) => {
-    try {
-      await axiosInstance.delete(`${API.permanentDeleteOffer}${id}`);
-      set((state) => ({
-        offers: state.offers.filter((o) => o._id !== id),
-      }));
-    } catch (error: any) {
-      set({ error: 'Permanent deletion failed' });
-    }
-  },
+// fetchOffers: async (page?: number, limit?: number, status?: string) => {
+  //   try {
+  //     set({ loading: true, error: null });
+  //     const res = await axiosInstance.get(API.listOffer);
+  //     console.log("res",res)
+  //     const { data, meta } = res.data.data;
 
-  checkDuplicateOffer: async (name, excludeId) => {
-    try {
-      const res = await axiosInstance.post(API.checkOfferDuplicate, { name, excludeId });
-      return res.data.exists;
-    } catch (error) {
-      return false;
-    }
-  },
-}));
+  //     set({
+  //       offers: Array.isArray(data) ? data : [],
+  //       stats: {
+  //         total: meta?.total || 0,
+  //         active: meta?.active || 0,
+  //         inactive: meta?.inactive || 0,
+  //       },
+  //       loading: false,
+  //     });
+  //   } catch (error: any) {
+  //     set({
+  //       error: error?.response?.data?.message || 'Failed to fetch offers',
+  //       loading: false,
+  //     });
+  //   }
+  // }, 
