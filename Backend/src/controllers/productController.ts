@@ -28,8 +28,15 @@ class productController {
       }
     }
 
+    let relatedTags = req.body.relatedTags;
+
+    if (relatedTags && !Array.isArray(relatedTags)) {
+      relatedTags = [relatedTags];
+    }
+
     const payload = {
       ...req.body,
+      relatedTags,
       images,
       thumbnail
     };
@@ -165,20 +172,14 @@ class productController {
       }
 
       let payload: any = { ...req.body };
-
-      /* --------------------------
-        ✅ 1. HANDLE EXISTING IMAGES
-      ---------------------------*/
-
+      if (payload.relatedTags && !Array.isArray(payload.relatedTags)) {
+        payload.relatedTags = [payload.relatedTags];
+      }
       let existingImages = req.body.existingImages || [];
 
       if (!Array.isArray(existingImages)) {
         existingImages = [existingImages];
       }
-
-      /* --------------------------
-        ✅ 2. HANDLE NEW IMAGES
-      ---------------------------*/
 
       let newImages: string[] = [];
 
@@ -199,10 +200,6 @@ class productController {
           payload.thumbnail = `/uploads/products/thumbnails/thumb_${result.filename}`;
         }
       }
-
-      /* --------------------------
-        ✅ 3. MERGE BOTH
-      ---------------------------*/
 
       payload.images = [...existingImages, ...newImages];
 

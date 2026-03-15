@@ -37,6 +37,8 @@ const BlogTrashPage = lazy(() => import('../pages/trash/BlogTrashPage'));
 const OfferListPage = lazy(() => import('../pages/offer/offerListPage'));
 const OfferFormPage = lazy(() => import('../pages/offer/offerFormPage'));
 
+const PromotionsListPage = lazy(() => import('../pages/promotions/PromotionsListPage'));
+const PromotionsFormPage = lazy(() => import('../pages/promotions/PromotionsFormPage'));
 
 const PrivateRoute = () => {
   const { isAuthenticated } = useAuthStore();
@@ -250,6 +252,14 @@ const routes: RouteObject[] = [
               { path: '', element: <NewsLetterPage /> },
               { path: 'add', element: <NewsLetterFormPage /> },
               { path: 'edit/:id', element: <NewsLetterFormPage /> },
+            ],
+          },
+          {
+            path: 'promotions',
+            children: [
+              { path: '', element: <PromotionsListPage /> },
+              { path: 'add', element: <PromotionsFormPage /> },
+              { path: 'edit/:id', element: <PromotionsFormPage /> },
             ],
           }, 
         ],

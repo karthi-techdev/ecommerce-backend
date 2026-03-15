@@ -8,7 +8,7 @@ interface FormFieldProps {
   value: any;
   onChange?: (e: { target: { name: string; value: any; } }) => void;
   error?: string;
-  isRequired?: boolean; 
+  isRequired?: boolean;
 }
 
 const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error, isRequired }) => {
@@ -77,11 +77,12 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error, is
         readonly={field.readonly}
         required={isRequired}
         disabled={field.disabled}
-        aria-label={field.ariaLabel} 
+        aria-label={field.ariaLabel}
         error={error}
         options={field.options}
         previewEnabled={field.previewEnabled}
         withEditor={field.withEditor}
+        accept={field.accept}
       />
     </div>
   );

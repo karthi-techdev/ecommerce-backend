@@ -2,19 +2,21 @@ import React, { useEffect, useState, useRef } from 'react';
 import axiosInstance from '../../utils/axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import {validateProductForm,type ProductFormData,type ProductValidationErrors} from '../../validations/productsValidation';
+import {validateProductForm,type ProductValidationErrors} from '../../validations/productsValidation';
 import ImportedURL from '../../../common/urls';
 import { useProductStore } from '../../../stores/productStore';
 import { useMainCategoryStore } from '../../../stores/mainCategoryStore';
 import { useCategoryStore } from '../../../stores/categoryStore';
 import { useBrandStore } from '../../../stores/brandStore';
 import { useSubCategoryStore } from '../../../stores/subcategoryStore';
-import type { ProductPayload } from '../../../types/common';
+import type { ProductPayload, ProductFormData } from '../../../types/common';
 import FormHeader from '../../molecules/FormHeader';
 import FormField from '../../molecules/FormField';
 import type { FieldConfig } from '../../../types/common';
 import { handleError } from '../../utils/errorHandler';
-import defaultImage from '../../../assets/images/preview-image.jpg.jpeg';
+import defaultImage from '../../../assets/images/preview-image.jpg.jpeg'
+import Select from "react-select";
+
 
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -34,15 +36,17 @@ const ProductFormTemplate: React.FC = () => {
   fetchAllMainCategories,  
   mainCategories 
 } = useMainCategoryStore();
-
+  
   const { fetchCategories, categories } = useCategoryStore();
   const {subCategories} = useSubCategoryStore();
   useEffect(() => {
   console.log("SUBCATEGORIES FROM STORE:", subCategories);
 }, [subCategories]);
   const { fetchBrands, brands } = useBrandStore();
+  const [colorInput, setColorInput] = useState("");
+  const [relatedTagOptions, setRelatedTagOptions] = useState<any[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>(defaultImage);
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,19 +55,27 @@ const ProductFormTemplate: React.FC = () => {
 const imageErrorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const slugRequestId = useRef(0);
 
-const [formData, setFormData] = useState<ProductFormData>({
+  const [formData, setFormData] = useState<ProductFormData>({
     name: '',
-    description: '',
+    title: '',
+    shortDescription: '',
+    longDescription: '',
+    sku: '',
     slug: '',
     price: '',
     discountPrice: '',
-    stockQuantity: '',
+    stockQuantity: 1,
+    colors: [],
+    sizes: "",
+    highlights: "",
+    relatedTags: [],
     brandId: '',
     mainCategoryId: '',
     subCategoryId: '',
     categoryId: '',
-    images: [],             
-    thumbnail: null,      
+
+    images: [],
+    thumbnail: null
   });
 
 
@@ -72,7 +84,7 @@ const [formData, setFormData] = useState<ProductFormData>({
     name: 'brandId',
     label: 'Brand ',
     type: 'select',
-    className: 'col-span-6',
+    className: 'col-span-6 text-gray-700',
     placeholder: 'Select brand',
     required: true,
     options: brands.map(b => ({ label: b.name, value: b._id as string }))
@@ -82,7 +94,7 @@ const [formData, setFormData] = useState<ProductFormData>({
     name: 'mainCategoryId',
     label: 'Main Category',
     type: 'select',
-    className: 'col-span-6',
+    className: 'col-span-6 text-gray-700',
     required: true,
     placeholder: 'Select main category',
     options: mainCategories.map((m:any) => ({ label: m.name, value: m._id }))
@@ -91,7 +103,7 @@ const [formData, setFormData] = useState<ProductFormData>({
   name: 'subCategoryId',
   label: 'Sub Category',
   type: 'select',
-  className: 'col-span-6',
+  className: 'col-span-6 text-gray-700',
   placeholder: 'Select sub category',
   required: false,
   options: Array.isArray(subCategories)
@@ -105,7 +117,7 @@ const [formData, setFormData] = useState<ProductFormData>({
   name: 'categoryId',
   label: 'Category',
   type: 'select',
-  className: 'col-span-6',
+  className: 'col-span-6 text-gray-700',
   placeholder: 'Select category',
   options: categories.map((c: any) => ({ label: c.name, value: c._id }))
 },
@@ -113,10 +125,15 @@ const [formData, setFormData] = useState<ProductFormData>({
 
   { name: 'name', label: 'Name', type: 'text', className: 'col-span-6', required: true, placeholder: 'Enter name'},
   { name: 'slug', label: 'Slug', type: 'text', className: 'col-span-6', readonly: true, placeholder: 'Slug generated automatically',},
-  { name: 'price', label: 'Price', type: 'number', className: 'col-span-4', required: true, placeholder: 'Enter price' },
-  { name: 'discountPrice', label: 'Discount Price', type: 'number', className: 'col-span-4', required: true, placeholder: 'Enter discount price' },
-  { name: 'stockQuantity', label: 'Stock', type: 'number', className: 'col-span-4', required: true, placeholder: 'Enter stock quantity' },
-  { name: 'description', label: 'Description', type: 'textarea', className: 'col-span-12', required: true, placeholder: 'Enter description' },
+  {name: 'title',label: 'Title',type: 'textarea',className: 'col-span-12',required: true,placeholder: 'Enter product title (min 30 characters)'},
+  {name: 'shortDescription',label: 'Short Description',type: 'textarea',className: 'col-span-12',required: false, placeholder: 'Enter Short Description...'},
+  {name: 'longDescription',label: 'Long Description',type: 'textarea',className: 'col-span-12',required: false, placeholder: 'Enter Long Description...'},
+  {name: 'sku',label: 'SKU',type: 'text',className: 'col-span-6',placeholder: 'Enter SKU'},
+  { name: 'price', label: 'Price', type: 'number', className: 'col-span-6', required: true, placeholder: 'Enter price' },
+  { name: 'discountPrice', label: 'Discount Price', type: 'number', className: 'col-span-6', required: true, placeholder: 'Enter discount price' },
+  { name: 'stockQuantity', label: 'Stock', type: 'number', className: 'col-span-6', required: true, placeholder: 'Enter stock quantity' },
+  {name: 'sizes',label: 'Sizes', type: 'text',className: 'col-span-12',required: false,placeholder: 'Enter Size'},
+  {name: 'highlights',label: 'Highlights',type: 'text',className: 'col-span-12',required: false,placeholder: 'Example: Waterproof,Lightweight'},
   { name: 'images', label: 'Images', type: 'file', className: 'col-span-12', required: false, multiple: true},
   {name: 'thumbnail',label: 'Thumbnail',type: 'file',className: 'col-span-12',required: true },
 ], [brands, mainCategories, subCategories, categories, id]);
@@ -127,6 +144,31 @@ const [formData, setFormData] = useState<ProductFormData>({
     fetchBrands();
   }, []);
 
+  useEffect(() => {
+    const fetchRelatedTags = async () => {
+      try {
+        const res = await axiosInstance.get("/admin/config");
+        console.log("CONFIG RESPONSE:", res.data);
+        const config = res.data?.data?.data?.find(
+          (c: any) => c.slug === "related-tags"
+        );
+
+        if (config) {
+          const values = config.options.map((o: any) => ({
+            label: o.value,   
+            value: o._id      
+          }));
+
+          setRelatedTagOptions(values);
+        }
+
+      } catch (err) {
+        console.log("Related tags fetch error", err);
+      }
+    };
+
+    fetchRelatedTags();
+  }, []);
   useEffect(() => {
   console.log("MAIN CATEGORIES FROM STORE:", mainCategories);
 }, [mainCategories]);
@@ -224,6 +266,7 @@ useEffect(() => {
       if (!product) return;
       console.log("FULL PRODUCT DATA:", product);
       console.log("IMAGES FROM DB:", product.images);
+      console.log("COLORS FROM API:", product.colors);
       const mainCategoryId =
         typeof product.mainCategoryId === 'string'
           ? product.mainCategoryId
@@ -243,24 +286,48 @@ useEffect(() => {
         typeof product.categoryId === 'string'
           ? product.categoryId
           : product.categoryId?._id ;
+      let parsedColors: string[] = [];
+
+      if (Array.isArray(product.colors)) {
+        if (product.colors.length === 1 && typeof product.colors[0] === "string") {
+          parsedColors = JSON.parse(product.colors[0]);
+        } else {
+          parsedColors = product.colors;
+        }
+      }
+
       setFormData({
         name: product.name || '',
-        description: product.description || '',
+        title: product.title || '',
+        shortDescription: product.shortDescription || '',
+        longDescription: product.longDescription || '',
+        sku: product.sku || '',
         slug: product.slug || '',
-        price: product.price ?? '',
-        discountPrice: product.discountPrice ?? '',
-        stockQuantity: product.stockQuantity ?? '',
+        price: product.price ?? "",
+        discountPrice: product.discountPrice ?? "",
+        stockQuantity: product.stockQuantity ?? 1,
         brandId: brandId || '',
         mainCategoryId: mainCategoryId || '',
         subCategoryId: subCategoryId || '',
         categoryId: categoryId || '',
-
-        // ✅ KEEP existing images
+        colors: parsedColors,  
+        sizes: product.sizes || "",        
+        highlights: product.highlights || "",
+        relatedTags: product.relatedTags || [],
         images: product.images || [],
-
-        // ✅ KEEP existing thumbnail
         thumbnail: product.thumbnail || null
       });
+          if (mainCategoryId) {
+        const res = await axiosInstance.get(`/admin/subcategory`);
+
+        const list = res.data?.data?.data || res.data?.data || res.data || [];
+
+        const filtered = list.filter(
+          (sc: any) => String(sc.mainCategoryId?._id || sc.mainCategoryId) === mainCategoryId
+        );
+
+        useSubCategoryStore.setState({ subCategories: filtered });
+      }
       const base = FILEURL.replace(/\/$/, "");
 
       if (product.thumbnail) {
@@ -323,19 +390,18 @@ useEffect(() => {
         name: exists ? "Name already exists" : undefined
       }));
 
-    }, 500); // 500ms debounce
+    }, 500); 
   };
   const removeImage = (index: number) => {
     if (index < existingImages.length) {
-      // Remove from existing images
+    
       setExistingImages(prev => prev.filter((_, i) => i !== index));
     } else {
-      // Remove from new images
+      
       const newIndex = index - existingImages.length;
       setNewImages(prev => prev.filter((_, i) => i !== newIndex));
     }
 
-    // Update previews
     setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
@@ -384,13 +450,37 @@ const handleThumbnailChange = (e: any) => {
     thumbnail: undefined
   }));
 };
+
+const addColor = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === "Enter" && colorInput.trim() !== "") {
+    e.preventDefault();
+
+    setFormData(prev => ({
+      ...prev,
+      colors: [...prev.colors, colorInput.trim()]
+    }));
+
+    setColorInput("");
+  }
+};
+
+const removeColor = (index: number) => {
+  setFormData(prev => ({
+    ...prev,
+    colors: prev.colors.filter((_, i) => i !== index)
+  }));
+};
  type SimpleEvent = { target: { name: string; value: any } };
   const handleChange = async (e: SimpleEvent) => {
   const { name, value } = e.target;
   let next = { ...formData };
 
-  // --- MAIN CATEGORY CHANGE ---
+  if (name === "sku") {
+    next.sku = value.toUpperCase()
+  }
+
   if (name === "mainCategoryId") {
+     setErrors(prev => ({ ...prev, mainCategoryId: undefined }));
     next = {
       ...next,
       mainCategoryId: value,
@@ -398,7 +488,6 @@ const handleThumbnailChange = (e: any) => {
       categoryId: ""
     };
 
-    // Reset dependent dropdowns
     useSubCategoryStore.setState({ subCategories: [] });
     useCategoryStore.setState({ categories: [] });
 
@@ -418,7 +507,6 @@ const handleThumbnailChange = (e: any) => {
     return;
   }
 
-  // --- SUBCATEGORY CHANGE ---
   if (name === "subCategoryId") {
     next = {
       ...next,
@@ -443,7 +531,7 @@ const handleThumbnailChange = (e: any) => {
     return;
   }
 
-  // --- OTHER FIELDS ---
+
   if (name === "images" || name === "thumbnail") return;
 
   if (name === "name") {
@@ -507,7 +595,6 @@ const handleThumbnailChange = (e: any) => {
     const formPayload = new FormData();
 
     formPayload.append("name", formData.name);
-    formPayload.append("description", formData.description);
     formPayload.append("slug", formData.slug);
     formPayload.append("price", String(formData.price));
     formPayload.append("discountPrice", String(formData.discountPrice));
@@ -516,18 +603,24 @@ const handleThumbnailChange = (e: any) => {
     formPayload.append("mainCategoryId", formData.mainCategoryId);
     formPayload.append("subCategoryId", formData.subCategoryId);
     formPayload.append("categoryId", formData.categoryId);
-
-    // thumbnail
+    formPayload.append("colors", JSON.stringify(formData.colors));
+    formPayload.append("sizes", formData.sizes || "");
+    formPayload.append("highlights", formData.highlights || "");
+    formData.relatedTags.forEach(tag => {
+      formPayload.append("relatedTags", tag);
+    });
+    formPayload.append("title", formData.title)
+    formPayload.append("shortDescription", formData.shortDescription || "")
+    formPayload.append("longDescription", formData.longDescription || "")
+    formPayload.append("sku", formData.sku)
     if (formData.thumbnail instanceof File) {
       formPayload.append("thumbnail", formData.thumbnail);
     }
 
-    // new images
     newImages.forEach((img) => {
       formPayload.append("images", img);
     });
 
-    // existing images
     existingImages.forEach((img) => {
       formPayload.append("existingImages", img);
     });
@@ -558,59 +651,205 @@ const handleThumbnailChange = (e: any) => {
 
       <form onSubmit={handleSubmit} noValidate className="bg-white rounded-xl shadow-sm p-6">
         <div className="grid grid-cols-12 gap-6">
-          {productFields.map(field => (
+          <h2 className="col-span-12 text-lg font-semibold">Basic Info</h2>
+
+          {productFields.filter(f => ["name","slug","title"].includes(f.name)).map(field => (
             <React.Fragment key={field.name}>
               <FormField
                 field={{ ...field }}
                 isRequired={field.required}
-                value={
-                  field.type === "file"
-                    ? undefined
-                    : formData[field.name as keyof ProductFormData]
-                }
-                onChange={
-                  field.name === "images"
-                    ? (e) => handleImageChange(e as React.ChangeEvent<HTMLInputElement>)
-                    : field.name === "thumbnail"
-                    ? (e) => handleThumbnailChange(e as React.ChangeEvent<HTMLInputElement>)
-                    : field.name === "slug"
-                    ? () => {}
-                    : handleChange
-                }
+                value={formData[field.name as keyof ProductFormData]}
+                onChange={handleChange}
                 error={errors[field.name as keyof ProductValidationErrors]}
               />
-              {field.name === "images" && imagePreviews.length > 0 && (
-                <div className="col-span-12 flex gap-4 flex-wrap mt-2">
-                  {imagePreviews.map((img, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={img}
-                        className="h-32 w-32 rounded-lg object-cover border"
-                      />
-
-                      <button
-                        type="button"
-                        onClick={() => removeImage(index)}
-                        className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {field.name === "thumbnail" && (
-                <div className="col-span-12 mt-2">
-                  <img
-                    key={imagePreview}
-                    src={imagePreview || defaultImage}
-                    className="h-32 w-32 rounded-lg object-cover border"
-                  />
-                </div>
-              )}
             </React.Fragment>
           ))}
+
+          <h2 className="col-span-12 text-lg font-semibold mt-4">Descriptions</h2>
+
+          {productFields.filter(f => ["shortDescription","longDescription"].includes(f.name)).map(field => (
+            <React.Fragment key={field.name}>
+              <FormField
+                field={{ ...field }}
+                isRequired={field.required}
+                value={formData[field.name as keyof ProductFormData]}
+                onChange={handleChange}
+                error={errors[field.name as keyof ProductValidationErrors]}
+              />
+            </React.Fragment>
+          ))}
+          <h2 className="col-span-12 text-lg font-semibold mt-4">Pricing & Inventory</h2>
+            {productFields
+              .filter(f => ["price","discountPrice","stockQuantity","sku"].includes(f.name))
+              .sort((a,b)=>["price","discountPrice","stockQuantity","sku"].indexOf(a.name)
+              -["price","discountPrice","stockQuantity","sku"].indexOf(b.name))
+              .map(field => (
+                <React.Fragment key={field.name}>
+                  <FormField
+                    field={{ ...field }}
+                    isRequired={field.required}
+                    value={formData[field.name as keyof ProductFormData]}
+                    onChange={handleChange}
+                    error={errors[field.name as keyof ProductValidationErrors]}
+                  />
+                </React.Fragment>
+            ))}
+          <h2 className="col-span-12 text-lg font-semibold mt-4">Images</h2>
+            {productFields
+              .filter(f => ["thumbnail","images"].includes(f.name))
+              .sort((a,b)=>["thumbnail","images"].indexOf(a.name)
+              -["thumbnail","images"].indexOf(b.name))
+              .map(field => (
+                <React.Fragment key={field.name}>
+                  <FormField
+                    field={{ ...field }}
+                    isRequired={field.required}
+                    value={undefined}
+                    onChange={
+                      field.name === "images"
+                        ? (e) => handleImageChange(e as React.ChangeEvent<HTMLInputElement>)
+                        : (e) => handleThumbnailChange(e as React.ChangeEvent<HTMLInputElement>)
+                    }
+                    error={errors[field.name as keyof ProductValidationErrors]}
+                  />
+
+                  {field.name === "thumbnail" && (
+                    <div className="col-span-12 mt-3">
+                      <div className="w-32 h-32 border rounded-md overflow-hidden">
+                        <img
+                          src={imagePreview || defaultImage}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {field.name === "images" && imagePreviews.length > 0 && (
+                    <div className="col-span-12 mt-3 flex flex-wrap gap-3">
+                      {imagePreviews.map((img, index) => (
+                        <div
+                          key={index}
+                          className="relative w-28 h-28 border rounded-md overflow-hidden"
+                        >
+                          <img src={img} className="w-full h-full object-cover"/>
+
+                          <button
+                            type="button"
+                            onClick={() => removeImage(index)}
+                            className="absolute top-1 right-1 bg-red-500 text-white text-xs px-1 rounded-full"
+                          >
+                            ✕
+                          </button>
+
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                </React.Fragment>
+            ))}
+            
+          <h2 className="col-span-12 text-lg font-semibold mt-4">Product Relations</h2>
+
+          {productFields.filter(f => ["brandId","mainCategoryId","subCategoryId","categoryId"].includes(f.name)).map(field => (
+            <React.Fragment key={field.name}>
+              <FormField
+                field={{ ...field }}
+                isRequired={field.required}
+                value={formData[field.name as keyof ProductFormData]}
+                onChange={handleChange}
+                error={errors[field.name as keyof ProductValidationErrors]}
+              />
+            </React.Fragment>
+          ))}
+
+          <h2 className="col-span-12 text-lg font-semibold mt-4">Optional Variants</h2>
+          <div className="col-span-12">
+            <label className="block text-sm font-medium mb-2">Colors</label>
+
+            <div className="border border-gray-300 rounded-md p-2 flex flex-wrap gap-2">
+
+              {formData.colors.map((color, index) => (
+                <span
+                  key={index}
+                  className="bg-gray-200 px-3 py-1 rounded-full flex items-center gap-2"
+                >
+                  {color}
+
+                  <button
+                    type="button"
+                    onClick={() => removeColor(index)}
+                    className="text-red-500"
+                  >
+                    ✕
+                  </button>
+                </span>
+              ))}
+
+              <input
+                type="text"
+                value={colorInput}
+                onChange={(e) => setColorInput(e.target.value)}
+                onKeyDown={addColor}
+                placeholder="Type color and press Enter"
+                className="outline-none flex-1 min-w-[120px]"
+              />
+
+            </div>
+          </div>
+
+
+          {/* Sizes */}
+          {productFields.filter(f => ["sizes"].includes(f.name)).map(field => (
+            <React.Fragment key={field.name}>
+              <FormField
+                field={{ ...field }}
+                isRequired={field.required}
+                value={formData[field.name as keyof ProductFormData]}
+                onChange={handleChange}
+                error={errors[field.name as keyof ProductValidationErrors]}
+              />
+            </React.Fragment>
+          ))}
+          <h2 className="col-span-12 text-lg font-semibold mt-4">Product Highlights</h2>
+
+          {productFields.filter(f => ["highlights"].includes(f.name)).map(field => (
+            <React.Fragment key={field.name}>
+              <FormField
+                field={{ ...field }}
+                isRequired={field.required}
+                value={formData[field.name as keyof ProductFormData]}
+                onChange={handleChange}
+                error={errors[field.name as keyof ProductValidationErrors]}
+              />
+            </React.Fragment>
+          ))}
+          <h2 className="col-span-12 text-lg font-semibold mt-4">Related Tags</h2>
+
+          <div className="col-span-12">
+            <Select
+              isMulti
+              options={relatedTagOptions}
+              value={relatedTagOptions.filter(option =>
+                formData.relatedTags.includes(option.value)
+              )}
+              onChange={(selected) => {
+                const values = selected.map((s) => s.value);
+
+                setFormData(prev => ({
+                  ...prev,
+                  relatedTags: values
+                }));
+              }}
+              placeholder="Select related tags..."
+              className="w-full"
+              classNames={{
+                multiValue: () => "bg-gray-200 px-3 py-1 rounded-full flex items-center gap-2 text-lg",
+                multiValueLabel: () => "text-gray-800",
+                multiValueRemove: () => "text-red-500 hover:bg-red-100 rounded-full px-1"
+              }}
+            />
+          </div>
         </div>
 
         <div className="mt-6 flex justify-end">
