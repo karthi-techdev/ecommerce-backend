@@ -1,5 +1,6 @@
 import { PiShoppingCartLight } from "react-icons/pi";
-import { FiSettings, FiTruck, FiLayers, FiTag, FiMail, FiList, FiSliders, FiBriefcase, FiTrash2, FiShoppingCart } from 'react-icons/fi';
+import { FiSettings,FiTruck,FiLayers,FiTag,FiMail,FiList,FiSliders , FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
+
 import { BiSolidOffer } from "react-icons/bi";
 import { BiCategory, BiBook } from "react-icons/bi";
 import type { ReactNode } from 'react';

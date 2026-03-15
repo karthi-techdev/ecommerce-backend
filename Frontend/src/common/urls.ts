@@ -62,17 +62,20 @@ const API = {
   permanentDeleteMainCategory: `${ROOTURL}admin/main-categories/permanent-delete/`,
   activeMainCategory: `${ROOTURL}admin/main-categories/activeMainCategories`,
   listAllMainCategory: `${ROOTURL}admin/main-categories`,
+  
   // ---------------- Brand endpoints ----------------
-  addBrand: `${ROOTURL}brands/`,
-  listBrand: `${ROOTURL}brands/`,
-  getBrand: `${ROOTURL}brands/getBrandById/`,
-  updateBrand: `${ROOTURL}brands/updateBrand/`,
-  softDeleteBrand: `${ROOTURL}brands/softDeleteBrand/`,
-  restoreBrand: `${ROOTURL}brands/restore`,
-  hardDeleteBrand: `${ROOTURL}brands/permanentDelete`,
-  toggleBrandStatus: `${ROOTURL}brands/togglestatus`,
-  trashBrands: `${ROOTURL}brands/trash`,
-  checkDuplicateBrand: `${ROOTURL}brands/check-duplicate`,
+  addBrand: `${ROOTURL}admin/brands/`,
+  listBrand: `${ROOTURL}admin/brands/`,
+  getBrand: `${ROOTURL}admin/brands/getBrandById/`,
+  updateBrand: `${ROOTURL}admin/brands/updateBrand/`,
+  softDeleteBrand: `${ROOTURL}admin/brands/softDeleteBrand/`,
+  restoreBrand: `${ROOTURL}admin/brands/restore`, 
+  hardDeleteBrand: `${ROOTURL}admin/brands/permanentDelete`,
+  toggleBrandStatus: `${ROOTURL}admin/brands/togglestatus`,
+  trashBrands: `${ROOTURL}admin/brands/trash`,
+  checkDuplicateBrand: `${ROOTURL}admin/brands/check-duplicate`,
+
+
   //subcategory endpoints
   addSubCategory: `${ROOTURL}admin/subcategory/`,
   listSubCategory: `${ROOTURL}admin/subcategory/`,
@@ -86,6 +89,8 @@ const API = {
   listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
   subCategoryByMainCategoryId: `${ROOTURL}admin/subcategory/activeSubCategory/`,
   listActiveMainCategory: `${ROOTURL}admin/subcategory/activemain-categorylist`,
+  
+  
   // ---------------- Coupon endpoints ----------------
 
   //shipmentMethods endpoints
@@ -173,6 +178,7 @@ const API = {
   promotionsStats: `${ROOTURL}admin/promotions/stats`,
   checkDuplicatePromotions: `${ROOTURL}admin/promotions/check-duplicate`,
 };
+ 
 
 const ImportedURL = { API, LIVEURL, FILEURL, SETTINGS_ID };
 export default ImportedURL;
