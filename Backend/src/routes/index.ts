@@ -15,6 +15,7 @@ import pageRoutes from "./pageRoutes";
 import shipmentMethodRoutes from "./shipmentMethodsRouter";
 import testimonialRoutes from "./testimonialRoutes";
 import newsLetterRoutes from "./newsLetterRoutes";
+import sliderRoutes from './sliderRoutes'
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
@@ -31,4 +32,5 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/page", pageRoutes);
   app.use("/api/v1/admin/testimonials", testimonialRoutes);
   app.use("/api/v1/newsletters", newsLetterRoutes);
+  app.use('/api/v1/admin/sliders',sliderRoutes)
 }

@@ -21,3 +21,8 @@ export const setProductUpload = (req: Request, res: Response, next: NextFunction
   res.locals.managementName = "products";
   next();
 };
+
+export const setSliderUpload=(req:Request,res:Response,next:NextFunction)=>{
+  res.locals.managementName='sliders';
+  next();
+}

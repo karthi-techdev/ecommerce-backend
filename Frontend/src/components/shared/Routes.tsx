@@ -3,6 +3,7 @@ import type { RouteObject } from 'react-router-dom';
 import { Navigate, Outlet } from 'react-router-dom';
 import Layout from './Layout';
 import AdminLoginTemplate from '../templates/loginAuth/adminLoginTemplate';
+import AdminForgetPasswordTemplate from '../templates/loginAuth/adminForgetPassword'
 import { useAuthStore } from '../../stores/authStore';
 import NotFoundPage from '../utils/notFound';
 
@@ -60,6 +61,9 @@ const TrashMainCategoryPage = lazy(
 
 const ConfigListPage = lazy(() => import('../pages/config/ConfigListPage'));
 const ConfigFormPage = lazy(() => import('../pages/config/ConfigFormPage'));
+const SliderListPage = lazy(() => import('../pages/slider/SliderListPage'));
+const SliderFormPage = lazy(() => import('../pages/slider/SliderFormPage'));
+
 const routes: RouteObject[] = [
   {
     element: <PublicRoute />,
@@ -67,7 +71,10 @@ const routes: RouteObject[] = [
       {
         path: 'login',
         element: <AdminLoginTemplate />,
-      }, 
+      }, {
+        path:'forgetPassword',
+        element:<AdminForgetPasswordTemplate/>
+      }
    ],
   },
   {
@@ -125,6 +132,14 @@ const routes: RouteObject[] = [
           { path: '', element: <ConfigListPage /> }, 
           { path: 'add', element: <ConfigFormPage /> },   
           { path: 'edit/:id', element: <ConfigFormPage /> },  
+        ],
+      },
+      {
+        path: 'slider',
+        children: [
+          { path: '', element: <SliderListPage /> }, 
+          { path: 'add', element: <SliderFormPage /> },   
+          { path: 'edit/:id', element: <SliderFormPage /> },  
         ],
       },
        {

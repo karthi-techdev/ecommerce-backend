@@ -81,6 +81,30 @@ class AdminAuthController {
       });
     }
   }
+  async forgetPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email} = req.body;
+
+      const result = await adminAuthService.forgetPassword(
+        email
+      );
+      console.log(result," udhs")
+      res.status(HTTP_STATUS_CODE.OK).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        message: "Email sent successfully"
+      });
+
+    } catch (error: any) {
+      res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+        status: HTTP_RESPONSE.FAIL,
+        message: error.message,
+      });
+      next(error);
+    }
+  }
 }
+
+
+
 
 export default new AdminAuthController(); 

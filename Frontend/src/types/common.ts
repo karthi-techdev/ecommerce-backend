@@ -35,7 +35,16 @@ export  interface Config{
   options:{key:string,value:string}[];
   status:'active'|'inactive';
 }
-
+export interface Slider{
+  _id?:string;
+  title:string;
+  image: File |string| null;
+  highlightsText:string;
+  serialNumber:Number;
+  buttonName:string;
+  buttonUrl:string;
+  status?:'active'|'inactive';
+}
 export interface MainCategory {
   _id?: string;
   name: string;

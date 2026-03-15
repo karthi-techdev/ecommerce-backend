@@ -59,6 +59,12 @@ const menuItems: MenuItem[] = [
     path: '/config',
   },
   {
+    key: 'slider',
+    label: 'Slider',
+    icon: <FiPieChart />,
+    path: '/slider',
+  },
+  {
     key: 'product',
     label: 'Products',
     icon: <FiShoppingCart />,

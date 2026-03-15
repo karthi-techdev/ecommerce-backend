@@ -60,7 +60,7 @@ const API = {
   getTrashMainCategory: `${ROOTURL}admin/main-categories/trash`,
   restoreMainCategory: `${ROOTURL}admin/main-categories/restore/`,
   permanentDeleteMainCategory: `${ROOTURL}admin/main-categories/permanent-delete/`,
-  activeMainCategory: `${ROOTURL}admin/main-categories//activeMainCategories`,
+  activeMainCategory: `${ROOTURL}admin/main-categories/activeMainCategories`,
   listAllMainCategory: `${ROOTURL}admin/main-categories/list`,
   // ---------------- Brand endpoints ----------------
   addBrand: `${ROOTURL}brands/`,
@@ -118,6 +118,14 @@ const API = {
   deleteConfig: `${ROOTURL}admin/config/deleteConfig/`,
   toggleConfigStatus: `${ROOTURL}admin/config/togglestatus/`,
 
+    // -------------------------- Sliders endpoints------------
+  addSlider:`${ROOTURL}admin/sliders/`,
+  listSLider:`${ROOTURL}admin/sliders/`,
+  getSliderById:`${ROOTURL}admin/sliders/getSliderById/`,
+  sliderStats:`${ROOTURL}admin/sliders/sliderStats`,
+  updateSlider:`${ROOTURL}admin/sliders/`,
+  toggleStatusSlider:`${ROOTURL}admin/sliders/`,
+  deleteSlider:`${ROOTURL}admin/sliders/`,
   // Page endpoints
   addPage: `${ROOTURL}admin/page/`,
   listPage: `${ROOTURL}admin/page/`,

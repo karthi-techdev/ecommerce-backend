@@ -65,7 +65,7 @@ const handleSubCategorySearch = (input: string) => {
       formData.mainCategoryId,
       1,
       5,
-      input || '',   // 🔥 important
+      input || '',  
       false
     );
   }, 500);
@@ -299,7 +299,7 @@ useEffect(() => {
       subHasMore: true
     });
 
-    prevMainCategoryId.current = null; // 🔥 IMPORTANT FIX
+    prevMainCategoryId.current = null; 
 
     setFormData(prev => ({
       ...prev,
@@ -505,7 +505,7 @@ if (name === "mainCategoryId" && !value) {
               value={formData[field.name as keyof CategoryFormData]}
               onChange={handleChange}
               error={errors[field.name as keyof ValidationErrors]}
-              isRequired={field.required}
+              
             />
           ))}
 
