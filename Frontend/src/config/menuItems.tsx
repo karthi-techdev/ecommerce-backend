@@ -1,4 +1,4 @@
-import { FiPieChart, FiSettings, FiHelpCircle,FiTruck, FiUsers,FiLayers,FiTag,FiMail,FiList,FiSliders , FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
+import { FiPieChart, FiSettings, FiFileText,FiHelpCircle,FiTruck, FiUsers,FiLayers,FiTag,FiMail,FiList,FiSliders , FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
 
 import { BiCategory, BiBook } from "react-icons/bi";
 import type { ReactNode } from 'react';
@@ -75,17 +75,20 @@ const menuItems: MenuItem[] = [
   key: 'blogs',
   label: 'Manage Blogs',
   icon: <BiBook />,
-  path: '/blog',
   submenu: [
     {
       key: 'blogCategory',
-      label: 'Blog Categories',
+      label: 'Category',
       path: '/blog-category', 
       icon: <FiList />,
     },
-  
-
-
+    {
+      key: 'blog',
+      label: 'Blog',
+      path: '/blogs',
+      icon: <FiFileText />, 
+    },
+    
   ],
 },
 
@@ -148,9 +151,15 @@ const menuItems: MenuItem[] = [
 
     { 
       key: 'trash-blog',
-       label: 'Blog', 
+       label: 'BlogCategory', 
        path: '/trash/blog-category' 
     }, 
+
+      {
+        key: 'trash-blogs',
+        label: 'Blogs',
+        path: '/trash/blogs',
+      },
 
         ],
       },

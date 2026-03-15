@@ -236,6 +236,26 @@ export interface FieldConfig {
 }
 
 
+export interface BlogFormData {
+  name: string;
+  slug: string;
+  categoryId: string ;
+  description: string; 
+  isActive: boolean;
+  coverImage?: string | File;
+}
+
+export interface Blog {
+  _id: string;
+  name: string;
+  slug: string;
+  image?: string;
+  categoryId: string | { _id: string; name: string };
+  isActive: boolean;
+  coverImage?: string | File;
+}
+
+
 export type ColumnConfig<T> = {
   key: keyof T;
   label: string;

@@ -21,3 +21,8 @@ export const setProductUpload = (req: Request, res: Response, next: NextFunction
   res.locals.managementName = "products";
   next();
 };
+export const setBlogUpload = (req: Request,res: Response,next: NextFunction) => {
+  res.locals.managementName = "blog";
+  next();
+};
+

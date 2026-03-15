@@ -34,6 +34,9 @@ const BlogListPage = lazy(() => import('../pages/blogCategory/BlogListPage'));
 const BlogFormPage = lazy(() => import('../pages/blogCategory/BlogFormPage'));
 const BlogTrashPage = lazy(() => import('../pages/trash/BlogTrashPage'));
 
+const BlogsListPage = lazy(() => import('../pages/blog/BlogsListPage'));
+const BlogsFormPage = lazy(() => import('../pages/blog/BlogsFormPage'));
+const BlogsTrashPage = lazy(() => import('../pages/trash/BlogsTrashPage'));
 
 const PrivateRoute = () => {
   const { isAuthenticated } = useAuthStore();
@@ -150,14 +153,24 @@ const routes: RouteObject[] = [
 },
       
 
-{
-  path: 'blog-category',
-  children: [
-    { path: '', element: <BlogListPage /> },
-    { path: 'add', element: <BlogFormPage /> },
-    { path: 'edit/:id', element: <BlogFormPage /> },
-  ]
-},
+      {
+        path: 'blog-category',
+        children: [
+          { path: '', element: <BlogListPage /> },
+          { path: 'add', element: <BlogFormPage /> },
+          { path: 'edit/:id', element: <BlogFormPage /> },
+        ]
+      },
+
+      {
+        path: 'blogs',
+        element: <Outlet />, 
+        children: [
+          { path:'', element: <BlogsListPage /> },
+          { path: 'add', element: <BlogsFormPage /> },
+          { path: 'edit/:id', element: <BlogsFormPage /> },
+        ]
+      },
 
 
       {
@@ -212,7 +225,8 @@ const routes: RouteObject[] = [
           {path: 'mainCategory',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
           {path: 'faq',element: <FaqTrashPage />,},
-          { path: 'blog-category', element: <BlogTrashPage /> }
+          { path: 'blog-category', element: <BlogTrashPage /> },
+          { path: 'blogs', element: <BlogsTrashPage /> }, 
         ]
       }, 
       {
