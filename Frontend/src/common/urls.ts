@@ -123,6 +123,14 @@ const API = {
   deleteConfig: `${ROOTURL}admin/config/deleteConfig/`,
   toggleConfigStatus: `${ROOTURL}admin/config/togglestatus/`,
 
+    // -------------------------- Sliders endpoints------------
+  addSlider:`${ROOTURL}admin/sliders/`,
+  listSLider:`${ROOTURL}admin/sliders/`,
+  getSliderById:`${ROOTURL}admin/sliders/getSliderById/`,
+  sliderStats:`${ROOTURL}admin/sliders/sliderStats`,
+  updateSlider:`${ROOTURL}admin/sliders/`,
+  toggleStatusSlider:`${ROOTURL}admin/sliders/`,
+  deleteSlider:`${ROOTURL}admin/sliders/`,
   // Page endpoints
   addPage: `${ROOTURL}admin/page/`,
   listPage: `${ROOTURL}admin/page/`,

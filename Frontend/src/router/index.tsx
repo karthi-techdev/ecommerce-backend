@@ -25,6 +25,7 @@ import SubCategoryListTemplate from '@/components/templates/subcategory/Subcateg
 import SubCategoryFormTemplate from '@/components/templates/subcategory/SubcategoryFormTemplate';
 import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
 import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
+import AdminForgetPasswordTemplate from '../components/templates/loginAuth/adminForgetPassword'
 import CouponListTemplate from '../components/templates/coupon/CouponListTemplate';
 import CouponFormTemplate from '../components/templates/coupon/CouponFormTemplate';
 
@@ -38,6 +39,8 @@ import OrderListTemplate from '@/components/templates/order/orderListTemplate';
 import ProductListTemplate from '@/components/templates/products/ProductsListTemplate';
 import ProductFormTemplate from '@/components/templates/products/ProductsFormTemplate';
 import ProductTrashListTemplate from '@/components/templates/trash/ProductsTrash/ProductsTrashListTemplate';
+import SliderListTemplate from '../components/templates/slider/SliderListTemplate';
+import SliderFormTemplate from '../components/templates/slider/SliderFormTemplate'
 
 import BlogCategoryListTemplate from '@/components/templates/blogCategory/BlogCategoryListTemplate';
 import BlogCategoryFormTemplate from '@/components/templates/blogCategory/BlogCategoryFormTemplate';
@@ -58,6 +61,10 @@ export const router = createBrowserRouter([
   {
         path: '/login',
         element: <AdminLoginTemplate />,
+      },
+      {
+        path:'/forgetPassword',
+        element:<AdminForgetPasswordTemplate/>
       },
 
   {
@@ -141,6 +148,21 @@ export const router = createBrowserRouter([
         ],
       },
       {
+        path: 'slider',
+        children: [
+          { path: '', element: <SliderListTemplate /> },
+           { path: 'add', element: <SliderFormTemplate /> },
+          { path: 'edit/:id', element: <SliderFormTemplate /> },
+        ],
+      },
+      {
+  path: 'coupon',
+  children: [
+    { path: '', element: <CouponListTemplate /> },
+    { path: 'add', element: <CouponFormTemplate /> },
+    { path: 'edit/:id', element: <CouponFormTemplate /> },
+  ],
+},{
         path: 'coupon',
         children: [
           { path: '', element: <CouponListTemplate /> },

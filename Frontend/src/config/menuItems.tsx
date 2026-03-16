@@ -5,7 +5,7 @@ import { FiSettings,FiTruck,FiFileText,FiLayers,FiTag,FiMail,FiList,FiSliders , 
 import { BiSolidOffer } from "react-icons/bi";
 import { BiCategory, BiBook } from "react-icons/bi";
 import type { ReactNode } from 'react';
-
+import { SlidersHorizontal,Settings2  } from 'lucide-react';
 
 export interface SubMenuItem {
   key: string;
@@ -59,11 +59,22 @@ const menuItems: MenuItem[] = [
   {
     key: 'config',
     label: 'Config',
-    icon: <FiSliders />,
+    icon: <Settings2 />,
     path: '/config',
   },
   
   {
+    key: 'slider',
+    label: 'Slider',
+    icon: <SlidersHorizontal />,
+    path: '/slider',
+  },
+  {
+    key: 'product',
+    label: 'Products',
+    icon: <FiShoppingCart />,
+    path: '/products',},
+    {
     key: 'coupon',
     label: 'Coupon',
     icon: <FiLayers />,
@@ -77,12 +88,6 @@ const menuItems: MenuItem[] = [
     icon: <PiShoppingCartLight />,
     path: '/orders',
   },
-  {
-  key: 'coupon',
-  label: 'Coupon',
-  icon: <FiLayers />,
-  path: '/coupon',
-},
 
 {
   key: 'blogs',
