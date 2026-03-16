@@ -2,6 +2,7 @@ import { create } from "zustand";
 import axiosInstance from "../components/utils/axios";
 import type { BlogCategory } from "../types/common";
 import ImportedURL from "../common/urls";
+import { useBlogStore } from "./blogStore";   // ✅ IMPORTANT
 
 const { API } = ImportedURL;
 
@@ -17,10 +18,25 @@ interface BlogCategoryState {
   totalActive: number;
   totalInactive: number;
 
-  fetchBlogCategories: (page?: number, limit?: number, filter?: "total" | "active" | "inactive") => Promise<void>;
+  fetchBlogCategories: (
+    page?: number,
+    limit?: number,
+    filter?: "total" | "active" | "inactive"
+  ) => Promise<void>;
+
   fetchTrashBlogCategories: (page?: number, limit?: number) => Promise<void>;
-  addBlogCategory: (data: { name: string; slug: string; isActive: boolean }) => Promise<void>;
-  updateBlogCategory: (id: string, data: { name: string; slug: string; isActive: boolean }) => Promise<void>;
+
+  addBlogCategory: (data: {
+    name: string;
+    slug: string;
+    isActive: boolean;
+  }) => Promise<void>;
+
+  updateBlogCategory: (
+    id: string,
+    data: { name: string; slug: string; isActive: boolean }
+  ) => Promise<void>;
+
   softDeleteBlogCategory: (id: string) => Promise<void>;
   restoreBlogCategory: (id: string) => Promise<void>;
   deleteBlogCategoryPermanently: (id: string) => Promise<void>;
@@ -39,57 +55,59 @@ export const useBlogCategoryStore = create<BlogCategoryState>((set, get) => ({
   totalActive: 0,
   totalInactive: 0,
 
- fetchBlogCategories: async (page = 1, limit = 10, filter = "total") => {
-  try {
-    set({ loading: true });
-    const params: any = { page, limit };
-    if (filter !== "total") params.status = filter;
+  fetchBlogCategories: async (page = 1, limit = 10, filter = "total") => {
+    try {
+      set({ loading: true });
 
-    const res = await axiosInstance.get(API.listBlogCategory, { params });
-    const { data, meta } = res.data.data;
+      const params: any = { page, limit };
+      if (filter !== "total") params.status = filter;
 
-    set({
-      blogCategories: data,
-      currentPage: meta.page,
-      totalPages: meta.totalPages,
-      totalBlogCategories: meta.total,
-      totalActive: data.filter((c: BlogCategory) => c.isActive).length,
-      totalInactive: data.filter((c: BlogCategory) => !c.isActive).length,
-      loading: false,
-    });
-  } catch (error: any) {
-    set({ error: error?.response?.data?.message, loading: false });
-  }
-},
+      const res = await axiosInstance.get(API.listBlogCategory, { params });
 
- fetchTrashBlogCategories: async (page = 1, limit = 10) => {
-  try {
-    set({ loading: true, error: null });
+      const { data, meta } = res.data.data;
 
-    const res = await axiosInstance.get(API.trashBlogCategory, {
-      params: { page, limit },
-    });
+      set({
+        blogCategories: data,
+        currentPage: meta.page,
+        totalPages: meta.totalPages,
+        totalBlogCategories: meta.total,
+        totalActive: data.filter((c: BlogCategory) => c.isActive).length,
+        totalInactive: data.filter((c: BlogCategory) => !c.isActive).length,
+        loading: false,
+      });
+    } catch (error: any) {
+      set({
+        error: error?.response?.data?.message,
+        loading: false,
+      });
+    }
+  },
 
-    console.log("Trash API response:", res.data); 
+  fetchTrashBlogCategories: async (page = 1, limit = 10) => {
+    try {
+      set({ loading: true, error: null });
 
+      const res = await axiosInstance.get(API.trashBlogCategory, {
+        params: { page, limit },
+      });
 
-    const dataArray = res.data?.data?.data || res.data?.data || [];
-    const meta = res.data?.data?.meta || { page, totalPages: 1 };
+      const dataArray = res.data?.data?.data || res.data?.data || [];
+      const meta = res.data?.data?.meta || { page, totalPages: 1 };
 
-    set({
-      trashBlogCategories: dataArray,
-      currentPage: meta.page,
-      totalPages: meta.totalPages || 1,
-      loading: false,
-    });
-  } catch (err: any) {
-    console.error("Trash fetch error:", err);
-    set({
-      error: err?.response?.data?.message || "Failed to fetch trash data",
-      loading: false,
-    });
-  }
-},
+      set({
+        trashBlogCategories: dataArray,
+        currentPage: meta.page,
+        totalPages: meta.totalPages || 1,
+        loading: false,
+      });
+    } catch (err: any) {
+      set({
+        error: err?.response?.data?.message || "Failed to fetch trash data",
+        loading: false,
+      });
+    }
+  },
+
   addBlogCategory: async (data) => {
     await axiosInstance.post(API.addBlogCategory, data);
     await get().fetchBlogCategories();
@@ -100,11 +118,10 @@ export const useBlogCategoryStore = create<BlogCategoryState>((set, get) => ({
     await get().fetchBlogCategories();
   },
 
- softDeleteBlogCategory: async (id) => {
-  console.log("Deleting category ID:", id);
-  await axiosInstance.delete(`${API.softDeleteBlogCategory}${id}`);
-  await get().fetchBlogCategories();
-},
+  softDeleteBlogCategory: async (id) => {
+    await axiosInstance.delete(`${API.softDeleteBlogCategory}${id}`);
+    await get().fetchBlogCategories();
+  },
 
   restoreBlogCategory: async (id) => {
     await axiosInstance.patch(`${API.restoreBlogCategory}${id}`);
@@ -115,8 +132,52 @@ export const useBlogCategoryStore = create<BlogCategoryState>((set, get) => ({
     await axiosInstance.delete(`${API.hardDeleteBlogCategory}${id}`);
   },
 
-  toggleBlogCategoryStatus: async (id) => {
+toggleBlogCategoryStatus: async (id: string) => {
+  try {
+
+    const { blogCategories } = get();
+    const category = blogCategories.find(c => c._id === id);
+    if (!category) return;
+
+    const blogStore = useBlogStore.getState();
+
+    if (!blogStore.blogs || blogStore.blogs.length === 0) {
+      await blogStore.fetchBlogs();
+    }
+
+    const blogs = useBlogStore.getState().blogs;
+
+    if (category.isActive) {
+
+      const activeBlogExists = blogs.some(
+        (blog) =>
+          blog.categoryId &&
+          blog.categoryId._id === id &&
+          blog.isActive === true
+      );
+
+      if (activeBlogExists) {
+        throw new Error(
+          "Cannot deactivate category because active blogs exist in this category."
+        );
+      }
+
+    }
+
     await axiosInstance.patch(`${API.toggleBlogCategoryStatus}${id}`);
+
     await get().fetchBlogCategories();
-  },
+
+  } catch (error: any) {
+
+    throw new Error(
+      error?.response?.data?.message ||
+      error?.message ||
+      "Failed to update category status"
+    );
+
+  }
+},
+
+  
 }));

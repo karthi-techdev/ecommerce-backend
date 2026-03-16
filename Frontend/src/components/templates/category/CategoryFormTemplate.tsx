@@ -35,7 +35,7 @@ const CategoryFormTemplate: React.FC = () => {
 } = useSubCategoryStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
-const imageErrorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 const slugRequestId = useRef(0);
   const [searchTerm, setSearchTerm] = useState('');
 const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -44,6 +44,10 @@ const [subSearchTerm, setSubSearchTerm] = useState('');
 const prevMainCategoryId = useRef<string | null>(null);
 const [mainCategoryLabel, setMainCategoryLabel] = useState('');
 const [subCategoryLabel, setSubCategoryLabel] = useState('');
+const [imagePreview, setImagePreview] = useState<string | null>(null);
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const [imageError, setImageError] = useState<string | null>(null);
+
 const handleSubCategorySearch = (input: string) => {
   setSubSearchTerm(input);
 
@@ -65,7 +69,7 @@ const handleSubCategorySearch = (input: string) => {
       formData.mainCategoryId,
       1,
       5,
-      input || '',   // 🔥 important
+      input || '',  
       false
     );
   }, 500);
@@ -175,7 +179,7 @@ const handleMainCategorySearch = (input: string) => {
       label: 'Image',
       type: 'file',
       className: 'col-span-12',
-      previewEnabled:true,
+    
     }
   ];
   useEffect(() => {
@@ -262,7 +266,11 @@ await activeMainCategory(1, 5, '', false);
       subCategoryId: subCatId,
       image: category.image || null
     });
-
+    if (category.image && typeof category.image === 'string') {
+  setImagePreview(
+    `http://localhost:5000${category.image.startsWith('/') ? category.image : '/' + category.image}`
+  );
+}
   } catch (err) {
     console.error(err);
   }
@@ -299,7 +307,7 @@ useEffect(() => {
       subHasMore: true
     });
 
-    prevMainCategoryId.current = null; // 🔥 IMPORTANT FIX
+    prevMainCategoryId.current = null; 
 
     setFormData(prev => ({
       ...prev,
@@ -392,12 +400,27 @@ const handleChange = (e: any) => {
     [name]: undefined
   }));
 if (name === 'image') {
- setTimeout(()=>{
-   setFormData(prev => ({
-    ...prev,
-    image: value
-  }));
- },500)
+  const file = files?.[0] ?? (value instanceof File ? value : null);
+  if (!file) return;
+
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+
+    setImageError('Only JPG, PNG or WEBP images are allowed');
+    setTimeout(() => setImageError(null), 4000);
+
+    if (!id) {
+      setImagePreview(null);
+      setFormData(prev => ({ ...prev, image: null }));
+    }
+    return;
+  }
+
+  setImageError(null); // ← add this line
+  setFormData(prev => ({ ...prev, image: file }));
+  setImagePreview(URL.createObjectURL(file));
+  setErrors(prev => ({ ...prev, image: undefined }));
   return;
 }
 if (name === "mainCategoryId" && !value) {
@@ -414,6 +437,7 @@ if (name === "mainCategoryId" && !value) {
   setFormData(next);
 
   const fieldErrors = validateCategoryForm(next);
+  if(name!='image')
   setErrors(prev => ({
     ...prev,[name]: fieldErrors[name as keyof ValidationErrors]
   }));
@@ -504,12 +528,21 @@ if (name === "mainCategoryId" && !value) {
               }}
               value={formData[field.name as keyof CategoryFormData]}
               onChange={handleChange}
-              error={errors[field.name as keyof ValidationErrors]}
-              isRequired={field.required}
+error={field.name === 'image' ? imageError || errors[field.name as keyof ValidationErrors] : errors[field.name as keyof ValidationErrors]}              
             />
           ))}
 
-
+<div className="col-span-12">
+    <div className="h-24 w-24 border border-gray-300 rounded flex items-center justify-center">
+      <img
+        src={imagePreview || defaultImage}
+        className="h-full w-full object-cover rounded"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = defaultImage;
+        }}
+      />
+    </div>
+  </div>
         </div>
 
         <div className="mt-6 flex justify-end">
