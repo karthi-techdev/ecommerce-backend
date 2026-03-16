@@ -16,10 +16,9 @@ import productRoutes from "./productRoutes";
 import shipmentMethodRoutes from "./shipmentMethodsRouter";
 import testimonialRoutes from "./testimonialRoutes";
 import blogCategoryRoutes from './blogCategoryRoutes';
-import settingsRoutes from "./settingsRoutes";
-
-
 import newsLetterRoutes from "./newsLetterRoutes";
+import blogRoutes from "./blogRoutes";
+import settingsRoutes from "./settingsRoutes";
 import offerRoutes from "./offerRoutes";
 import promotionRoutes from "./promotionRoutes";
 
@@ -40,6 +39,9 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/offers", offerRoutes);
   app.use('/api/v1/admin/testimonials', testimonialRoutes)
   app.use('/api/v1/admin/blog-category', blogCategoryRoutes);
+  app.use("/api/v1/admin/testimonials", testimonialRoutes);
+  app.use("/api/v1/newsletters", newsLetterRoutes);
+  app.use("/api/v1/admin/blogs", blogRoutes);
   
   app.use("/api/v1/newsletters", newsLetterRoutes);
   app.use("/api/v1/admin/settings", settingsRoutes);
