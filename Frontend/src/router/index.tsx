@@ -48,6 +48,9 @@ import BlogTrashListPage from '@/components/templates/trash/BlogTrash/TrashBlogT
 import OfferListTemplate from '@/components/templates/offer/offerListTemplate';
 import OfferFormTemplate from '@/components/templates/offer/offerFormTemplate';
 
+import BlogListTemplate from '@/components/templates/blog/BlogListTemplate';
+import BlogFormTemplate from '@/components/templates/blog/BlogFormTemplate';
+import BlogTrashTemplate from '@/components/templates/trash/BlogsTrash/BlogTrashTemplate';
 
 import PromotionsListTemplate from '../components/templates/promotions/PromotionsListTemplate';
 import PromotionsFormTemplate from '../components/templates/promotions/PromotionsFormTemplate';
@@ -178,6 +181,17 @@ export const router = createBrowserRouter([
       },
 
       {
+      path: 'blogs',                 
+      children: [
+    { index:true, element: <BlogListTemplate /> },     
+    { path: 'add', element: <BlogFormTemplate /> },  
+    { path: 'edit/:id', element: <BlogFormTemplate /> }, 
+    { path: 'trash', element: <BlogTrashTemplate /> },
+  ]
+},
+
+
+      {
         path: 'subcategory',
         children: [
           { path: '', element: <SubCategoryListTemplate />, },
@@ -255,7 +269,10 @@ export const router = createBrowserRouter([
           { path: 'products', element: <ProductTrashListTemplate /> }, 
 
            { path: 'blog-category', 
-            element: <BlogTrashListPage /> }
+            element: <BlogTrashListPage /> },
+
+            { path: 'blogs', element: 
+            <BlogTrashTemplate /> },
         ],
       },
 

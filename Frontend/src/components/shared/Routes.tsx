@@ -38,6 +38,9 @@ const BlogTrashPage = lazy(() => import('../pages/trash/BlogTrashPage'));
 const OfferListPage = lazy(() => import('../pages/offer/offerListPage'));
 const OfferFormPage = lazy(() => import('../pages/offer/offerFormPage'));
 
+const BlogsListPage = lazy(() => import('../pages/blog/BlogsListPage'));
+const BlogsFormPage = lazy(() => import('../pages/blog/BlogsFormPage'));
+const BlogsTrashPage = lazy(() => import('../pages/trash/BlogsTrashPage'));
 const PromotionsListPage = lazy(() => import('../pages/promotions/PromotionsListPage'));
 const PromotionsFormPage = lazy(() => import('../pages/promotions/PromotionsFormPage'));
 
@@ -187,14 +190,24 @@ const routes: RouteObject[] = [
 },
       
 
-{
-  path: 'blog-category',
-  children: [
-    { path: '', element: <BlogListPage /> },
-    { path: 'add', element: <BlogFormPage /> },
-    { path: 'edit/:id', element: <BlogFormPage /> },
-  ]
-},
+      {
+        path: 'blog-category',
+        children: [
+          { path: '', element: <BlogListPage /> },
+          { path: 'add', element: <BlogFormPage /> },
+          { path: 'edit/:id', element: <BlogFormPage /> },
+        ]
+      },
+
+      {
+        path: 'blogs',
+        element: <Outlet />, 
+        children: [
+          { path:'', element: <BlogsListPage /> },
+          { path: 'add', element: <BlogsFormPage /> },
+          { path: 'edit/:id', element: <BlogsFormPage /> },
+        ]
+      },
 
 
       {
@@ -258,7 +271,8 @@ const routes: RouteObject[] = [
           {path: 'mainCategory',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
           {path: 'faq',element: <FaqTrashPage />,},
-          { path: 'blog-category', element: <BlogTrashPage /> }
+          { path: 'blog-category', element: <BlogTrashPage /> },
+          { path: 'blogs', element: <BlogsTrashPage /> }, 
         ]
       }, 
       {

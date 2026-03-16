@@ -183,6 +183,18 @@ const API = {
     toggleBlogCategoryStatus: `${ROOTURL}admin/blog-category/toggleStatus/`,
     trashBlogCategory: `${ROOTURL}admin/blog-category/trash`,
     checkDuplicateBlogCategory: `${ROOTURL}admin/blog-category/check-duplicate`,
+
+      //  Blog endpoints
+   addBlog: `${ROOTURL}admin/blogs/`,
+  listBlog: `${ROOTURL}admin/blogs/`,
+  getBlog: (id: string) => `${ROOTURL}admin/blogs/get/${id}`,
+  updateBlog: (id: string) => `${ROOTURL}admin/blogs/update/${id}`,
+  softDeleteBlog: (id: string) => `${ROOTURL}admin/blogs/delete/${id}`,
+  trashBlog: `${ROOTURL}admin/blogs/trash`,
+  toggleBlogStatus: (id: string) => `${ROOTURL}admin/blogs/status/${id}`,
+  restoreBlog: (id: string) => `${ROOTURL}admin/blogs/restore/${id}`,
+  permanentDelete: (id: string) => `${ROOTURL}admin/blogs/permanentDelete/${id}`,
+  checkDuplicate: `${ROOTURL}admin/blogs/check-duplicate`,
     
   // ---------- Promotions endpoints ----------
   addPromotions: `${ROOTURL}admin/promotions`,

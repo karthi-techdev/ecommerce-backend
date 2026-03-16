@@ -1,5 +1,6 @@
+
 import { PiShoppingCartLight } from "react-icons/pi";
-import { FiSettings,FiTruck,FiLayers,FiTag,FiMail,FiList,FiSliders , FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
+import { FiSettings,FiTruck,FiFileText,FiLayers,FiTag,FiMail,FiList,FiSliders , FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
 
 import { BiSolidOffer } from "react-icons/bi";
 import { BiCategory, BiBook } from "react-icons/bi";
@@ -80,23 +81,6 @@ const menuItems: MenuItem[] = [
     path: '/coupon',
   },
 
-  {
-    key: 'blogs',
-    label: 'Manage Blogs',
-    icon: <BiBook />,
-    path: '/blog',
-    submenu: [
-      {
-        key: 'blogCategory',
-        label: 'Blog Categories',
-        path: '/blog-category',
-        icon: <FiList />,
-      },
-
-
-
-    ],
-  },
 
   {
     key: 'orders',
@@ -104,7 +88,29 @@ const menuItems: MenuItem[] = [
     icon: <PiShoppingCartLight />,
     path: '/orders',
   },
-  {
+
+{
+  key: 'blogs',
+  label: 'Manage Blogs',
+  icon: <BiBook />,
+  submenu: [
+    {
+      key: 'blogCategory',
+      label: 'Category',
+      path: '/blog-category', 
+      icon: <FiList />,
+    },
+    {
+      key: 'blog',
+      label: 'Blog',
+      path: '/blogs',
+      icon: <FiFileText />, 
+    },
+    
+  ],
+},
+
+{
     key: 'offer',
     label: 'Offers',
     icon: <PiShoppingCartLight />,
@@ -184,13 +190,19 @@ const menuItems: MenuItem[] = [
         label: 'Faq',
         path: '/trash/faq'
       },
-
-      {
-        key: 'trash-blog',
-        label: 'Blog',
+       {
+          key: 'trash-blog',
+        label: 'Blog Category',
         path: '/trash/blog-category'
       },
 
+       {
+        key: 'trash-blogs',
+        label: 'Blogs',
+        path: '/trash/blogs',
+      },
+
+    
     ],
   },
 ];
