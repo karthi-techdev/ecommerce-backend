@@ -154,6 +154,8 @@ const API = {
   toggleProductStatus: `${ROOTURL}admin/products/toggleStatus/`,
   trashProducts: `${ROOTURL}admin/products/trash`,
   checkProductSlug: `${ROOTURL}admin/products/checkSlugExist`,
+  filterProducts: `${ROOTURL}products/filter`,
+  newProducts: `${ROOTURL}products/new`,
   // Order endpoints
   listOrder: `${ROOTURL}admin/orders/`,
   getOrderById: `${ROOTURL}admin/orders/`,
