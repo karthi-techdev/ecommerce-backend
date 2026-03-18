@@ -39,7 +39,7 @@ const SubCategoryFormTemplate: React.FC = () => {
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-
+  const [selectedMainCategoryName, setSelectedMainCategoryName] = useState<any>(null);
   const imageErrorDebounce = useRef<any>(null);
   const showImageErrorWithDebounce = (message: string) => {
     if (imageErrorDebounce.current) clearTimeout(imageErrorDebounce.current);
@@ -52,6 +52,7 @@ const SubCategoryFormTemplate: React.FC = () => {
   };
 
   useEffect(() => {
+    if (id) return; 
     const delay = setTimeout(() => {
       fetchActiveMainCategories(1, 5, searchTerm);
     }, 400);
@@ -60,13 +61,17 @@ const SubCategoryFormTemplate: React.FC = () => {
   }, [searchTerm]);
 
   useEffect(() => {
+  if (id) {
+    fetchActiveMainCategories(1, 50, "");
+  } else {
     fetchActiveMainCategories(1, 5, "");
-  }, []);
+  }
+}, [id]);
 
   useEffect(() => {
     if (!id) return;
     const loadData = async () => {
-      const subCategory = await fetchSubCategoryById(id);
+      const subCategory = await fetchSubCategoryById(id);  
       if (!subCategory) return;
       setFormData({
         name: subCategory.name || '',
@@ -75,6 +80,10 @@ const SubCategoryFormTemplate: React.FC = () => {
         mainCategoryId: subCategory.mainCategoryId || '',
         image: null,
       });
+      setSelectedMainCategoryName({
+    label: subCategory.mainCategory?.name,
+    value: subCategory.mainCategoryId,
+  });
       if (subCategory.image) {
         setImagePreview(
           `${ImportedURL.FILEURL}${subCategory.image.startsWith('/')? subCategory.image.slice(1) : subCategory.image}`
@@ -164,22 +173,35 @@ const SubCategoryFormTemplate: React.FC = () => {
   return (
     <div className="p-6">
       <FormHeader managementName="Sub Category" addButtonLink="/subcategory" type={id ? 'Edit' : 'Add'}/>
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <form onSubmit={handleSubmit} noValidate className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="space-y-6">
           {subCategoryFields.map(field => {
             const isRequired = ['mainCategoryId', 'name'].includes(field.name) || (!id && field.name === 'image');
             return (
               <FormField
-  key={field.name}
-  field={{
-    ...field,
-    options:
-      field.name === 'mainCategoryId'
-        ? subCategories?.filter((cat) => cat && cat._id && cat.name).map(cat => ({
-            label: cat.name,
-            value: cat._id ?? ""
-          }))
-        : undefined,
+              key={field.name}
+              field={{
+                ...field,
+              options:
+              field.name === 'mainCategoryId'
+                ? (() => {
+              const opts =
+              subCategories
+                ?.filter((cat) => cat && cat._id && cat.name)
+                .map((cat) => ({
+                  label: cat.name,
+                  value: cat._id || "",
+                })) || [];
+                    if (
+                      formData.mainCategoryId &&
+                      !opts.find((o) => o.value === formData.mainCategoryId)
+                    ) {
+                      opts.push(selectedMainCategoryName);
+                    }
+
+                    return opts;
+                  })()
+                : undefined,
 
         onMenuScrollToBottom: () => {
           if (hasMore && !loading) {
@@ -187,9 +209,7 @@ const SubCategoryFormTemplate: React.FC = () => {
           }
         },
 
-          onInputChange: (value: string) => {  
-            setSearchTerm(value);
-          }
+          onInputChange: (value: string) => { setSearchTerm(value); }
         }}
         isRequired={isRequired}
         value={
