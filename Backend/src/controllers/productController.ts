@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import productService from "../services/productService";
 import { HTTP_RESPONSE } from "../utils/httpResponse";
 import { processUpload } from "../utils/fileUpload";
+import { ProductModel } from "../models/productModel";
 class productController {
 
   async createProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -291,30 +292,78 @@ async toggleStatus(req: Request, res: Response, next: NextFunction): Promise<voi
   }
 }
 
-async getAllTrash(req: Request, res: Response, next: NextFunction): Promise<void> {
-  try {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+  async getAllTrash(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
 
-    const result = await productService.getTrashProducts(page, limit);
+      const result = await productService.getTrashProducts(page, limit);
 
-    res.status(200).json({
-      status: HTTP_RESPONSE.SUCCESS,
-      data: {
-        data: result.data,
-        meta: {
-          total: result.meta.total,
-          totalPages: result.meta.totalPages,
-          page: result.meta.page,
-          limit: result.meta.limit
+      res.status(200).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        data: {
+          data: result.data,
+          meta: {
+            total: result.meta.total,
+            totalPages: result.meta.totalPages,
+            page: result.meta.page,
+            limit: result.meta.limit
+          }
         }
-      }
-    });
+      });
 
-  } catch (err) {
-    next(err);
+    } catch (err) {
+      next(err);
+    }
   }
-}
 
+  async getFilteredProducts(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { tag } = req.query;
+
+      let filter: any = {
+        status: "active",
+        isDeleted: false
+      };
+
+      if (tag) {
+        filter.relatedTags = tag;
+      }
+
+      const products = await ProductModel.find(filter).sort({ createdAt: -1 });
+
+      res.status(200).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        data: products
+      });
+
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getNewProducts(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      let filter: any = {
+        status: "active",
+        isDeleted: false
+      };
+
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      filter.createdAt = { $gte: sevenDaysAgo };
+
+      const products = await ProductModel.find(filter).sort({ createdAt: -1 });
+
+      res.status(200).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        data: products
+      });
+
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 export default new productController();
