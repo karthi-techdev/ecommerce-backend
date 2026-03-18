@@ -6,13 +6,16 @@ import TableHeader from '../../molecules/TableHeader';
 import Loader from '../../atoms/Loader';
 import Pagination from '../../atoms/Pagination';
 import { useBlogCategoryStore } from '../../../stores/blogCategoryStore';
+import { useBlogStore } from '../../../stores/blogStore';
 import { ToggleLeft, ToggleRight, Pencil, Trash2, List, CheckCircle, XCircle } from 'lucide-react';
 import { PAGINATION_CONFIG } from '../../../constants/pagination';
 
 type FilterType = 'total' | 'active' | 'inactive';
 
 const BlogCategoryListTemplate: React.FC = () => {
+
   const navigate = useNavigate();
+
   const {
     blogCategories,
     fetchBlogCategories,
@@ -26,14 +29,18 @@ const BlogCategoryListTemplate: React.FC = () => {
     totalInactive,
   } = useBlogCategoryStore();
 
+  const { blogs, fetchBlogs } = useBlogStore();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('total');
 
   useEffect(() => {
     fetchBlogCategories(1, PAGINATION_CONFIG.DEFAULT_LIMIT, selectedFilter);
-  }, []);
+    fetchBlogs();
+  }, [selectedFilter]);
 
   const handleDelete = async (id: string, name: string) => {
+
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: `Move "${name}" to trash?`,
@@ -53,7 +60,35 @@ const BlogCategoryListTemplate: React.FC = () => {
   };
 
   const handleToggleStatus = async (id: string, name: string, isActive: boolean) => {
+
     const action = isActive ? 'deactivate' : 'activate';
+
+
+    if (isActive) {
+
+    const activeBlogExists = blogs?.some((blog) => {
+          if (!blog.categoryId) return false;
+
+          const categoryId =
+            typeof blog.categoryId === "string"
+              ? blog.categoryId
+              : blog.categoryId._id;
+
+          return categoryId === id && blog.isActive === true;
+        });
+
+      if (activeBlogExists) {
+
+        await Swal.fire({
+          icon: 'error',
+          title: 'Action Not Allowed',
+          text: `You can't deactivate "${name}" because active blogs exist in this category.`,
+        });
+
+        return;
+      }
+    }
+
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: `Do you want to ${action} "${name}"?`,
@@ -63,22 +98,31 @@ const BlogCategoryListTemplate: React.FC = () => {
     });
 
     if (result.isConfirmed) {
+
       try {
         await toggleBlogCategoryStatus(id);
         toast.success(`"${name}" ${action}d successfully`);
       } catch (err: any) {
         toast.error(err?.message || 'Failed to update status');
       }
+
     }
   };
 
-  const handlePageChange = (selectedItem: { selected: number }) =>
-    fetchBlogCategories(selectedItem.selected + 1, PAGINATION_CONFIG.DEFAULT_LIMIT, selectedFilter);
+  const handlePageChange = (selectedItem: { selected: number }) => {
+
+    fetchBlogCategories(
+      selectedItem.selected + 1,
+      PAGINATION_CONFIG.DEFAULT_LIMIT,
+      selectedFilter
+    );
+  };
 
   if (loading) return <Loader />;
 
   return (
     <div className="p-6">
+
       <TableHeader
         managementName="Blog Category"
         searchTerm={searchTerm}
@@ -116,69 +160,132 @@ const BlogCategoryListTemplate: React.FC = () => {
       />
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 mt-4 overflow-x-auto">
+
         <table className="min-w-full divide-y divide-gray-200">
+
           <thead className="bg-gray-50">
+
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">S.No</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Slug</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                S.No
+              </th>
+
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Name
+              </th>
+
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Slug
+              </th>
+
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Status
+              </th>
+
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Actions
+              </th>
+
             </tr>
+
           </thead>
+
           <tbody className="bg-white divide-y divide-gray-200">
+
             {blogCategories.length === 0 ? (
+
               <tr>
                 <td colSpan={5} className="text-center text-gray-400 py-4">
                   No data to display.
                 </td>
               </tr>
+
             ) : (
+
               blogCategories.map((category, index) => (
+
                 <tr key={category._id}>
+
                   <td className="px-6 py-4 text-gray-700">
                     {(currentPage - 1) * PAGINATION_CONFIG.DEFAULT_LIMIT + index + 1}
                   </td>
-                  <td className="px-6 py-4 text-gray-700">{category.name || '-'}</td>
-                  <td className="px-6 py-4 text-gray-700">{category.slug || '-'}</td>
+
+                  <td className="px-6 py-4 text-gray-700">
+                    {category.name || '-'}
+                  </td>
+
+                  <td className="px-6 py-4 text-gray-700">
+                    {category.slug || '-'}
+                  </td>
+
                   <td className="px-6 py-4">
+
                     <button
-                      onClick={() => handleToggleStatus(category._id!, category.name!, category.isActive)}
+                      onClick={() =>
+                        handleToggleStatus(
+                          category._id!,
+                          category.name!,
+                          category.isActive
+                        )
+                      }
                       className="transition"
                     >
+
                       {category.isActive ? (
                         <ToggleRight size={18} className="text-green-500" />
                       ) : (
                         <ToggleLeft size={18} className="text-gray-400" />
                       )}
+
                     </button>
+
                   </td>
+
                   <td className="px-6 py-4 flex gap-2">
+
                     <button
-                      onClick={() => navigate(`/blog-category/edit/${category._id}`)}
+                      onClick={() =>
+                        navigate(`/blog-category/edit/${category._id}`)
+                      }
                       className="text-indigo-500 hover:text-indigo-700"
                     >
                       <Pencil size={16} />
                     </button>
+
                     <button
-                      onClick={() => handleDelete(category._id!, category.name!)}
+                      onClick={() =>
+                        handleDelete(category._id!, category.name!)
+                      }
                       className="text-red-500 hover:text-red-700"
                     >
                       <Trash2 size={16} />
                     </button>
+
                   </td>
+
                 </tr>
+
               ))
+
             )}
+
           </tbody>
+
         </table>
+
       </div>
 
       {totalPages > 1 && (
         <div className="flex justify-center mt-6">
-          <Pagination pageCount={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
+          <Pagination
+            pageCount={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
       )}
+
     </div>
   );
 };

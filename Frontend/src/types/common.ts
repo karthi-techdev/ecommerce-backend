@@ -35,7 +35,16 @@ export  interface Config{
   options:{key:string,value:string}[];
   status:'active'|'inactive';
 }
-
+export interface Slider{
+  _id?:string;
+  title:string;
+  image: File |string| null;
+  highlightsText:string;
+  serialNumber:Number;
+  buttonName:string;
+  buttonUrl:string;
+  status?:'active'|'inactive';
+}
 export interface MainCategory {
   _id?: string;
   name: string;
@@ -75,7 +84,6 @@ export interface Coupon {
   updatedAt?: string;
 }
 
-
 export interface SubCategory {
   _id?: string;
   name: string;
@@ -111,7 +119,10 @@ export interface Product {
   _id?: string;
   name: string;
   slug: string;
-  description: string;
+  title?: string;
+  shortDescription?: string;
+  longDescription?: string;
+  sku?: string;
   price: number;
   discountPrice: number;
   stockQuantity: number;
@@ -121,8 +132,12 @@ export interface Product {
   categoryId: PopulatedProduct;
   status: 'active' | 'inactive';
   isDeleted?: boolean;
-  images: string[];       
-  thumbnail?: string;  
+  images: string[];
+  thumbnail?: string;
+  colors?: string[];
+  sizes?: string
+  highlights?: string
+  relatedTags?: string[]
 }
 
 export interface Page {
@@ -167,7 +182,6 @@ export interface PageFormData {
   isActive?: boolean;
 }
 
-
 export interface Testimonial {
   _id?: string;
   name: string;
@@ -196,21 +210,47 @@ export interface ProductPayload {
   categoryId: string;
   status?: 'active' | 'inactive';
 }
-export interface ProductFormData {
+
+export interface Offer {
+  _id?: string;
   name: string;
-  description: string;
-  slug: string;
-  price: string;
-  discountPrice: string;
-  stockQuantity: string;
-  brandId: string;
-  mainCategoryId: string;
-  subCategoryId: string;
-  categoryId: string;
-  images: (File | string)[];
-  thumbnail: File | string | null;
+  banner: string;
+  description?: string;
+  buttonName: string;
+  products: string[] | any[]; 
+  isActive: boolean;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
 }
 
+export interface OfferProduct {
+  _id: string;
+  name: string;
+  price: number;
+  thumbnail: string;
+}
+export interface ProductFormData {
+  name: string
+  title: string
+  shortDescription?: string
+  longDescription?: string
+  sku: string
+  slug: string
+  price: number | ""
+  discountPrice: number | ""
+  stockQuantity: number | ""
+  brandId: string
+  mainCategoryId: string
+  subCategoryId: string
+  categoryId: string
+  images: (File | string)[]
+  thumbnail: File | string | null
+  colors: string[]
+  sizes?: string
+  highlights?: string
+  relatedTags: string[]
+}
 
 export type InputType =
   | 'text'
@@ -247,12 +287,14 @@ export interface FieldConfig {
   defaultValue?: any;
   onChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   dataTestId?: string;
-  accept?: string; 
+  accept?: string;
   previewEnabled?: boolean;
   withEditor?: boolean;
-  options? :{label:string , value:string}[];
+  options? :{label:string , value:string , isDisabled? : boolean}[];
+  multiple?: boolean;
   onMenuScrollToBottom?: () => void;
   onInputChange?: (value: string) => void;
+  isMulti?: boolean;
  }
 
  export interface BlogCategory {
@@ -265,8 +307,34 @@ export interface FieldConfig {
 }
 
 
+export interface BlogFormData {
+  name: string;
+  slug: string;
+  categoryId: string ;
+  description: string; 
+  isActive: boolean;
+  coverImage?: string | File;
+}
+
+export interface Blog {
+  _id: string;
+  name: string;
+  slug: string;
+  image?: string;
+  categoryId: string | { _id: string; name: string };
+  isActive: boolean;
+  coverImage?: string | File;
+}
+
+
 export type ColumnConfig<T> = {
   key: keyof T;
   label: string;
   render?: (value: any, row: T) => React.ReactNode;
 };
+export interface Promotions {
+  _id?: string;
+  name: string;
+  image?: string;
+  isActive: boolean;
+}
