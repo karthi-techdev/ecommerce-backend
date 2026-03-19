@@ -91,7 +91,9 @@ const API = {
   listActiveMainCategory: `${ROOTURL}admin/subcategory/activemain-categorylist`,
   
   
-  // ---------------- Coupon endpoints ----------------
+ // Settings endpoints
+getSettings: `${ROOTURL}admin/settings/`,
+updateSettings: `${ROOTURL}admin/settings/`,
 
   //shipmentMethods endpoints
   addShipmentMethods: `${ROOTURL}admin/shipment-methods/`,

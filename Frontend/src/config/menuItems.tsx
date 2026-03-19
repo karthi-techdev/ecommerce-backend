@@ -33,7 +33,7 @@ const menuItems: MenuItem[] = [
     label: 'Site Settings',
     icon: <FiSettings />,
     submenu: [
-      { key: 'faq', label: 'FAQ', path: '/faq' },
+      { key: 'faq', label: 'Faq', path: '/faq' },
       {
         key: 'testimonial',
         label: 'Testimonial',
@@ -123,6 +123,12 @@ const menuItems: MenuItem[] = [
         path: '/category'
       }
     ]
+  },
+  {
+    key: 'settings',
+    label: 'Settings',
+    icon: <FiSettings />,
+    path: '/settings', 
   },
   {
     key: 'manage-products',

@@ -48,8 +48,7 @@ import OfferFormTemplate from '@/components/templates/offer/offerFormTemplate';
 
 import PromotionsListTemplate from '../components/templates/promotions/PromotionsListTemplate';
 import PromotionsFormTemplate from '../components/templates/promotions/PromotionsFormTemplate';
-
-
+import SettingsManager from '../components/templates/settings/settingsManager';
 
 export const router = createBrowserRouter([
   {
@@ -197,7 +196,10 @@ export const router = createBrowserRouter([
           },
         ],
       },
-      
+      {
+        path: 'settings',
+        element: <SettingsManager />,
+      },
       {
         path: 'mainCategory',
         children: [
