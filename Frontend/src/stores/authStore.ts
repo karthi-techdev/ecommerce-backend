@@ -18,6 +18,7 @@ interface AuthState {
   logout: () => void;
   refreshToken: () => Promise<boolean>;
   startTokenMonitor: () => void;
+  forgetPassword:(email:string)=>void;
 }
 
 const API_URL = "http://localhost:5000/api/v1/admin/auth";
@@ -109,7 +110,11 @@ export const useAuthStore = create<AuthState>((set, get) => {
         startMonitorInternal(); 
       }
     },
-
+    forgetPassword:async(email:string)=>{
+     const res = await axios.post(`${API_URL}/forgetPassword`, {email});
+      console.log("Email data",email)
+      
+    },
     refreshToken: async () => {
       try {
         const token = localStorage.getItem("adminToken");

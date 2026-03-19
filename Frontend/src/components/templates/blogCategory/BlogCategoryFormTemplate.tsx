@@ -117,21 +117,11 @@ const BlogCategoryFormTemplate: React.FC = () => {
           />
         </div>
 
-        <div className="flex items-center space-x-2">
-          <label htmlFor="isActive" className="text-gray-700 font-medium">Active</label>
-          <input
-            id="isActive"
-            type="checkbox"
-            checked={formData.isActive}
-            onChange={e => handleChange('isActive', e.target.checked)}
-          />
-        </div>
-
         <div className="flex justify-end">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+            className="px-4 py-2 bg-amber-600 text-white rounded-md  disabled:opacity-50"
           >
             {isSubmitting ? 'Saving...' : isEditMode ? 'Update' : 'Add'}
           </button>

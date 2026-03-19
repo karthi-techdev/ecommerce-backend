@@ -25,6 +25,7 @@ import SubCategoryListTemplate from '@/components/templates/subcategory/Subcateg
 import SubCategoryFormTemplate from '@/components/templates/subcategory/SubcategoryFormTemplate';
 import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
 import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
+import AdminForgetPasswordTemplate from '../components/templates/loginAuth/adminForgetPassword'
 import CouponListTemplate from '../components/templates/coupon/CouponListTemplate';
 import CouponFormTemplate from '../components/templates/coupon/CouponFormTemplate';
 
@@ -38,6 +39,8 @@ import OrderListTemplate from '@/components/templates/order/orderListTemplate';
 import ProductListTemplate from '@/components/templates/products/ProductsListTemplate';
 import ProductFormTemplate from '@/components/templates/products/ProductsFormTemplate';
 import ProductTrashListTemplate from '@/components/templates/trash/ProductsTrash/ProductsTrashListTemplate';
+import SliderListTemplate from '../components/templates/slider/SliderListTemplate';
+import SliderFormTemplate from '../components/templates/slider/SliderFormTemplate'
 
 import BlogCategoryListTemplate from '@/components/templates/blogCategory/BlogCategoryListTemplate';
 import BlogCategoryFormTemplate from '@/components/templates/blogCategory/BlogCategoryFormTemplate';
@@ -45,6 +48,9 @@ import BlogTrashListPage from '@/components/templates/trash/BlogTrash/TrashBlogT
 import OfferListTemplate from '@/components/templates/offer/offerListTemplate';
 import OfferFormTemplate from '@/components/templates/offer/offerFormTemplate';
 
+import BlogListTemplate from '@/components/templates/blog/BlogListTemplate';
+import BlogFormTemplate from '@/components/templates/blog/BlogFormTemplate';
+import BlogTrashTemplate from '@/components/templates/trash/BlogsTrash/BlogTrashTemplate';
 
 import PromotionsListTemplate from '../components/templates/promotions/PromotionsListTemplate';
 import PromotionsFormTemplate from '../components/templates/promotions/PromotionsFormTemplate';
@@ -54,6 +60,10 @@ export const router = createBrowserRouter([
   {
         path: '/login',
         element: <AdminLoginTemplate />,
+      },
+      {
+        path:'/forgetPassword',
+        element:<AdminForgetPasswordTemplate/>
       },
 
   {
@@ -137,6 +147,21 @@ export const router = createBrowserRouter([
         ],
       },
       {
+        path: 'slider',
+        children: [
+          { path: '', element: <SliderListTemplate /> },
+           { path: 'add', element: <SliderFormTemplate /> },
+          { path: 'edit/:id', element: <SliderFormTemplate /> },
+        ],
+      },
+      {
+  path: 'coupon',
+  children: [
+    { path: '', element: <CouponListTemplate /> },
+    { path: 'add', element: <CouponFormTemplate /> },
+    { path: 'edit/:id', element: <CouponFormTemplate /> },
+  ],
+},{
         path: 'coupon',
         children: [
           { path: '', element: <CouponListTemplate /> },
@@ -153,6 +178,17 @@ export const router = createBrowserRouter([
           { path: 'edit/:id', element: <BlogCategoryFormTemplate /> }, 
         ]
       },
+
+      {
+      path: 'blogs',                 
+      children: [
+    { index:true, element: <BlogListTemplate /> },     
+    { path: 'add', element: <BlogFormTemplate /> },  
+    { path: 'edit/:id', element: <BlogFormTemplate /> }, 
+    { path: 'trash', element: <BlogTrashTemplate /> },
+  ]
+},
+
 
       {
         path: 'subcategory',
@@ -235,7 +271,10 @@ export const router = createBrowserRouter([
           { path: 'products', element: <ProductTrashListTemplate /> }, 
 
            { path: 'blog-category', 
-            element: <BlogTrashListPage /> }
+            element: <BlogTrashListPage /> },
+
+            { path: 'blogs', element: 
+            <BlogTrashTemplate /> },
         ],
       },
 

@@ -2,9 +2,12 @@ import bcrypt from "bcrypt";
 import jwt, { Secret, SignOptions } from "jsonwebtoken";
 import adminAuthRepository from "../repositories/adminAuthRepository";
 import { IAdmin , AdminModel } from "../models/adminAuthModel";
+import newsLetterRepository from "../repositories/newsLetterRepository";
 import ValidationHelper from "../utils/validationHelper";
 import { Types } from "mongoose";
-
+import {sendEmail} from '../utils/email';
+import path from "path";
+import fs from 'fs'
 export class AdminAuthService {
 
   private readonly JWT_SECRET: Secret ;
@@ -90,6 +93,29 @@ export class AdminAuthService {
 
     return { message: "Password updated successfully" };
   }
+    async forgetPassword(email:string){
+      const error=ValidationHelper.isRequired(email,'Email')||email.trim()!==''?ValidationHelper.isValidEmail(email,"Email"):null;
+      if(error){
+        throw new Error(error.message);
+      }
+      const admin=await adminAuthRepository.findEmail(email);
+      if(!admin){
+        throw new Error("Email not exist");
+      }
+      let htmlContent="";
+      let templatePath="";
+      const isNewsLetter=await newsLetterRepository.getNewsLetterBySlug('forgot-password');
+      if(isNewsLetter && isNewsLetter.isPublished && !isNewsLetter.isDeleted){
+          templatePath=path.join(__dirname,'../templates/newsletters/forgot-password.html');
+          htmlContent=fs.readFileSync(templatePath,'utf-8');
+      }
+      else{
+        templatePath = path.join(__dirname, '../templates/default/reset-password.html');
+    htmlContent = fs.readFileSync(templatePath, 'utf-8');
+      }
+      const sendMail=sendEmail(email,"Reset your password",htmlContent);
+      return sendEmail;
+    }
 }
 
 export const adminAuthService = new AdminAuthService();

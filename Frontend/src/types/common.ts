@@ -35,7 +35,16 @@ export  interface Config{
   options:{key:string,value:string}[];
   status:'active'|'inactive';
 }
-
+export interface Slider{
+  _id?:string;
+  title:string;
+  image: File |string| null;
+  highlightsText:string;
+  serialNumber:Number;
+  buttonName:string;
+  buttonUrl:string;
+  status?:'active'|'inactive';
+}
 export interface MainCategory {
   _id?: string;
   name: string;
@@ -295,6 +304,26 @@ export interface FieldConfig {
   isActive: boolean;
   createdAt?: string;
   updatedAt?: string;
+}
+
+
+export interface BlogFormData {
+  name: string;
+  slug: string;
+  categoryId: string ;
+  description: string; 
+  isActive: boolean;
+  coverImage?: string | File;
+}
+
+export interface Blog {
+  _id: string;
+  name: string;
+  slug: string;
+  image?: string;
+  categoryId: string | { _id: string; name: string };
+  isActive: boolean;
+  coverImage?: string | File;
 }
 
 
