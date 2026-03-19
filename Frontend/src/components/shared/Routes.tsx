@@ -3,6 +3,7 @@ import type { RouteObject } from 'react-router-dom';
 import { Navigate, Outlet } from 'react-router-dom';
 import Layout from './Layout';
 import AdminLoginTemplate from '../templates/loginAuth/adminLoginTemplate';
+import AdminForgetPasswordTemplate from '../templates/loginAuth/adminForgetPassword'
 import { useAuthStore } from '../../stores/authStore';
 import NotFoundPage from '../utils/notFound';
 
@@ -34,6 +35,12 @@ const OrderListPage = lazy(()=>import('../templates/order/orderListTemplate'));
 const BlogListPage = lazy(() => import('../pages/blogCategory/BlogListPage'));
 const BlogFormPage = lazy(() => import('../pages/blogCategory/BlogFormPage'));
 const BlogTrashPage = lazy(() => import('../pages/trash/BlogTrashPage'));
+const OfferListPage = lazy(() => import('../pages/offer/offerListPage'));
+const OfferFormPage = lazy(() => import('../pages/offer/offerFormPage'));
+
+const BlogsListPage = lazy(() => import('../pages/blog/BlogsListPage'));
+const BlogsFormPage = lazy(() => import('../pages/blog/BlogsFormPage'));
+const BlogsTrashPage = lazy(() => import('../pages/trash/BlogsTrashPage'));
 const PromotionsListPage = lazy(() => import('../pages/promotions/PromotionsListPage'));
 const PromotionsFormPage = lazy(() => import('../pages/promotions/PromotionsFormPage'));
 
@@ -66,6 +73,9 @@ const TrashMainCategoryPage = lazy(
 
 const ConfigListPage = lazy(() => import('../pages/config/ConfigListPage'));
 const ConfigFormPage = lazy(() => import('../pages/config/ConfigFormPage'));
+const SliderListPage = lazy(() => import('../pages/slider/SliderListPage'));
+const SliderFormPage = lazy(() => import('../pages/slider/SliderFormPage'));
+
 const routes: RouteObject[] = [
   {
     element: <PublicRoute />,
@@ -73,7 +83,10 @@ const routes: RouteObject[] = [
       {
         path: 'login',
         element: <AdminLoginTemplate />,
-      }, 
+      }, {
+        path:'forgetPassword',
+        element:<AdminForgetPasswordTemplate/>
+      }
    ],
   },
   {
@@ -150,6 +163,14 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <ConfigFormPage /> },  
         ],
       },
+      {
+        path: 'slider',
+        children: [
+          { path: '', element: <SliderListPage /> }, 
+          { path: 'add', element: <SliderFormPage /> },   
+          { path: 'edit/:id', element: <SliderFormPage /> },  
+        ],
+      },
        {
         path: 'brand',
         children: [
@@ -169,14 +190,24 @@ const routes: RouteObject[] = [
 },
       
 
-{
-  path: 'blog-category',
-  children: [
-    { path: '', element: <BlogListPage /> },
-    { path: 'add', element: <BlogFormPage /> },
-    { path: 'edit/:id', element: <BlogFormPage /> },
-  ]
-},
+      {
+        path: 'blog-category',
+        children: [
+          { path: '', element: <BlogListPage /> },
+          { path: 'add', element: <BlogFormPage /> },
+          { path: 'edit/:id', element: <BlogFormPage /> },
+        ]
+      },
+
+      {
+        path: 'blogs',
+        element: <Outlet />, 
+        children: [
+          { path:'', element: <BlogsListPage /> },
+          { path: 'add', element: <BlogsFormPage /> },
+          { path: 'edit/:id', element: <BlogsFormPage /> },
+        ]
+      },
 
 
       {
@@ -214,6 +245,15 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <SubcategoryFormPage /> },
         ],
       },
+      {
+        
+        path: 'offer',
+        children: [
+          { path: '', element: <OfferListPage /> },
+          { path: 'add', element: <OfferFormPage /> },
+          { path: 'edit/:id', element: <OfferFormPage /> },
+        ],
+      },
        {
         path: 'shipment-methods',
         children: [
@@ -231,7 +271,8 @@ const routes: RouteObject[] = [
           {path: 'mainCategory',element: <TrashMainCategoryPage />},
           {path: 'category',element: <CategoryTrashPage />,},
           {path: 'faq',element: <FaqTrashPage />,},
-          { path: 'blog-category', element: <BlogTrashPage /> }
+          { path: 'blog-category', element: <BlogTrashPage /> },
+          { path: 'blogs', element: <BlogsTrashPage /> }, 
         ]
       }, 
       {

@@ -30,14 +30,17 @@ const LoginFormTemplate: React.FC = () => {
   const { login } = useAuthStore();
 
   const [formData, setFormData] = useState<LoginFormData>({
-    email: '',
-    password: ''
+    email: 'admin@company.com',
+    password: 'Admin@123'
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const forgetPassword=()=>{
+    navigate('/forgetPassword');
+    console.log("hiiiii")
+  }
   const handleChange = (e: { target: { name: string; value: any } }) => {
     const { name, value } = e.target;
 
@@ -154,8 +157,8 @@ const LoginFormTemplate: React.FC = () => {
                 </div>
               ))}
 
-              <div className="text-right text-xs text-amber-500 cursor-pointer hover:underline">
-                Forgot Password?
+              <div className="text-right text-xs text-amber-500 cursor-pointer hover:underline" >
+                <button type='button' className='cursor-pointer' onClick={forgetPassword}>Forgot Password?</button>
               </div>
 
               <button

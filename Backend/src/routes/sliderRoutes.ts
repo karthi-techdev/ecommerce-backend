@@ -1,0 +1,13 @@
+import { Router } from "express";
+import sliderController from '../controllers/sliderController';
+import { setSliderUpload } from "../middleware/setManagementName";
+import { upload } from "../utils/fileUpload";
+const router=Router();
+router.post("/",setSliderUpload,upload.single('image'),(req,res,next)=>{sliderController.createSlider(req,res,next)});
+router.get('/',(req,res,next)=>{sliderController.getAllSlider(req,res,next)});
+router.get('/getSliderById/:id',(req,res,next)=>{sliderController.getSliderById(req,res,next)});
+router.get('/sliderStats',(req,res,next)=>{sliderController.getSliderStats(req,res,next)});
+router.put('/:id',setSliderUpload,upload.single('image'),(req,res,next)=>{sliderController.updateSlider(req,res,next)});
+router.patch('/:id',(req,res,next)=>{sliderController.toggleStatus(req,res,next)});
+router.delete('/:id',(req,res,next)=>{sliderController.deleteSlider(req,res,next)});
+export default router;

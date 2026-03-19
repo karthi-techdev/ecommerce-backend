@@ -15,12 +15,12 @@ const promotionsFields: FieldConfig[] = [
     type: 'text',
     placeholder: 'Enter promotion name...',
   },
-   {
+  {
     name: 'image',
     label: 'Image',
     type: 'file',
     previewEnabled: true,
-     accept: "image/png, image/jpeg, image/jpg"
+    accept: "image/png,image/jpeg,image/jpg,image/webp"
   },
   // {
   //   name: 'isActive',
@@ -29,24 +29,18 @@ const promotionsFields: FieldConfig[] = [
   // },
 ];
 
-interface PromotionsFormDataLocal {
-  name: string;
-  image: File | null;
-  isActive: boolean;
-}
 
 const PromotionsFormTemplate: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { fetchPromotionsById, addPromotions, updatePromotions } = usePromotionsStore();
 
-    const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     name: '',
     image: null,
     isActive: true
   });
 
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -61,7 +55,6 @@ const PromotionsFormTemplate: React.FC = () => {
             image: `${ImportedURL.LIVEURL}${promotion.image}` || '',// keep null for file input
             isActive: promotion.isActive ?? true,
           });
-          setPreviewUrl(promotion.image ? `${ImportedURL.LIVEURL}${promotion.image}` : null);
         } else {
           toast.error('Failed to load promotion data');
         }
@@ -71,26 +64,16 @@ const PromotionsFormTemplate: React.FC = () => {
   }, [id, fetchPromotionsById]);
 
   // Handle input changes
- const handleChange = (e: { target: { name: string; value: any } }) => {
+  const handleChange = (e: { target: { name: string; value: any } }) => {
     const target = e.target;
     let newValue: any;
 
     if (target.type === 'checkbox') {
       newValue = (target as HTMLInputElement).checked;
     } else if (target.type === 'file') {
-  const fileTarget = target as HTMLInputElement;
-  const file = fileTarget.files ? fileTarget.files[0] : null;
-
-  if (file && !file.type.startsWith("image/")) {
-    toast.error("Only image files are allowed (jpg, png, jpeg)");
-    return;
-  }
-
-  newValue = file;
-
-  if (previewUrl) URL.revokeObjectURL(previewUrl);
-  setPreviewUrl(file ? URL.createObjectURL(file) : null);
-}else {
+      const fileTarget = target as HTMLInputElement;
+      newValue = fileTarget.files ? fileTarget.files[0] : null;
+    } else {
       newValue = target.value;
     }
 
@@ -144,23 +127,23 @@ const PromotionsFormTemplate: React.FC = () => {
       <form onSubmit={handleSubmit} encType="multipart/form-data" className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="space-y-6">
           {promotionsFields.map((field) => (
-     <div key={field.name}>
-    <FormField
-      field={{ ...field, className: 'w-full' }}
-      
-      value={formData[field.name as keyof PromotionsFormData]}
-      onChange={handleChange}
-      error={errors[field.name as keyof ValidationErrors]}
-    />
+            <div key={field.name}>
+              <FormField
+                field={{ ...field, className: 'w-full' }}
 
-    {/* Only show preview for file field */}
-    {/* {field.type === 'file' && previewUrl && (
+                value={formData[field.name as keyof PromotionsFormData]}
+                onChange={handleChange}
+                error={errors[field.name as keyof ValidationErrors]}
+              />
+
+              {/* Only show preview for file field */}
+              {/* {field.type === 'file' && previewUrl && (
       <div className="relative w-40 h-40 border rounded overflow-hidden flex items-center justify-center bg-gray-100 mt-2">
         <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
       </div>
     )} */}
-  </div>
-))}
+            </div>
+          ))}
         </div>
         <div className="mt-6 flex justify-end">
           <button

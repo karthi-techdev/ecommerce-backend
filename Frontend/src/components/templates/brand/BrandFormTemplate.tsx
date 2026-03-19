@@ -244,6 +244,8 @@ const handleImageChange = (
           onChange={(e) => handleChange('name', e.target.value)}
           error={errors.name}
           isRequired={brandFields[0].required}
+          
+  
         />
 
         {/* Slug */}
@@ -268,6 +270,8 @@ const handleImageChange = (
           onChange={(e) => handleChange('description', e.target.value)}
           error={errors.description}
           isRequired={brandFields[1].required}
+          
+  
         />
 
         {/* Image */}
@@ -281,6 +285,8 @@ const handleImageChange = (
           }}
           error={errors.img}
           isRequired={brandFields[2].required}
+          
+  
         />
 
         {/* Preview */}
