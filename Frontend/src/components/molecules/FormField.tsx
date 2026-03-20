@@ -16,8 +16,8 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error, is
     return (
       <div className={field.className || 'md:col-span-6'}>
         <label className="block mb-1 font-medium">
-          {field.label}
-          {isRequired && <span className="text-red-500 ml-1">*</span>}
+        {field.label} 
+        {isRequired &&  <span className="text-red-500 ml-1">*</span>}
         </label>
 
         <CustomSelect

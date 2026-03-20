@@ -21,8 +21,8 @@ const CategoryTrashPage = lazy(() => import('../pages/trash/CategoryTrashListPag
 const SubcategoryPage = lazy(() => import('../pages/subcategory/SubcategoryListPage'));
 const SubcategoryFormPage = lazy(() => import('../pages/subcategory/SubcategoryFormPage'));
 const SubcategoryTrashPage = lazy(() => import('../pages/trash/SubcategoryTrashListPage'));
-const ShipmentMethodsFormPage = lazy(()=> import ('../pages/shipmentMethods/ShipmentMethodsFormPage'))
-const ShipmentMethodsListPage = lazy(()=> import ('../pages/shipmentMethods/ShipmentMethodsListPage'))
+const ShipmentMethodsFormPage = lazy(() => import('../pages/shipmentMethods/ShipmentMethodsFormPage'))
+const ShipmentMethodsListPage = lazy(() => import('../pages/shipmentMethods/ShipmentMethodsListPage'))
 const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
 const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
 const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
@@ -30,12 +30,14 @@ const CouponListPage = lazy(() => import('../pages/coupon/CouponListPage'));
 const CouponFormPage = lazy(() => import('../pages/coupon/CouponFormPage'));
 const PageListPage = lazy(() => import('../pages/page/pageListPages'));
 const PageFormPage = lazy(() => import('../pages/page/pageFormPages'));
-const OrderListPage = lazy(()=>import('../templates/order/orderListTemplate'));
+const OrderListPage = lazy(() => import('../templates/order/orderListTemplate'));
 const BlogListPage = lazy(() => import('../pages/blogCategory/BlogListPage'));
 const BlogFormPage = lazy(() => import('../pages/blogCategory/BlogFormPage'));
 const BlogTrashPage = lazy(() => import('../pages/trash/BlogTrashPage'));
 const PromotionsListPage = lazy(() => import('../pages/promotions/PromotionsListPage'));
 const PromotionsFormPage = lazy(() => import('../pages/promotions/PromotionsFormPage'));
+const BannerOneFormPage = lazy(() => import('../pages/bannerOne/BannerFormPage'));
+const BannerTwoFormPage = lazy(() => import('../pages/bannerTwo/BannerTwoFormPage'));
 
 const PrivateRoute = () => {
   const { isAuthenticated } = useAuthStore();
@@ -73,8 +75,8 @@ const routes: RouteObject[] = [
       {
         path: 'login',
         element: <AdminLoginTemplate />,
-      }, 
-   ],
+      },
+    ],
   },
   {
     element: <PrivateRoute />,
@@ -93,39 +95,39 @@ const routes: RouteObject[] = [
           },
           {
             path: 'page',
-            children:[
+            children: [
               {
-                path:"",
-                element:<PageListPage/>
+                path: "",
+                element: <PageListPage />
               }
-              ,{
+              , {
                 path: 'add',
                 element: <PageFormPage />,
               },
-              { 
-                path: 'edit/:id', 
-                element: <PageFormPage /> 
+              {
+                path: 'edit/:id',
+                element: <PageFormPage />
               },
             ]
-          }, 
+          },
           {
             path: 'orders',
-            children:[
+            children: [
               {
-                path:"",
-                element:<OrderListPage/>
+                path: "",
+                element: <OrderListPage />
               }
-              ,{
+              , {
                 path: 'add',
                 element: <OrderListPage />,
               },
-              { 
-                path: 'edit/:id', 
-                element: <OrderListPage /> 
+              {
+                path: 'edit/:id',
+                element: <OrderListPage />
               },
             ]
-          }, 
-    
+          },
+
           {
             path: 'faq',
             children: [
@@ -133,108 +135,108 @@ const routes: RouteObject[] = [
               { path: 'add', element: <FaqFormPage /> },
               { path: 'edit/:id', element: <FaqFormPage /> },
             ],
-          }, 
+          },
           {
-        path: 'testimonial',
-        children: [
-          { path: '', element: < TestmonialPage /> },
-          { path: 'add', element: <TestimonialFormPage /> },
-          { path: 'edit/:id', element: < TestimonialFormPage /> },
-        ],
-      },
-           {
-        path: 'config',
-        children: [
-          { path: '', element: <ConfigListPage /> }, 
-          { path: 'add', element: <ConfigFormPage /> },   
-          { path: 'edit/:id', element: <ConfigFormPage /> },  
-        ],
-      },
-       {
-        path: 'brand',
-        children: [
-          { path: '', element: <BrandListPage /> }, 
-          { path: 'add', element: <BrandFormPage /> },   
-          { path: 'edit/:id', element: <BrandFormPage /> }, 
-        ],
-      },
-
-      {
-  path: 'coupon',
-  children: [
-    { path: '', element: <CouponListPage /> },
-    { path: 'add', element: <CouponFormPage /> },
-    { path: 'edit/:id', element: <CouponFormPage /> },
-  ],
-},
-      
-
-{
-  path: 'blog-category',
-  children: [
-    { path: '', element: <BlogListPage /> },
-    { path: 'add', element: <BlogFormPage /> },
-    { path: 'edit/:id', element: <BlogFormPage /> },
-  ]
-},
-
-
-      {
-        
-        path: 'products',
-        children: [
-          { path: '', element: <ProductListPage /> },
-          { path: 'add', element: <ProductFormPage /> },
-          { path: 'edit/:id', element: <ProductFormPage /> },
-        ],
-      },
-
-      {
-        path: 'mainCategory',
-        children: [
-          { path: '', element: <MainCategoryPage /> },
-          { path: 'add', element: <MainCategoryFormPage /> },
-          { path: 'edit/:id', element: <MainCategoryFormPage /> },
-        ],
-      },
-
-      {
-        path:'category',
-       children:[
-        {path:'',element:<CategoryPage/>},
-        {path:'add',element:<CategoryFormPage/>},
-        {path:'edit/:id',element:<CategoryFormPage/>},
-       ]
-      },
+            path: 'testimonial',
+            children: [
+              { path: '', element: < TestmonialPage /> },
+              { path: 'add', element: <TestimonialFormPage /> },
+              { path: 'edit/:id', element: < TestimonialFormPage /> },
+            ],
+          },
           {
-        path: 'subcategory',
-        children: [
-          { path: '', element: <SubcategoryPage /> },
-          { path: 'add', element: <SubcategoryFormPage /> },
-          { path: 'edit/:id', element: <SubcategoryFormPage /> },
-        ],
-      },
-       {
-        path: 'shipment-methods',
-        children: [
-          { path: '', element: <ShipmentMethodsListPage /> },
-          { path: 'add', element: <ShipmentMethodsFormPage /> },
-          { path: 'edit/:id', element: <ShipmentMethodsFormPage /> },
-        ],
-      },
-      {
-        path: 'trash',
-        children: [
-          { path: 'subcategory', element: <SubcategoryTrashPage /> },
-          { path: 'brand', element: <BrandTrashPage /> },
-          { path: 'products', element: <ProductTrashPage /> },
-          {path: 'mainCategory',element: <TrashMainCategoryPage />},
-          {path: 'category',element: <CategoryTrashPage />,},
-          {path: 'faq',element: <FaqTrashPage />,},
-          { path: 'blog-category', element: <BlogTrashPage /> }
-        ]
-      }, 
-      {
+            path: 'config',
+            children: [
+              { path: '', element: <ConfigListPage /> },
+              { path: 'add', element: <ConfigFormPage /> },
+              { path: 'edit/:id', element: <ConfigFormPage /> },
+            ],
+          },
+          {
+            path: 'brand',
+            children: [
+              { path: '', element: <BrandListPage /> },
+              { path: 'add', element: <BrandFormPage /> },
+              { path: 'edit/:id', element: <BrandFormPage /> },
+            ],
+          },
+
+          {
+            path: 'coupon',
+            children: [
+              { path: '', element: <CouponListPage /> },
+              { path: 'add', element: <CouponFormPage /> },
+              { path: 'edit/:id', element: <CouponFormPage /> },
+            ],
+          },
+
+
+          {
+            path: 'blog-category',
+            children: [
+              { path: '', element: <BlogListPage /> },
+              { path: 'add', element: <BlogFormPage /> },
+              { path: 'edit/:id', element: <BlogFormPage /> },
+            ]
+          },
+
+
+          {
+
+            path: 'products',
+            children: [
+              { path: '', element: <ProductListPage /> },
+              { path: 'add', element: <ProductFormPage /> },
+              { path: 'edit/:id', element: <ProductFormPage /> },
+            ],
+          },
+
+          {
+            path: 'mainCategory',
+            children: [
+              { path: '', element: <MainCategoryPage /> },
+              { path: 'add', element: <MainCategoryFormPage /> },
+              { path: 'edit/:id', element: <MainCategoryFormPage /> },
+            ],
+          },
+
+          {
+            path: 'category',
+            children: [
+              { path: '', element: <CategoryPage /> },
+              { path: 'add', element: <CategoryFormPage /> },
+              { path: 'edit/:id', element: <CategoryFormPage /> },
+            ]
+          },
+          {
+            path: 'subcategory',
+            children: [
+              { path: '', element: <SubcategoryPage /> },
+              { path: 'add', element: <SubcategoryFormPage /> },
+              { path: 'edit/:id', element: <SubcategoryFormPage /> },
+            ],
+          },
+          {
+            path: 'shipment-methods',
+            children: [
+              { path: '', element: <ShipmentMethodsListPage /> },
+              { path: 'add', element: <ShipmentMethodsFormPage /> },
+              { path: 'edit/:id', element: <ShipmentMethodsFormPage /> },
+            ],
+          },
+          {
+            path: 'trash',
+            children: [
+              { path: 'subcategory', element: <SubcategoryTrashPage /> },
+              { path: 'brand', element: <BrandTrashPage /> },
+              { path: 'products', element: <ProductTrashPage /> },
+              { path: 'mainCategory', element: <TrashMainCategoryPage /> },
+              { path: 'category', element: <CategoryTrashPage />, },
+              { path: 'faq', element: <FaqTrashPage />, },
+              { path: 'blog-category', element: <BlogTrashPage /> }
+            ]
+          },
+          {
             path: 'newsLetters',
             children: [
               { path: '', element: <NewsLetterPage /> },
@@ -249,7 +251,25 @@ const routes: RouteObject[] = [
               { path: 'add', element: <PromotionsFormPage /> },
               { path: 'edit/:id', element: <PromotionsFormPage /> },
             ],
-          }, 
+          },
+          {
+            path: 'banners',
+            children: [
+              {
+                index: true,
+                element: <Navigate to="banner-one?tab=banner-one" replace />
+              },
+              {
+                path: 'banner-one',
+                element: <BannerOneFormPage />
+              },
+              {
+                path: 'banner-two',
+                element: <BannerTwoFormPage />
+              }
+            ]
+          }
+
         ],
       },
     ],
