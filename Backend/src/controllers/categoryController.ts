@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import categoryService from '../services/categoryServices';
 import { HTTP_RESPONSE } from "../utils/httpResponse";
-import { MainCategoryModel } from "../models/mainCategoryModel";
-import { SubCategoryModel } from "../models/subCategoryModel";
 class categoryController {
     async createCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {

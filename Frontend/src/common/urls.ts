@@ -62,17 +62,20 @@ const API = {
   permanentDeleteMainCategory: `${ROOTURL}admin/main-categories/permanent-delete/`,
   activeMainCategory: `${ROOTURL}admin/main-categories/activeMainCategories`,
   listAllMainCategory: `${ROOTURL}admin/main-categories`,
+  
   // ---------------- Brand endpoints ----------------
-  addBrand: `${ROOTURL}brands/`,
-  listBrand: `${ROOTURL}brands/`,
-  getBrand: `${ROOTURL}brands/getBrandById/`,
-  updateBrand: `${ROOTURL}brands/updateBrand/`,
-  softDeleteBrand: `${ROOTURL}brands/softDeleteBrand/`,
-  restoreBrand: `${ROOTURL}brands/restore`,
-  hardDeleteBrand: `${ROOTURL}brands/permanentDelete`,
-  toggleBrandStatus: `${ROOTURL}brands/togglestatus`,
-  trashBrands: `${ROOTURL}brands/trash`,
-  checkDuplicateBrand: `${ROOTURL}brands/check-duplicate`,
+  addBrand: `${ROOTURL}admin/brands/`,
+  listBrand: `${ROOTURL}admin/brands/`,
+  getBrand: `${ROOTURL}admin/brands/getBrandById/`,
+  updateBrand: `${ROOTURL}admin/brands/updateBrand/`,
+  softDeleteBrand: `${ROOTURL}admin/brands/softDeleteBrand/`,
+  restoreBrand: `${ROOTURL}admin/brands/restore`, 
+  hardDeleteBrand: `${ROOTURL}admin/brands/permanentDelete`,
+  toggleBrandStatus: `${ROOTURL}admin/brands/togglestatus`,
+  trashBrands: `${ROOTURL}admin/brands/trash`,
+  checkDuplicateBrand: `${ROOTURL}admin/brands/check-duplicate`,
+
+
   //subcategory endpoints
   addSubCategory: `${ROOTURL}admin/subcategory/`,
   listSubCategory: `${ROOTURL}admin/subcategory/`,
@@ -86,6 +89,8 @@ const API = {
   listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
   subCategoryByMainCategoryId: `${ROOTURL}admin/subcategory/activeSubCategory/`,
   listActiveMainCategory: `${ROOTURL}admin/subcategory/activemain-categorylist`,
+  
+  
   // ---------------- Coupon endpoints ----------------
 
   //shipmentMethods endpoints
@@ -118,6 +123,14 @@ const API = {
   deleteConfig: `${ROOTURL}admin/config/deleteConfig/`,
   toggleConfigStatus: `${ROOTURL}admin/config/togglestatus/`,
 
+    // -------------------------- Sliders endpoints------------
+  addSlider:`${ROOTURL}admin/sliders/`,
+  listSLider:`${ROOTURL}admin/sliders/`,
+  getSliderById:`${ROOTURL}admin/sliders/getSliderById/`,
+  sliderStats:`${ROOTURL}admin/sliders/sliderStats`,
+  updateSlider:`${ROOTURL}admin/sliders/`,
+  toggleStatusSlider:`${ROOTURL}admin/sliders/`,
+  deleteSlider:`${ROOTURL}admin/sliders/`,
   // Page endpoints
   addPage: `${ROOTURL}admin/page/`,
   listPage: `${ROOTURL}admin/page/`,
@@ -146,20 +159,43 @@ const API = {
   getOrderById: `${ROOTURL}admin/orders/`,
   updateOrderStatus: `${ROOTURL}admin/orders/orderstatus`,
   updatePaymentStatus: `${ROOTURL}admin/orders/paymentstatus`,
-  deleteOrder: `${ROOTURL}admin/orders/`,
+  deleteOrder: `${ROOTURL}admin/orders/`, 
 
-  //  BlogCategory endpoints
-  addBlogCategory: `${ROOTURL}admin/blog-category/`,
-  listBlogCategory: `${ROOTURL}admin/blog-category/`,
-  getBlogCategory: `${ROOTURL}admin/blog-category/getBlogCategoryById/`,
-  updateBlogCategory: `${ROOTURL}admin/blog-category/updateBlogCategory/`,
-  softDeleteBlogCategory: `${ROOTURL}admin/blog-category/softDeleteBlogCategory/`,
-  restoreBlogCategory: `${ROOTURL}admin/blog-category/restore/`,
-  hardDeleteBlogCategory: `${ROOTURL}admin/blog-category/permanentDelete/`,
-  toggleBlogCategoryStatus: `${ROOTURL}admin/blog-category/toggleStatus/`,
-  trashBlogCategory: `${ROOTURL}admin/blog-category/trash`,
-  checkDuplicateBlogCategory: `${ROOTURL}admin/blog-category/check-duplicate`,
+  // Offer Management
+  addOffer: `${ROOTURL}admin/offers/`, 
+  listOffer: `${ROOTURL}admin/offers/`,
+  getOfferById: `${ROOTURL}admin/offers/`,
+  updateOffer: `${ROOTURL}admin/offers/`,
+  toggleOfferStatus: `${ROOTURL}admin/offers/toggle-status/`,
+  // softDeleteOffer: `${ROOTURL}admin/offer/soft/`,
+  // restoreOffer: `${ROOTURL}admin/offer/restore/`,
+  permanentDeleteOffer: `${ROOTURL}admin/offers/permanent/`,
+  checkOfferDuplicate: `${ROOTURL}admin/offers/check-duplicate`, 
 
+   //  BlogCategory endpoints
+    addBlogCategory: `${ROOTURL}admin/blog-category/`,
+    listBlogCategory: `${ROOTURL}admin/blog-category/`,
+    getBlogCategory: `${ROOTURL}admin/blog-category/getBlogCategoryById/`,
+    updateBlogCategory: `${ROOTURL}admin/blog-category/updateBlogCategory/`,
+    softDeleteBlogCategory: `${ROOTURL}admin/blog-category/softDeleteBlogCategory/`,
+    restoreBlogCategory: `${ROOTURL}admin/blog-category/restore/`,
+    hardDeleteBlogCategory: `${ROOTURL}admin/blog-category/permanentDelete/`,
+    toggleBlogCategoryStatus: `${ROOTURL}admin/blog-category/toggleStatus/`,
+    trashBlogCategory: `${ROOTURL}admin/blog-category/trash`,
+    checkDuplicateBlogCategory: `${ROOTURL}admin/blog-category/check-duplicate`,
+
+      //  Blog endpoints
+   addBlog: `${ROOTURL}admin/blogs/`,
+  listBlog: `${ROOTURL}admin/blogs/`,
+  getBlog: (id: string) => `${ROOTURL}admin/blogs/get/${id}`,
+  updateBlog: (id: string) => `${ROOTURL}admin/blogs/update/${id}`,
+  softDeleteBlog: (id: string) => `${ROOTURL}admin/blogs/delete/${id}`,
+  trashBlog: `${ROOTURL}admin/blogs/trash`,
+  toggleBlogStatus: (id: string) => `${ROOTURL}admin/blogs/status/${id}`,
+  restoreBlog: (id: string) => `${ROOTURL}admin/blogs/restore/${id}`,
+  permanentDelete: (id: string) => `${ROOTURL}admin/blogs/permanentDelete/${id}`,
+  checkDuplicate: `${ROOTURL}admin/blogs/check-duplicate`,
+    
   // ---------- Promotions endpoints ----------
   addPromotions: `${ROOTURL}admin/promotions`,
   listPromotions: `${ROOTURL}admin/promotions`,
@@ -178,6 +214,7 @@ const API = {
   updateBanners: `${ROOTURL}admin/banner/`,
 
 };
+ 
 
 const ImportedURL = { API, LIVEURL, FILEURL, SETTINGS_ID };
 export default ImportedURL;

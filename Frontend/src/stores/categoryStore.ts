@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import axiosInstance from '../components/utils/axios';
 import type { Category } from '../types/common';
 import ImportedURL from '../common/urls';
-import { data } from 'react-router-dom';
 
 const { API } = ImportedURL;
 
@@ -202,7 +201,6 @@ slugEXist: async (data: any) => {
     if (category.image instanceof File) {
       formData.append('image', category.image);
     }
-    console.log(formData,' in store');
 for (const pair of formData.entries()) {
   console.log(pair[0], pair[1]);
 }
@@ -229,7 +227,6 @@ for (const pair of formData.entries()) {
     if (category.image instanceof File) {
       formData.append('image', category.image);
     }
-    console.log('store room',category)
     if (category.status) {
       formData.append('status', category.status);
     }

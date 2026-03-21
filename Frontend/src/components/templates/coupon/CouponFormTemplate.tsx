@@ -199,6 +199,8 @@ const handleChange = (name: string, value: string | number) => {
                 value={(formData as any)[field.name]}
                 onChange={(e) => handleChange(field.name, e.target.value)}
                 error={(errors as any)[field.name]}
+                isRequired={field.required}
+
               />
             ))}
           </div>
@@ -211,6 +213,8 @@ const handleChange = (name: string, value: string | number) => {
                 value={(formData as any)[field.name]}
                 onChange={(e) => handleChange(field.name, e.target.value)}
                 error={(errors as any)[field.name]}
+                isRequired={field.required}
+
               />
             ))}
           </div>
@@ -221,6 +225,9 @@ const handleChange = (name: string, value: string | number) => {
           value={formData.description}
           onChange={(e) => handleChange("description", e.target.value)}
           error={errors.description}
+          isRequired={bottomField.required}
+
+          
         />
 
         <div className="flex justify-end">

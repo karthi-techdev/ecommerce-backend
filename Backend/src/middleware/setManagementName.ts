@@ -29,3 +29,12 @@ export const setbannerUpload = (req: Request, res: Response, next: NextFunction)
 
 
 
+export const setSliderUpload=(req:Request,res:Response,next:NextFunction)=>{
+  res.locals.managementName='sliders';
+  next();
+}
+export const setBlogUpload = (req: Request,res: Response,next: NextFunction) => {
+  res.locals.managementName = "blog";
+  next();
+};
+

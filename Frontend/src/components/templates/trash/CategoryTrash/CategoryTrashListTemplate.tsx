@@ -56,7 +56,7 @@ category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     if (result.isConfirmed) {
       try {
         await restoreCategory(categoryID);
-        
+         await trashCategory();
         toast.success('Category restored successfully!');
       } catch {
         toast.error('Failed to restore Category.');

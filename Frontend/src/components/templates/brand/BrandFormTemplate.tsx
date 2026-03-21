@@ -14,7 +14,7 @@ import { useDebounce } from '../../../components/hooks/useDebounce';
 const brandFields: FieldConfig[] = [
   { name: 'name', label: 'Name', type: 'text', placeholder: 'Enter brand name...', required: true },
   { name: 'description', label: 'Description', type: 'textarea', placeholder: 'Enter brand description...', required: true },
-  { name: 'image', label: 'Image', type: 'file', required: true },
+  { name: 'image', label: 'Image', type: 'file', required: true ,accept: 'image/jpeg,image/png,image/webp' },
 ];
 
 const BrandFormTemplate: React.FC = () => {
@@ -243,6 +243,9 @@ const handleImageChange = (
           value={formData.name}
           onChange={(e) => handleChange('name', e.target.value)}
           error={errors.name}
+          isRequired={brandFields[0].required}
+          
+  
         />
 
         {/* Slug */}
@@ -266,6 +269,9 @@ const handleImageChange = (
           value={formData.description}
           onChange={(e) => handleChange('description', e.target.value)}
           error={errors.description}
+          isRequired={brandFields[1].required}
+          
+  
         />
 
         {/* Image */}
@@ -278,6 +284,9 @@ const handleImageChange = (
             handleImageChange(file, input);
           }}
           error={errors.img}
+          isRequired={brandFields[2].required}
+          
+  
         />
 
         {/* Preview */}

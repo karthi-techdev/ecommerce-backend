@@ -17,16 +17,20 @@ import shipmentMethodRoutes from "./shipmentMethodsRouter";
 import testimonialRoutes from "./testimonialRoutes";
 import blogCategoryRoutes from "./blogCategoryRoutes";
 import promotionRoutes from "./promotionRoutes";
-
 import newsLetterRoutes from "./newsLetterRoutes";
 import bannerRoutes from "./bannerRoutes"
+import sliderRoutes from './sliderRoutes'
+import blogRoutes from "./blogRoutes";
+import settingsRoutes from "./settingsRoutes";
+import offerRoutes from "./offerRoutes";
+
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
   app.use("/api/v1/admin/faqs", faqRoutes);
   app.use("/api/v1/admin/categories", categoryRoutes);
   app.use("/api/v1/admin/main-categories", mainCategoryRoutes);
-  app.use("/api/v1/brands", brandRoutes);
+  app.use("/api/v1/admin/brands", brandRoutes);
   app.use("/api/v1/admin/subcategory", subCategoryRoutes);
   app.use("/api/v1/admin/auth", adminAuthRoutes);
   app.use("/api/v1/admin/shipment-methods", shipmentMethodRoutes);
@@ -35,10 +39,15 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/products", productRoutes);
   app.use("/api/v1/admin/page", pageRoutes);
   app.use("/api/v1/admin/orders", orderRoutes);
+  app.use("/api/v1/admin/offers", offerRoutes);
+  app.use('/api/v1/admin/testimonials', testimonialRoutes)
+  app.use('/api/v1/admin/blog-category', blogCategoryRoutes);
+  app.use("/api/v1/newsletters", newsLetterRoutes);
+  app.use("/api/v1/admin/blogs", blogRoutes);
+  app.use('/api/v1/admin/sliders',sliderRoutes)
+  app.use("/api/v1/admin/settings", settingsRoutes);
   app.use("/api/v1/admin/blog-category", blogCategoryRoutes);
   app.use("/api/v1/admin/promotions", promotionRoutes);
-  app.use("/api/v1/newsletters", newsLetterRoutes);
-  app.use("/api/v1/admin/testimonials", testimonialRoutes);
   app.use("/api/v1/admin/banner", bannerRoutes);
 
 }

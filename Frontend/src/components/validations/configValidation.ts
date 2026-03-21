@@ -20,9 +20,6 @@ export const validateConfigForm = (
 
   const errors: ConfigValidationErrors = {};
 
-  // ----------------
-  // Name Validation
-  // ----------------
   if (!data.name) {
     errors.name = 'Name is required.';
   } else if (!data.name.trim()) {
@@ -31,14 +28,8 @@ export const validateConfigForm = (
     errors.name = 'Name must be at least 3 characters.';
   }
 
-  // ----------------
-  // Options Validation
-  // ----------------
 
   const optionErrors: { key?: string; value?: string }[] = [];
-  const keysSeen = new Set<string>();
-  const valuesSeen = new Set<string>();
-
   data.options.forEach((row, index) => {
     const key = row.key.trim();
     const value = row.value.trim();

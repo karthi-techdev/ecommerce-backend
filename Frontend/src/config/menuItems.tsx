@@ -1,9 +1,11 @@
+
 import { PiShoppingCartLight } from "react-icons/pi";
-import { FiSettings, FiTruck, FiLayers, FiTag, FiMail, FiList, FiSliders, FiBriefcase, FiTrash2, FiShoppingCart } from 'react-icons/fi';
+import { FiSettings,FiTruck,FiFileText,FiLayers,FiTag,FiMail,FiList,FiSliders ,FiTool, FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
+
 import { BiSolidOffer } from "react-icons/bi";
 import { BiCategory, BiBook, BiBitcoin } from "react-icons/bi";
 import type { ReactNode } from 'react';
-
+import { SlidersHorizontal,Settings2  } from 'lucide-react';
 
 export interface SubMenuItem {
   key: string;
@@ -53,56 +55,25 @@ const menuItems: MenuItem[] = [
       },
     ],
   },
+  
   {
-    key: 'shipment-methods',
-    label: 'ShipmentMethods',
-    icon: <FiTruck />,
-    path: '/shipment-methods'
-  },
-
-  {
-    key: 'brand',
-    label: 'Brand',
-    icon: <FiTag />,
-    path: '/brand',
+    key: 'slider',
+    label: 'Slider',
+    icon: <SlidersHorizontal />,
+    path: '/slider',
   },
   {
-    key: 'config',
-    label: 'Config',
-    icon: <FiSliders />,
-    path: '/config',
-  },
-  {
-    key: 'product',
-    label: 'Products',
-    icon: <FiShoppingCart />,
-    path: '/products',
-  },
-  {
-    key: 'coupon',
-    label: 'Coupon',
-    icon: <FiLayers />,
-    path: '/coupon',
-  },
-
-  {
-    key: 'blogs',
-    label: 'Manage Blogs',
-    icon: <BiBook />,
-    path: '/blog',
-    submenu: [
-      {
-        key: 'blogCategory',
-        label: 'Blog Categories',
-        path: '/blog-category',
-        icon: <FiList />,
+        key: 'brand',
+        label: 'Brand',
+        path: '/brand',
+        icon: <FiTag />,
       },
-
-
-
-    ],
-  },
-
+      {
+        key: 'products',
+        label: 'Products',
+        path: '/products',
+        icon: <FiShoppingCart />,
+      },
 
   {
     key: 'orders',
@@ -126,6 +97,39 @@ const menuItems: MenuItem[] = [
   },
 
 
+{
+  key: 'blogs',
+  label: 'Manage Blogs',
+  icon: <BiBook />,
+  submenu: [
+    {
+      key: 'blogCategory',
+      label: 'Category',
+      path: '/blog-category', 
+      icon: <FiList />,
+    },
+    {
+      key: 'blog',
+      label: 'Blog',
+      path: '/blogs',
+      icon: <FiFileText />, 
+    },
+    {
+        key: 'shipment-methods',
+        label: 'Shipment Methods',
+        path: '/shipment-methods',
+        icon: <FiTruck />,
+      },
+    
+  ],
+},
+
+{
+    key: 'offer',
+    label: 'Offers',
+    icon: <PiShoppingCartLight />,
+    path: '/offer',
+  },
   {
     key: 'category',
     label: 'Manage Categories',
@@ -151,6 +155,26 @@ const menuItems: MenuItem[] = [
     ]
   },
   {
+    key: 'commerce-settings',
+    label: 'Commerce Settings',
+    icon: <FiTool />,
+    path: '#',
+    submenu: [
+       {
+        key: 'coupon',
+        label: 'Coupon',
+        icon: <FiLayers />,
+        path: '/coupon',
+      },
+      {
+        key: 'config',
+        label: 'Config',
+        icon: <Settings2 />,
+        path: '/config',
+      },
+    ]
+  },
+  {
     key: 'trash',
     label: 'Trash',
     icon: <FiTrash2 />,
@@ -168,24 +192,25 @@ const menuItems: MenuItem[] = [
         label: 'Category',
         path: '/trash/category'
       },
-      { key: 'trash-product', label: 'Product', path: '/trash/products' },
-      {
-        key: 'trash-category',
-        label: 'Category',
-        path: '/trash/category'
-      },
+      { key: 'trash-product', label: 'Products', path: '/trash/products' },
       {
         key: 'trash-faq',
         label: 'Faq',
         path: '/trash/faq'
       },
-
-      {
-        key: 'trash-blog',
-        label: 'Blog',
+       {
+          key: 'trash-blog',
+        label: 'Blog Category',
         path: '/trash/blog-category'
       },
 
+       {
+        key: 'trash-blogs',
+        label: 'Blogs',
+        path: '/trash/blogs',
+      },
+
+    
     ],
   },
 ];

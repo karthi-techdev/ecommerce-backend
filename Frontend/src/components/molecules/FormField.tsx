@@ -13,30 +13,51 @@ interface FormFieldProps {
 
 const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error, isRequired }) => {
   if (field.type === 'select') {
+    const isMulti = field.isMulti;
+
+    const getDisplayValue = () => {
+      if (!field.options) return isMulti ? [] : null;
+
+      if (isMulti) {
+        return field.options.filter(opt => 
+          Array.isArray(value) && value.includes(opt.value)
+        );
+      } else {
+        return field.options.find(opt => opt.value === value) || null;
+      }
+    };
+
     return (
       <div className={field.className || 'md:col-span-6'}>
-        <label className="block mb-1 font-medium">
-        {field.label} 
-        {isRequired &&  <span className="text-red-500 ml-1">*</span>}
+        <label className="block mb-1 font-medium text-gray-700">
+          {field.label} 
+          {isRequired && <span className="text-red-500 ml-1">*</span>}
         </label>
 
         <CustomSelect
+          isMulti={isMulti}
           options={field.options || []}
-          value={
-            field.options?.find(opt => opt.value === value) || null
-          }
+          value={getDisplayValue() as any} 
           placeholder={field.placeholder}
-          className={error ? "react-select-error" : ""}
+          className={error ? "border-red-500 rounded" : ""}
           onMenuScrollToBottom={field.onMenuScrollToBottom}
-          onInputChange={field.onInputChange}
-          onChange={(selected: any) =>
+          onInputChange={field.onInputChange}  
+          onChange={(selected: any) => {
+            let processedValue;
+
+            if (isMulti) {
+              processedValue = selected ? selected.map((opt: any) => opt.value) : [];
+            } else {
+              processedValue = selected ? selected.value : '';
+            }
+
             onChange?.({
               target: {
                 name: field.name,
-                value: selected ? selected.value : '',
+                value: processedValue,
               },
-            })
-          }
+            });
+          }}
         />
 
         {error && <p className="text-red-500 text-sm mt-1">{error}</p>}

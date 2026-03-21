@@ -69,6 +69,12 @@ class NewsLetterRepository {
       { new: true },
     );
   }
+  async getNewsLetterBySlug(
+   name:string
+  ): Promise<INewsLetter | null> {
+    return await NewsLetterModel.findOne({slug:name});
+  }
+
 }
 
 export default new NewsLetterRepository();
