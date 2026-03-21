@@ -29,6 +29,10 @@ export const setbannerUpload = (req: Request, res: Response, next: NextFunction)
 
 
 
+export const setSettingsUpload = (req: Request, res: Response, next: NextFunction) => {
+  res.locals.managementName = "settings";
+  next();
+};
 export const setSliderUpload=(req:Request,res:Response,next:NextFunction)=>{
   res.locals.managementName='sliders';
   next();

@@ -101,3 +101,4 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean; setIsC
 };
 
 export default Sidebar;
+

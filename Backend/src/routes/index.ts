@@ -42,7 +42,7 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/offers", offerRoutes);
   app.use('/api/v1/admin/testimonials', testimonialRoutes)
   app.use('/api/v1/admin/blog-category', blogCategoryRoutes);
-  app.use("/api/v1/newsletters", newsLetterRoutes);
+  app.use("/api/v1/admin/newsletters", newsLetterRoutes);
   app.use("/api/v1/admin/blogs", blogRoutes);
   app.use('/api/v1/admin/sliders',sliderRoutes)
   app.use("/api/v1/admin/settings", settingsRoutes);
