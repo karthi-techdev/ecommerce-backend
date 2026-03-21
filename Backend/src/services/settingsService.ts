@@ -1,49 +1,24 @@
 import settingsRepository from "../repositories/settingsRepository";
 import { ISettings } from "../models/settingsModel";
-
+ 
 class SettingsService {
-
-  private validateSettingsData(data: Partial<ISettings>) {
-
-  if (
-    data.generalSettings?.siteName !== undefined &&
-    data.generalSettings.siteName.trim() === ""
-  ) {
-    throw new Error("siteName cannot be empty");
-  }
-
-  if (
-    data.generalSettings?.email !== undefined &&
-    data.generalSettings.email.trim() === ""
-  ) {
-    throw new Error("email cannot be empty");
-  }
-
-  if (
-    data.mailConfiguration?.mailHost !== undefined &&
-    data.mailConfiguration.mailHost.trim() === ""
-  ) {
-    throw new Error("mailHost cannot be empty");
-  }
-
-}
-
-  // GET SETTINGS
   async getSettings(): Promise<ISettings | null> {
-
     return await settingsRepository.getSettings();
-
   }
 
-  // UPDATE SETTINGS
-  async updateSettings(data: Partial<ISettings>): Promise<ISettings | null> {
+  async updateSettings(payload: any): Promise<ISettings | null> {
+    if (payload.newPassword) {
+      if (!payload.currentPassword) throw new Error("Current password is required");
+      if (payload.newPassword !== payload.confirmPassword) throw new Error("Passwords do not match");
+    }
 
-    this.validateSettingsData(data);
+    const dataToSave = { ...payload };
+    delete dataToSave.currentPassword;
+    delete dataToSave.newPassword;
+    delete dataToSave.confirmPassword;
 
-    return await settingsRepository.updateSettings(data);
-
+    return await settingsRepository.updateSettings(dataToSave);
   }
-
 }
 
 export default new SettingsService();

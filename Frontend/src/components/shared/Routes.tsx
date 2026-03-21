@@ -43,6 +43,7 @@ const BlogsFormPage = lazy(() => import('../pages/blog/BlogsFormPage'));
 const BlogsTrashPage = lazy(() => import('../pages/trash/BlogsTrashPage'));
 const PromotionsListPage = lazy(() => import('../pages/promotions/PromotionsListPage'));
 const PromotionsFormPage = lazy(() => import('../pages/promotions/PromotionsFormPage'));
+const SettingsManager = lazy(() => import('../templates/settings/settingsManager'));
 
 const PrivateRoute = () => {
   const { isAuthenticated } = useAuthStore();
@@ -209,6 +210,10 @@ const routes: RouteObject[] = [
         ]
       },
 
+      {
+        path: 'settings', // Simplified path
+        element: <SettingsManager />, 
+      },
 
       {
         
