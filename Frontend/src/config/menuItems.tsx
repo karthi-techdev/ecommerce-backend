@@ -3,7 +3,7 @@ import { PiShoppingCartLight } from "react-icons/pi";
 import { FiSettings,FiTruck,FiFileText,FiLayers,FiTag,FiMail,FiList,FiSliders ,FiTool, FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
 
 import { BiSolidOffer } from "react-icons/bi";
-import { BiCategory, BiBook } from "react-icons/bi";
+import { BiCategory, BiBook, BiBitcoin } from "react-icons/bi";
 import type { ReactNode } from 'react';
 import { SlidersHorizontal,Settings2  } from 'lucide-react';
 
@@ -82,6 +82,21 @@ const menuItems: MenuItem[] = [
     path: '/orders',
   },
 
+  {
+    key: 'banners',
+    label: 'Manage Banners',
+    icon: <BiBitcoin />,
+    path: '#',
+    submenu: [
+      {
+        key: 'homepage-banners',
+        label: 'Home page Banners',
+        path: '/banners',
+      }
+    ]
+  },
+
+
 {
   key: 'blogs',
   label: 'Manage Blogs',
@@ -149,7 +164,8 @@ const menuItems: MenuItem[] = [
     key: 'manage-products',
     label: 'Manage Products',
     icon: <FiShoppingCart />,
-  },{
+  },
+  {
     key: 'commerce-settings',
     label: 'Commerce Settings',
     icon: <FiTool />,

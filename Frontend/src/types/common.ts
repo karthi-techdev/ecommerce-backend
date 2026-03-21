@@ -338,3 +338,40 @@ export interface Promotions {
   image?: string;
   isActive: boolean;
 }
+
+
+export interface IBannerone {
+  title: string;
+  subtitle: string;
+  description: string;
+  image: string;
+  buttonName: string;
+  buttonUrl: string;
+}
+
+export interface IBannertwo {
+  title: string;
+  subtitle: string;
+  description: string;
+  imageone: string;
+  imagetwo: string;
+  imagethree: string;
+  buttonName: string;
+  buttonUrl: string;
+}
+
+export interface IBanner {
+  _id?: string;
+  home_page: {
+    banner_one: IBannerone;
+    banner_two: IBannertwo;
+  };
+  updatedAt?: Date;
+}
+
+export interface BannerFormData {
+  home_page: {
+    banner_one: IBannerone;
+    banner_two: IBannertwo;
+  };
+}
