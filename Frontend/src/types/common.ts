@@ -138,6 +138,7 @@ export interface Product {
   sizes?: string
   highlights?: string
   relatedTags?: string[]
+  type: string;
 }
 
 export interface Page {
@@ -250,6 +251,7 @@ export interface ProductFormData {
   sizes?: string
   highlights?: string
   relatedTags: string[]
+  type: string
 }
 
 export type InputType =
