@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
 // Request interceptor to add the bearer token
 axiosInstance.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('adminToken');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
