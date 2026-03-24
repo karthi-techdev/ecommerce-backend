@@ -16,7 +16,7 @@ export interface ITestimonial extends Document {
 const TestimonialSchema = new Schema<ITestimonial>(
 
     {
-        name: { type: String, required: true, unique: true },
+        name: { type: String, required: true },
         designation: { type: String },
         message: { type: String, },
         image: { type: String },

@@ -7,9 +7,7 @@ class BrandController {
   //CREATE BRAND
 async createBrand(req: Request, res: Response, next: NextFunction) {
   try {
-    
-
-    const { name, slug, description } = req.body;
+const { name, slug, description } = req.body;
 
     let imagePath;
 

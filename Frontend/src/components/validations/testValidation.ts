@@ -36,9 +36,9 @@ export const validateTestimonialForm = (
     errors.message = "Message must be at least 10 characters long.";
   }
 
-  if (!isEditMode && !data.image) {
-    errors.image = 'Image is required';
-  }
+ if (!isEditMode && (!data.image || data.image === null)) {
+  errors.image = "Image is required";
+}
 
   return errors;
 };

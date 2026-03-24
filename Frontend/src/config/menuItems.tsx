@@ -3,7 +3,7 @@ import { PiShoppingCartLight } from "react-icons/pi";
 import { FiSettings,FiTruck,FiFileText,FiLayers,FiTag,FiMail,FiList,FiSliders ,FiTool, FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
 
 import { BiSolidOffer } from "react-icons/bi";
-import { BiCategory, BiBook } from "react-icons/bi";
+import { BiCategory, BiBook, BiBitcoin } from "react-icons/bi";
 import type { ReactNode } from 'react';
 import { SlidersHorizontal,Settings2  } from 'lucide-react';
 
@@ -34,7 +34,7 @@ const menuItems: MenuItem[] = [
     label: 'Site Settings',
     icon: <FiSettings />,
     submenu: [
-      { key: 'faq', label: 'FAQ', path: '/faq' },
+      { key: 'faq', label: 'Faq', path: '/faq' },
       {
         key: 'testimonial',
         label: 'Testimonial',
@@ -81,6 +81,21 @@ const menuItems: MenuItem[] = [
     icon: <PiShoppingCartLight />,
     path: '/orders',
   },
+
+  {
+    key: 'banners',
+    label: 'Manage Banners',
+    icon: <BiBitcoin />,
+    path: '#',
+    submenu: [
+      {
+        key: 'homepage-banners',
+        label: 'Home page Banners',
+        path: '/banners',
+      }
+    ]
+  },
+
 
 {
   key: 'blogs',
@@ -138,6 +153,17 @@ const menuItems: MenuItem[] = [
         path: '/category'
       }
     ]
+  },
+  {
+    key: 'settings',
+    label: 'Settings',
+    icon: <FiSettings />,
+    path: '/settings', 
+  },
+  {
+    key: 'manage-products',
+    label: 'Manage Products',
+    icon: <FiShoppingCart />,
   },
   {
     key: 'commerce-settings',

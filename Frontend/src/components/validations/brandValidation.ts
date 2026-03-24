@@ -17,11 +17,9 @@ export const validateBrandForm = (
   const errors: ValidationErrors = {};
 
   // Name validation
-  if (!data.name) {
-    errors.name = "Name is required.";
-  } else if (data.name.trim().length < 3) {
-    errors.name = "Name must be at least 3 characters long.";
-  }
+  if (!data.name || data.name.trim().length === 0) {
+  errors.name = "Name is required.";
+}
 
   // Description validation
   if (!data.description) {

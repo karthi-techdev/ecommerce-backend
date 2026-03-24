@@ -2,9 +2,26 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link id="dynamic-favicon" rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Avenstek Solutions</title>
+    
+    <script>
+      (function() {
+        try {
+          const savedFavicon = localStorage.getItem('cached_favicon');
+          if (savedFavicon) {
+            const link = document.getElementById('dynamic-favicon');
+            if (link) {
+              link.href = savedFavicon;
+              link.rel = 'icon'; 
+            }
+          }
+        } catch (e) {
+          console.error("Favicon sync error", e);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

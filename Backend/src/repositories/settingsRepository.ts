@@ -1,25 +1,35 @@
 import { SettingsModel, ISettings } from "../models/settingsModel";
 
 class SettingsRepository {
+  private flattenObject(obj: any, prefix = "") {
+    return Object.keys(obj).reduce((acc: any, k: string) => {
+      const pre = prefix.length ? prefix + "." : "";
+      if (
+        typeof obj[k] === "object" && 
+        obj[k] !== null && 
+        !Array.isArray(obj[k]) &&
+        !(obj[k] instanceof Date)
+      ) {
+        Object.assign(acc, this.flattenObject(obj[k], pre + k));
+      } else {
+        acc[pre + k] = obj[k];
+      }
+      return acc;
+    }, {});
+  }
 
-  // GET SETTINGS
   async getSettings(): Promise<ISettings | null> {
-
     return await SettingsModel.findOne();
-
   }
 
-  // UPDATE SETTINGS
-  async updateSettings(data: Partial<ISettings>): Promise<ISettings | null> {
-
-    return await SettingsModel.findOneAndUpdate( 
-      {},      //find the first document in the collection
-      data,    //new data you want to update.
-      { new: true }  //Return the updated document.
+  async updateSettings(data: any): Promise<ISettings | null> {
+    const flattenedData = this.flattenObject(data);
+    return await SettingsModel.findOneAndUpdate(
+      {},
+      { $set: flattenedData },
+      { new: true, upsert: true, runValidators: true }
     );
-
   }
-
 }
 
 export default new SettingsRepository();

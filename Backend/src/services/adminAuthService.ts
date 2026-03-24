@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
 import jwt, { Secret, SignOptions } from "jsonwebtoken";
 import adminAuthRepository from "../repositories/adminAuthRepository";
+import { IAdmin , AdminModel } from "../models/adminAuthModel";
 import newsLetterRepository from "../repositories/newsLetterRepository";
-import { IAdmin } from "../models/adminAuthModel";
 import ValidationHelper from "../utils/validationHelper";
 import { Types } from "mongoose";
 import {sendEmail} from '../utils/email';
@@ -63,6 +63,36 @@ export class AdminAuthService {
         }
         return await adminAuthRepository.getAdmin(id);
     }
+
+  async changePassword(adminId: string | Types.ObjectId, payload: any) {
+    const { currentPassword, newPassword, confirmPassword } = payload;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      throw new Error("Current, New, and Confirm passwords are required");
+    }
+
+    if (newPassword !== confirmPassword) {
+      throw new Error("New password and confirm password do not match");
+    }
+
+    const admin = await AdminModel.findById(adminId);
+    if (!admin) {
+      throw new Error("Admin not found");
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, admin.password);
+    if (!isMatch) {
+      throw new Error("The current password you entered is incorrect");
+    }
+
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    admin.password = hashedPassword;
+    await admin.save();
+
+    return { message: "Password updated successfully" };
+  }
     async forgetPassword(email:string){
       const error=ValidationHelper.isRequired(email,'Email')||email.trim()!==''?ValidationHelper.isValidEmail(email,"Email"):null;
       if(error){
@@ -89,5 +119,3 @@ export class AdminAuthService {
 }
 
 export const adminAuthService = new AdminAuthService();
- 
-
