@@ -8,6 +8,7 @@ import { Types } from "mongoose";
 import {sendEmail} from '../utils/email';
 import path from "path";
 import fs from 'fs'
+import crypto from 'crypto'
 export class AdminAuthService {
 
   private readonly JWT_SECRET: Secret ;
@@ -74,17 +75,46 @@ export class AdminAuthService {
       }
       let htmlContent="";
       let templatePath="";
+        const token = crypto.randomBytes(32).toString('hex');
+  const expires = new Date(Date.now() + 60 * 60 * 1000);
+
+  await adminAuthRepository.saveResetToken(email, token, expires);
+
+  const resetUrl = `${process.env.FRONTEND_URL?process.env.FRONTEND_URL:'http://localhost:3000'}/resetPassword?token=${token}`;
       const isNewsLetter=await newsLetterRepository.getNewsLetterBySlug('forgot-password');
-      if(isNewsLetter && isNewsLetter.isPublished && !isNewsLetter.isDeleted){
+     
+      if(isNewsLetter && isNewsLetter.isPublished && !isNewsLetter.isDeleted && isNewsLetter.slug=="forgot-password"){
           templatePath=path.join(__dirname,'../templates/newsletters/forgot-password.html');
-          htmlContent=fs.readFileSync(templatePath,'utf-8');
+          htmlContent=fs.readFileSync(templatePath,'utf-8');  
+          console.log("its here ")
       }
       else{
         templatePath = path.join(__dirname, '../templates/default/reset-password.html');
     htmlContent = fs.readFileSync(templatePath, 'utf-8');
       }
-      const sendMail=sendEmail(email,"Reset your password",htmlContent);
-      return sendEmail;
+      htmlContent = htmlContent
+    .replace('{{resetUrl}}', resetUrl)
+    .replace('{{year}}', new Date().getFullYear().toString());
+     return await sendEmail(email,"Reset your password",htmlContent);
+
+    }
+    async resetPassword(token:string,newPassword:string){
+      const tokenRequired = ValidationHelper.isRequired(token, "Reset Token");
+    if (tokenRequired) throw new Error(tokenRequired.message);
+
+    const tokenValid = ValidationHelper.isNonEmptyString(token, "Reset Token");
+    if (tokenValid) throw new Error(tokenValid.message);
+
+    const passwordRequired = ValidationHelper.isRequired(newPassword, "Password");
+    if (passwordRequired) throw new Error(passwordRequired.message);
+
+    const passwordLength = ValidationHelper.minLength(newPassword, "Password", 6);
+    if (passwordLength) throw new Error(passwordLength.message);
+      const admin = await adminAuthRepository.findResetToken(token);
+  if (!admin) throw new Error('Invalid or expired reset token');
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await adminAuthRepository.resetPassword(admin._id as string, hashedPassword);
     }
 }
 

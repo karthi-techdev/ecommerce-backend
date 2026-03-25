@@ -26,6 +26,7 @@ import SubCategoryFormTemplate from '@/components/templates/subcategory/Subcateg
 import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
 import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
 import AdminForgetPasswordTemplate from '../components/templates/loginAuth/adminForgetPassword'
+import AdminResetPasswordTemplate from '../components/templates/loginAuth/adminResetPassword'
 import CouponListTemplate from '../components/templates/coupon/CouponListTemplate';
 import CouponFormTemplate from '../components/templates/coupon/CouponFormTemplate';
 
@@ -65,6 +66,10 @@ export const router = createBrowserRouter([
       {
         path:'/forgetPassword',
         element:<AdminForgetPasswordTemplate/>
+      },
+      {
+        path:'/resetPassword',
+        element:<AdminResetPasswordTemplate/>
       },
 
   {
