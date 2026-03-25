@@ -130,7 +130,7 @@ const imageErrorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   {name: 'longDescription',label: 'Long Description',type: 'textarea',className: 'col-span-12',required: false, placeholder: 'Enter Long Description...'},
   {name: 'sku',label: 'SKU',type: 'text',className: 'col-span-6',placeholder: 'Enter SKU'},
   { name: 'price', label: 'Price', type: 'number', className: 'col-span-6', required: true, placeholder: 'Enter price' },
-  { name: 'discountPrice', label: 'Discount Price', type: 'number', className: 'col-span-6', required: true, placeholder: 'Enter discount price' },
+  { name: 'discountPrice', label: 'Discount Price', type: 'number', className: 'col-span-6', required: false, placeholder: 'Enter discount price' },
   { name: 'stockQuantity', label: 'Stock', type: 'number', className: 'col-span-6', required: true, placeholder: 'Enter stock quantity' },
   {name: 'sizes',label: 'Sizes', type: 'text',className: 'col-span-12',required: false,placeholder: 'Enter Size'},
   {name: 'highlights',label: 'Highlights',type: 'text',className: 'col-span-12',required: false,placeholder: 'Example: Waterproof,Lightweight'},

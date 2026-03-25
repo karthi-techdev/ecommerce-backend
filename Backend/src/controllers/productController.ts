@@ -3,6 +3,7 @@ import productService from "../services/productService";
 import { HTTP_RESPONSE } from "../utils/httpResponse";
 import { processUpload } from "../utils/fileUpload";
 import { ProductModel } from "../models/productModel";
+import { ConfigModel } from "../models/configModel"; 
 class productController {
 
   async createProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -319,18 +320,49 @@ async toggleStatus(req: Request, res: Response, next: NextFunction): Promise<voi
 
   async getFilteredProducts(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tag } = req.query;
-
+      const type = req.query.type as string | undefined;
+      console.log("🔥 TYPE:", type);
       let filter: any = {
         status: "active",
         isDeleted: false
       };
 
-      if (tag) {
-        filter.relatedTags = tag;
+      let sort: any = { createdAt: -1 };
+
+      const configs = await ConfigModel.find({ status: "active" });
+
+      const relatedTagsConfig = configs.find(c => c.slug === "related-tags");
+      let featuredIds: string[] = [];
+      let popularIds: string[] = [];
+      if (relatedTagsConfig) {
+        featuredIds = relatedTagsConfig.options
+          .filter(opt => opt.key === "Featured")
+          .map(opt => opt._id.toString());
+
+        popularIds = relatedTagsConfig.options
+          .filter(opt => opt.key === "Popular")
+          .map(opt => opt._id.toString());
       }
 
-      const products = await ProductModel.find(filter).sort({ createdAt: -1 });
+      console.log("🔥 featuredIds:", featuredIds);
+      console.log("🔥 popularIds:", popularIds);
+
+      if (type === "featured" && featuredIds.length > 0) {
+        filter.relatedTags = { $in: featuredIds };
+      }
+
+      if (type === "popular" && popularIds.length > 0) {
+        filter.relatedTags = { $in: popularIds };
+      }
+
+      if (type === "new") {
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        filter.createdAt = { $gte: sevenDaysAgo };
+      } 
+      console.log("🔥 FILTER:", filter);
+
+      const products = await ProductModel.find(filter).populate("categoryId", "name") .sort(sort);
 
       res.status(200).json({
         status: HTTP_RESPONSE.SUCCESS,
@@ -338,8 +370,9 @@ async toggleStatus(req: Request, res: Response, next: NextFunction): Promise<voi
       });
 
     } catch (err) {
-      next(err);
-    }
+        console.log("❌ FILTER ERROR:", err);
+        next(err);
+      }
   }
 
   async getNewProducts(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -354,7 +387,7 @@ async toggleStatus(req: Request, res: Response, next: NextFunction): Promise<voi
 
       filter.createdAt = { $gte: sevenDaysAgo };
 
-      const products = await ProductModel.find(filter).sort({ createdAt: -1 });
+      const products = await ProductModel.find(filter).populate("categoryId", "name") .sort({ createdAt: -1 });
 
       res.status(200).json({
         status: HTTP_RESPONSE.SUCCESS,
