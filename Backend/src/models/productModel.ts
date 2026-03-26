@@ -29,6 +29,7 @@ export interface IProduct extends Document {
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date | null;
+  type: 'deals' | 'topSelling' | 'hotReleases';
 }
 
 const productSchema = new Schema<IProduct>(
@@ -57,7 +58,8 @@ const productSchema = new Schema<IProduct>(
     isFeatured: { type: Boolean, default: false },
     isPopular: { type: Boolean, default: false },
     rating: { type: Number, default: 0 },
-    deletedAt: {type: Date,default: null}
+    deletedAt: {type: Date,default: null},
+    type: {type: String,enum: ["deals", "topSelling", "hotReleases"],required: true},
   },
   {
     timestamps: true

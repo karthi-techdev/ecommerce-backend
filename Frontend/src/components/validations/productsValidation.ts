@@ -12,6 +12,7 @@ export interface ProductValidationErrors {
   images?: string;
   thumbnail?: string;
   title?: string;
+  type?: string;
 }
 
 export const validateProductForm = (
@@ -82,6 +83,10 @@ export const validateProductForm = (
   else if (data.title.trim().length < 30) {
     errors.title = "Title must be minimum 30 characters";
   }
+
+  if (!data.type) {
+  errors.type = "Product type is required";
+}
   return errors;
 
   

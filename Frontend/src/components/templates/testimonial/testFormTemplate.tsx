@@ -62,7 +62,6 @@ const TestimonialFormTemplate: React.FC = () => {
   });
 
   const debouncedName = useDebounce(formData.name, 500);
-
   const [preview, setPreview] = useState<string | null>('/preview-image.jpeg');
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -116,6 +115,7 @@ const TestimonialFormTemplate: React.FC = () => {
     }
 
   }, [debouncedName, id, errors.name]);
+
 
   const handleChange = (
     name: keyof TestimonialFormData,
@@ -197,42 +197,59 @@ const TestimonialFormTemplate: React.FC = () => {
     }
   };
 
-  const handleImageChange = (
-    file: File | null,
-    inputElement?: HTMLInputElement
-  ) => {
-    if (!file) return;
+const handleImageChange = (
+  file: File | null,
+  inputElement?: HTMLInputElement
+) => {
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
 
-    if (!allowedTypes.includes(file.type)) {
+  if (!file) {
+    setErrors((prev) => ({
+      ...prev,
+      image: "Image is required",
+    }));
+    return;
+  }
 
-      setErrors((prev) => ({
-        ...prev,
-        image: 'Only JPG, PNG, or WEBP images are allowed',
-      }));
-
-      if (inputElement) inputElement.value = '';
-
-
-      setTimeout(() => {
-        setErrors((prev) => ({
-          ...prev,
-          image: undefined,
-        }));
-      }, 5000);
-
-      return;
-    }
+  if (!allowedTypes.includes(file.type)) {
 
     setErrors((prev) => ({
       ...prev,
-      image: undefined,
+      image: "Only JPG, PNG, or WEBP images are allowed",
     }));
 
-    handleChange('image', file);
-    setPreview(URL.createObjectURL(file));
-  };
+    setTimeout(() => {
+      setErrors((prev) => ({
+        ...prev,
+        image: undefined
+      }));
+    }, 5000)
+
+    setPreview("/preview-image.jpeg");
+
+    setFormData((prev) => ({
+      ...prev,
+      image: null
+    }));
+
+    if (inputElement) inputElement.value = "";
+
+    return;
+  }
+
+  setErrors((prev) => ({
+    ...prev,
+    image: undefined,
+  }));
+
+  setFormData((prev) => ({
+    ...prev,
+    image: file
+  }));
+
+  setPreview(URL.createObjectURL(file));
+};
 
   return (
     <div className="p-6">
@@ -245,6 +262,7 @@ const TestimonialFormTemplate: React.FC = () => {
 
       <form
         onSubmit={handleSubmit}
+        noValidate
         className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6"
       >
 
@@ -252,6 +270,7 @@ const TestimonialFormTemplate: React.FC = () => {
         <FormField
           field={TestimonialFields[0]}
           value={formData.name}
+          isRequired={true}
           onChange={(e) => handleChange('name', e.target.value)}
           error={errors.name}
         />
@@ -269,6 +288,7 @@ const TestimonialFormTemplate: React.FC = () => {
         <FormField
           field={TestimonialFields[2]}
           value={formData.message}
+          isRequired={true}
           onChange={(e) => handleChange('message', e.target.value)}
           error={errors.message}
         />
@@ -277,6 +297,7 @@ const TestimonialFormTemplate: React.FC = () => {
         <FormField
           field={TestimonialFields[3]}
           value={undefined}
+          isRequired={true}
           onChange={(e) => {
             const input = e.target as HTMLInputElement;
             const file = input.files?.[0] || null;
@@ -297,7 +318,6 @@ const TestimonialFormTemplate: React.FC = () => {
           />
         )}
 
- {/* Rating */}
 {/* Rating */}
 <div className="flex items-center gap-4 flex-wrap">
   <label className="text-base sm:text-lg font-medium text-gray-700">
@@ -340,7 +360,7 @@ const TestimonialFormTemplate: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+            className="px-4 py-2 bg-amber-600 text-white rounded-md disabled:opacity-50"
           >
             {isSubmitting
               ? 'Saving...'

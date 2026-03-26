@@ -83,6 +83,15 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
           setFileError(`Please upload valid file. Allowed types: ${accept}`);
           setPreview(defaultImage);
           e.target.value = ""; // reset file input
+
+
+          if (errorTimer.current) clearTimeout(errorTimer.current);
+
+          errorTimer.current = setTimeout(() => {
+            setFileError(null);
+          }, 5000);
+
+          
           return;
         }
 

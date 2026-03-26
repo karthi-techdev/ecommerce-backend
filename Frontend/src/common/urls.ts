@@ -91,7 +91,9 @@ const API = {
   listActiveMainCategory: `${ROOTURL}admin/subcategory/activemain-categorylist`,
   
   
-  // ---------------- Coupon endpoints ----------------
+ // Settings endpoints
+getSettings: `${ROOTURL}admin/settings/`,
+updateSettings: `${ROOTURL}admin/settings/`,
 
   //shipmentMethods endpoints
   addShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
@@ -210,6 +212,11 @@ const API = {
   trashPromotions: `${ROOTURL}admin/promotions/trash`,
   promotionsStats: `${ROOTURL}admin/promotions/stats`,
   checkDuplicatePromotions: `${ROOTURL}admin/promotions/check-duplicate`,
+
+  //----------banners endpoints---------
+  listBanners: `${ROOTURL}admin/banner`,
+  updateBanners: `${ROOTURL}admin/banner/`,
+
 };
  
 

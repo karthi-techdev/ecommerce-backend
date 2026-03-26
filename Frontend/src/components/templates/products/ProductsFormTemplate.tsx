@@ -75,7 +75,8 @@ const imageErrorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     categoryId: '',
 
     images: [],
-    thumbnail: null
+    thumbnail: null,
+    type: '',
   });
 
 
@@ -120,6 +121,19 @@ const imageErrorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   className: 'col-span-6 text-gray-700',
   placeholder: 'Select category',
   options: categories.map((c: any) => ({ label: c.name, value: c._id }))
+},
+{
+  name: 'type',
+  label: 'Product Type',
+  type: 'select',
+  className: 'col-span-6 text-gray-700',
+  required: true,
+  placeholder: 'Select product type',
+  options: [
+    { label: 'Deals & Outlet', value: 'deals' },
+    { label: 'Top Selling', value: 'topSelling' },
+    { label: 'Hot Releases', value: 'hotReleases' }
+  ]
 },
 
 
@@ -315,7 +329,8 @@ useEffect(() => {
         highlights: product.highlights || "",
         relatedTags: product.relatedTags || [],
         images: product.images || [],
-        thumbnail: product.thumbnail || null
+        thumbnail: product.thumbnail || null,
+        type: product.type || '',
       });
           if (mainCategoryId) {
         const res = await axiosInstance.get(`/admin/subcategory`);
@@ -606,6 +621,7 @@ const removeColor = (index: number) => {
     formPayload.append("colors", JSON.stringify(formData.colors));
     formPayload.append("sizes", formData.sizes || "");
     formPayload.append("highlights", formData.highlights || "");
+    formPayload.append("type", formData.type); 
     formData.relatedTags.forEach(tag => {
       formPayload.append("relatedTags", tag);
     });
@@ -751,7 +767,7 @@ const removeColor = (index: number) => {
             
           <h2 className="col-span-12 text-lg font-semibold mt-4">Product Relations</h2>
 
-          {productFields.filter(f => ["brandId","mainCategoryId","subCategoryId","categoryId"].includes(f.name)).map(field => (
+          {productFields.filter(f => ["type","brandId","mainCategoryId","subCategoryId","categoryId"].includes(f.name)).map(field => (
             <React.Fragment key={field.name}>
               <FormField
                 field={{ ...field }}
