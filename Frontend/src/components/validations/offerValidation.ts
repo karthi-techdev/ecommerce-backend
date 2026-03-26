@@ -3,8 +3,9 @@ export interface OfferFormData {
   banner?: string;
   description?: string;
   buttonName: string;
-  products: string[]; 
+  products: string[];
   isActive?: boolean;
+  image: File | string | null;
 }
 
 export interface OfferValidationErrors {
@@ -13,6 +14,7 @@ export interface OfferValidationErrors {
   description?: string;
   buttonName?: string;
   products?: string;
+  image?: string;
 }
 
 export const validateOfferForm = (
@@ -48,8 +50,21 @@ export const validateOfferForm = (
 
   if (!data.products || data.products.length === 0) {
     errors.products = "Please select at least one product.";
-  } else if (data.products.length > 10) { 
+  } else if (data.products.length > 10) {
     errors.products = "An offer cannot contain more than 10 products.";
+  }
+  // Image validation
+  if (!data.image) {
+    errors.image = "Offer image is required.";
+  } else if (data.image instanceof File) {
+    const maxSize = 2 * 1024 * 1024;
+    if (data.image.size > maxSize) {
+      errors.image = "Image size must be less than 2MB.";
+    }
+  } else if (typeof data.image === "string") {
+    if (!data.image.startsWith("http") && !data.image.includes("blob:")) {
+      errors.image = "Invalid image format.";
+    }
   }
 
   return errors;
