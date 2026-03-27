@@ -130,6 +130,26 @@ const menuItems: MenuItem[] = [
     icon: <PiShoppingCartLight />,
     path: '/offer',
   },
+    {
+    key: 'commerce-settings',
+    label: 'Commerce Settings',
+    icon: <FiTool />,
+    path: '#',
+    submenu: [
+       {
+        key: 'coupon',
+        label: 'Coupon',
+        icon: <FiLayers />,
+        path: '/coupon',
+      },
+      {
+        key: 'config',
+        label: 'Config',
+        icon: <Settings2 />,
+        path: '/config',
+      },
+    ]
+  },
   {
     key: 'category',
     label: 'Manage Categories',
@@ -159,31 +179,6 @@ const menuItems: MenuItem[] = [
     label: 'Settings',
     icon: <FiSettings />,
     path: '/settings', 
-  },
-  {
-    key: 'manage-products',
-    label: 'Manage Products',
-    icon: <FiShoppingCart />,
-  },
-  {
-    key: 'commerce-settings',
-    label: 'Commerce Settings',
-    icon: <FiTool />,
-    path: '#',
-    submenu: [
-       {
-        key: 'coupon',
-        label: 'Coupon',
-        icon: <FiLayers />,
-        path: '/coupon',
-      },
-      {
-        key: 'config',
-        label: 'Config',
-        icon: <Settings2 />,
-        path: '/config',
-      },
-    ]
   },
   {
     key: 'trash',

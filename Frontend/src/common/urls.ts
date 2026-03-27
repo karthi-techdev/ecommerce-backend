@@ -156,6 +156,8 @@ updateSettings: `${ROOTURL}admin/settings/`,
   toggleProductStatus: `${ROOTURL}admin/products/toggleStatus/`,
   trashProducts: `${ROOTURL}admin/products/trash`,
   checkProductSlug: `${ROOTURL}admin/products/checkSlugExist`,
+  filterProducts: `${ROOTURL}admin/products/filter`,
+  newProducts: `${ROOTURL}admin/products/new`,
   // Order endpoints
   listOrder: `${ROOTURL}admin/orders/`,
   getOrderById: `${ROOTURL}admin/orders/`,
