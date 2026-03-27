@@ -148,8 +148,8 @@ const imageErrorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   { name: 'stockQuantity', label: 'Stock', type: 'number', className: 'col-span-6', required: true, placeholder: 'Enter stock quantity' },
   {name: 'sizes',label: 'Sizes', type: 'text',className: 'col-span-12',required: false,placeholder: 'Enter Size'},
   {name: 'highlights',label: 'Highlights',type: 'text',className: 'col-span-12',required: false,placeholder: 'Example: Waterproof,Lightweight'},
-  { name: 'images', label: 'Images', type: 'file', className: 'col-span-12', required: false, multiple: true},
-  {name: 'thumbnail',label: 'Thumbnail',type: 'file',className: 'col-span-12',required: true },
+  { name: 'images', label: 'Images', type: 'file', className: 'col-span-12', required: false, multiple: true,accept: 'image/jpeg,image/png,image/webp'},
+  {name: 'thumbnail',label: 'Thumbnail',type: 'file',className: 'col-span-12',required: true,accept: 'image/jpeg,image/png,image/webp' },
 ], [brands, mainCategories, subCategories, categories, id]);
 
 
@@ -440,18 +440,57 @@ useEffect(() => {
 };
 
 
-const handleThumbnailChange = (e: any) => {
+const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const input = e.target;
 
-  const input = document.querySelector(
-    'input[name="thumbnail"]'
-  ) as HTMLInputElement;
-
-  console.log("INPUT FILES:", input?.files);
-
-  if (!input?.files || input.files.length === 0) return;
+  if (!input.files || input.files.length === 0) return;
 
   const file = input.files[0];
 
+  // Clear previous timer
+  if (imageErrorTimer.current) {
+    clearTimeout(imageErrorTimer.current);
+  }
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/jpg",
+    "image/webp"
+  ];
+
+  // ❌ INVALID FILE (PDF etc.)
+  if (!allowedTypes.includes(file.type)) {
+
+    // Reset input so filename not shown
+    input.value = "";
+
+    // Reset preview
+    setImagePreview(defaultImage);
+
+    // Remove thumbnail from formData
+    setFormData(prev => ({
+      ...prev,
+      thumbnail: null
+    }));
+
+    // Show immediate error
+    setErrors(prev => ({
+      ...prev,
+      thumbnail: "Only JPEG, JPG, WEBP files are allowed"
+    }));
+
+    // After 5 sec → show required error
+    imageErrorTimer.current = setTimeout(() => {
+      setErrors(prev => ({
+        ...prev,
+        thumbnail: "Thumbnail is required"
+      }));
+    }, 5000);
+
+    return;
+  }
+
+  // ✅ VALID IMAGE
   const previewUrl = URL.createObjectURL(file);
 
   setFormData(prev => ({
@@ -460,7 +499,8 @@ const handleThumbnailChange = (e: any) => {
   }));
 
   setImagePreview(previewUrl);
-    setErrors(prev => ({
+
+  setErrors(prev => ({
     ...prev,
     thumbnail: undefined
   }));
@@ -677,6 +717,7 @@ const removeColor = (index: number) => {
                 value={formData[field.name as keyof ProductFormData]}
                 onChange={handleChange}
                 error={errors[field.name as keyof ProductValidationErrors]}
+
               />
             </React.Fragment>
           ))}
@@ -871,7 +912,7 @@ const removeColor = (index: number) => {
         <div className="mt-6 flex justify-end">
           <button
             disabled={isSubmitting}
-            className="px-4 py-2 bg-orange-600 text-white rounded-md"
+            className="px-4 py-2 bg-amber-600 text-white rounded-md"
           >
             {isSubmitting ? 'Saving...' : id ? 'Update' : 'Save'}
           </button>
