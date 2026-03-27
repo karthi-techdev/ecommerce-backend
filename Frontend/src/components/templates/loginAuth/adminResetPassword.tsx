@@ -20,7 +20,7 @@ const loginFields: FieldConfig[] = [
     name: 'confirmPassword',
     label: 'Confirm Password',
     type: 'password',
-    placeholder: 'Enter your new password...',
+    placeholder: 'Re-enter your password...',
   },
 ];
 
@@ -143,7 +143,7 @@ const ResetPasswordTemplate: React.FC = () => {
                 </div>
               ))}
             <div className="text-right text-xs text-amber-500 cursor-pointer hover:underline" >
-                <button type='button' className='cursor-pointer' onClick={login}>Login?</button>
+                <button type='button' className='cursor-pointer' onClick={login}>Back to Login?</button>
               </div>
               <button
                 type="submit"
@@ -165,5 +165,3 @@ const ResetPasswordTemplate: React.FC = () => {
 };
 
 export default ResetPasswordTemplate;
-
-// bg-[#f5f7fb]

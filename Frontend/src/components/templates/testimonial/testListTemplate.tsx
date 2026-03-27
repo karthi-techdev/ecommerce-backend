@@ -27,7 +27,7 @@ const TestimoialListTemplate: React.FC = () => {
   const {
     testimonials,
     fetchTestimonial,
-    softDeleteTestimonial,
+    hardDeleteTestimonial,
     toggleTestimonialStatus,
     loading,
     error,
@@ -114,7 +114,7 @@ const TestimoialListTemplate: React.FC = () => {
     }
   };
 
-  const handleSoftDelete = async (testimonial: Testimonial) => {
+  const handleHardDelete = async (testimonial: Testimonial) => {
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: `This will  delete "${testimonial.name}"`,
@@ -125,7 +125,7 @@ const TestimoialListTemplate: React.FC = () => {
 
     if (result.isConfirmed) {
       try {
-        await softDeleteTestimonial(testimonial._id!);
+        await hardDeleteTestimonial(testimonial._id!);
         toast.success('Testimonial delete successfully!');
       } catch {
         toast.error('Failed to delete');
@@ -227,7 +227,7 @@ const TestimoialListTemplate: React.FC = () => {
                       </button>
 
                       <button
-                        onClick={() => handleSoftDelete(testimonial)}
+                        onClick={() => handleHardDelete(testimonial)}
                         className="text-orange-500 hover:text-orange-700 p-2"
                       >
                         <Trash2 size={16} />

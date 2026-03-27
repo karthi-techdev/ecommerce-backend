@@ -1,9 +1,9 @@
 
 import { PiShoppingCartLight } from "react-icons/pi";
-import { FiSettings,FiTruck,FiFileText,FiLayers,FiTag,FiMail,FiList,FiSliders , FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
+import { FiSettings,FiTruck,FiFileText,FiLayers,FiTag,FiMail,FiList,FiSliders ,FiTool, FiBriefcase,FiTrash2, FiShoppingCart} from 'react-icons/fi';
 
 import { BiSolidOffer } from "react-icons/bi";
-import { BiCategory, BiBook } from "react-icons/bi";
+import { BiCategory, BiBook, BiBitcoin } from "react-icons/bi";
 import type { ReactNode } from 'react';
 import { SlidersHorizontal,Settings2  } from 'lucide-react';
 
@@ -34,7 +34,7 @@ const menuItems: MenuItem[] = [
     label: 'Site Settings',
     icon: <FiSettings />,
     submenu: [
-      { key: 'faq', label: 'FAQ', path: '/faq' },
+      { key: 'faq', label: 'Faq', path: '/faq' },
       {
         key: 'testimonial',
         label: 'Testimonial',
@@ -57,30 +57,23 @@ const menuItems: MenuItem[] = [
   },
   
   {
-    key: 'config',
-    label: 'Config',
-    icon: <Settings2 />,
-    path: '/config',
-  },
-  
-  {
     key: 'slider',
     label: 'Slider',
     icon: <SlidersHorizontal />,
     path: '/slider',
   },
   {
-    key: 'product',
-    label: 'Products',
-    icon: <FiShoppingCart />,
-    path: '/products',},
-    {
-    key: 'coupon',
-    label: 'Coupon',
-    icon: <FiLayers />,
-    path: '/coupon',
-  },
-
+        key: 'brand',
+        label: 'Brand',
+        path: '/brand',
+        icon: <FiTag />,
+      },
+      {
+        key: 'products',
+        label: 'Products',
+        path: '/products',
+        icon: <FiShoppingCart />,
+      },
 
   {
     key: 'orders',
@@ -88,6 +81,21 @@ const menuItems: MenuItem[] = [
     icon: <PiShoppingCartLight />,
     path: '/orders',
   },
+
+  {
+    key: 'banners',
+    label: 'Manage Banners',
+    icon: <BiBitcoin />,
+    path: '#',
+    submenu: [
+      {
+        key: 'homepage-banners',
+        label: 'Home page Banners',
+        path: '/banners',
+      }
+    ]
+  },
+
 
 {
   key: 'blogs',
@@ -106,6 +114,12 @@ const menuItems: MenuItem[] = [
       path: '/blogs',
       icon: <FiFileText />, 
     },
+    {
+        key: 'shipment-methods',
+        label: 'Shipment Methods',
+        path: '/shipment-methods',
+        icon: <FiTruck />,
+      },
     
   ],
 },
@@ -141,29 +155,34 @@ const menuItems: MenuItem[] = [
     ]
   },
   {
+    key: 'settings',
+    label: 'Settings',
+    icon: <FiSettings />,
+    path: '/settings', 
+  },
+  {
     key: 'manage-products',
     label: 'Manage Products',
     icon: <FiShoppingCart />,
+  },
+  {
+    key: 'commerce-settings',
+    label: 'Commerce Settings',
+    icon: <FiTool />,
     path: '#',
     submenu: [
-      {
-        key: 'brand',
-        label: 'Brand',
-        path: '/brand',
-        icon: <FiTag />,
+       {
+        key: 'coupon',
+        label: 'Coupon',
+        icon: <FiLayers />,
+        path: '/coupon',
       },
       {
-        key: 'products',
-        label: 'Products',
-        path: '/products',
-        icon: <FiShoppingCart />,
+        key: 'config',
+        label: 'Config',
+        icon: <Settings2 />,
+        path: '/config',
       },
-      {
-        key: 'shipment-methods',
-        label: 'Shipment Methods',
-        path: '/shipment-methods',
-        icon: <FiTruck />,
-      }
     ]
   },
   {
