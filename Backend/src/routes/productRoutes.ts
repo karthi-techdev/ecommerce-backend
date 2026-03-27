@@ -15,5 +15,7 @@ router.delete('/permanentDelete/:id',(req, res, next) => productController.delet
 router.patch('/restore/:id',(req, res, next) => productController.restoreProduct(req, res, next));
 router.patch('/toggleStatus/:id',(req, res, next) => productController.toggleStatus(req, res, next));
 router.get('/trash',(req, res, next) => productController.getAllTrash(req, res, next));
+router.get('/filter', (req, res, next) =>productController.getFilteredProducts(req, res, next));
+router.get('/new', (req, res, next) =>productController.getNewProducts(req, res, next));
 
 export default router;

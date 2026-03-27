@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import productService from "../services/productService";
 import { HTTP_RESPONSE } from "../utils/httpResponse";
 import { processUpload } from "../utils/fileUpload";
+import { ProductModel } from "../models/productModel";
+import { ConfigModel } from "../models/configModel"; 
 class productController {
 
   async createProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -291,30 +293,110 @@ async toggleStatus(req: Request, res: Response, next: NextFunction): Promise<voi
   }
 }
 
-async getAllTrash(req: Request, res: Response, next: NextFunction): Promise<void> {
-  try {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+  async getAllTrash(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
 
-    const result = await productService.getTrashProducts(page, limit);
+      const result = await productService.getTrashProducts(page, limit);
 
-    res.status(200).json({
-      status: HTTP_RESPONSE.SUCCESS,
-      data: {
-        data: result.data,
-        meta: {
-          total: result.meta.total,
-          totalPages: result.meta.totalPages,
-          page: result.meta.page,
-          limit: result.meta.limit
+      res.status(200).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        data: {
+          data: result.data,
+          meta: {
+            total: result.meta.total,
+            totalPages: result.meta.totalPages,
+            page: result.meta.page,
+            limit: result.meta.limit
+          }
         }
-      }
-    });
+      });
 
-  } catch (err) {
-    next(err);
+    } catch (err) {
+      next(err);
+    }
   }
-}
 
+  async getFilteredProducts(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const type = req.query.type as string | undefined;
+      console.log("🔥 TYPE:", type);
+      let filter: any = {
+        status: "active",
+        isDeleted: false
+      };
+
+      let sort: any = { createdAt: -1 };
+
+      const configs = await ConfigModel.find({ status: "active" });
+
+      const relatedTagsConfig = configs.find(c => c.slug === "related-tags");
+      let featuredIds: string[] = [];
+      let popularIds: string[] = [];
+      if (relatedTagsConfig) {
+        featuredIds = relatedTagsConfig.options
+          .filter(opt => opt.key === "Featured")
+          .map(opt => opt._id.toString());
+
+        popularIds = relatedTagsConfig.options
+          .filter(opt => opt.key === "Popular")
+          .map(opt => opt._id.toString());
+      }
+
+      console.log("🔥 featuredIds:", featuredIds);
+      console.log("🔥 popularIds:", popularIds);
+
+      if (type === "featured" && featuredIds.length > 0) {
+        filter.relatedTags = { $in: featuredIds };
+      }
+
+      if (type === "popular" && popularIds.length > 0) {
+        filter.relatedTags = { $in: popularIds };
+      }
+
+      if (type === "new") {
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        filter.createdAt = { $gte: sevenDaysAgo };
+      } 
+      console.log("🔥 FILTER:", filter);
+
+      const products = await ProductModel.find(filter).populate("categoryId", "name") .sort(sort);
+
+      res.status(200).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        data: products
+      });
+
+    } catch (err) {
+        console.log("❌ FILTER ERROR:", err);
+        next(err);
+      }
+  }
+
+  async getNewProducts(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      let filter: any = {
+        status: "active",
+        isDeleted: false
+      };
+
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      filter.createdAt = { $gte: sevenDaysAgo };
+
+      const products = await ProductModel.find(filter).populate("categoryId", "name") .sort({ createdAt: -1 });
+
+      res.status(200).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        data: products
+      });
+
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 export default new productController();

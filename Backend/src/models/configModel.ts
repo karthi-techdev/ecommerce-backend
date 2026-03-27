@@ -1,9 +1,10 @@
-import {Schema,Document,model} from 'mongoose';
+import {Schema,Document,model,Types} from 'mongoose';
 
 export interface IConfig extends Document{
     name:string;
     slug:string;
     options:{
+        _id: Types.ObjectId; 
         key:string,
         value:string
     }[];
