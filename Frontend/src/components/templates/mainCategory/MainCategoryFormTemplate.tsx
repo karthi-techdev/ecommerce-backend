@@ -34,6 +34,13 @@ const mainCategoryFields: FieldConfig[] = [
     required: true, 
   },
   {
+    name: 'icon', 
+    label: 'Icon',
+    type: 'text',
+    placeholder: 'Enter Icon Name',
+    required: true,
+  },
+  {
     name: 'image',
     label: 'Image',
     type: 'file',
@@ -58,6 +65,7 @@ const { fetchMainCategoryById, addMainCategory, updateMainCategory } =
   const [formData, setFormData] = useState<MainCategoryFormData>({
     name: '',
     slug: '',
+     icon: '',
     description: '',
     image: null,
     isActive: true,
@@ -102,6 +110,7 @@ const { fetchMainCategoryById, addMainCategory, updateMainCategory } =
             slug: mainCategory.slug || '',
             description: mainCategory.description || '',
             image: mainCategory.image || null,
+            icon: mainCategory.icon || '', 
             isActive: mainCategory.isActive ?? true,
           });
           if (mainCategory.image) {
@@ -244,7 +253,7 @@ const { fetchMainCategoryById, addMainCategory, updateMainCategory } =
     payload.append('name', formData.name);
     payload.append('slug', formData.slug);
     payload.append('description', formData.description || '');
-
+    payload.append('icon', formData.icon);
     if (formData.image instanceof File) {
       payload.append('image', formData.image);
     }

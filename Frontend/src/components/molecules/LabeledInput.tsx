@@ -80,9 +80,14 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
         const file = e.target.files?.[0];
         if (!file) return;
         if (accept && !accept.split(',').includes(file.type)) {
-          setFileError(`Please upload valid file. Allowed types: ${accept}`);
+          setFileError(`Only JPG, PNG or WEBP images are allowed`);
           setPreview(defaultImage);
           e.target.value = ""; // reset file input
+          if (errorTimer.current) clearTimeout(errorTimer.current);
+
+          errorTimer.current = setTimeout(() => {
+            setFileError(null);
+          }, 5000);
           return;
         }
 

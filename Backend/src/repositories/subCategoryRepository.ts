@@ -185,16 +185,20 @@ async getAllTrashSubCategories(page = 1,limit = 10,filter?: string
     throw error;
   }
 }
-  async existsBySlug( slug: string, mainCategoryId: string, excludeId?: string | Types.ObjectId): Promise<boolean> {
-  const query: any = {slug: { $regex: new RegExp(`^${slug.trim()}$`, 'i') },mainCategoryId,isDeleted: false,};
+
+async existsBySlug(slug: string, mainCategoryId: string, excludeId?: string | Types.ObjectId): Promise<boolean> {
+  const query: any = {
+    slug: { $regex: new RegExp(`^${slug.trim()}$`, 'i') },
+    mainCategoryId: new Types.ObjectId(mainCategoryId), 
+    isDeleted: false,
+  };
+
   if (excludeId) {
     query._id = {
-      $ne:
-        typeof excludeId === 'string'
-          ? new Types.ObjectId(excludeId)
-          : excludeId,
+      $ne: typeof excludeId === 'string' ? new Types.ObjectId(excludeId) : excludeId,
     };
   }
+
   const count = await SubCategoryModel.countDocuments(query);
   return count > 0;
 }

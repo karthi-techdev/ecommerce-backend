@@ -49,6 +49,7 @@ export interface MainCategory {
   _id?: string;
   name: string;
   slug: string;
+  icon: string; 
   description: string;
   image:  File | string | null;
   isActive: boolean;
