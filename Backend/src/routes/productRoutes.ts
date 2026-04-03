@@ -57,5 +57,12 @@ router.patch("/toggleStatus/:id", (req, res, next) =>
 router.get("/trash", (req, res, next) =>
   productController.getAllTrash(req, res, next),
 );
+router.get("/filter", (req, res, next) =>
+  productController.getFilteredProducts(req, res, next),
+);
+
+router.get("/new", (req, res, next) =>
+  productController.getNewProducts(req, res, next),
+);
 
 export default router;
