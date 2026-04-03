@@ -81,6 +81,15 @@ class AdminRepository {
   ): Promise<IAdmin | null> {
     return await AdminModel.findById(id).select("-password");
   }
+  async saveResetToken(email:string,token:string,expires:Date){
+      return await AdminModel.findOneAndUpdate({email},{resetPasswordToken:token,resetPasswordTokenExpires:expires},{new:true});
+  }
+  async findResetToken(token:string){
+    return await AdminModel.findOne({resetPasswordToken:token,resetPasswordTokenExpires:{$gt:new Date()}});
+  }
+  async resetPassword(id:string|Types.ObjectId,hashedPassword:string){
+    return await AdminModel.findByIdAndUpdate(id,{$set:{password:hashedPassword},$unset:{resetPasswordToken:"",resetPasswordTokenExpires:""}},{new:true});
+  }
 }
 
 export default new AdminRepository();

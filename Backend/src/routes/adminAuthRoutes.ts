@@ -9,4 +9,5 @@ adminAuthRoutes.post("/logout" ,(req, res) => adminAuthController.logout(req, re
 adminAuthRoutes.post("/refresh", (req, res) => adminAuthController.refresh(req, res));
 adminAuthRoutes.get("/me/:id",  (req, res ,next) => adminAuthController.getMe(req, res , next));
 adminAuthRoutes.post('/forgetPassword',(req,res,next)=>adminAuthController.forgetPassword(req,res,next));
+adminAuthRoutes.post('/resetPassword',(req,res,next)=>adminAuthController.resetPassword(req,res,next));
 export default adminAuthRoutes;
