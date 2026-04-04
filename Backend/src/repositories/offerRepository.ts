@@ -12,14 +12,14 @@
 //   async createOffer(data: Partial<IOffer>): Promise<IOffer> {
 //     return await OfferModel.create(data);
 //   }
- 
+
 //   async getAllOffers() {
 //     try {
 //       const pipeline: any[] = [
-//         { $match: { isDeleted: false } }, 
+//         { $match: { isDeleted: false } },
 //         {
 //           $lookup: {
-//             from: "products",       
+//             from: "products",
 //             localField: "products",
 //             foreignField: "_id",
 //             as: "productDetails",
@@ -52,7 +52,7 @@
 
 //   async getOfferById(id: string | Types.ObjectId): Promise<any | null> {
 //     const objectId = typeof id === "string" ? new Types.ObjectId(id) : id;
-    
+
 //     const results = await OfferModel.aggregate([
 //       { $match: { _id: objectId, isDeleted: false } },
 //       {
@@ -89,7 +89,6 @@
 //     return await OfferModel.findByIdAndDelete(id);
 //   }
 
-
 //   async toggleStatus(id: string | Types.ObjectId): Promise<IOffer | null> {
 //     const offer = await OfferModel.findById(id);
 //     if (!offer) return null;
@@ -125,7 +124,7 @@
 //   }
 // }
 
-// export default new OfferRepository(); 
+// export default new OfferRepository();
 
 // offerRepository.ts
 import { OfferModel, IOffer } from "../models/offerModel";
@@ -146,10 +145,10 @@ class OfferRepository {
   async getAllOffers() {
     try {
       const pipeline: any[] = [
-        { $match: { isDeleted: false } }, 
+        { $match: { isDeleted: false } },
         {
           $lookup: {
-            from: "products",       
+            from: "products",
             localField: "products",
             foreignField: "_id",
             as: "productDetails",
@@ -175,16 +174,24 @@ class OfferRepository {
   }
 
   // Helper to check counts for a specific banner
-  async countByBannerType(banner: string, excludeId?: string | Types.ObjectId): Promise<number> {
-    const query: any = { 
-      banner: banner, 
-      isDeleted: false 
+  async countByBannerType(
+    banner: string,
+    excludeId?: string | Types.ObjectId,
+  ): Promise<number> {
+    const query: any = {
+      banner: banner,
+      isDeleted: false,
     };
-    
+
     if (excludeId) {
-      query._id = { $ne: typeof excludeId === "string" ? new Types.ObjectId(excludeId) : excludeId };
+      query._id = {
+        $ne:
+          typeof excludeId === "string"
+            ? new Types.ObjectId(excludeId)
+            : excludeId,
+      };
     }
-    
+
     return await OfferModel.countDocuments(query);
   }
 
@@ -193,41 +200,66 @@ class OfferRepository {
     const results = await OfferModel.aggregate([
       { $match: { _id: objectId, isDeleted: false } },
       {
-        $lookup: { from: "products", localField: "products", foreignField: "_id", as: "productDetails" },
+        $lookup: {
+          from: "products",
+          localField: "products",
+          foreignField: "_id",
+          as: "productDetails",
+        },
       },
       { $addFields: { productCount: { $size: "$products" } } },
     ]);
     return results.length > 0 ? results[0] : null;
   }
 
-  async updateOffer(id: string | Types.ObjectId, data: Partial<IOffer>): Promise<IOffer | null> {
+  async updateOffer(
+    id: string | Types.ObjectId,
+    data: Partial<IOffer>,
+  ): Promise<IOffer | null> {
     return await OfferModel.findByIdAndUpdate(id, data, { new: true });
   }
 
-  async deleteOfferPermanently(id: string | Types.ObjectId): Promise<IOffer | null> {
+  async deleteOfferPermanently(
+    id: string | Types.ObjectId,
+  ): Promise<IOffer | null> {
     return await OfferModel.findByIdAndDelete(id);
   }
 
   async toggleStatus(id: string | Types.ObjectId): Promise<IOffer | null> {
     const offer = await OfferModel.findById(id);
     if (!offer) return null;
-    return await OfferModel.findByIdAndUpdate(id, { $set: { isActive: !offer.isActive } }, { new: true });
+    return await OfferModel.findByIdAndUpdate(
+      id,
+      { $set: { isActive: !offer.isActive } },
+      { new: true },
+    );
   }
 
   async getStats() {
     const total = await OfferModel.countDocuments({ isDeleted: false });
-    const active = await OfferModel.countDocuments({ isDeleted: false, isActive: true });
+    const active = await OfferModel.countDocuments({
+      isDeleted: false,
+      isActive: true,
+    });
     const inactive = total - active;
-    return { total, active, inactive }; 
+    return { total, active, inactive };
   }
 
-  async existsByName(name: string, excludeId?: string | Types.ObjectId): Promise<boolean> {
+  async existsByName(
+    name: string,
+    excludeId?: string | Types.ObjectId,
+  ): Promise<boolean> {
     const query: any = {
       name: { $regex: new RegExp(`^${name.trim()}$`, "i") },
-      isDeleted: false
+      isDeleted: false,
     };
     if (excludeId) {
-      query._id = { $ne: typeof excludeId === "string" ? new Types.ObjectId(excludeId) : excludeId };
+      query._id = {
+        $ne:
+          typeof excludeId === "string"
+            ? new Types.ObjectId(excludeId)
+            : excludeId,
+      };
     }
     return (await OfferModel.countDocuments(query)) > 0;
   }

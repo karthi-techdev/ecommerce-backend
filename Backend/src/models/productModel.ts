@@ -23,9 +23,13 @@ export interface IProduct extends Document {
   categoryId: Types.ObjectId;
   status: 'active' | 'inactive';  
   isDeleted: boolean;
+  isFeatured?: boolean;
+  isPopular?: boolean;
+  rating?: number;
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date | null;
+  type: 'deals' | 'topSelling' | 'hotReleases';
 }
 
 const productSchema = new Schema<IProduct>(
@@ -51,7 +55,11 @@ const productSchema = new Schema<IProduct>(
     categoryId: {type: mongoose.Schema.Types.ObjectId,ref: "category"},
     status: {type: String,enum: ['active', 'inactive'],default: 'active'},
     isDeleted: {type: Boolean,default: false},
-    deletedAt: {type: Date,default: null}
+    isFeatured: { type: Boolean, default: false },
+    isPopular: { type: Boolean, default: false },
+    rating: { type: Number, default: 0 },
+    deletedAt: {type: Date,default: null},
+    type: {type: String,enum: ["deals", "topSelling", "hotReleases"],required: true},
   },
   {
     timestamps: true

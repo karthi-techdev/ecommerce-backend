@@ -18,7 +18,7 @@ import BrandListTemplate from '../components/templates/brand/BrandListTemplate';
 import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
 
 import BrandTrashPage from '../components/pages/trash/BrandTrashPage';
-   
+
 import ShipmentMethodListTemplate from '../components/templates/shipmentMethods/shipmentMethodsListTemplate';
 import ShipmentMethodFormTemplate from '../components/templates/shipmentMethods/ShipmentMethodsFormTemplate';
 import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
@@ -26,6 +26,7 @@ import SubCategoryFormTemplate from '@/components/templates/subcategory/Subcateg
 import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
 import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
 import AdminForgetPasswordTemplate from '../components/templates/loginAuth/adminForgetPassword'
+import AdminResetPasswordTemplate from '../components/templates/loginAuth/adminResetPassword'
 import CouponListTemplate from '../components/templates/coupon/CouponListTemplate';
 import CouponFormTemplate from '../components/templates/coupon/CouponFormTemplate';
 
@@ -55,7 +56,7 @@ import BlogTrashTemplate from '@/components/templates/trash/BlogsTrash/BlogTrash
 import PromotionsListTemplate from '../components/templates/promotions/PromotionsListTemplate';
 import PromotionsFormTemplate from '../components/templates/promotions/PromotionsFormTemplate';
 
-
+import SettingsManager from '../components/templates/settings/settingsManager';
 
 export const router = createBrowserRouter([
   {
@@ -66,44 +67,50 @@ export const router = createBrowserRouter([
         path:'/forgetPassword',
         element:<AdminForgetPasswordTemplate/>
       },
+      {
+        path:'/resetPassword',
+        element:<AdminResetPasswordTemplate/>
+      },
 
   {
     path: '/',
     element: <Layout />,
-    children: [  
-      {  path: '/', element: <Dashboard /> },
-      {  path: 'page',
-        children:[
+    children: [
+      { path: '/', element: <Dashboard /> },
+      {
+        path: 'page',
+        children: [
           {
-            path:"",
-            element:<PageListTemplate/>
+            path: "",
+            element: <PageListTemplate />
           }
-           ,{
+          , {
             path: 'add',
             element: <PageFormTemplate />,
           },
         ]
-       }, 
-      {  path: 'orders',
-        children:[
+      },
+      {
+        path: 'orders',
+        children: [
           {
-            path:"",
-            element:<OrderListTemplate/>
+            path: "",
+            element: <OrderListTemplate />
           }
-          ,{
+          , {
             path: 'add',
             element: <OrderListTemplate />,
           },
         ]
-      }, 
+      },
       {
-        path:'/category',
-        children:[
+        path: '/category',
+        children: [
           {
-            path:"",
-            element:<CategoryListTemplate/>
+            path: "",
+            element: <CategoryListTemplate />
           }
-           ,{
+          , {
             path: 'add',
             element: <CategoryFormTemplate />,
           },
@@ -143,7 +150,7 @@ export const router = createBrowserRouter([
         path: 'config',
         children: [
           { path: '', element: <ConfigListTemplate /> },
-           { path: 'add', element: <ConfigFormTemplate /> },
+          { path: 'add', element: <ConfigFormTemplate /> },
           { path: 'edit/:id', element: <ConfigFormTemplate /> },
         ],
       },
@@ -172,11 +179,11 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: 'blog-category', 
+        path: 'blog-category',
         children: [
-          { path: '', element: <BlogCategoryListTemplate /> },      
-          { path: 'add', element: <BlogCategoryFormTemplate /> }, 
-          { path: 'edit/:id', element: <BlogCategoryFormTemplate /> }, 
+          { path: '', element: <BlogCategoryListTemplate /> },
+          { path: 'add', element: <BlogCategoryFormTemplate /> },
+          { path: 'edit/:id', element: <BlogCategoryFormTemplate /> },
         ]
       },
 
@@ -195,8 +202,8 @@ export const router = createBrowserRouter([
         path: 'subcategory',
         children: [
           { path: '', element: <SubCategoryListTemplate />, },
-          { path: 'add', element: <SubCategoryFormTemplate />,},
-          { path: 'edit/:id', element: <SubCategoryFormTemplate />,},
+          { path: 'add', element: <SubCategoryFormTemplate />, },
+          { path: 'edit/:id', element: <SubCategoryFormTemplate />, },
         ],
       },
       {
@@ -233,7 +240,11 @@ export const router = createBrowserRouter([
           },
         ],
       },
-      
+
+      {
+        path: 'settings',
+        element: <SettingsManager />,
+      },
       {
         path: 'mainCategory',
         children: [
@@ -241,7 +252,7 @@ export const router = createBrowserRouter([
           { path: 'add', element: <MainCategoryFormTemplate /> },
           { path: 'edit/:id', element: <MainCategoryFormTemplate /> },
         ]
-      }, 
+      },
       {
         path: 'shipment-methods',
         children: [
@@ -252,21 +263,21 @@ export const router = createBrowserRouter([
       },
       {
         path: 'trash',
-          children : [
+        children: [
           {
-             path: 'subcategory', 
-             element: <SubCategoryTrashListTemplate /> 
+            path: 'subcategory',
+            element: <SubCategoryTrashListTemplate />
           },
-          { path: 'brand', element: <BrandTrashPage /> }, 
+          { path: 'brand', element: <BrandTrashPage /> },
           {
             path: 'mainCategory',
             element: <TrashMainCategoryListTemplate />,
           },
           {
-             path: 'category', 
-             element: <CategoryTrashListPage /> 
+            path: 'category',
+            element: <CategoryTrashListPage />
           },
-          { path: 'products', element: <ProductTrashListTemplate /> }, 
+          { path: 'products', element: <ProductTrashListTemplate /> },
 
            { path: 'blog-category', 
             element: <BlogTrashListPage /> },
@@ -284,7 +295,7 @@ export const router = createBrowserRouter([
           { path: 'edit/:id', element: <PromotionsFormTemplate /> },
         ],
       },
-      
+
     ],
   }
 ]);

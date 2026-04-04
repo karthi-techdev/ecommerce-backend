@@ -12,6 +12,7 @@ export interface ProductValidationErrors {
   images?: string;
   thumbnail?: string;
   title?: string;
+  type?: string;
 }
 
 export const validateProductForm = (
@@ -46,15 +47,13 @@ export const validateProductForm = (
     errors.price = "Price must be greater than 0.";
   }
 
-
-  if (data.discountPrice === '' || data.discountPrice === undefined) {
-    errors.discountPrice = "Discount price is required.";
-  }
-  else if (Number(data.discountPrice) < 0) {
-    errors.discountPrice = "Discount price cannot be negative.";
-  } 
-  else if (Number(data.discountPrice) >= Number(data.price)) {
-    errors.discountPrice = "Discount price must be less than regular price.";
+  if (data.discountPrice !== '' && data.discountPrice !== undefined) {
+    if (Number(data.discountPrice) < 0) {
+      errors.discountPrice = "Discount price cannot be negative.";
+    } 
+    else if (Number(data.discountPrice) >= Number(data.price)) {
+      errors.discountPrice = "Discount price must be less than regular price.";
+    }
   }
 
   
@@ -84,6 +83,10 @@ export const validateProductForm = (
   else if (data.title.trim().length < 30) {
     errors.title = "Title must be minimum 30 characters";
   }
+
+  if (!data.type) {
+  errors.type = "Product type is required";
+}
   return errors;
 
   

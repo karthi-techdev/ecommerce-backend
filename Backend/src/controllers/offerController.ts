@@ -6,7 +6,7 @@
 //   // async createOffer(req: Request, res: Response, next: NextFunction): Promise<void> {
 //   //   try {
 //   //     const { name, buttonName, products } = req.body;
-      
+
 //   //     if (!name || !buttonName || !products) {
 //   //       res.status(400).json({
 //   //         status: HTTP_RESPONSE.FAIL,
@@ -16,7 +16,7 @@
 //   //     }
 
 //   //     const offer = await offerService.createOffer(req.body);
-      
+
 //   //     res.status(201).json({
 //   //       status: HTTP_RESPONSE.SUCCESS,
 //   //       message: "Offer created successfully",
@@ -33,7 +33,7 @@
 //   async createOffer(req: Request, res: Response, next: NextFunction): Promise<void> {
 //     try {
 //       const { name, banner, buttonName, products } = req.body;
-      
+
 //       // Added 'banner' to the required check
 //       if (!name || !banner || !buttonName || !products) {
 //         res.status(400).json({
@@ -44,7 +44,7 @@
 //       }
 
 //       const offer = await offerService.createOffer(req.body);
-      
+
 //       res.status(201).json({
 //         status: HTTP_RESPONSE.SUCCESS,
 //         message: "Offer created successfully",
@@ -62,7 +62,7 @@
 //   async getAllOffers(req: Request, res: Response, next: NextFunction): Promise<void> {
 //     try {
 //       const result = await offerService.getAllOffers();
-      
+
 //       res.status(200).json({
 //         status: HTTP_RESPONSE.SUCCESS,
 //         data: {
@@ -153,7 +153,7 @@
 //   //     if (!id) {
 //   //       res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "Offer id is required" });
 //   //       return;
-//   //     } 
+//   //     }
 
 //   //     const offer = await offerService.softDeleteOffer(id);
 //   //     if (!offer) {
@@ -244,38 +244,63 @@ import offerService from "../services/offerService";
 import { HTTP_RESPONSE } from "../utils/httpResponse";
 
 class OfferController {
-  async createOffer(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async createOffer(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const { name, banner, buttonName, products } = req.body;
-      
+
       // Initial Required Check
       if (!name || !banner || !buttonName || !products) {
         res.status(400).json({
           status: HTTP_RESPONSE.FAIL,
-          message: "Required fields (name, banner, buttonName, products) are missing",
+          message:
+            "Required fields (name, banner, buttonName, products) are missing",
         });
         return;
       }
+      let image = "";
+      if (req.file) {
+        image = `uploads/offers/${req.file.filename}`;
+      }
 
-      const offer = await offerService.createOffer(req.body);
-      
+      const offer = await offerService.createOffer({
+        ...req.body,
+        image,
+      });
+
+      // const offer = await offerService.createOffer(req.body);
+
       res.status(201).json({
         status: HTTP_RESPONSE.SUCCESS,
         message: "Offer created successfully",
-        data: offer
+        data: offer,
       });
     } catch (err: any) {
-      // Conflict error (409) for limit and duplicate names
-      if (err.message && (err.message.includes("reached") || err.message.includes("exists") || err.message.includes("full"))) {
-        res.status(409).json({ status: HTTP_RESPONSE.FAIL, message: err.message });
+      if (
+        err.message &&
+        (err.message.includes("reached") ||
+          err.message.includes("exists") ||
+          err.message.includes("full"))
+      ) {
+        res
+          .status(409)
+          .json({ status: HTTP_RESPONSE.FAIL, message: err.message });
         return;
       }
-      // Validation error (400)
-      res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: err.message });
+      res
+        .status(400)
+        .json({ status: HTTP_RESPONSE.FAIL, message: err.message });
     }
   }
 
-  async getAllOffers(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getAllOffers(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const result = await offerService.getAllOffers();
       res.status(200).json({
@@ -290,12 +315,18 @@ class OfferController {
     }
   }
 
-  async getOfferById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getOfferById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.params.id;
       const offer = await offerService.getOfferById(id);
       if (!offer) {
-        res.status(404).json({ status: HTTP_RESPONSE.FAIL, message: "Offer not found" });
+        res
+          .status(404)
+          .json({ status: HTTP_RESPONSE.FAIL, message: "Offer not found" });
         return;
       }
       res.status(200).json({ status: HTTP_RESPONSE.SUCCESS, data: offer });
@@ -304,49 +335,108 @@ class OfferController {
     }
   }
 
-  async updateOffer(req: Request, res: Response, next: NextFunction): Promise<void> {
+  //  Update Offer with image handling
+  async updateOffer(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.params.id;
-      const updatedOffer = await offerService.updateOffer(id, req.body);
-      
+
+      if (!id) {
+        res.status(400).json({
+          status: HTTP_RESPONSE.FAIL,
+          message: "Offer id is required",
+        });
+        return;
+      }
+
+      const existingOffer = await offerService.getOfferById(id);
+      if (!existingOffer) {
+        res.status(404).json({
+          status: HTTP_RESPONSE.FAIL,
+          message: "Offer not found",
+        });
+        return;
+      }
+
+      let payload: any = req.body;
+
+      // FIX products
+      if (payload.products) {
+        if (Array.isArray(payload.products)) {
+        } else {
+          payload.products = [payload.products];
+        }
+      }
+
+      if (req.file) {
+        payload = { ...req.body, image: `uploads/offers/${req.file.filename}` };
+      } else if (existingOffer?.image) {
+        payload.image = existingOffer.image;
+      }
+
+      const updatedOffer = await offerService.updateOffer(id, payload);
+
+      if (!updatedOffer) {
+        res.status(404).json({
+          status: HTTP_RESPONSE.FAIL,
+          message: "Offer not found",
+        });
+        return;
+      }
+
       res.status(200).json({
         status: HTTP_RESPONSE.SUCCESS,
         message: "Offer updated successfully",
         data: updatedOffer,
       });
     } catch (err: any) {
-      res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: err.message });
+      next(err);
     }
   }
 
-  async toggleOfferStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async toggleOfferStatus(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.params.id;
       const updated = await offerService.toggleStatus(id);
       res.status(200).json({
         status: HTTP_RESPONSE.SUCCESS,
         message: "Offer status toggled",
-        data: updated
+        data: updated,
       });
     } catch (err: any) {
       next(err);
     }
   }
 
-  async deleteOfferPermanently(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async deleteOfferPermanently(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.params.id;
       await offerService.deleteOfferPermanently(id);
       res.status(200).json({
         status: HTTP_RESPONSE.SUCCESS,
-        message: "Offer permanently deleted"
+        message: "Offer permanently deleted",
       });
     } catch (err: any) {
       next(err);
     }
   }
 
-  async checkDuplicate(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async checkDuplicate(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const { name, excludeId } = req.body;
       const exists = await offerService.checkDuplicateName(name, excludeId);

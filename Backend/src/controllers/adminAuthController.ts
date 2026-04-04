@@ -102,6 +102,24 @@ class AdminAuthController {
       next(error);
     }
   }
+  async resetPassword(req:Request,res:Response,next:NextFunction){
+    try {
+      const {token,newPassword}=req.body;
+      const admin=await adminAuthService.resetPassword(token,newPassword);
+      console.log(admin," data here for reset")
+      res.status(HTTP_STATUS_CODE.OK).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        message: "Password updated successfully"
+      });
+
+    } catch (error: any) {
+      res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+        status: HTTP_RESPONSE.FAIL,
+        message: error.message,
+      });
+      next(error);
+    }
+  }
 }
 
 
