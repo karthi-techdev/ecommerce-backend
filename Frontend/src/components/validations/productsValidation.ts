@@ -47,15 +47,13 @@ export const validateProductForm = (
     errors.price = "Price must be greater than 0.";
   }
 
-
-  if (data.discountPrice === '' || data.discountPrice === undefined) {
-    errors.discountPrice = "Discount price is required.";
-  }
-  else if (Number(data.discountPrice) < 0) {
-    errors.discountPrice = "Discount price cannot be negative.";
-  } 
-  else if (Number(data.discountPrice) >= Number(data.price)) {
-    errors.discountPrice = "Discount price must be less than regular price.";
+  if (data.discountPrice !== '' && data.discountPrice !== undefined) {
+    if (Number(data.discountPrice) < 0) {
+      errors.discountPrice = "Discount price cannot be negative.";
+    } 
+    else if (Number(data.discountPrice) >= Number(data.price)) {
+      errors.discountPrice = "Discount price must be less than regular price.";
+    }
   }
 
   
