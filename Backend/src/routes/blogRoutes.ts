@@ -24,7 +24,7 @@ const upload = multer({ storage });
 
 router.post("/", upload.single("image"), BlogController.create);
 router.get("/", BlogController.getAll);
-router.get("/get/:id", BlogController.getById);
+router.get("/get/:slug", BlogController.getBySlug);
 router.put("/update/:id", upload.single("image"), BlogController.update);
 router.delete("/delete/:id", BlogController.softDelete);
 router.delete("/permanentDelete/:id", BlogController.deletePermanent);

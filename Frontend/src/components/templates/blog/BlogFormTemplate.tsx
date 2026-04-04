@@ -46,35 +46,41 @@ useEffect(() => {
   const loadBlog = async () => {
     try {
       const blog = await fetchBlogById(id);
-
       if (!blog) return;
 
       const blogData: any = blog;
+      const imagePath = blogData.image || '';
 
       setFormData({
-        name: blogData.name || "",
-        slug: blogData.slug || "",
+        name: blogData.name || '',
+        slug: blogData.slug || '',
         categoryId:
-          typeof blogData.categoryId === "object"
-            ? blogData.categoryId._id
-            : blogData.categoryId || "",
-        description: blogData.description || "",
-        isActive: blogData.isActive,
-        coverImage: blogData.image
+          typeof blogData.categoryId === 'object'
+            ? blogData.categoryId?._id || ''
+            : blogData.categoryId || '',
+        description: blogData.description || '',
+        isActive: blogData.isActive ?? true,
+        coverImage: undefined
       });
 
-      if (blogData.image) {
-        const baseUrl = ImportedURL.LIVEURL.replace(/\/$/, "");
+      if (imagePath) {
+        const baseUrl = ImportedURL.LIVEURL.replace(/\/$/, '');
+        const normalizedPath = String(imagePath).replace(/\\/g, '/').replace(/^\/+/, '');
 
-        const imageUrl = blogData.image.startsWith("http")
-          ? blogData.image
-          : `${baseUrl}/${blogData.image}`;
+        const finalImageUrl = /^https?:\/\//i.test(imagePath)
+          ? imagePath
+          : `${baseUrl}/uploads/blog/${normalizedPath}`;
 
-        setImagePreview(imageUrl);
+        console.log('blogData.image:', blogData.image);
+        console.log('final preview url:', finalImageUrl);
+
+        setImagePreview(finalImageUrl);
+      } else {
+        setImagePreview(placeholderImage);
       }
-
     } catch (error) {
-      toast.error("Failed to load blog data");
+      toast.error('Failed to load blog data');
+      setImagePreview(placeholderImage);
     }
   };
 
@@ -94,20 +100,18 @@ useEffect(() => {
     const trimmedName = formData.name.trim();
     const trimmedDescription = formData.description.trim();
 
-    if (!trimmedName) newErrors.name = "Name is required";
-    else if (formData.name.startsWith(" ")) newErrors.name = "Name cannot start with space";
-    else if (trimmedName.length < 3) newErrors.name = "Name must be at least 3 characters";
+    if (!trimmedName) newErrors.name = 'Name is required';
+    else if (formData.name.startsWith(' ')) newErrors.name = 'Name cannot start with space';
+    else if (trimmedName.length < 3) newErrors.name = 'Name must be at least 3 characters';
 
-    if (!formData.categoryId) newErrors.categoryId = "Category is required";
+    if (!formData.categoryId) newErrors.categoryId = 'Category is required';
 
-    if (!id && !formData.coverImage) newErrors.image = "Image is required";
+    if (!id && !formData.coverImage) newErrors.image = 'Image is required';
 
-    if (!trimmedDescription) newErrors.description = "Description is required";
-    else if (trimmedDescription.length < 10)
-      newErrors.description = "Description must be at least 10 characters";
+    if (!trimmedDescription) newErrors.description = 'Description is required';
+    else if (trimmedDescription.length < 10) newErrors.description = 'Description must be at least 10 characters';
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
@@ -136,15 +140,11 @@ useEffect(() => {
       }));
 
       setErrors(prev => ({ ...prev, name: '' }));
-    }
-
-    else if (name === 'description') {
+    } else if (name === 'description') {
       setFormData(prev => ({ ...prev, description: value }));
-    }
-
-    else if (type === 'file' && files && files[0]) {
+      setErrors(prev => ({ ...prev, description: '' }));
+    } else if (type === 'file' && files && files[0]) {
       const file = files[0];
-
       const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
       if (!validTypes.includes(file.type)) {
@@ -154,19 +154,16 @@ useEffect(() => {
         return;
       }
 
+      const previewUrl = URL.createObjectURL(file);
+
       setFormData(prev => ({
         ...prev,
         coverImage: file
       }));
 
-      const previewUrl = URL.createObjectURL(file);
-
       setImagePreview(previewUrl);
-
       setErrors(prev => ({ ...prev, image: '' }));
-    }
-
-    else {
+    } else {
       setFormData(prev => ({
         ...prev,
         [name]: value
@@ -200,11 +197,8 @@ useEffect(() => {
       else await addBlog(payload);
 
       toast.success(id ? 'Blog updated successfully!' : 'Blog added successfully!');
-
       navigate('/blogs');
-
     } catch (err: any) {
-
       const msg = err?.response?.data?.message || 'Failed to save blog';
 
       if (msg.includes('exists')) {
@@ -212,7 +206,6 @@ useEffect(() => {
       } else {
         toast.error(msg);
       }
-
     } finally {
       setIsSubmitting(false);
     }
@@ -220,7 +213,6 @@ useEffect(() => {
 
   return (
     <div className="p-6">
-
       <FormHeader
         managementName="Blog"
         addButtonLink="/blogs"
@@ -232,13 +224,9 @@ useEffect(() => {
         noValidate
         className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6"
       >
-
         <div className="grid grid-cols-1 gap-6">
-
           {blogFields.map((field) => (
-
             <div key={field.name} className="flex flex-col gap-1">
-
               <FormField
                 field={{
                   ...field,
@@ -263,13 +251,10 @@ useEffect(() => {
                   {errors[field.name]}
                 </span>
               )}
-
             </div>
-
           ))}
 
           <div className="space-y-2">
-
             <label className="block text-sm font-medium text-gray-700">
               Image <span className="text-red-500">*</span>
             </label>
@@ -291,26 +276,21 @@ useEffect(() => {
             )}
 
             <div className="mt-4">
-  <div className="w-56 h-36 rounded-lg border border-gray-200 overflow-hidden shadow-sm bg-gray-50">
-
-    <img
-      src={imagePreview}
-      alt="Preview"
-      className="w-full h-full object-cover"
-      onError={(e) => {
-        (e.currentTarget as HTMLImageElement).src = placeholderImage;
-      }}
-    />
-
-  </div>
-</div>
-
+              <div className="w-56 h-36 rounded-lg border border-gray-200 overflow-hidden shadow-sm bg-gray-50">
+                <img
+                  src={imagePreview || placeholderImage}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = placeholderImage;
+                  }}
+                />
+              </div>
+            </div>
           </div>
-
         </div>
 
         <div className="flex justify-end pt-4">
-
           <button
             type="submit"
             disabled={isSubmitting}
@@ -318,14 +298,10 @@ useEffect(() => {
           >
             {isSubmitting ? 'Saving...' : id ? 'Update' : 'Add'}
           </button>
-
         </div>
-
       </form>
-
     </div>
   );
 };
 
 export default BlogFormTemplate;
-
