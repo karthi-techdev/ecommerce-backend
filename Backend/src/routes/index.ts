@@ -22,6 +22,8 @@ import blogRoutes from "./blogRoutes";
 import settingsRoutes from "./settingsRoutes";
 import offerRoutes from "./offerRoutes";
 import promotionRoutes from "./promotionRoutes";
+import usersRoutes from "./usersRoutes";
+
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
@@ -53,4 +55,6 @@ export default function registerRoutes(app: Express) {
 
   app.use("/api/v1/admin/newsletters", newsLetterRoutes);
   app.use("/api/v1/admin/promotions", promotionRoutes);
+
+  app.use("/api/users", usersRoutes);
 }
