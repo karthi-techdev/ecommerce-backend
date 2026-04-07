@@ -23,7 +23,7 @@ import sliderRoutes from './sliderRoutes'
 import blogRoutes from "./blogRoutes";
 import settingsRoutes from "./settingsRoutes";
 import offerRoutes from "./offerRoutes";
-
+import cartRoutes from './cartRoutes';
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
@@ -49,5 +49,5 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/blog-category", blogCategoryRoutes);
   app.use("/api/v1/admin/promotions", promotionRoutes);
   app.use("/api/v1/admin/banner", bannerRoutes);
-
+  app.use("/api/v1/cart",cartRoutes);
 }
