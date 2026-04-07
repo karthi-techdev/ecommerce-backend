@@ -24,6 +24,8 @@ import blogRoutes from "./blogRoutes";
 import settingsRoutes from "./settingsRoutes";
 import offerRoutes from "./offerRoutes";
 import cartRoutes from './cartRoutes';
+import usersRoutes from "./usersRoutes";
+
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
@@ -48,6 +50,8 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/settings", settingsRoutes);
   app.use("/api/v1/admin/blog-category", blogCategoryRoutes);
   app.use("/api/v1/admin/promotions", promotionRoutes);
+
+  app.use("/api/users", usersRoutes);
   app.use("/api/v1/admin/banner", bannerRoutes);
   app.use("/api/v1/cart",cartRoutes);
 }
