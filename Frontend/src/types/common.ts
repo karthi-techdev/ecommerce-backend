@@ -143,6 +143,7 @@ export interface Product {
 
 export interface Page {
     _id?: string;
+    footerPageTitle?: string;
     name : string,
     slug : string,
     type? : "content" | "url",
