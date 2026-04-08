@@ -3,7 +3,8 @@ import type { RouteObject } from 'react-router-dom';
 import { Navigate, Outlet } from 'react-router-dom';
 import Layout from './Layout';
 import AdminLoginTemplate from '../templates/loginAuth/adminLoginTemplate';
-import AdminForgetPasswordTemplate from '../templates/loginAuth/adminForgetPassword'
+import AdminForgetPasswordTemplate from '../templates/loginAuth/adminForgetPassword';
+import AdminResetPasswordTemplate from '../templates/loginAuth/adminResetPassword'
 import { useAuthStore } from '../../stores/authStore';
 import NotFoundPage from '../utils/notFound';   
 
@@ -92,6 +93,9 @@ const routes: RouteObject[] = [
       }, {
         path:'forgetPassword',
         element:<AdminForgetPasswordTemplate/>
+      },{
+        path:'resetPassword',
+        element:<AdminResetPasswordTemplate/>
       },
 
   {
@@ -332,7 +336,6 @@ const routes: RouteObject[] = [
 ];
 
 export default routes;
-
 
 
 

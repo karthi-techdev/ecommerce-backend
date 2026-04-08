@@ -69,8 +69,8 @@ class BlogService {
     return { blogs, total };
   }
 
-  getById(id: string) {
-    return this.repo.getBlogById(id);
+  getBySlug(slug: string) {
+    return this.repo.getBlogBySlug(slug);
   }
 
   softDelete(id: string) {
