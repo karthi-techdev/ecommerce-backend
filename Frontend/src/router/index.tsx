@@ -56,21 +56,24 @@ import BlogTrashTemplate from '@/components/templates/trash/BlogsTrash/BlogTrash
 import PromotionsListTemplate from '../components/templates/promotions/PromotionsListTemplate';
 import PromotionsFormTemplate from '../components/templates/promotions/PromotionsFormTemplate';
 
+import ReviewListTemplate from '../components/templates/reviews/ReviewListTemplate';
+import ReviewFormTemplate from '../components/templates/reviews/ReviewFormTemplate';
+
 import SettingsManager from '../components/templates/settings/settingsManager';
 
 export const router = createBrowserRouter([
   {
-        path: '/login',
-        element: <AdminLoginTemplate />,
-      },
-      {
-        path:'/forgetPassword',
-        element:<AdminForgetPasswordTemplate/>
-      },
-      {
-        path:'/resetPassword',
-        element:<AdminResetPasswordTemplate/>
-      },
+    path: '/login',
+    element: <AdminLoginTemplate />,
+  },
+  {
+    path: '/forgetPassword',
+    element: <AdminForgetPasswordTemplate />
+  },
+  {
+    path: '/resetPassword',
+    element: <AdminResetPasswordTemplate />
+  },
 
   {
     path: '/',
@@ -158,18 +161,18 @@ export const router = createBrowserRouter([
         path: 'slider',
         children: [
           { path: '', element: <SliderListTemplate /> },
-           { path: 'add', element: <SliderFormTemplate /> },
+          { path: 'add', element: <SliderFormTemplate /> },
           { path: 'edit/:id', element: <SliderFormTemplate /> },
         ],
       },
       {
-  path: 'coupon',
-  children: [
-    { path: '', element: <CouponListTemplate /> },
-    { path: 'add', element: <CouponFormTemplate /> },
-    { path: 'edit/:id', element: <CouponFormTemplate /> },
-  ],
-},{
+        path: 'coupon',
+        children: [
+          { path: '', element: <CouponListTemplate /> },
+          { path: 'add', element: <CouponFormTemplate /> },
+          { path: 'edit/:id', element: <CouponFormTemplate /> },
+        ],
+      }, {
         path: 'coupon',
         children: [
           { path: '', element: <CouponListTemplate /> },
@@ -188,14 +191,14 @@ export const router = createBrowserRouter([
       },
 
       {
-      path: 'blogs',                 
-      children: [
-    { index:true, element: <BlogListTemplate /> },     
-    { path: 'add', element: <BlogFormTemplate /> },  
-    { path: 'edit/:id', element: <BlogFormTemplate /> }, 
-    { path: 'trash', element: <BlogTrashTemplate /> },
-  ]
-},
+        path: 'blogs',
+        children: [
+          { index: true, element: <BlogListTemplate /> },
+          { path: 'add', element: <BlogFormTemplate /> },
+          { path: 'edit/:id', element: <BlogFormTemplate /> },
+          { path: 'trash', element: <BlogTrashTemplate /> },
+        ]
+      },
 
 
       {
@@ -207,13 +210,13 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path:'/offer',
-        children:[
+        path: '/offer',
+        children: [
           {
-            path:"",
-            element:<OfferListTemplate/>
+            path: "",
+            element: <OfferListTemplate />
           }
-           ,{
+          , {
             path: 'add',
             element: <OfferFormTemplate />,
           },
@@ -279,11 +282,24 @@ export const router = createBrowserRouter([
           },
           { path: 'products', element: <ProductTrashListTemplate /> },
 
-           { path: 'blog-category', 
-            element: <BlogTrashListPage /> },
+          {
+            path: 'blog-category',
+            element: <BlogTrashListPage />
+          },
 
-            { path: 'blogs', element: 
-            <BlogTrashTemplate /> },
+          {
+            path: 'blogs', element:
+              <BlogTrashTemplate />
+          },
+        ],
+      },
+
+      {
+        path: 'reviews', // Reviews Path
+        children: [
+          { path: '', element: <ReviewListTemplate /> },
+          { path: 'add', element: <ReviewFormTemplate /> },
+          { path: 'edit/:id', element: <ReviewFormTemplate /> },
         ],
       },
 
