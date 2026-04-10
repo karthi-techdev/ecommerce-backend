@@ -7,6 +7,7 @@ import Loader from '../../atoms/Loader';
 import Pagination from '../../atoms/Pagination';
 import { useOfferStore } from '../../../stores/offerStore';
 import type { Offer } from '../../../types/common';
+import ImportedURL from '../../../common/urls';
 import {
   Tag,
   CheckCircle,
@@ -224,6 +225,7 @@ const OfferListTemplate: React.FC = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Button Text</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Products</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Banner Image</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
@@ -258,6 +260,18 @@ const OfferListTemplate: React.FC = () => {
                       <span className="bg-indigo-50 text-indigo-700 px-2 py-1 rounded-md font-bold">
                         {offer.products?.length || 0} Products
                       </span>
+                    </td>
+                    {/* Image Section  */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {(offer as any).image ? (
+                        <img
+                          src={`${ImportedURL.LIVEURL}${(offer as any).image}`}
+                          alt={offer.name}
+                          className="h-10 w-20 object-cover rounded"
+                        />
+                      ) : (
+                        <span>No Image</span>
+                      )}
                     </td>
                     <td className="px-6 py-4">
                       <button

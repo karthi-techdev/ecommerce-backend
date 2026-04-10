@@ -22,6 +22,13 @@ export const setProductUpload = (req: Request, res: Response, next: NextFunction
   next();
 };
 
+export const setbannerUpload = (req: Request, res: Response, next: NextFunction) => {
+  res.locals.managementName = "banner";
+  next();
+};
+
+
+
 export const setSettingsUpload = (req: Request, res: Response, next: NextFunction) => {
   res.locals.managementName = "settings";
   next();

@@ -15,13 +15,20 @@ import configRoutes from "./configRoutes";
 import productRoutes from "./productRoutes";
 import shipmentMethodRoutes from "./shipmentMethodsRouter";
 import testimonialRoutes from "./testimonialRoutes";
-import blogCategoryRoutes from './blogCategoryRoutes';
+import blogCategoryRoutes from "./blogCategoryRoutes";
+import promotionRoutes from "./promotionRoutes";
 import newsLetterRoutes from "./newsLetterRoutes";
-import sliderRoutes from './sliderRoutes'
+import bannerRoutes from "./bannerRoutes";
+import sliderRoutes from "./sliderRoutes";
 import blogRoutes from "./blogRoutes";
 import settingsRoutes from "./settingsRoutes";
 import offerRoutes from "./offerRoutes";
-import promotionRoutes from "./promotionRoutes";
+<<<<<<< HEAD
+import reviewRoutes from "./reviewRoutes";
+=======
+import usersRoutes from "./usersRoutes";
+
+>>>>>>> f7054db0cafe3f47ad1200105d7402f87c0b6a5f
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
@@ -38,19 +45,16 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/page", pageRoutes);
   app.use("/api/v1/admin/orders", orderRoutes);
   app.use("/api/v1/admin/offers", offerRoutes);
-  app.use('/api/v1/admin/testimonials', testimonialRoutes)
-  app.use('/api/v1/admin/blog-category', blogCategoryRoutes);
-  app.use("/api/v1/admin/testimonials", testimonialRoutes);
-  app.use("/api/v1/newsletters", newsLetterRoutes);
-  app.use("/api/v1/admin/blogs", blogRoutes);
-  
-  app.use("/api/v1/newsletters", newsLetterRoutes);
-  app.use('/api/v1/admin/sliders',sliderRoutes)
-  app.use("/api/v1/admin/settings", settingsRoutes);
-
   app.use("/api/v1/admin/testimonials", testimonialRoutes);
   app.use("/api/v1/admin/blog-category", blogCategoryRoutes);
-
   app.use("/api/v1/admin/newsletters", newsLetterRoutes);
+  app.use("/api/v1/admin/blogs", blogRoutes);
+  app.use("/api/v1/admin/sliders", sliderRoutes);
+  app.use("/api/v1/admin/settings", settingsRoutes);
+  app.use("/api/v1/admin/blog-category", blogCategoryRoutes);
   app.use("/api/v1/admin/promotions", promotionRoutes);
+
+  app.use("/api/users", usersRoutes);
+  app.use("/api/v1/admin/banner", bannerRoutes);
+  app.use("/api/v1/admin/reviews", reviewRoutes);
 }

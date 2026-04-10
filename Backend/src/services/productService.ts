@@ -58,12 +58,9 @@ class productService {
 
 
       !isUpdate
-        ? (
-            ValidationHelper.isRequired(data.discountPrice, "discountPrice") ||
-            (data.discountPrice !== undefined
-              ? ValidationHelper.isNumber(data.discountPrice, "discountPrice")
-              : null)
-          )
+        ? data.discountPrice !== undefined
+          ? ValidationHelper.isNumber(data.discountPrice, "discountPrice")
+          : null
         : (
             data.discountPrice !== undefined
               ? ValidationHelper.isNumber(data.discountPrice, "discountPrice")
@@ -166,10 +163,22 @@ class productService {
         data.sku = data.sku.toUpperCase();
       }
       this.validateProductData(data);
+      if (
+        data.discountPrice !== undefined &&
+        data.price !== undefined
+      ) {
+        if (data.discountPrice < 0) {
+          throw new Error("Discount price cannot be negative");
+        }
+
+        if (data.discountPrice >= data.price) {
+          throw new Error("Discount price must be less than price");
+        }
+      }
       
 
   if (!data.slug) {
-    data.slug = await this.slugGenerete(data.name);
+    data.slug = await this.slugGenerete(data.name);  
   }
 
   if (!(await this.validateSlug(data.slug))) {
@@ -233,6 +242,17 @@ class productService {
   if (data.slug) {
     if (!(await this.validateSlug(data.slug))) {
       throw new Error("Invalid slug");
+    }
+  }
+  const finalPrice = data.price ?? existingProduct.price;
+
+  if (data.discountPrice !== undefined) {
+    if (data.discountPrice < 0) {
+      throw new Error("Discount price cannot be negative");
+    }
+
+    if (data.discountPrice >= finalPrice) {
+      throw new Error("Discount price must be less than price");
     }
   }
 

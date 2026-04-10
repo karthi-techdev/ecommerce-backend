@@ -39,7 +39,8 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, onChange, error, is
           options={field.options || []}
           value={getDisplayValue() as any} 
           placeholder={field.placeholder}
-          className={error ? "border-red-500 rounded" : ""}
+          className={error ? "border-red-100 rounded" : ""}
+          isError={!!error} 
           onMenuScrollToBottom={field.onMenuScrollToBottom}
           onInputChange={field.onInputChange}  
           onChange={(selected: any) => {
