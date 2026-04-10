@@ -15,13 +15,16 @@ import configRoutes from "./configRoutes";
 import productRoutes from "./productRoutes";
 import shipmentMethodRoutes from "./shipmentMethodsRouter";
 import testimonialRoutes from "./testimonialRoutes";
-import blogCategoryRoutes from './blogCategoryRoutes';
+import blogCategoryRoutes from "./blogCategoryRoutes";
+import promotionRoutes from "./promotionRoutes";
 import newsLetterRoutes from "./newsLetterRoutes";
+import bannerRoutes from "./bannerRoutes"
 import sliderRoutes from './sliderRoutes'
 import blogRoutes from "./blogRoutes";
 import settingsRoutes from "./settingsRoutes";
 import offerRoutes from "./offerRoutes";
-import promotionRoutes from "./promotionRoutes";
+import contactRoutes from "./contactRoutes";
+
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
@@ -40,17 +43,13 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/offers", offerRoutes);
   app.use('/api/v1/admin/testimonials', testimonialRoutes)
   app.use('/api/v1/admin/blog-category', blogCategoryRoutes);
-  app.use("/api/v1/admin/testimonials", testimonialRoutes);
-  app.use("/api/v1/newsletters", newsLetterRoutes);
+  app.use("/api/v1/admin/newsletters", newsLetterRoutes);
   app.use("/api/v1/admin/blogs", blogRoutes);
-  
-  app.use("/api/v1/newsletters", newsLetterRoutes);
   app.use('/api/v1/admin/sliders',sliderRoutes)
   app.use("/api/v1/admin/settings", settingsRoutes);
-
-  app.use("/api/v1/admin/testimonials", testimonialRoutes);
   app.use("/api/v1/admin/blog-category", blogCategoryRoutes);
-
-  app.use("/api/v1/admin/newsletters", newsLetterRoutes);
   app.use("/api/v1/admin/promotions", promotionRoutes);
+  app.use("/api/v1/admin/banner", bannerRoutes);
+  app.use("/api/v1/admin/contact", contactRoutes);
+
 }

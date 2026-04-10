@@ -8,6 +8,7 @@ import FormField from '../../molecules/FormField';
 import type { FieldConfig } from '../../../types/common';
 import { toast } from 'react-toastify';
 import { handleError } from '../../utils/errorHandler';
+import ImportedURL from '../../../common/urls';
 
 const OfferFormTemplate: React.FC = () => {
 
@@ -38,6 +39,7 @@ const OfferFormTemplate: React.FC = () => {
     buttonName: '',
     products: [],
     isActive: true,
+    image: null
   });
 
   const [errors, setErrors] = useState<OfferValidationErrors>({});
@@ -71,6 +73,7 @@ const OfferFormTemplate: React.FC = () => {
         buttonName: offer.buttonName || '',
         products: offer.products?.map((p: any) => p._id || p) || [],
         isActive: offer.isActive ?? true,
+        image: offer.image ? `${ImportedURL.LIVEURL}${offer.image}` : null,
       });
     };
     loadData();
@@ -81,6 +84,7 @@ const OfferFormTemplate: React.FC = () => {
   const handleChange = (e: any) => {
     const name = e.target ? e.target.name : e.name;
     let value = e.target ? e.target.value : e.value;
+
     if (name === 'name' && value.trim()) {
       if (nameCheckTimer.current) clearTimeout(nameCheckTimer.current);
       nameCheckTimer.current = setTimeout(async () => {
@@ -113,11 +117,25 @@ const OfferFormTemplate: React.FC = () => {
     }
     setIsSubmitting(true);
     try {
+      const data = new FormData();
+      data.append('name', formData.name);
+      data.append('banner', formData.banner || '');
+      data.append('description', formData.description || '');
+      data.append('buttonName', formData.buttonName);
+      data.append('isActive', formData.isActive ? '1' : '0');
+
+
+      formData.products.forEach((p: string) => data.append('products', p));
+
+      if (formData.image instanceof File) {
+        data.append('image', formData.image);
+      }
+
       if (id) {
-        await updateOffer(id, formData);
+        await updateOffer(id, data as any);
         toast.success('Offer updated successfully');
       } else {
-        await addOffer(formData);
+        await addOffer(data as any);
         toast.success('Offer added successfully');
       }
       navigate('/offer');
@@ -170,6 +188,13 @@ const OfferFormTemplate: React.FC = () => {
       type: 'select',
       placeholder: 'Select products',
       isMulti: true as any
+    },
+    {
+      name: 'image',
+      label: 'Image',
+      type: 'file',
+      previewEnabled: true,
+      accept: "image/png,image/jpeg,image/jpg,image/webp"
     }
   ];
   return (
@@ -194,29 +219,22 @@ const OfferFormTemplate: React.FC = () => {
               }));
             }
             return (
-              <FormField
-                key={field.name}
-                field={{
-                  ...field,
-                  options: fieldOptions,
-                  onMenuScrollToBottom: () => {
-                    if (page < totalPages && !loading) {
-                      fetchProducts(page + 1, 10, 'active');
-                    }
-                  },
-                  onInputChange: (val) => setSearchTerm(val)
-                }}
-                isRequired={[
-                  'name',
-                  'banner',
-                  'description',
-                  'buttonName',
-                  'products'
-                ].includes(field.name)}
-                value={formData[field.name as keyof OfferFormData]}
-                onChange={handleChange}
-                error={errors[field.name as keyof OfferValidationErrors]}
-              />
+              <div key={field.name}>
+                <FormField
+                  field={{
+                    ...field,
+                    options: fieldOptions,
+                    onMenuScrollToBottom: () => {
+                      if (page < totalPages && !loading) fetchProducts(page + 1, 10, 'active');
+                    },
+                    onInputChange: (val) => setSearchTerm(val),
+                  }}
+                  isRequired={['name', 'banner', 'description', 'buttonName', 'products'].includes(field.name)}
+                  value={formData[field.name as keyof OfferFormData]}
+                  onChange={handleChange}
+                  error={errors[field.name as keyof OfferValidationErrors]}
+                />
+              </div>
             );
           })}
         </div>

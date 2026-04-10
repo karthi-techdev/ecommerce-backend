@@ -87,7 +87,7 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
 
           errorTimer.current = setTimeout(() => {
             setFileError(null);
-          }, 5000);
+          }, 5000);        
           return;
         }
 

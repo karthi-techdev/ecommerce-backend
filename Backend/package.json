@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@types/bcrypt": "^6.0.0",
     "@types/express-session": "^1.18.2",
     "@types/joi": "^17.2.2",

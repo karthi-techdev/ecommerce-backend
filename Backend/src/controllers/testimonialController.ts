@@ -7,10 +7,7 @@ class TestimonialController {
 
   async createTestimonial(req: Request, res: Response, next: NextFunction) {
     try {
-
-
-
-      const { name, message, designation, rating } = req.body;
+     const { name, message, designation, rating } = req.body;
 
       let imagePath;
 

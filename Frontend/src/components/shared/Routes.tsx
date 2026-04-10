@@ -3,7 +3,8 @@ import type { RouteObject } from 'react-router-dom';
 import { Navigate, Outlet } from 'react-router-dom';
 import Layout from './Layout';
 import AdminLoginTemplate from '../templates/loginAuth/adminLoginTemplate';
-import AdminForgetPasswordTemplate from '../templates/loginAuth/adminForgetPassword'
+import AdminForgetPasswordTemplate from '../templates/loginAuth/adminForgetPassword';
+import AdminResetPasswordTemplate from '../templates/loginAuth/adminResetPassword'
 import { useAuthStore } from '../../stores/authStore';
 import NotFoundPage from '../utils/notFound';
 
@@ -22,8 +23,8 @@ const CategoryTrashPage = lazy(() => import('../pages/trash/CategoryTrashListPag
 const SubcategoryPage = lazy(() => import('../pages/subcategory/SubcategoryListPage'));
 const SubcategoryFormPage = lazy(() => import('../pages/subcategory/SubcategoryFormPage'));
 const SubcategoryTrashPage = lazy(() => import('../pages/trash/SubcategoryTrashListPage'));
-const ShipmentMethodsFormPage = lazy(()=> import ('../pages/shipmentMethods/ShipmentMethodsFormPage'))
-const ShipmentMethodsListPage = lazy(()=> import ('../pages/shipmentMethods/ShipmentMethodsListPage'))
+const ShipmentMethodsFormPage = lazy(() => import('../pages/shipmentMethods/ShipmentMethodsFormPage'))
+const ShipmentMethodsListPage = lazy(() => import('../pages/shipmentMethods/ShipmentMethodsListPage'))
 const BrandListPage = lazy(() => import('../pages/brand/BrandListPage'));
 const BrandFormPage = lazy(() => import('../pages/brand/BrandFormPage'));
 const BrandTrashPage = lazy(() => import('../pages/trash/BrandTrashPage'));
@@ -31,7 +32,7 @@ const CouponListPage = lazy(() => import('../pages/coupon/CouponListPage'));
 const CouponFormPage = lazy(() => import('../pages/coupon/CouponFormPage'));
 const PageListPage = lazy(() => import('../pages/page/pageListPages'));
 const PageFormPage = lazy(() => import('../pages/page/pageFormPages'));
-const OrderListPage = lazy(()=>import('../templates/order/orderListTemplate'));
+const OrderListPage = lazy(() => import('../templates/order/orderListTemplate'));
 const BlogListPage = lazy(() => import('../pages/blogCategory/BlogListPage'));
 const BlogFormPage = lazy(() => import('../pages/blogCategory/BlogFormPage'));
 const BlogTrashPage = lazy(() => import('../pages/trash/BlogTrashPage'));
@@ -43,6 +44,9 @@ const BlogsFormPage = lazy(() => import('../pages/blog/BlogsFormPage'));
 const BlogsTrashPage = lazy(() => import('../pages/trash/BlogsTrashPage'));
 const PromotionsListPage = lazy(() => import('../pages/promotions/PromotionsListPage'));
 const PromotionsFormPage = lazy(() => import('../pages/promotions/PromotionsFormPage'));
+const BannerOneFormPage = lazy(() => import('../pages/bannerOne/BannerFormPage'));
+const BannerTwoFormPage = lazy(() => import('../pages/bannerTwo/BannerTwoFormPage'));
+const SettingsManager = lazy(() => import('../templates/settings/settingsManager'));
 
 const PrivateRoute = () => {
   const { isAuthenticated } = useAuthStore();
@@ -75,6 +79,9 @@ const ConfigListPage = lazy(() => import('../pages/config/ConfigListPage'));
 const ConfigFormPage = lazy(() => import('../pages/config/ConfigFormPage'));
 const SliderListPage = lazy(() => import('../pages/slider/SliderListPage'));
 const SliderFormPage = lazy(() => import('../pages/slider/SliderFormPage'));
+const ContactFormPage = lazy(()=> import('../pages/contact/contactFormPage'))
+const ContactListPage = lazy(()=> import('../pages/contact/contactListPage'))
+const ContactTrashPage = lazy(()=> import('../pages/trash/ContactTrashPage'))
 
 const routes: RouteObject[] = [
   {
@@ -83,12 +90,16 @@ const routes: RouteObject[] = [
       {
         path: 'login',
         element: <AdminLoginTemplate />,
+      },
+    ],
       }, {
         path:'forgetPassword',
         element:<AdminForgetPasswordTemplate/>
-      }
-   ],
-  },
+      },{
+        path:'resetPassword',
+        element:<AdminResetPasswordTemplate/>
+      },
+
   {
     element: <PrivateRoute />,
     children: [
@@ -106,39 +117,39 @@ const routes: RouteObject[] = [
           },
           {
             path: 'page',
-            children:[
+            children: [
               {
-                path:"",
-                element:<PageListPage/>
+                path: "",
+                element: <PageListPage />
               }
-              ,{
+              , {
                 path: 'add',
                 element: <PageFormPage />,
               },
-              { 
-                path: 'edit/:id', 
-                element: <PageFormPage /> 
+              {
+                path: 'edit/:id',
+                element: <PageFormPage />
               },
             ]
-          }, 
+          },
           {
             path: 'orders',
-            children:[
+            children: [
               {
-                path:"",
-                element:<OrderListPage/>
+                path: "",
+                element: <OrderListPage />
               }
-              ,{
+              , {
                 path: 'add',
                 element: <OrderListPage />,
               },
-              { 
-                path: 'edit/:id', 
-                element: <OrderListPage /> 
+              {
+                path: 'edit/:id',
+                element: <OrderListPage />
               },
             ]
-          }, 
-    
+          },
+
           {
             path: 'faq',
             children: [
@@ -146,7 +157,7 @@ const routes: RouteObject[] = [
               { path: 'add', element: <FaqFormPage /> },
               { path: 'edit/:id', element: <FaqFormPage /> },
             ],
-          }, 
+          },
           {
         path: 'testimonial',
         children: [
@@ -209,6 +220,10 @@ const routes: RouteObject[] = [
         ]
       },
 
+      {
+        path: 'settings', // Simplified path
+        element: <SettingsManager />, 
+      },
 
       {
         
@@ -263,6 +278,14 @@ const routes: RouteObject[] = [
         ],
       },
       {
+        path: 'contact',
+        children: [
+          { path: '', element: <ContactListPage /> }, 
+          { path: 'add', element: <ContactFormPage /> },   
+          { path: 'edit/:id', element: <ContactFormPage /> },  
+        ],
+      },
+      {
         path: 'trash',
         children: [
           { path: 'subcategory', element: <SubcategoryTrashPage /> },
@@ -273,6 +296,7 @@ const routes: RouteObject[] = [
           {path: 'faq',element: <FaqTrashPage />,},
           { path: 'blog-category', element: <BlogTrashPage /> },
           { path: 'blogs', element: <BlogsTrashPage /> }, 
+          { path: 'contact', element: <ContactTrashPage /> }, 
         ]
       }, 
       {
@@ -290,7 +314,25 @@ const routes: RouteObject[] = [
               { path: 'add', element: <PromotionsFormPage /> },
               { path: 'edit/:id', element: <PromotionsFormPage /> },
             ],
-          }, 
+          },
+          {
+            path: 'banners',
+            children: [
+              {
+                index: true,
+                element: <Navigate to="banner-one?tab=banner-one" replace />
+              },
+              {
+                path: 'banner-one',
+                element: <BannerOneFormPage />
+              },
+              {
+                path: 'banner-two',
+                element: <BannerTwoFormPage />
+              }
+            ]
+          }
+
         ],
       },
     ],
@@ -303,7 +345,6 @@ const routes: RouteObject[] = [
 ];
 
 export default routes;
-
 
 
 
