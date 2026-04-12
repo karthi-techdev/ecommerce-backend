@@ -18,7 +18,7 @@ import BrandListTemplate from '../components/templates/brand/BrandListTemplate';
 import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
 
 import BrandTrashPage from '../components/pages/trash/BrandTrashPage';
-
+import CommentListTemplate from '@/components/templates/comments/CommentsListTemplate';
 import ShipmentMethodListTemplate from '../components/templates/shipmentMethods/shipmentMethodsListTemplate';
 import ShipmentMethodFormTemplate from '../components/templates/shipmentMethods/ShipmentMethodsFormTemplate';
 import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
@@ -137,6 +137,12 @@ export const router = createBrowserRouter([
           { path: 'edit/:id', element: <BrandFormTemplate /> },
         ],
       },
+      {
+  path: 'comments',
+  children: [
+    { path: '', element: <CommentListTemplate /> },
+  ],
+},
 
       {
         path: 'products',

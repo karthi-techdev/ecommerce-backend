@@ -8,6 +8,7 @@ import AdminResetPasswordTemplate from '../templates/loginAuth/adminResetPasswor
 import { useAuthStore } from '../../stores/authStore';
 import NotFoundPage from '../utils/notFound';
 
+
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 
 const NewsLetterPage = lazy(() => import('../pages/newsLetter/NewsLetterListPage'));
@@ -79,6 +80,7 @@ const ConfigListPage = lazy(() => import('../pages/config/ConfigListPage'));
 const ConfigFormPage = lazy(() => import('../pages/config/ConfigFormPage'));
 const SliderListPage = lazy(() => import('../pages/slider/SliderListPage'));
 const SliderFormPage = lazy(() => import('../pages/slider/SliderFormPage'));
+const CommentsListPage = lazy(() => import('../pages/comments/CommentsListPage'));
 
 const routes: RouteObject[] = [
   {
@@ -187,6 +189,14 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <BrandFormPage /> }, 
         ],
       },
+      {
+        path: 'comments',
+        children: [
+          { path: '', element: <CommentsListPage /> }, 
+      
+        ],
+      },
+      
 
       {
   path: 'coupon',

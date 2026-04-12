@@ -5,7 +5,7 @@ import { FiSettings,FiTruck,FiFileText,FiLayers,FiTag,FiMail,FiList,FiSliders ,F
 import { BiSolidOffer } from "react-icons/bi";
 import { BiCategory, BiBook, BiBitcoin } from "react-icons/bi";
 import type { ReactNode } from 'react';
-import { SlidersHorizontal,Settings2  } from 'lucide-react';
+import { SlidersHorizontal,Settings2 ,ClipboardPen } from 'lucide-react';
 
 export interface SubMenuItem {
   key: string;
@@ -130,6 +130,13 @@ const menuItems: MenuItem[] = [
     icon: <PiShoppingCartLight />,
     path: '/offer',
   },
+
+  {
+  key: 'comments',
+  label: 'Comments',
+  path: '/comments',
+  icon: <ClipboardPen />,
+},
     {
     key: 'commerce-settings',
     label: 'Commerce Settings',
