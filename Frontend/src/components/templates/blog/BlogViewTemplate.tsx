@@ -15,6 +15,7 @@ const BlogViewTemplate: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+     console.log("Blog ID from params:", id);
     const loadBlog = async () => {
       try {
         const data = await fetchBlogById(id as string);

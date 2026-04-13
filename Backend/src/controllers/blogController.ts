@@ -144,6 +144,18 @@ class BlogController {
       next(err);
     }
   };
+  getById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const blog = await BlogService.getById(req.params.id);
+
+    res.status(200).json({
+      status: HTTP_RESPONSE.SUCCESS,
+      data: blog,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 }
 
 export default new BlogController();
