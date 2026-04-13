@@ -190,6 +190,7 @@ const API = {
   addBlog: `${ROOTURL}admin/blogs/`,
   listBlog: `${ROOTURL}admin/blogs/`,
   getBlog: (id: string) => `${ROOTURL}admin/blogs/get/${id}`,
+  getBlogById: (id: string) => `${ROOTURL}admin/blogs/${id}`,
   updateBlog: (id: string) => `${ROOTURL}admin/blogs/update/${id}`,
   softDeleteBlog: (id: string) => `${ROOTURL}admin/blogs/delete/${id}`,
   trashBlog: `${ROOTURL}admin/blogs/trash`,

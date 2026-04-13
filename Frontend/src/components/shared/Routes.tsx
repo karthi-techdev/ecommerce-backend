@@ -6,7 +6,7 @@ import AdminLoginTemplate from '../templates/loginAuth/adminLoginTemplate';
 import AdminForgetPasswordTemplate from '../templates/loginAuth/adminForgetPassword';
 import AdminResetPasswordTemplate from '../templates/loginAuth/adminResetPassword'
 import { useAuthStore } from '../../stores/authStore';
-import NotFoundPage from '../utils/notFound';
+import NotFoundPage from '../utils/notFound';   
 import ReviewListPage from '../pages/reviews/ReviewListPage';
 
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
@@ -43,6 +43,7 @@ const OfferFormPage = lazy(() => import('../pages/offer/offerFormPage'));
 const BlogsListPage = lazy(() => import('../pages/blog/BlogsListPage'));
 const BlogsFormPage = lazy(() => import('../pages/blog/BlogsFormPage'));
 const BlogsTrashPage = lazy(() => import('../pages/trash/BlogsTrashPage'));
+import BlogViewTemplate from '../templates/blog/BlogViewTemplate';
 const PromotionsListPage = lazy(() => import('../pages/promotions/PromotionsListPage'));
 const PromotionsFormPage = lazy(() => import('../pages/promotions/PromotionsFormPage'));
 const BannerOneFormPage = lazy(() => import('../pages/bannerOne/BannerFormPage'));
@@ -156,6 +157,102 @@ const routes: RouteObject[] = [
               { path: 'edit/:id', element: <FaqFormPage /> },
             ],
           },
+          {
+        path: 'testimonial',
+        children: [
+          { path: '', element: < TestmonialPage /> },
+          { path: 'add', element: <TestimonialFormPage /> },
+          { path: 'edit/:id', element: < TestimonialFormPage /> },
+        ],
+      },
+           {
+        path: 'config',
+        children: [
+          { path: '', element: <ConfigListPage /> }, 
+          { path: 'add', element: <ConfigFormPage /> },   
+          { path: 'edit/:id', element: <ConfigFormPage /> },  
+        ],
+      },
+      {
+        path: 'slider',
+        children: [
+          { path: '', element: <SliderListPage /> }, 
+          { path: 'add', element: <SliderFormPage /> },   
+          { path: 'edit/:id', element: <SliderFormPage /> },  
+        ],
+      },
+       {
+        path: 'brand',
+        children: [
+          { path: '', element: <BrandListPage /> }, 
+          { path: 'add', element: <BrandFormPage /> },   
+          { path: 'edit/:id', element: <BrandFormPage /> }, 
+        ],
+      },
+
+      {
+  path: 'coupon',
+  children: [
+    { path: '', element: <CouponListPage /> },
+    { path: 'add', element: <CouponFormPage /> },
+    { path: 'edit/:id', element: <CouponFormPage /> },
+  ],
+},
+      
+
+      {
+        path: 'blog-category',
+        children: [
+          { path: '', element: <BlogListPage /> },
+          { path: 'add', element: <BlogFormPage /> },
+          { path: 'edit/:id', element: <BlogFormPage /> },
+          
+        ]
+      },
+
+      {
+        path: 'blogs',
+        element: <Outlet />, 
+        children: [
+          { path:'', element: <BlogsListPage /> },
+          { path: 'add', element: <BlogsFormPage /> },
+          { path: 'edit/:id', element: <BlogsFormPage /> },
+          { path: 'view/:id', element: <BlogViewTemplate /> },
+        ]
+      },
+
+      {
+        path: 'settings', // Simplified path
+        element: <SettingsManager />, 
+      },
+
+      {
+        
+        path: 'products',
+        children: [
+          { path: '', element: <ProductListPage /> },
+          { path: 'add', element: <ProductFormPage /> },
+          { path: 'edit/:id', element: <ProductFormPage /> },
+        ],
+      },
+
+      {
+        path: 'mainCategory',
+        children: [
+          { path: '', element: <MainCategoryPage /> },
+          { path: 'add', element: <MainCategoryFormPage /> },
+          { path: 'edit/:id', element: <MainCategoryFormPage /> },
+        ],
+      },
+
+      {
+        path:'category',
+       children:[
+        {path:'',element:<CategoryPage/>},
+        {path:'add',element:<CategoryFormPage/>},
+        {path:'edit/:id',element:<CategoryFormPage/>},
+       ]
+      },
           {
             path: 'testimonial',
             children: [

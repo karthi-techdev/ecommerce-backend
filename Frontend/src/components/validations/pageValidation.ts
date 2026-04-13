@@ -1,13 +1,15 @@
 export interface PageFormData {
+  footerPageTitle: string;
   name: string;
   slug: string;
-  type: "content" | "url";
+  type: "" | "content" | "url";
   description?: string;
   url?: string;
   isActive?: boolean;
 }
 
 export interface ValidationErrors {
+  footerPageTitle?: string;  
   name?: string;
   slug?: string;
   type?: string;
@@ -21,6 +23,12 @@ export const validatePageForm = (
   // isEdit:boolean = false
 ): ValidationErrors => {
   const errors: ValidationErrors = {};
+   
+  if (!data.footerPageTitle) {
+  errors.footerPageTitle = "Title is required.";
+} else if (!data.footerPageTitle.trim()) {
+  errors.footerPageTitle = "Title cannot be empty.";
+}
 
   if (!data.name) {
     errors.name = "Name is required.";

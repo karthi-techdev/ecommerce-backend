@@ -6,7 +6,7 @@ class PageController {
 
     async createPage(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { name, slug } = req.body;
+      const { name, slug, type } = req.body;
 
       if (!name) {
         res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
@@ -24,6 +24,21 @@ class PageController {
         return;
       }
 
+      if (!type) {
+        res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+            status: HTTP_RESPONSE.FAIL,
+            message: "Type is required",
+        });
+        return;
+        }
+
+        if (!["content", "url"].includes(type)) {
+        res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+            status: HTTP_RESPONSE.FAIL,
+            message: "Invalid page type",
+        });
+        return;
+        }
       const isDuplicate = await PageService.existBySlug(slug);
         if (isDuplicate) {
         res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({

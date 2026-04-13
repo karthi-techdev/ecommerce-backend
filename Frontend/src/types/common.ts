@@ -139,14 +139,15 @@ export interface Product {
 }
 
 export interface Page {
-  _id?: string;
-  name: string;
-  slug: string;
-  type?: "content" | "url";
-  description?: string;
-  url?: string;
-  isActive?: boolean;
-  createdAt?: Date;
+    _id?: string;
+    footerPageTitle?: string;
+    name : string,
+    slug : string,
+    type? : "content" | "url",
+    description? : string,
+    url? : string,
+    isActive? : boolean,
+    createdAt? : Date
 }
 
 export interface OrderProduct {
