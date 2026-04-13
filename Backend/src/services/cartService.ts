@@ -66,8 +66,8 @@ class cartService{
         }
         return await cartRepository.getStats(id);
     }
-    async clearCart(userId:string|Types.ObjectId){
-        return await cartRepository.clearCart(userId);
+    async updateCart(id:string|Types.ObjectId,data:Partial<ICart>){
+        return await cartRepository.updateCart(id,data);
     }
 }
 export default new cartService();

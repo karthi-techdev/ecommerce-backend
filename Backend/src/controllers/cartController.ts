@@ -48,11 +48,12 @@ class cartController{
            next(err); 
         }
     }
-    async clearCart(req:Request,res:Response,next:NextFunction):Promise<void>{
+    async updateCart(req:Request,res:Response,next:NextFunction):Promise<void>{
         try {
-            const userId=req.params.id;
-            const clearCart=await cartService.clearCart(userId);
-            res.status(200).json({status:HTTP_RESPONSE.SUCCESS,message:"Cart items cleared successfully"});
+            const id=req.params.id;
+            const data=req.body
+            const updateCart=await cartService.updateCart(id,data);
+            res.status(200).json({status:HTTP_RESPONSE.SUCCESS,message:"Cart item updates successfully"});
         } catch (err:any) {
             next(err)
         }

@@ -19,8 +19,5 @@ class cartRepository{
     async getStats(id:Types.ObjectId|string){
         return await CartModel.find({userId:id}).countDocuments();
     }
-    async clearCart(userId:string|Types.ObjectId){
-        return await CartModel.deleteMany({userId})
-    }
 }
 export default new cartRepository();
