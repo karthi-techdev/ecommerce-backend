@@ -81,6 +81,11 @@ const ConfigListPage = lazy(() => import('../pages/config/ConfigListPage'));
 const ConfigFormPage = lazy(() => import('../pages/config/ConfigFormPage'));
 const SliderListPage = lazy(() => import('../pages/slider/SliderListPage'));
 const SliderFormPage = lazy(() => import('../pages/slider/SliderFormPage'));
+const ContactFormPage = lazy(()=> import('../pages/contact/contactFormPage'))
+const ContactListPage = lazy(()=> import('../pages/contact/contactListPage'))
+const ContactTrashPage = lazy(()=> import('../pages/trash/ContactTrashPage'))
+const AddInfoListPage = lazy(()=>import('../pages/addinfo/AddInfoListPage'))
+const AddInfoFormPage = lazy(()=>import('../pages/addinfo/AddInfoFormPage'))
 
 const routes: RouteObject[] = [
   {
@@ -148,7 +153,6 @@ const routes: RouteObject[] = [
               },
             ]
           },
-
           {
             path: 'faq',
             children: [
@@ -157,6 +161,8 @@ const routes: RouteObject[] = [
               { path: 'edit/:id', element: <FaqFormPage /> },
             ],
           },
+
+          
           {
         path: 'testimonial',
         children: [
@@ -233,6 +239,14 @@ const routes: RouteObject[] = [
           { path: '', element: <ProductListPage /> },
           { path: 'add', element: <ProductFormPage /> },
           { path: 'edit/:id', element: <ProductFormPage /> },
+          {
+            path: 'add-info',
+            children: [
+              { path: '', element: <AddInfoListPage /> },
+              { path: 'add', element: <AddInfoFormPage /> },
+              { path: 'edit/:id', element: <AddInfoFormPage /> },
+            ],
+          },
         ],
       },
 
@@ -254,6 +268,53 @@ const routes: RouteObject[] = [
        ]
       },
           {
+        path: 'subcategory',
+        children: [
+          { path: '', element: <SubcategoryPage /> },
+          { path: 'add', element: <SubcategoryFormPage /> },
+          { path: 'edit/:id', element: <SubcategoryFormPage /> },
+        ],
+      },
+      {
+        
+        path: 'offer',
+        children: [
+          { path: '', element: <OfferListPage /> },
+          { path: 'add', element: <OfferFormPage /> },
+          { path: 'edit/:id', element: <OfferFormPage /> },
+        ],
+      },
+       {
+        path: 'shipment-methods',
+        children: [
+          { path: '', element: <ShipmentMethodsListPage /> },
+          { path: 'add', element: <ShipmentMethodsFormPage /> },
+          { path: 'edit/:id', element: <ShipmentMethodsFormPage /> },
+        ],
+      },
+      {
+        path: 'contact',
+        children: [
+          { path: '', element: <ContactListPage /> }, 
+          { path: 'add', element: <ContactFormPage /> },   
+          { path: 'edit/:id', element: <ContactFormPage /> },  
+        ],
+      },
+      {
+        path: 'trash',
+        children: [
+          { path: 'subcategory', element: <SubcategoryTrashPage /> },
+          { path: 'brand', element: <BrandTrashPage /> },
+          { path: 'products', element: <ProductTrashPage /> },
+          {path: 'mainCategory',element: <TrashMainCategoryPage />},
+          {path: 'category',element: <CategoryTrashPage />,},
+          {path: 'faq',element: <FaqTrashPage />,},
+          { path: 'blog-category', element: <BlogTrashPage /> },
+          { path: 'blogs', element: <BlogsTrashPage /> }, 
+          { path: 'contact', element: <ContactTrashPage /> }, 
+        ]
+      }, 
+      {
             path: 'testimonial',
             children: [
               { path: '', element: < TestmonialPage /> },
@@ -418,17 +479,19 @@ const routes: RouteObject[] = [
               }
             ]
           },
-          {
+           {
             path: 'reviews',
             children: [
               { path: '', element: <ReviewListPage /> },
             ]
           },
+        ],
+          },
+         
 
         ],
       },
-    ],
-  },
+   
 
   {
     path: '*',

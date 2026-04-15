@@ -34,6 +34,12 @@ class MainCategoryService {
         : data.description !== undefined
         ? ValidationHelper.isNonEmptyString(data.description, "description")
         : null,
+
+        !isUpdate
+        ? ValidationHelper.isRequired(data.icon, "icon")
+        : data.icon !== undefined
+        ? ValidationHelper.isNonEmptyString(data.icon, "icon")
+        : null,
     ];
 
     const errors = ValidationHelper.validate(rules);
@@ -62,6 +68,7 @@ class MainCategoryService {
       slug: data.slug,
       description: data.description,
       image: data.image,
+      icon: data.icon,
       isActive: data.isActive,
     });
   }
