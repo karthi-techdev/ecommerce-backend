@@ -81,5 +81,17 @@ class configService{
         }
         return await configRepository.deleteConfig(id);
     }
+    async getFooterPageTitles() {
+    const config = await configRepository.getBySlug(
+        "footer-page-title"
+    );
+
+    if (!config) return [];
+
+    return config.options.map((opt: any) => ({
+        label: opt.value,
+        value: opt.value
+    }));
+}
 }
 export default new configService;

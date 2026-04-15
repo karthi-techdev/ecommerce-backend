@@ -52,5 +52,11 @@ class configRepository{
     async toggleStatus(id:string):Promise<IConfig|null>{
           return await this.commonRepository.toggleStatus(id);
         }
+    async getBySlug(slug: string) {
+    return await ConfigModel.findOne({
+        slug,
+        status: "active"
+    });
+}
 }
 export default new configRepository;

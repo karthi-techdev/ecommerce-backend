@@ -6,7 +6,7 @@ import AdminLoginTemplate from '../templates/loginAuth/adminLoginTemplate';
 import AdminForgetPasswordTemplate from '../templates/loginAuth/adminForgetPassword';
 import AdminResetPasswordTemplate from '../templates/loginAuth/adminResetPassword'
 import { useAuthStore } from '../../stores/authStore';
-import NotFoundPage from '../utils/notFound';
+import NotFoundPage from '../utils/notFound';   
 import ReviewListPage from '../pages/reviews/ReviewListPage';
 
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
@@ -43,6 +43,7 @@ const OfferFormPage = lazy(() => import('../pages/offer/offerFormPage'));
 const BlogsListPage = lazy(() => import('../pages/blog/BlogsListPage'));
 const BlogsFormPage = lazy(() => import('../pages/blog/BlogsFormPage'));
 const BlogsTrashPage = lazy(() => import('../pages/trash/BlogsTrashPage'));
+import BlogViewTemplate from '../templates/blog/BlogViewTemplate';
 const PromotionsListPage = lazy(() => import('../pages/promotions/PromotionsListPage'));
 const PromotionsFormPage = lazy(() => import('../pages/promotions/PromotionsFormPage'));
 const BannerOneFormPage = lazy(() => import('../pages/bannerOne/BannerFormPage'));
@@ -211,6 +212,7 @@ const routes: RouteObject[] = [
           { path: '', element: <BlogListPage /> },
           { path: 'add', element: <BlogFormPage /> },
           { path: 'edit/:id', element: <BlogFormPage /> },
+          
         ]
       },
 
@@ -221,6 +223,7 @@ const routes: RouteObject[] = [
           { path:'', element: <BlogsListPage /> },
           { path: 'add', element: <BlogsFormPage /> },
           { path: 'edit/:id', element: <BlogsFormPage /> },
+          { path: 'view/:id', element: <BlogViewTemplate /> },
         ]
       },
 

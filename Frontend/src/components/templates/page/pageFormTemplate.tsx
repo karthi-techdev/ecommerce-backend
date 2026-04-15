@@ -9,12 +9,13 @@ import FormField from "../../molecules/FormField";
 import type { FieldConfig } from "../../../types/common";
 import { toast } from "react-toastify";
 import { handleError } from "../../utils/errorHandler";
+import axiosInstance from "../../utils/axios";   
+import ImportedURL from "../../../common/urls";
 
 const TYPE_OPTIONS = [
   { label: "Content Page", value: "content" },
   { label: "External URL Page", value: "url" },
 ];
-
 const createSlug = (text: string) => text.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
 
 const PageFormTemplate: React.FC = () => {
@@ -38,27 +39,52 @@ const PageFormTemplate: React.FC = () => {
   );
 
   const pageFields: FieldConfig[] = [
+    {name: "footerPageTitle",label: " Title",type: "select",required: true},
     { name: "name", label: "Name", placeholder: "Enter Name", type: "text", required: true },
     { name: "slug", label: "Slug", type: "text", placeholder: "slug is automatically generated", disabled: true },
-    { name: "type", label: "Type", type: "select" },
+    { name: "type", label: "Type", type: "select",required: true },
     { name: "url", label: "External URL", placeholder: "Enter the URL", type: "text", required: true },
   ];
 
   const [formData, setFormData] = useState<PageFormData>({
-    name: "",
-    slug: "",
-    type: "content",
-    description: "",
-    url: "",
-    isActive: true,
-  });
+  footerPageTitle: "",
+  name: "",
+  slug: "",
+  type: "",
+  description: "",
+  url: "",
+  isActive: true,
+});
 
   const [editorContent, setEditorContent] = useState("");
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [footerOptions, setFooterOptions] = useState<{ label: string; value: string }[]>([]);
   const nameTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  useEffect(() => {
+  const fetchFooterTitles = async () => {
+    try {
+      const res = await axiosInstance.get(ImportedURL.API.listConfig);
+      const configs = res.data?.data?.data || [];
+      const footerConfig = configs.find(
+        (c: any) => c.slug === "footer-page-title"
+      );
+
+      if (footerConfig) {
+        const options = footerConfig.options.map((opt: any) => ({
+          label: opt.value,
+          value: opt.value,
+        }));
+        setFooterOptions(options);
+      }
+    } catch (err) {
+      console.log("Failed to load footer titles", err);
+    }
+  };
+
+  fetchFooterTitles();
+}, []);
   useEffect(() => {
     if (!id) return;
 
@@ -67,6 +93,7 @@ const PageFormTemplate: React.FC = () => {
         const page = await fetchPageById(id);
         if (page) {
           setFormData({
+            footerPageTitle: page.footerPageTitle || "", 
             name: page.name || "",
             slug: page.slug || "",
             type: (page.type as "content" | "url") || "content",
@@ -144,7 +171,7 @@ const PageFormTemplate: React.FC = () => {
       toast.error(errorMessages[0]);
     }
     return;
-  }
+  } 
 
   try {
     setIsSubmitting(true);
@@ -183,7 +210,12 @@ const PageFormTemplate: React.FC = () => {
                   field={{
                     ...field,
                     label: "", 
-                    options: field.name === "type" ? TYPE_OPTIONS : undefined,
+                    options:
+                      field.name === "type"
+                        ? TYPE_OPTIONS
+                        : field.name === "footerPageTitle"
+                        ? footerOptions
+                        : undefined,
                   }}
                   value={
                     field.name === "isActive"

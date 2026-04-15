@@ -16,9 +16,7 @@ import MainCategoryFormTemplate from '../components/templates/mainCategory/MainC
 import TrashMainCategoryListTemplate from '../components/templates/trash/MainCategoryTrash/TrashMainCategoryListTemplate'
 import BrandListTemplate from '../components/templates/brand/BrandListTemplate';
 import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
-
 import BrandTrashPage from '../components/pages/trash/BrandTrashPage';
-
 import ShipmentMethodListTemplate from '../components/templates/shipmentMethods/shipmentMethodsListTemplate';
 import ShipmentMethodFormTemplate from '../components/templates/shipmentMethods/ShipmentMethodsFormTemplate';
 import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
@@ -51,6 +49,7 @@ import OfferFormTemplate from '@/components/templates/offer/offerFormTemplate';
 
 import BlogListTemplate from '@/components/templates/blog/BlogListTemplate';
 import BlogFormTemplate from '@/components/templates/blog/BlogFormTemplate';
+import BlogViewTemplate from '@/components/templates/blog/BlogViewTemplate';
 import BlogTrashTemplate from '@/components/templates/trash/BlogsTrash/BlogTrashTemplate';
 
 import PromotionsListTemplate from '../components/templates/promotions/PromotionsListTemplate';
@@ -217,14 +216,15 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: 'blogs',
-        children: [
-          { index: true, element: <BlogListTemplate /> },
-          { path: 'add', element: <BlogFormTemplate /> },
-          { path: 'edit/:id', element: <BlogFormTemplate /> },
-          { path: 'trash', element: <BlogTrashTemplate /> },
-        ]
-      },
+      path: 'blogs',                 
+      children: [
+    { index:true, element: <BlogListTemplate /> },     
+    { path: 'add', element: <BlogFormTemplate /> },  
+    { path: 'edit/:id', element: <BlogFormTemplate /> }, 
+    { path: 'view/:id', element: <BlogViewTemplate /> },
+    { path: 'trash', element: <BlogTrashTemplate /> },
+  ]
+},
 
 
       {

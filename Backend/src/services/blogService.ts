@@ -105,6 +105,9 @@ class BlogService {
     const exists = await this.repo.existsBySlug(slug, excludeId);
     return exists;
   }
+  getById(id: string) {
+  return this.repo.getBlogById(id);
+}
 }
 
 export default new BlogService();

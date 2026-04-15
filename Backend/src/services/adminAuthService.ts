@@ -41,8 +41,7 @@ export class AdminAuthService {
       { expiresIn: this.JWT_ACCESS_EXPIRATION }
     );
 
-    await adminAuthRepository.lastLoggedIn( (admin as any)._id.toString());
-
+    await adminAuthRepository.lastLoggedIn((admin as any)._id.toString());
     return {
       token,
       admin: {
