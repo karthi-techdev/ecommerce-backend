@@ -62,19 +62,18 @@ const API = {
   permanentDeleteMainCategory: `${ROOTURL}admin/main-categories/permanent-delete/`,
   activeMainCategory: `${ROOTURL}admin/main-categories/activeMainCategories`,
   listAllMainCategory: `${ROOTURL}admin/main-categories`,
-  
+
   // ---------------- Brand endpoints ----------------
   addBrand: `${ROOTURL}admin/brands/`,
   listBrand: `${ROOTURL}admin/brands/`,
   getBrand: `${ROOTURL}admin/brands/getBrandById/`,
   updateBrand: `${ROOTURL}admin/brands/updateBrand/`,
   softDeleteBrand: `${ROOTURL}admin/brands/softDeleteBrand/`,
-  restoreBrand: `${ROOTURL}admin/brands/restore`, 
+  restoreBrand: `${ROOTURL}admin/brands/restore`,
   hardDeleteBrand: `${ROOTURL}admin/brands/permanentDelete`,
   toggleBrandStatus: `${ROOTURL}admin/brands/togglestatus`,
   trashBrands: `${ROOTURL}admin/brands/trash`,
   checkDuplicateBrand: `${ROOTURL}admin/brands/check-duplicate`,
-
 
   //subcategory endpoints
   addSubCategory: `${ROOTURL}admin/subcategory/`,
@@ -103,7 +102,7 @@ updateSettings: `${ROOTURL}admin/settings/`,
   deleteShipmentMethods: `${ROOTURL}admin/shipment-methods/softDeleteShipmentMethod/`,
   toggleStatusShipmentMethods: `${ROOTURL}admin/shipment-methods/togglestatus/`,
   checkDuplicateShipmentMethods: `${ROOTURL}admin/shipment-methods/check-duplicate/`,
-  // ---------------- Coupon endpoints ----------------
+  // ---------------- Coupon endpoints -----contact-----------
 
   addCoupon: `${ROOTURL}admin/coupon/`,
   listCoupon: `${ROOTURL}admin/coupon/`,
@@ -125,14 +124,14 @@ updateSettings: `${ROOTURL}admin/settings/`,
   deleteConfig: `${ROOTURL}admin/config/deleteConfig/`,
   toggleConfigStatus: `${ROOTURL}admin/config/togglestatus/`,
 
-    // -------------------------- Sliders endpoints------------
-  addSlider:`${ROOTURL}admin/sliders/`,
-  listSLider:`${ROOTURL}admin/sliders/`,
-  getSliderById:`${ROOTURL}admin/sliders/getSliderById/`,
-  sliderStats:`${ROOTURL}admin/sliders/sliderStats`,
-  updateSlider:`${ROOTURL}admin/sliders/`,
-  toggleStatusSlider:`${ROOTURL}admin/sliders/`,
-  deleteSlider:`${ROOTURL}admin/sliders/`,
+  // -------------------------- Sliders endpoints------------
+  addSlider: `${ROOTURL}admin/sliders/`,
+  listSLider: `${ROOTURL}admin/sliders/`,
+  getSliderById: `${ROOTURL}admin/sliders/getSliderById/`,
+  sliderStats: `${ROOTURL}admin/sliders/sliderStats`,
+  updateSlider: `${ROOTURL}admin/sliders/`,
+  toggleStatusSlider: `${ROOTURL}admin/sliders/`,
+  deleteSlider: `${ROOTURL}admin/sliders/`,
   // Page endpoints
   addPage: `${ROOTURL}admin/page/`,
   listPage: `${ROOTURL}admin/page/`,
@@ -163,10 +162,10 @@ updateSettings: `${ROOTURL}admin/settings/`,
   getOrderById: `${ROOTURL}admin/orders/`,
   updateOrderStatus: `${ROOTURL}admin/orders/orderstatus`,
   updatePaymentStatus: `${ROOTURL}admin/orders/paymentstatus`,
-  deleteOrder: `${ROOTURL}admin/orders/`, 
+  deleteOrder: `${ROOTURL}admin/orders/`,
 
   // Offer Management
-  addOffer: `${ROOTURL}admin/offers/`, 
+  addOffer: `${ROOTURL}admin/offers/`,
   listOffer: `${ROOTURL}admin/offers/`,
   getOfferById: `${ROOTURL}admin/offers/`,
   updateOffer: `${ROOTURL}admin/offers/`,
@@ -174,22 +173,22 @@ updateSettings: `${ROOTURL}admin/settings/`,
   // softDeleteOffer: `${ROOTURL}admin/offer/soft/`,
   // restoreOffer: `${ROOTURL}admin/offer/restore/`,
   permanentDeleteOffer: `${ROOTURL}admin/offers/permanent/`,
-  checkOfferDuplicate: `${ROOTURL}admin/offers/check-duplicate`, 
+  checkOfferDuplicate: `${ROOTURL}admin/offers/check-duplicate`,
 
-   //  BlogCategory endpoints
-    addBlogCategory: `${ROOTURL}admin/blog-category/`,
-    listBlogCategory: `${ROOTURL}admin/blog-category/`,
-    getBlogCategory: `${ROOTURL}admin/blog-category/getBlogCategoryById/`,
-    updateBlogCategory: `${ROOTURL}admin/blog-category/updateBlogCategory/`,
-    softDeleteBlogCategory: `${ROOTURL}admin/blog-category/softDeleteBlogCategory/`,
-    restoreBlogCategory: `${ROOTURL}admin/blog-category/restore/`,
-    hardDeleteBlogCategory: `${ROOTURL}admin/blog-category/permanentDelete/`,
-    toggleBlogCategoryStatus: `${ROOTURL}admin/blog-category/toggleStatus/`,
-    trashBlogCategory: `${ROOTURL}admin/blog-category/trash`,
-    checkDuplicateBlogCategory: `${ROOTURL}admin/blog-category/check-duplicate`,
+  //  BlogCategory endpoints
+  addBlogCategory: `${ROOTURL}admin/blog-category/`,
+  listBlogCategory: `${ROOTURL}admin/blog-category/`,
+  getBlogCategory: `${ROOTURL}admin/blog-category/getBlogCategoryById/`,
+  updateBlogCategory: `${ROOTURL}admin/blog-category/updateBlogCategory/`,
+  softDeleteBlogCategory: `${ROOTURL}admin/blog-category/softDeleteBlogCategory/`,
+  restoreBlogCategory: `${ROOTURL}admin/blog-category/restore/`,
+  hardDeleteBlogCategory: `${ROOTURL}admin/blog-category/permanentDelete/`,
+  toggleBlogCategoryStatus: `${ROOTURL}admin/blog-category/toggleStatus/`,
+  trashBlogCategory: `${ROOTURL}admin/blog-category/trash`,
+  checkDuplicateBlogCategory: `${ROOTURL}admin/blog-category/check-duplicate`,
 
-      //  Blog endpoints
-   addBlog: `${ROOTURL}admin/blogs/`,
+  //  Blog endpoints
+  addBlog: `${ROOTURL}admin/blogs/`,
   listBlog: `${ROOTURL}admin/blogs/`,
   getBlog: (id: string) => `${ROOTURL}admin/blogs/get/${id}`,
   updateBlog: (id: string) => `${ROOTURL}admin/blogs/update/${id}`,
@@ -197,9 +196,10 @@ updateSettings: `${ROOTURL}admin/settings/`,
   trashBlog: `${ROOTURL}admin/blogs/trash`,
   toggleBlogStatus: (id: string) => `${ROOTURL}admin/blogs/status/${id}`,
   restoreBlog: (id: string) => `${ROOTURL}admin/blogs/restore/${id}`,
-  permanentDelete: (id: string) => `${ROOTURL}admin/blogs/permanentDelete/${id}`,
+  permanentDelete: (id: string) =>
+    `${ROOTURL}admin/blogs/permanentDelete/${id}`,
   checkDuplicate: `${ROOTURL}admin/blogs/check-duplicate`,
-    
+
   // ---------- Promotions endpoints ----------
   addPromotions: `${ROOTURL}admin/promotions`,
   listPromotions: `${ROOTURL}admin/promotions`,
@@ -228,8 +228,29 @@ updateSettings: `${ROOTURL}admin/settings/`,
   restoreContact: `${ROOTURL}admin/contact/restore/`,
   listContactTrash: `${ROOTURL}admin/contact/trash`,
  
+  // ---------- Review endpoints ----------
+  addReviews: `${ROOTURL}admin/reviews`,
+  listReviews: `${ROOTURL}admin/reviews`,
+  getReviewById: `${ROOTURL}admin/reviews/`,
+  updateReview: `${ROOTURL}admin/reviews/`,
+  deleteReview: `${ROOTURL}admin/reviews/`,
+  toggleStatusReview: `${ROOTURL}admin/reviews/updateStatus/`,
+  getActiveReviews: `${ROOTURL}admin/reviews/active/`,
+
+  //---------- info endpoints---------
+  addAddInfo: `${ROOTURL}admin/product/add-info`,
+  listAddInfos: `${ROOTURL}admin/product/add-info`,
+  getAddInfo: `${ROOTURL}admin/product/add-info/getAddInfoById/`,
+  updateAddInfo: `${ROOTURL}admin/product/add-info/updateAddInfo/`,
+  softDeleteAddInfo: `${ROOTURL}admin/product/add-info/softDeleteAddInfo/`,
+  hardDeleteAddInfo: `${ROOTURL}admin/product/add-info/permanentDelete/`,
+  restoreAddInfo: `${ROOTURL}admin/product/add-info/restore/`,
+  listAddInfoTrash: `${ROOTURL}admin/product/add-info/trash`,
+  addInfoStats: `${ROOTURL}admin/product/add-info/stats`,
+  checkDuplicateAddInfo: `${ROOTURL}admin/product/add-info/check-duplicate`,
+  toggleAddInfo: `${ROOTURL}admin/product/add-info/togglestatus/`,
+
 };
- 
 
 const ImportedURL = { API, LIVEURL, FILEURL, SETTINGS_ID };
 export default ImportedURL;

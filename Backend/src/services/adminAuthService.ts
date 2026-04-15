@@ -41,7 +41,7 @@ export class AdminAuthService {
       { expiresIn: this.JWT_ACCESS_EXPIRATION }
     );
 
-    await adminAuthRepository.lastLoggedIn(admin._id as string);
+    await adminAuthRepository.lastLoggedIn( (admin as any)._id.toString());
 
     return {
       token,
@@ -144,7 +144,7 @@ export class AdminAuthService {
     if (!admin) throw new Error('Invalid or expired reset token');
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await adminAuthRepository.resetPassword(admin._id as string, hashedPassword);
+    await adminAuthRepository.resetPassword((admin as any)._id.toString(),hashedPassword);
   }
 }
 

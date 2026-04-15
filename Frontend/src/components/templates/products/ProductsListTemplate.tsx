@@ -6,10 +6,11 @@ import TableHeader from '../../molecules/TableHeader';
 import Loader from '../../atoms/Loader';
 import Pagination from '../../atoms/Pagination';
 import { useProductStore } from '../../../stores/productStore';
-import type { Product } from '../../../types/common';
+import type { Product , FieldConfig} from '../../../types/common';
 import {Package,CheckCircle,XCircle,Pencil,Trash2,ToggleLeft,HelpCircle,ToggleRight,} from 'lucide-react';
 import { truncate } from '../../utils/helper';
 import { PAGINATION_CONFIG } from '../../../constants/pagination';
+import FormField from '../../../components/molecules/FormField';
 
 interface StatFilter {
   id: string;
@@ -38,6 +39,21 @@ const ProductListTemplate: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(
     PAGINATION_CONFIG.DEFAULT_PAGE
   );
+
+const handleActionChange = (e: { target: { name: string; value: any } }) => {
+  if (e.target.value === 'add_info') {
+    navigate('/products/add-info'); 
+  }
+};
+
+const actionField: FieldConfig = {
+  name: 'actions',
+  label: '', 
+  type: 'select',
+  options: [{ value: 'add_info', label: 'Add Info' }],
+  placeholder: 'Actions',
+  className: 'w-40'
+};
 
   type FilterType = 'total' | 'active' | 'inactive';
   const [selectedFilter, setSelectedFilter] =
@@ -206,7 +222,7 @@ const ProductListTemplate: React.FC = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thumbnail</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-1"><FormField field={actionField}  value="" onChange={handleActionChange} /> </th>
               </tr>
            </thead>
 

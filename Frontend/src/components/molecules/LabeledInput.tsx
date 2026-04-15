@@ -83,11 +83,15 @@ const LabeledInput: React.FC<LabeledInputProps> = memo(
           setFileError(`Only JPG, PNG or WEBP images are allowed`);
           setPreview(defaultImage);
           e.target.value = ""; // reset file input
+
+
           if (errorTimer.current) clearTimeout(errorTimer.current);
 
           errorTimer.current = setTimeout(() => {
             setFileError(null);
-          }, 5000);        
+          }, 5000);
+
+          
           return;
         }
 
