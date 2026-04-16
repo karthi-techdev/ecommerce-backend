@@ -145,8 +145,8 @@ const SubCategoryListTemplate: React.FC = () => {
           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
-          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+          <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Status</th>
+          <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
         </tr>
       </thead>
 
@@ -167,10 +167,14 @@ const SubCategoryListTemplate: React.FC = () => {
         <td className="px-6 py-4">
         {item.image ? (
           <img
-            src={`${ImportedURL.FILEURL}${item.image.startsWith('/') ? item.image.slice(1) : item.image}`}
+            // Added ?t= timestamp to force refresh on update
+            src={`${ImportedURL.FILEURL}${item.image.startsWith('/') ? item.image.slice(1) : item.image}?t=${new Date().getTime()}`}
             alt={item.name}
             className="h-10 w-10 rounded-md object-cover"
-            onError={(e) => {(e.currentTarget as HTMLImageElement).src = '/no-image.png';}}
+            onError={(e) => {
+                (e.currentTarget as HTMLImageElement).onerror = null; 
+                (e.currentTarget as HTMLImageElement).src = '/no-image.png';
+            }}
           />
         ) : (
           <span className="text-xs text-gray-400">No Image</span>

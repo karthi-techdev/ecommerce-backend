@@ -163,7 +163,7 @@ const ShipmentMethodListTemplate: React.FC = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
             </thead>
 
@@ -179,7 +179,7 @@ const ShipmentMethodListTemplate: React.FC = () => {
                     <td className="px-6 py-4 text-sm text-gray-900"> {item.name}</td>
                     <td className="px-6 py-4 text-sm text-gray-900"> {item.description? truncate(item.description, 30): '-'} </td>
                     <td className="px-6 py-4 text-sm text-gray-900">{item.price}</td>
-                    <td className="px-6 py-2">
+                    <td className="px-6 py-4">
                       <button
                         onClick={() => handleToggleStatus(item)}
                         className={`${item.status === 'active'? 'text-green-500 hover:text-green-700' : 'text-gray-400 hover:text-gray-600'}`}

@@ -2,6 +2,7 @@ export interface MainCategoryFormData {
   name: string;
   slug: string;
   description?: string;
+  icon:string;
   image?: File | string | null;
   isActive?: boolean;
 }

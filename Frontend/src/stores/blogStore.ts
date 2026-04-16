@@ -68,7 +68,9 @@ export const useBlogStore = create<BlogStore>((set, get) => ({
   fetchBlogById: async (id: string) => {
     set({ loading: true });
     try {
-      const res = await axios.get(ImportedURL.API.getBlog(id));
+      const res = await axios.get(
+        ImportedURL.API.getBlogById(id)
+      );
       return res.data.data;
     } catch (err) {
       console.error(err);
