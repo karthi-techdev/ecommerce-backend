@@ -13,7 +13,7 @@ export interface ISubCategory extends Document {
 const subCategorySchema = new Schema<ISubCategory>(
     {
         name: {type: String, required: true },
-        slug: {type: String, required: true, unique: true},
+        slug: {type: String, required: true},
         description: {type: String },
         image: {type: String },
         mainCategoryId: {type: Schema.Types.ObjectId, ref: "MainCategory", required: true},

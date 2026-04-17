@@ -32,5 +32,6 @@ router.get("/trash", BlogController.getTrashBlogs);
 router.post("/check-duplicate", BlogController.checkDuplicate);
 router.patch("/status/:id", BlogController.toggleStatus);
 router.patch("/restore/:id", BlogController.restore);
+router.get("/:id", BlogController.getById);
 
 export default router;

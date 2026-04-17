@@ -8,4 +8,5 @@ router.get('/configStats',(req,res,next)=>{configController.getConfigStats(req,r
 router.put('/editConfig/:id',configController.updateConfig);
 router.delete('/deleteConfig/:id',configController.deleteConfig);
 router.patch('/togglestatus/:id',(req,res,next)=>{configController.toggleStatus(req,res,next)})
+router.get("/footer-page-titles",configController.getFooterPageTitles);
 export default router;

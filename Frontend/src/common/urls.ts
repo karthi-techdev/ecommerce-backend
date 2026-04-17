@@ -88,10 +88,11 @@ const API = {
   listSubCategoryTrash: `${ROOTURL}admin/subcategory/trash/`,
   subCategoryByMainCategoryId: `${ROOTURL}admin/subcategory/activeSubCategory/`,
   listActiveMainCategory: `${ROOTURL}admin/subcategory/activemain-categorylist`,
-
-  // Settings endpoints
-  getSettings: `${ROOTURL}admin/settings/`,
-  updateSettings: `${ROOTURL}admin/settings/`,
+  
+  
+ // Settings endpoints
+getSettings: `${ROOTURL}admin/settings/`,
+updateSettings: `${ROOTURL}admin/settings/`,
 
   //shipmentMethods endpoints
   addShipmentMethods: `${ROOTURL}admin/shipment-methods/`,
@@ -101,7 +102,7 @@ const API = {
   deleteShipmentMethods: `${ROOTURL}admin/shipment-methods/softDeleteShipmentMethod/`,
   toggleStatusShipmentMethods: `${ROOTURL}admin/shipment-methods/togglestatus/`,
   checkDuplicateShipmentMethods: `${ROOTURL}admin/shipment-methods/check-duplicate/`,
-  // ---------------- Coupon endpoints ----------------
+  // ---------------- Coupon endpoints -----contact-----------
 
   addCoupon: `${ROOTURL}admin/coupon/`,
   listCoupon: `${ROOTURL}admin/coupon/`,
@@ -190,6 +191,7 @@ const API = {
   addBlog: `${ROOTURL}admin/blogs/`,
   listBlog: `${ROOTURL}admin/blogs/`,
   getBlog: (id: string) => `${ROOTURL}admin/blogs/get/${id}`,
+  getBlogById: (id: string) => `${ROOTURL}admin/blogs/${id}`,
   updateBlog: (id: string) => `${ROOTURL}admin/blogs/update/${id}`,
   softDeleteBlog: (id: string) => `${ROOTURL}admin/blogs/delete/${id}`,
   trashBlog: `${ROOTURL}admin/blogs/trash`,
@@ -216,6 +218,24 @@ const API = {
   listBanners: `${ROOTURL}admin/banner`,
   updateBanners: `${ROOTURL}admin/banner/`,
 
+  //---------- subscriber endpoitns-----
+  listSubScriber: `${ROOTURL}admin/subscribe`,
+  addSubScriber: `${ROOTURL}admin/subscribe`,
+  toggleSubScriber: `${ROOTURL}admin/subscribe/togglestatus`,
+  deleteSubScriber: `${ROOTURL}admin/subscribe/permanentDelete`,
+
+
+  //----------contact endpoints---------
+  addContact: `${ROOTURL}admin/contact`,
+  listContacts: `${ROOTURL}admin/contact`,
+  getContact: `${ROOTURL}admin/contact/getContactById/`,
+  updateContact: `${ROOTURL}admin/contact/updateContact/`,
+  softDeleteContact: `${ROOTURL}admin/contact/softDeleteContact/`,
+  toggleStatusContact: `${ROOTURL}admin/contact/togglestatus/`,
+  hardDeleteContact: `${ROOTURL}admin/contact/permanentDelete/`,
+  restoreContact: `${ROOTURL}admin/contact/restore/`,
+  listContactTrash: `${ROOTURL}admin/contact/trash`,
+ 
   // ---------- Review endpoints ----------
   addReviews: `${ROOTURL}admin/reviews`,
   listReviews: `${ROOTURL}admin/reviews`,
@@ -224,6 +244,20 @@ const API = {
   deleteReview: `${ROOTURL}admin/reviews/`,
   toggleStatusReview: `${ROOTURL}admin/reviews/updateStatus/`,
   getActiveReviews: `${ROOTURL}admin/reviews/active/`,
+
+  //---------- info endpoints---------
+  addAddInfo: `${ROOTURL}admin/product/add-info`,
+  listAddInfos: `${ROOTURL}admin/product/add-info`,
+  getAddInfo: `${ROOTURL}admin/product/add-info/getAddInfoById/`,
+  updateAddInfo: `${ROOTURL}admin/product/add-info/updateAddInfo/`,
+  softDeleteAddInfo: `${ROOTURL}admin/product/add-info/softDeleteAddInfo/`,
+  hardDeleteAddInfo: `${ROOTURL}admin/product/add-info/permanentDelete/`,
+  restoreAddInfo: `${ROOTURL}admin/product/add-info/restore/`,
+  listAddInfoTrash: `${ROOTURL}admin/product/add-info/trash`,
+  addInfoStats: `${ROOTURL}admin/product/add-info/stats`,
+  checkDuplicateAddInfo: `${ROOTURL}admin/product/add-info/check-duplicate`,
+  toggleAddInfo: `${ROOTURL}admin/product/add-info/togglestatus/`,
+
 };
 
 const ImportedURL = { API, LIVEURL, FILEURL, SETTINGS_ID };

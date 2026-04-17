@@ -49,6 +49,7 @@ export interface MainCategory {
   _id?: string;
   name: string;
   slug: string;
+  icon: string; 
   description: string;
   image: File | string | null;
   isActive: boolean;
@@ -107,6 +108,19 @@ export interface ShipmentMethod {
   updatedAt?: string;
 }
 
+export interface Contact {
+  _id?: string;
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+  status?: 'active' | 'inactive'; 
+  isDeleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface PopulatedProduct {
   _id: string;
   name: string;
@@ -139,14 +153,15 @@ export interface Product {
 }
 
 export interface Page {
-  _id?: string;
-  name: string;
-  slug: string;
-  type?: "content" | "url";
-  description?: string;
-  url?: string;
-  isActive?: boolean;
-  createdAt?: Date;
+    _id?: string;
+    footerPageTitle?: string;
+    name : string,
+    slug : string,
+    type? : "content" | "url",
+    description? : string,
+    url? : string,
+    isActive? : boolean,
+    createdAt? : Date
 }
 
 export interface OrderProduct {
@@ -250,6 +265,14 @@ export interface ProductFormData {
   relatedTags: string[];
   type: string;
 }
+
+export interface SubscriberFormData {
+  _id?: string;
+  email: string
+  isActive: boolean;
+  createdAt: Date;
+}
+
 
 export type InputType =
   | "text"
@@ -399,4 +422,13 @@ export interface ReviewFormData {
   productId: string;
   status: string;
   isActive?: boolean;
+}
+export interface AddInfo {
+  _id?: string;
+  key: string;
+  value: string;
+  isDeleted?: boolean;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
