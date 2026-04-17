@@ -103,25 +103,29 @@ const ConfigFormTemplate: React.FC = () => {
   };
 
  const handleConfigFieldChange = (
-  index: number,
-  field: 'key' | 'value',
-  value: string
-) => {
-  const updatedFields = [...formData.options];
-  updatedFields[index][field] = value;
-
-  setFormData(prev => ({
-    ...prev,
-    options: updatedFields
-  }));
-  setErrors((prev: any) => {
-    const newErrors = { ...prev };
-    if (newErrors.options?.[index]) {
-      newErrors.options[index][field] = undefined;
+    index: number,
+    field: 'key' | 'value',
+    value: string
+  ) => {
+    const updatedFields = [...formData.options];
+    updatedFields[index][field] = value;
+    if (field === 'key') {
+      updatedFields[index].value = generateSlug(value);
     }
-    return newErrors;
-  });
-};
+
+    setFormData(prev => ({
+      ...prev,
+      options: updatedFields
+    }));
+
+    setErrors((prev: any) => {
+      const newErrors = { ...prev };
+      if (newErrors.options?.[index]) {
+        newErrors.options[index][field] = undefined;
+      }
+      return newErrors;
+    });
+  };
 
   const addFieldRow = () => {
     setFormData(prev => ({
@@ -232,9 +236,7 @@ const ConfigFormTemplate: React.FC = () => {
       type="text"
       placeholder="Value"
       value={field.value}
-      onChange={e =>
-        handleConfigFieldChange(index, 'value', e.target.value)
-      }
+      readOnly
       className={`border w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 ${
         errors.options?.[index]?.value ? 'border-red-500' : ''
       }`}

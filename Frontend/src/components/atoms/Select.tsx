@@ -10,6 +10,7 @@ interface SelectOption {
 interface CustomSelectProps {
   options: SelectOption[];
   value?: SelectOption | SelectOption[] | null;
+  isError?: boolean;
   onChange?: (value: SelectOption | SelectOption[] | null) => void;
   className?: string;
   placeholder?: string;
@@ -27,6 +28,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   isMulti = false,
   onMenuScrollToBottom,
   onInputChange,   
+  isError = false, 
 }) => {
 
   const handleChange = (
@@ -50,6 +52,16 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
       className={className}
       classNamePrefix="react-select"
       onMenuScrollToBottom={onMenuScrollToBottom}
+      styles={{
+        control: (base) => ({
+          ...base,
+          borderColor: isError ? 'red' : base.borderColor,
+          boxShadow: 'none',   
+          '&:hover': {
+            borderColor: isError ? 'red' : base.borderColor,
+          },
+        }),
+      }}
      onInputChange={(value, actionMeta) => {
   if (actionMeta.action === "input-change") {
     onInputChange?.(value);

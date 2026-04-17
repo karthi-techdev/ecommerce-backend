@@ -69,8 +69,8 @@ class BlogService {
     return { blogs, total };
   }
 
-  getById(id: string) {
-    return this.repo.getBlogById(id);
+  getBySlug(slug: string) {
+    return this.repo.getBlogBySlug(slug);
   }
 
   softDelete(id: string) {
@@ -105,6 +105,9 @@ class BlogService {
     const exists = await this.repo.existsBySlug(slug, excludeId);
     return exists;
   }
+  getById(id: string) {
+  return this.repo.getBlogById(id);
+}
 }
 
 export default new BlogService();

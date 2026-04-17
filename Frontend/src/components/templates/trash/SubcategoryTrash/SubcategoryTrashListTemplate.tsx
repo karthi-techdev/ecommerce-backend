@@ -35,13 +35,9 @@ const SubCategoryTrashListTemplate: React.FC = () => {
     );
   }, [currentPage, fetchTrashSubCategories]);
   console.log('trashSubCategories:', trashSubCategories);
-  // useEffect(() => {
-  //   if (error) toast.error(error);
-  // }, [error]);
+
   useEffect(() => {
     if (error && !loading) {
-       // Only toast if it's a general fetch error, not an action error
-       // toast.error(error); 
     }
   }, [error, loading]);
   useEffect(() => {

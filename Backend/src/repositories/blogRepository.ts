@@ -18,10 +18,16 @@ class BlogRepository {
     return BlogModel.countDocuments(query);
   }
 
+ async getBlogBySlug(slug: string) {
+  return BlogModel.findOne({ slug, isDeleted: false }) 
+    .populate("categoryId", "name isActive");
+}
+
   async getBlogById(id: string) {
-    return BlogModel.findById(id)
-      .populate("categoryId", "name isActive");
-  }
+  return BlogModel
+    .findById(id)
+    .populate("categoryId", "name isActive");
+}
 
   async updateBlog(id: string, data: any) {
     return BlogModel.findByIdAndUpdate(id, data, { new: true })

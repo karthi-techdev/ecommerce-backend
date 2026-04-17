@@ -16,9 +16,7 @@ import MainCategoryFormTemplate from '../components/templates/mainCategory/MainC
 import TrashMainCategoryListTemplate from '../components/templates/trash/MainCategoryTrash/TrashMainCategoryListTemplate'
 import BrandListTemplate from '../components/templates/brand/BrandListTemplate';
 import BrandFormTemplate from '../components/templates/brand/BrandFormTemplate';
-
 import BrandTrashPage from '../components/pages/trash/BrandTrashPage';
-
 import ShipmentMethodListTemplate from '../components/templates/shipmentMethods/shipmentMethodsListTemplate';
 import ShipmentMethodFormTemplate from '../components/templates/shipmentMethods/ShipmentMethodsFormTemplate';
 import SubCategoryListTemplate from '@/components/templates/subcategory/SubcategoryListTemplate';
@@ -26,6 +24,7 @@ import SubCategoryFormTemplate from '@/components/templates/subcategory/Subcateg
 import SubCategoryTrashListTemplate from '@/components/templates/trash/SubcategoryTrash/SubcategoryTrashListTemplate';
 import AdminLoginTemplate from '@/components/templates/loginAuth/adminLoginTemplate';
 import AdminForgetPasswordTemplate from '../components/templates/loginAuth/adminForgetPassword'
+import AdminResetPasswordTemplate from '../components/templates/loginAuth/adminResetPassword'
 import CouponListTemplate from '../components/templates/coupon/CouponListTemplate';
 import CouponFormTemplate from '../components/templates/coupon/CouponFormTemplate';
 
@@ -51,6 +50,7 @@ import OfferFormTemplate from '@/components/templates/offer/offerFormTemplate';
 
 import BlogListTemplate from '@/components/templates/blog/BlogListTemplate';
 import BlogFormTemplate from '@/components/templates/blog/BlogFormTemplate';
+import BlogViewTemplate from '@/components/templates/blog/BlogViewTemplate';
 import BlogTrashTemplate from '@/components/templates/trash/BlogsTrash/BlogTrashTemplate';
 
 import PromotionsListTemplate from '../components/templates/promotions/PromotionsListTemplate';
@@ -59,16 +59,29 @@ import PromotionsFormTemplate from '../components/templates/promotions/Promotion
 import SettingsManager from '../components/templates/settings/settingsManager';
 
 import SubscriberListTemplate from '../components/templates/subscriber/subsciberListTemplate';
+import ContactListTemplate from '../components/templates/contact/contactListTemplate';
+import ContactFormTemplate from '../components/templates/contact/contactFormTemplate';
+import ContactTrashListTemplate from '../components/templates/trash/ContactTrash/ContactTrashListTemplate';
+import ReviewListTemplate from '../components/templates/reviews/ReviewListTemplate';
+import ReviewFormTemplate from '../components/templates/reviews/ReviewFormTemplate';
+import AddInfoListPage from '../components/templates/addinfo/addinfoListTemplate';
+import AddInfoFormPage from '../components/templates/addinfo/addinfoFormTemplate';
+
+
 
 export const router = createBrowserRouter([
   {
-        path: '/login',
-        element: <AdminLoginTemplate />,
-      },
-      {
-        path:'/forgetPassword',
-        element:<AdminForgetPasswordTemplate/>
-      },
+    path: '/login',
+    element: <AdminLoginTemplate />,
+  },
+  {
+    path: '/forgetPassword',
+    element: <AdminForgetPasswordTemplate />
+  },
+  {
+    path: '/resetPassword',
+    element: <AdminResetPasswordTemplate />
+  },
 
   {
     path: '/',
@@ -118,6 +131,7 @@ export const router = createBrowserRouter([
           },
         ]
       }
+      
       ,
       {
         path: 'newsLetter',
@@ -143,7 +157,25 @@ export const router = createBrowserRouter([
           { path: 'add', element: <ProductFormTemplate /> },
           { path: 'edit/:id', element: <ProductFormTemplate /> },
           { path: 'view/:id', element: <ProductViewPage /> },
+           {
+        path: '/add-info',
+        children: [
+          {
+            path: "",
+            element: <AddInfoListPage />
+          }
+          , {
+            path: 'add',
+            element: <AddInfoFormPage />,
+          },
+          {
+            path: 'edit/:id',
+            element: <AddInfoFormPage />,
+          },
+        ]
+      },
         ],
+        
       },
       {
         path: 'config',
@@ -157,18 +189,18 @@ export const router = createBrowserRouter([
         path: 'slider',
         children: [
           { path: '', element: <SliderListTemplate /> },
-           { path: 'add', element: <SliderFormTemplate /> },
+          { path: 'add', element: <SliderFormTemplate /> },
           { path: 'edit/:id', element: <SliderFormTemplate /> },
         ],
       },
       {
-  path: 'coupon',
-  children: [
-    { path: '', element: <CouponListTemplate /> },
-    { path: 'add', element: <CouponFormTemplate /> },
-    { path: 'edit/:id', element: <CouponFormTemplate /> },
-  ],
-},{
+        path: 'coupon',
+        children: [
+          { path: '', element: <CouponListTemplate /> },
+          { path: 'add', element: <CouponFormTemplate /> },
+          { path: 'edit/:id', element: <CouponFormTemplate /> },
+        ],
+      }, {
         path: 'coupon',
         children: [
           { path: '', element: <CouponListTemplate /> },
@@ -192,6 +224,7 @@ export const router = createBrowserRouter([
     { index:true, element: <BlogListTemplate /> },     
     { path: 'add', element: <BlogFormTemplate /> },  
     { path: 'edit/:id', element: <BlogFormTemplate /> }, 
+    { path: 'view/:id', element: <BlogViewTemplate /> },
     { path: 'trash', element: <BlogTrashTemplate /> },
   ]
 },
@@ -212,13 +245,13 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path:'/offer',
-        children:[
+        path: '/offer',
+        children: [
           {
-            path:"",
-            element:<OfferListTemplate/>
+            path: "",
+            element: <OfferListTemplate />
           }
-           ,{
+          , {
             path: 'add',
             element: <OfferFormTemplate />,
           },
@@ -267,6 +300,14 @@ export const router = createBrowserRouter([
         ],
       },
       {
+        path: 'contact',
+        children: [
+          { path: '', element: <ContactListTemplate /> },
+          { path: 'add', element: <ContactFormTemplate /> },
+          { path: 'edit/:id', element: <ContactFormTemplate /> },
+        ],
+      },
+      {
         path: 'trash',
         children: [
           {
@@ -284,11 +325,30 @@ export const router = createBrowserRouter([
           },
           { path: 'products', element: <ProductTrashListTemplate /> },
 
-           { path: 'blog-category', 
-            element: <BlogTrashListPage /> },
+          {
+            path: 'blog-category',
+            element: <BlogTrashListPage />
+          },
 
             { path: 'blogs', element: 
             <BlogTrashTemplate /> },
+            {
+            path: 'contact',
+            element: <ContactTrashListTemplate />
+          },
+          {
+            path: 'blogs', element:
+              <BlogTrashTemplate />
+          },
+        ],
+      },
+
+      {
+        path: 'reviews', // Reviews Path
+        children: [
+          { path: '', element: <ReviewListTemplate /> },
+          { path: 'add', element: <ReviewFormTemplate /> },
+          { path: 'edit/:id', element: <ReviewFormTemplate /> },
         ],
       },
 

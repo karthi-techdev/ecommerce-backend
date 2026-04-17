@@ -133,11 +133,7 @@ res.status(200).json({
           });
         return;
       }
-      const updateData: any = {
-      name: req.body.name,
-      slug: req.body.slug,
-      description: req.body.description,
-    };
+      const updateData: any = {name: req.body.name,slug: req.body.slug, description: req.body.description, mainCategoryId: req.body.mainCategoryId,};
 
     if (req.file) {
       updateData.image = `/uploads/subcategories/${req.file.filename}`;

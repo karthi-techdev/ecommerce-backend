@@ -6,7 +6,7 @@ class BlogController {
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = { ...req.body };
-      if (req.file) data.image = req.file.filename;
+      if (req.file) data.image = `uploads/blog/${req.file.filename}`;
       const blog = await BlogService.create(data);
       res.status(201).json({
         status: HTTP_RESPONSE.SUCCESS,
@@ -39,9 +39,9 @@ class BlogController {
     }
   };
 
-  getById = async (req: Request, res: Response, next: NextFunction) => {
+  getBySlug = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const blog = await BlogService.getById(req.params.id);
+      const blog = await BlogService.getBySlug(req.params.slug);
       res.status(200).json({ status: HTTP_RESPONSE.SUCCESS, data: blog });
     } catch (err) {
       next(err);
@@ -51,7 +51,7 @@ class BlogController {
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = { ...req.body };
-      if (req.file) data.image = req.file.filename;
+      if (req.file) data.image = `uploads/blog/${req.file.filename}`;
       const blog = await BlogService.update(req.params.id, data);
       res.status(200).json({
         status: HTTP_RESPONSE.SUCCESS,
@@ -144,6 +144,18 @@ class BlogController {
       next(err);
     }
   };
+  getById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const blog = await BlogService.getById(req.params.id);
+
+    res.status(200).json({
+      status: HTTP_RESPONSE.SUCCESS,
+      data: blog,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 }
 
 export default new BlogController();
