@@ -22,11 +22,13 @@ import sliderRoutes from './sliderRoutes'
 import blogRoutes from "./blogRoutes";
 import settingsRoutes from "./settingsRoutes";
 import offerRoutes from "./offerRoutes";
+import reviewRoutes from "./reviewRoutes";
+import usersRoutes from "./usersRoutes";
+
 import subscribeRoutes from "./subscribeRoutes"
 
 import contactRoutes from "./contactRoutes"
 import addInfoRoutes from './addInfoRoutes'
-import usersRoutes from "./usersRoutes";
 import bannerRoutes from "./bannerRoutes";
 
 export default function registerRoutes(app: Express) {
