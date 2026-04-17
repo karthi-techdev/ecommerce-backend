@@ -23,12 +23,9 @@ import sliderRoutes from "./sliderRoutes";
 import blogRoutes from "./blogRoutes";
 import settingsRoutes from "./settingsRoutes";
 import offerRoutes from "./offerRoutes";
-<<<<<<< HEAD
 import reviewRoutes from "./reviewRoutes";
-=======
 import usersRoutes from "./usersRoutes";
 
->>>>>>> f7054db0cafe3f47ad1200105d7402f87c0b6a5f
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
