@@ -252,6 +252,14 @@ export interface ProductFormData {
   relatedTags: string[]
 }
 
+export interface SubscriberFormData {
+  _id?: string;
+  email: string
+  isActive: boolean;
+  createdAt: Date;
+}
+
+
 export type InputType =
   | 'text'
   | 'email'

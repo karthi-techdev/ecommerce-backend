@@ -215,6 +215,12 @@ updateSettings: `${ROOTURL}admin/settings/`,
   listBanners: `${ROOTURL}admin/banner`,
   updateBanners: `${ROOTURL}admin/banner/`,
 
+  //---------- subscriber endpoitns-----
+  listSubScriber: `${ROOTURL}admin/subscribe`,
+  addSubScriber: `${ROOTURL}admin/subscribe`,
+  toggleSubScriber: `${ROOTURL}admin/subscribe/togglestatus`,
+  deleteSubScriber: `${ROOTURL}admin/subscribe/permanentDelete`
+
 };
  
 

@@ -38,6 +38,7 @@ import OrderListTemplate from '@/components/templates/order/orderListTemplate';
 
 import ProductListTemplate from '@/components/templates/products/ProductsListTemplate';
 import ProductFormTemplate from '@/components/templates/products/ProductsFormTemplate';
+import ProductViewPage from '@/components/templates/products/productsViewTemplate';
 import ProductTrashListTemplate from '@/components/templates/trash/ProductsTrash/ProductsTrashListTemplate';
 import SliderListTemplate from '../components/templates/slider/SliderListTemplate';
 import SliderFormTemplate from '../components/templates/slider/SliderFormTemplate'
@@ -56,6 +57,8 @@ import PromotionsListTemplate from '../components/templates/promotions/Promotion
 import PromotionsFormTemplate from '../components/templates/promotions/PromotionsFormTemplate';
 
 import SettingsManager from '../components/templates/settings/settingsManager';
+
+import SubscriberListTemplate from '../components/templates/subscriber/subsciberListTemplate';
 
 export const router = createBrowserRouter([
   {
@@ -139,6 +142,7 @@ export const router = createBrowserRouter([
           { path: '', element: <ProductListTemplate /> },
           { path: 'add', element: <ProductFormTemplate /> },
           { path: 'edit/:id', element: <ProductFormTemplate /> },
+          { path: 'view/:id', element: <ProductViewPage /> },
         ],
       },
       {
@@ -192,6 +196,12 @@ export const router = createBrowserRouter([
   ]
 },
 
+{
+  path:'subscriber',
+  children:[
+   {path: '', element:< SubscriberListTemplate/>} 
+  ]
+},
 
       {
         path: 'subcategory',
