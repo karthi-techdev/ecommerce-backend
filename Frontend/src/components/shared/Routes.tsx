@@ -65,6 +65,7 @@ const PublicRoute = () => {
 const ProductListPage = lazy(() => import('../pages/products/ProductsListPage'));
 const ProductFormPage = lazy(() => import('../pages/products/ProductsFormPage'));
 const ProductTrashPage = lazy(() => import('../pages/trash/ProductsTrashListPage'));
+const ProductView = lazy(() => import('../pages/products/ProductsViewPage'));
 
 
 const MainCategoryPage = lazy(
@@ -86,6 +87,9 @@ const ContactListPage = lazy(()=> import('../pages/contact/contactListPage'))
 const ContactTrashPage = lazy(()=> import('../pages/trash/ContactTrashPage'))
 const AddInfoListPage = lazy(()=>import('../pages/addinfo/AddInfoListPage'))
 const AddInfoFormPage = lazy(()=>import('../pages/addinfo/AddInfoFormPage'))
+
+const SubscribeListPage = lazy(() => import('../pages/subscriber/subscriberListPage'));
+
 
 const routes: RouteObject[] = [
   {
@@ -239,6 +243,7 @@ const routes: RouteObject[] = [
           { path: '', element: <ProductListPage /> },
           { path: 'add', element: <ProductFormPage /> },
           { path: 'edit/:id', element: <ProductFormPage /> },
+          { path: 'view/:id', element: <ProductView /> },
           {
             path: 'add-info',
             children: [
@@ -248,6 +253,13 @@ const routes: RouteObject[] = [
             ],
           },
         ],
+      },
+
+      {
+      path: 'subscriber',
+      children:[
+        { path:'', element:<SubscribeListPage/> }
+      ]
       },
 
       {

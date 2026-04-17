@@ -37,6 +37,7 @@ import OrderListTemplate from '@/components/templates/order/orderListTemplate';
 
 import ProductListTemplate from '@/components/templates/products/ProductsListTemplate';
 import ProductFormTemplate from '@/components/templates/products/ProductsFormTemplate';
+import ProductViewPage from '@/components/templates/products/productsViewTemplate';
 import ProductTrashListTemplate from '@/components/templates/trash/ProductsTrash/ProductsTrashListTemplate';
 import SliderListTemplate from '../components/templates/slider/SliderListTemplate';
 import SliderFormTemplate from '../components/templates/slider/SliderFormTemplate'
@@ -57,6 +58,7 @@ import PromotionsFormTemplate from '../components/templates/promotions/Promotion
 
 import SettingsManager from '../components/templates/settings/settingsManager';
 
+import SubscriberListTemplate from '../components/templates/subscriber/subsciberListTemplate';
 import ContactListTemplate from '../components/templates/contact/contactListTemplate';
 import ContactFormTemplate from '../components/templates/contact/contactFormTemplate';
 import ContactTrashListTemplate from '../components/templates/trash/ContactTrash/ContactTrashListTemplate';
@@ -154,6 +156,7 @@ export const router = createBrowserRouter([
           { path: '', element: <ProductListTemplate /> },
           { path: 'add', element: <ProductFormTemplate /> },
           { path: 'edit/:id', element: <ProductFormTemplate /> },
+          { path: 'view/:id', element: <ProductViewPage /> },
            {
         path: '/add-info',
         children: [
@@ -226,6 +229,12 @@ export const router = createBrowserRouter([
   ]
 },
 
+{
+  path:'subscriber',
+  children:[
+   {path: '', element:< SubscriberListTemplate/>} 
+  ]
+},
 
       {
         path: 'subcategory',

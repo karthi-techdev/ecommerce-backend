@@ -7,7 +7,7 @@ import Loader from '../../atoms/Loader';
 import Pagination from '../../atoms/Pagination';
 import { useProductStore } from '../../../stores/productStore';
 import type { Product , FieldConfig} from '../../../types/common';
-import {Package,CheckCircle,XCircle,Pencil,Trash2,ToggleLeft,HelpCircle,ToggleRight,} from 'lucide-react';
+import {Package,CheckCircle,XCircle,Pencil,Trash2,ToggleLeft,HelpCircle,ToggleRight,Eye} from 'lucide-react';
 import { truncate } from '../../utils/helper';
 import { PAGINATION_CONFIG } from '../../../constants/pagination';
 import FormField from '../../../components/molecules/FormField';
@@ -275,9 +275,16 @@ const actionField: FieldConfig = {
                           : <ToggleLeft size={20} />}
                       </button>
                     </td>
+                     
 
-                    <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-5">
+                         <button 
+                      onClick={() => navigate(`/products/view/${product._id}`)}
+                      title='view'
+                      className='text-indigo-600 hover:text-indigo-800'>
+                        <Eye size={18}/>
+                      </button>
 
                         <button
                           onClick={() => navigate(`/products/edit/${product._id}`)}
