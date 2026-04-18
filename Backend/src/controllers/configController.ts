@@ -114,5 +114,22 @@ class configController{
             next(err)
         }
     }
+    async getFooterPageTitles(
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> {
+    try {
+        const titles =
+            await configService.getFooterPageTitles();
+
+        res.status(200).json({
+            status: HTTP_RESPONSE.SUCCESS,
+            data: titles
+        });
+    } catch (err: any) {
+        next(err);
+    }
+}
 }
 export default new configController;

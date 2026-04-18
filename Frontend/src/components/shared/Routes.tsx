@@ -6,7 +6,7 @@ import AdminLoginTemplate from '../templates/loginAuth/adminLoginTemplate';
 import AdminForgetPasswordTemplate from '../templates/loginAuth/adminForgetPassword';
 import AdminResetPasswordTemplate from '../templates/loginAuth/adminResetPassword'
 import { useAuthStore } from '../../stores/authStore';
-import NotFoundPage from '../utils/notFound';
+import NotFoundPage from '../utils/notFound';   
 import ReviewListPage from '../pages/reviews/ReviewListPage';
 
 
@@ -44,6 +44,7 @@ const OfferFormPage = lazy(() => import('../pages/offer/offerFormPage'));
 const BlogsListPage = lazy(() => import('../pages/blog/BlogsListPage'));
 const BlogsFormPage = lazy(() => import('../pages/blog/BlogsFormPage'));
 const BlogsTrashPage = lazy(() => import('../pages/trash/BlogsTrashPage'));
+import BlogViewTemplate from '../templates/blog/BlogViewTemplate';
 const PromotionsListPage = lazy(() => import('../pages/promotions/PromotionsListPage'));
 const PromotionsFormPage = lazy(() => import('../pages/promotions/PromotionsFormPage'));
 const BannerOneFormPage = lazy(() => import('../pages/bannerOne/BannerFormPage'));
@@ -65,6 +66,7 @@ const PublicRoute = () => {
 const ProductListPage = lazy(() => import('../pages/products/ProductsListPage'));
 const ProductFormPage = lazy(() => import('../pages/products/ProductsFormPage'));
 const ProductTrashPage = lazy(() => import('../pages/trash/ProductsTrashListPage'));
+const ProductView = lazy(() => import('../pages/products/ProductsViewPage'));
 
 
 const MainCategoryPage = lazy(
@@ -82,6 +84,14 @@ const ConfigFormPage = lazy(() => import('../pages/config/ConfigFormPage'));
 const SliderListPage = lazy(() => import('../pages/slider/SliderListPage'));
 const SliderFormPage = lazy(() => import('../pages/slider/SliderFormPage'));
 const CommentsListPage = lazy(() => import('../pages/comments/CommentsListPage'));
+const ContactFormPage = lazy(()=> import('../pages/contact/contactFormPage'))
+const ContactListPage = lazy(()=> import('../pages/contact/contactListPage'))
+const ContactTrashPage = lazy(()=> import('../pages/trash/ContactTrashPage'))
+const AddInfoListPage = lazy(()=>import('../pages/addinfo/AddInfoListPage'))
+const AddInfoFormPage = lazy(()=>import('../pages/addinfo/AddInfoFormPage'))
+
+const SubscribeListPage = lazy(() => import('../pages/subscriber/subscriberListPage'));
+
 
 const routes: RouteObject[] = [
   {
@@ -149,7 +159,6 @@ const routes: RouteObject[] = [
               },
             ]
           },
-
           {
             path: 'faq',
             children: [
@@ -158,6 +167,8 @@ const routes: RouteObject[] = [
               { path: 'edit/:id', element: <FaqFormPage /> },
             ],
           },
+
+          
           {
         path: 'testimonial',
         children: [
@@ -215,6 +226,7 @@ const routes: RouteObject[] = [
           { path: '', element: <BlogListPage /> },
           { path: 'add', element: <BlogFormPage /> },
           { path: 'edit/:id', element: <BlogFormPage /> },
+          
         ]
       },
 
@@ -225,6 +237,7 @@ const routes: RouteObject[] = [
           { path:'', element: <BlogsListPage /> },
           { path: 'add', element: <BlogsFormPage /> },
           { path: 'edit/:id', element: <BlogsFormPage /> },
+          { path: 'view/:id', element: <BlogViewTemplate /> },
         ]
       },
 
@@ -240,7 +253,23 @@ const routes: RouteObject[] = [
           { path: '', element: <ProductListPage /> },
           { path: 'add', element: <ProductFormPage /> },
           { path: 'edit/:id', element: <ProductFormPage /> },
+          { path: 'view/:id', element: <ProductView /> },
+          {
+            path: 'add-info',
+            children: [
+              { path: '', element: <AddInfoListPage /> },
+              { path: 'add', element: <AddInfoFormPage /> },
+              { path: 'edit/:id', element: <AddInfoFormPage /> },
+            ],
+          },
         ],
+      },
+
+      {
+      path: 'subscriber',
+      children:[
+        { path:'', element:<SubscribeListPage/> }
+      ]
       },
 
       {
@@ -260,7 +289,56 @@ const routes: RouteObject[] = [
         {path:'edit/:id',element:<CategoryFormPage/>},
        ]
       },
-         {   path: 'testimonial',
+         
+          {
+        path: 'subcategory',
+        children: [
+          { path: '', element: <SubcategoryPage /> },
+          { path: 'add', element: <SubcategoryFormPage /> },
+          { path: 'edit/:id', element: <SubcategoryFormPage /> },
+        ],
+      },
+      {
+        
+        path: 'offer',
+        children: [
+          { path: '', element: <OfferListPage /> },
+          { path: 'add', element: <OfferFormPage /> },
+          { path: 'edit/:id', element: <OfferFormPage /> },
+        ],
+      },
+       {
+        path: 'shipment-methods',
+        children: [
+          { path: '', element: <ShipmentMethodsListPage /> },
+          { path: 'add', element: <ShipmentMethodsFormPage /> },
+          { path: 'edit/:id', element: <ShipmentMethodsFormPage /> },
+        ],
+      },
+      {
+        path: 'contact',
+        children: [
+          { path: '', element: <ContactListPage /> }, 
+          { path: 'add', element: <ContactFormPage /> },   
+          { path: 'edit/:id', element: <ContactFormPage /> },  
+        ],
+      },
+      {
+        path: 'trash',
+        children: [
+          { path: 'subcategory', element: <SubcategoryTrashPage /> },
+          { path: 'brand', element: <BrandTrashPage /> },
+          { path: 'products', element: <ProductTrashPage /> },
+          {path: 'mainCategory',element: <TrashMainCategoryPage />},
+          {path: 'category',element: <CategoryTrashPage />,},
+          {path: 'faq',element: <FaqTrashPage />,},
+          { path: 'blog-category', element: <BlogTrashPage /> },
+          { path: 'blogs', element: <BlogsTrashPage /> }, 
+          { path: 'contact', element: <ContactTrashPage /> }, 
+        ]
+      }, 
+      {
+            path: 'testimonial',
             children: [
               { path: '', element: < TestmonialPage /> },
               { path: 'add', element: <TestimonialFormPage /> },
@@ -424,17 +502,19 @@ const routes: RouteObject[] = [
               }
             ]
           },
-          {
+           {
             path: 'reviews',
             children: [
               { path: '', element: <ReviewListPage /> },
             ]
           },
+        ],
+          },
+         
 
         ],
       },
-    ],
-  },
+   
 
   {
     path: '*',

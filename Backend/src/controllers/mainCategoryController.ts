@@ -10,13 +10,17 @@ class MainCategoryController {
   
   async createMainCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { name, slug, description } = req.body;
+      const { name, slug, description,icon } = req.body;
       if (!name) {
         res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "name is required" });
         return;
       }
       if (!slug) {
         res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "slug is required" });
+        return;
+      }
+      if (!icon) {
+        res.status(400).json({ status: HTTP_RESPONSE.FAIL, message: "Icon is required" });
         return;
       }
       if (!description) {
@@ -36,6 +40,7 @@ class MainCategoryController {
       const category = await mainCategoryService.createMainCategory({
           name,
           slug,
+          icon,
           description,
           image: imagePath, 
         });

@@ -1,6 +1,7 @@
 import mongoose, { model, Schema , Document } from "mongoose";
 
 export interface IPage extends Document{
+    footerPageTitle?: string, 
     name : string,
     slug : string,
     type : "content" | "url",
@@ -12,6 +13,7 @@ export interface IPage extends Document{
 
 const PageSchema = new Schema<IPage>(
     {
+        footerPageTitle: { type: String   },
         name : { type : String , required : true },
         slug : { type : String , required : true , unique : true },
         type : { type : String , enum : ["content", "url"] , required : true },

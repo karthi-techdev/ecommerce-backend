@@ -1,12 +1,13 @@
 
 import { PiShoppingCartLight } from "react-icons/pi";
-import { FiSettings, FiTruck, FiFileText, FiLayers, FiTag, FiMail, FiList, FiSliders, FiTool, FiBriefcase, FiTrash2, FiShoppingCart } from 'react-icons/fi';
+import { FiSettings, FiTruck, FiFileText, FiLayers, FiTag, FiMail, FiList, FiSliders, FiTool, FiBriefcase, FiTrash2, FiShoppingCart,FiPhone } from 'react-icons/fi';
 import { MdOutlineRateReview } from "react-icons/md";
 import { BiSolidOffer } from "react-icons/bi";
 import { BiCategory, BiBook, BiBitcoin } from "react-icons/bi";
 import type { ReactNode } from 'react';
 import { SlidersHorizontal,Settings2 ,ClipboardPen } from 'lucide-react';
 
+import { FaYoutube } from "react-icons/fa";
 
 export interface SubMenuItem {
   key: string;
@@ -82,13 +83,11 @@ const menuItems: MenuItem[] = [
     icon: <PiShoppingCartLight />,
     path: '/orders',
   },
-
-  // 1. Inga Reviews-ai add pannunga
   {
-    key: 'reviews',
-    label: 'Customer Reviews',
-    icon: <MdOutlineRateReview />,
-    path: '/reviews',
+    key: 'Contact',
+    label: 'contact',
+    icon: <FiPhone />,
+    path: '/contact',
   },
 
   {
@@ -105,6 +104,14 @@ const menuItems: MenuItem[] = [
     ]
   },
 
+
+  // 1. Inga Reviews-ai add pannunga
+  {
+    key: 'reviews',
+    label: 'Customer Reviews',
+    icon: <MdOutlineRateReview />,
+    path: '/reviews',
+  },
 
   {
     key: 'blogs',
@@ -148,12 +155,18 @@ const menuItems: MenuItem[] = [
 },
     
   {
+   key: 'subscriber',
+   label: 'Subscriber',
+   icon: <FaYoutube />,
+   path: '/subscriber'
+  },
+    {
     key: 'commerce-settings',
     label: 'Commerce Settings',
     icon: <FiTool />,
     path: '#',
     submenu: [
-      {
+       {
         key: 'coupon',
         label: 'Coupon',
         icon: <FiLayers />,
@@ -231,6 +244,11 @@ const menuItems: MenuItem[] = [
         key: 'trash-blogs',
         label: 'Blogs',
         path: '/trash/blogs',
+      },
+      {
+        key: 'contact',
+        label: 'Contact',
+        path: '/trash/contact',
       },
 
 
