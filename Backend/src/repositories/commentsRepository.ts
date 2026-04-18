@@ -18,7 +18,6 @@ async getAllComments(page = 1, limit = 10, status?: string) {
 
   const query: any = { isDeleted: false };
 
-  // ✅ APPLY FILTER
   if (status === "active") query.isActive = true;
   if (status === "inactive") query.isActive = false;
 
@@ -29,13 +28,8 @@ async getAllComments(page = 1, limit = 10, status?: string) {
       .skip(skip)
       .limit(limit),
 
-     // ✅ ALWAYS total (no filter)
   CommentModel.countDocuments({ isDeleted: false }),
-
-  // ✅ active count
   CommentModel.countDocuments({ isDeleted: false, isActive: true }),
-
-  // ✅ inactive count
   CommentModel.countDocuments({ isDeleted: false, isActive: false }),
   ]);
 
@@ -62,10 +56,10 @@ async getAllComments(page = 1, limit = 10, status?: string) {
       .sort({ createdAt: -1 });
   }
 
-  //  DELETE COMMENT (HARD DELETE)
-  async deleteComment(id: string | Types.ObjectId) {
-    return await CommentModel.findByIdAndDelete(id);
-  }
+  //  DELETE COMMENT 
+async deleteComment(id: string | Types.ObjectId) {
+  return await CommentModel.findByIdAndDelete(id);
+}
 
 
 

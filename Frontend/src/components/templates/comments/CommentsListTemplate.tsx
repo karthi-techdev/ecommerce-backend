@@ -35,7 +35,7 @@ const CommentListTemplate: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("total");
 
-  // 🔍 Filter
+  //  Filter
   const filteredComments = comments.filter((c) =>
     c.comment.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -48,7 +48,7 @@ const CommentListTemplate: React.FC = () => {
     if (error) toast.error(error);
   }, [error]);
 
-  // 📄 Pagination
+  //  Pagination
   const handlePageChange = (selectedItem: { selected: number }) => {
     fetchComments(selectedItem.selected + 1, PAGINATION_CONFIG.DEFAULT_LIMIT, selectedFilter);
   };
@@ -64,7 +64,7 @@ const CommentListTemplate: React.FC = () => {
     totalCount / PAGINATION_CONFIG.DEFAULT_LIMIT
   );
 
-  // 🔁 Toggle
+  // Toggle
   const handleToggleStatus = async (comment: any) => {
     const action = comment.isActive ? "deactivate" : "activate";
 
@@ -86,7 +86,7 @@ const CommentListTemplate: React.FC = () => {
     }
   };
 
-  // ❌ Delete
+  //  Delete
   const handleDelete = async (comment: any) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -106,7 +106,7 @@ const CommentListTemplate: React.FC = () => {
     }
   };
 
-  // 📊 Stats (same UI style)
+  // Stats 
   const statFilters: StatFilter[] = [
     {
       id: "total",
@@ -206,9 +206,6 @@ const CommentListTemplate: React.FC = () => {
                       )}
                     </td>
 
-
-
-
                     <td className="px-6 py-4 text-sm">
                       {c.website ? (
                         <a
@@ -227,7 +224,7 @@ const CommentListTemplate: React.FC = () => {
                       )}
                     </td>
 
-                    {/* 🔁 Status Toggle */}
+                    {/* Status Toggle */}
                     <td className="px-4 py-2">
                       <button
                         onClick={() => handleToggleStatus(c)}
@@ -242,7 +239,7 @@ const CommentListTemplate: React.FC = () => {
 
 
 
-                    {/* ❌ Actions */}
+                    {/*  Actions */}
                     <td className="px-4 py-2 flex gap-2">
                       <button
                         onClick={() => handleDelete(c)}

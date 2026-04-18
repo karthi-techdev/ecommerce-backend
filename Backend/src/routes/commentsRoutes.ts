@@ -3,10 +3,12 @@ import commentController from "../controllers/commentsController";
 import { upload } from "../utils/fileUpload";
 import { setCommentUpload } from "../middleware/setManagementName";
 const router = Router();
+import { authenticate } from "../middleware/authentication";
 
 // CREATE COMMENT
 router.post(
   "/",
+  authenticate, 
   setCommentUpload,          
   upload.single("image"),
   commentController.createComment
@@ -21,7 +23,7 @@ router.get("/:blogId", (req, res, next) =>
 );
 
 // DELETE COMMENT
-router.delete("/:id", (req, res, next) =>
+router.delete("/:id", authenticate, (req, res, next) =>
   commentController.deleteComment(req, res, next)
 );
 

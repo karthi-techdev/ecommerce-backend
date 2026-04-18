@@ -7,13 +7,17 @@ class CommentController {
   // CREATE COMMENT
   async createComment(req: Request, res: Response) {
   try {
-    const { comment, blogId, userId, name, email, website, rating } = req.body;
+    const { comment, blogId, name, email, website, rating } = req.body;
+    const userId = (req as any).user._id;
 
     let imagePath;
 
     if (req.file) {
-      imagePath = `uploads/comments/${req.file.filename}`;
+      imagePath = req.file.path;
     }
+    console.log("USER:", (req as any).user);
+    console.log("FILE:", req.file);
+console.log("BODY:", req.body);
 
     const newComment = await commentService.createComment({
       comment,
@@ -40,12 +44,13 @@ class CommentController {
 }
 }
 
+
 // GET ALL COMMENTS 
 async getAllComments(req: Request, res: Response, next: NextFunction) {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
-    const status = req.query.status as string; // ✅ ADD THIS
+    const status = req.query.status as string; 
 
     const { data, meta } = await commentService.getAllComments(page, limit, status);
 

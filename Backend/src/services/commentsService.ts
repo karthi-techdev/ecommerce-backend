@@ -92,6 +92,9 @@ async toggleStatus(id: string | Types.ObjectId): Promise<IComment | null> {
   return updatedComment;
 }
 
+async getCommentById(id: string | Types.ObjectId) {
+  return await commentRepository.findById(id);
+}
 }
 
 export default new CommentService();
