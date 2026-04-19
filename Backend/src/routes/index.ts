@@ -22,8 +22,14 @@ import sliderRoutes from './sliderRoutes'
 import blogRoutes from "./blogRoutes";
 import settingsRoutes from "./settingsRoutes";
 import offerRoutes from "./offerRoutes";
+
+import commentsRoutes from "./commentsRoutes";
+
 import reviewRoutes from "./reviewRoutes";
 import usersRoutes from "./usersRoutes";
+
+
+
 
 import subscribeRoutes from "./subscribeRoutes"
 
@@ -55,6 +61,11 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/settings", settingsRoutes);
   app.use("/api/v1/admin/blog-category", blogCategoryRoutes);
   app.use("/api/v1/admin/promotions", promotionRoutes);
+  app.use("/api/v1/admin/banner", bannerRoutes);
+  app.use("/api/v1/admin/comments", commentsRoutes);
+
+
+  app.use("/api/users", usersRoutes);
   app.use("/api/v1/admin/banner", bannerRoutes);
   app.use("/api/v1/admin/subscribe", subscribeRoutes);
   app.use("/api/v1/admin/contact", contactRoutes);

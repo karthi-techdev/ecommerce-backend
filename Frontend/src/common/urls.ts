@@ -218,6 +218,14 @@ updateSettings: `${ROOTURL}admin/settings/`,
   listBanners: `${ROOTURL}admin/banner`,
   updateBanners: `${ROOTURL}admin/banner/`,
 
+// ---------------- Comments endpoints ----------------
+addComment: `${ROOTURL}admin/comments/`,
+listComments: `${ROOTURL}admin/comments/`,
+deleteComment: (id: string) =>`${ROOTURL}admin/comments/${id}`,
+getCommentsByBlog: (blogId: string) =>`${ROOTURL}admin/comments/${blogId}`,
+toggleCommentStatus: (id: string) => `${ROOTURL}admin/comments/togglestatus/${id}`,
+
+
   //---------- subscriber endpoitns-----
   listSubScriber: `${ROOTURL}admin/subscribe`,
   addSubScriber: `${ROOTURL}admin/subscribe`,
