@@ -83,7 +83,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean; setIsC
           </ul>
         </div>
 
-        <div className="p-4 border-t border-gray-200">
+        {/* <div className="p-4 border-t border-gray-200">
           <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
             {!isCollapsed && (
               <div>
@@ -94,7 +94,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean; setIsC
               <span className="text-sm font-medium">G</span>
             </div>
           </div>
-        </div>
+        </div> */}
       </motion.div>
     </>
   );

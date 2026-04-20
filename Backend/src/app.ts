@@ -5,6 +5,7 @@ import { setupMiddleware } from "./middleware/setup";
 import registerRoutes from "./routes";
 
 
+
 const app = express();
 
 // Initialize basic middleware first

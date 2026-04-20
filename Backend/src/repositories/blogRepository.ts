@@ -24,8 +24,10 @@ class BlogRepository {
 }
 
   async getBlogById(id: string) {
-    return BlogModel.findById(id);
-  }
+  return BlogModel
+    .findById(id)
+    .populate("categoryId", "name isActive");
+}
 
   async updateBlog(id: string, data: any) {
     return BlogModel.findByIdAndUpdate(id, data, { new: true })

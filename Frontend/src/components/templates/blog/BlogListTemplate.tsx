@@ -6,7 +6,7 @@ import TableHeader from '../../molecules/TableHeader';
 import Loader from '../../atoms/Loader';
 import { useBlogStore } from '../../../stores/blogStore';
 import { ToggleLeft, ToggleRight, Pencil, Trash2, List, CheckCircle, XCircle } from 'lucide-react';
-
+import { Eye } from "lucide-react";
 type FilterType = 'total' | 'active' | 'inactive';
 
 const BlogListTemplate: React.FC = () => {
@@ -14,7 +14,8 @@ const BlogListTemplate: React.FC = () => {
   const { blogs, fetchBlogs, toggleBlogStatus, deleteBlog, loading } = useBlogStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('total');
-
+  const [selectedBlog, setSelectedBlog] = useState<any>(null);
+  const [isViewOpen, setIsViewOpen] = useState(false);
   useEffect(() => { fetchBlogs(); }, []);
 
   const handleDelete = async (id: string, name: string) => {
@@ -90,13 +91,14 @@ const BlogListTemplate: React.FC = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Slug</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">View</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
             </tr>
           </thead>
 
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredBlogs.length === 0 ? (
-              <tr><td colSpan={6} className="text-center text-gray-400 py-4">No data to display.</td></tr>
+              <tr><td colSpan={7} className="text-center text-gray-400 py-4">No data to display.</td></tr>
             ) : (
               filteredBlogs.map((blog, index) => (
                 <tr key={blog._id}>
@@ -107,6 +109,14 @@ const BlogListTemplate: React.FC = () => {
                   <td className="px-6 py-4">
                     <button onClick={() => handleToggleStatus(blog._id, blog.name, blog.isActive)}>
                       {blog.isActive ? <ToggleRight size={18} className="text-green-500" /> : <ToggleLeft size={18} className="text-gray-400" />}
+                    </button>
+                  </td>
+                  <td className="px-6 py-4">
+                    <button
+                      onClick={() => navigate(`/blogs/view/${blog._id}`)}
+                      className="text-blue-500 hover:text-blue-700"
+                    >
+                      <Eye size={18} />
                     </button>
                   </td>
                   <td className="px-6 py-4 flex gap-2">
