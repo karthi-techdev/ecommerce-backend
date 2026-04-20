@@ -4,6 +4,7 @@ import ValidationHelper from '../utils/validationHelper';
 import { ObjectId, Types } from 'mongoose';
 import { CommonRepository } from '../repositories/commonRepository';
 import { CommonService } from './commonService';
+import { IProduct } from '../models/productModel';
 class cartService{
     private CommonService=new CommonService<ICart>(CartModel);
     private validateCartData(data:Partial<ICart>,isUpdate:boolean=false):void{
@@ -34,15 +35,26 @@ class cartService{
             if(data.size)
                 isExistCartItem=isExistCartItem.filter(item=>item.size==data.size);
                 console.log(isExistCartItem,'check color');
-            if(isExistCartItem.length==1){
-                if(data.quantity && data.price){
-                    data.quantity+=isExistCartItem[0].quantity;
-                    data.price+=isExistCartItem[0].price;
-                }
-                return await cartRepository.updateCart(isExistCartItem[0]._id as any,data);
-            }
+         if (isExistCartItem.length === 1) {
+  const existingItem = isExistCartItem[0];
+  const product = existingItem.productId as IProduct;
+
+  if (data.quantity && data.price) {
+    const newQuantity = existingItem.quantity + data.quantity;
+    if (product && newQuantity > product.stockQuantity) {
+      throw new Error("Stock max reached!");
+      return;
+    }
+
+    data.quantity = newQuantity;
+    data.price = existingItem.price + data.price;
+  }
+  console.log(data, "present here")
+  return await cartRepository.updateCart(existingItem._id as any, data);
+}
             }
         }
+         console.log(data, "new one here")
           return await cartRepository.addToCart(data);
     }
     async getAllCart(id:string|Types.ObjectId):Promise<ICart[]|null>{

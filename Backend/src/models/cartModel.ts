@@ -1,7 +1,8 @@
 import mongoose, {model,Document,Schema} from 'mongoose';
+import { IProduct } from './productModel';
 export interface ICart extends Document{
     userId:Schema.Types.ObjectId;
-    productId:Schema.Types.ObjectId;
+    productId:Schema.Types.ObjectId| IProduct;
     quantity:number;
     color:string;
     size:string;
