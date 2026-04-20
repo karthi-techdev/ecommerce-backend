@@ -56,7 +56,13 @@ const BlogListTemplate: React.FC = () => {
 
   if (loading) return <Loader />;
 
-  const filteredBlogs = blogs.filter(blog => blog.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredBlogs = blogs
+    .filter(blog => blog.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter(blog => {
+      if (selectedFilter === 'active') return blog.isActive;
+      if (selectedFilter === 'inactive') return !blog.isActive;
+      return true;
+    });
 
   return (
     <div className="p-6">
