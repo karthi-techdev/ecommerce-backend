@@ -9,6 +9,7 @@ import { useAuthStore } from '../../stores/authStore';
 import NotFoundPage from '../utils/notFound';   
 import ReviewListPage from '../pages/reviews/ReviewListPage';
 
+
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 
 const NewsLetterPage = lazy(() => import('../pages/newsLetter/NewsLetterListPage'));
@@ -65,6 +66,7 @@ const PublicRoute = () => {
 const ProductListPage = lazy(() => import('../pages/products/ProductsListPage'));
 const ProductFormPage = lazy(() => import('../pages/products/ProductsFormPage'));
 const ProductTrashPage = lazy(() => import('../pages/trash/ProductsTrashListPage'));
+const ProductView = lazy(() => import('../pages/products/ProductsViewPage'));
 
 
 const MainCategoryPage = lazy(
@@ -81,11 +83,15 @@ const ConfigListPage = lazy(() => import('../pages/config/ConfigListPage'));
 const ConfigFormPage = lazy(() => import('../pages/config/ConfigFormPage'));
 const SliderListPage = lazy(() => import('../pages/slider/SliderListPage'));
 const SliderFormPage = lazy(() => import('../pages/slider/SliderFormPage'));
+const CommentsListPage = lazy(() => import('../pages/comments/CommentsListPage'));
 const ContactFormPage = lazy(()=> import('../pages/contact/contactFormPage'))
 const ContactListPage = lazy(()=> import('../pages/contact/contactListPage'))
 const ContactTrashPage = lazy(()=> import('../pages/trash/ContactTrashPage'))
 const AddInfoListPage = lazy(()=>import('../pages/addinfo/AddInfoListPage'))
 const AddInfoFormPage = lazy(()=>import('../pages/addinfo/AddInfoFormPage'))
+
+const SubscribeListPage = lazy(() => import('../pages/subscriber/subscriberListPage'));
+
 
 const routes: RouteObject[] = [
   {
@@ -195,6 +201,14 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <BrandFormPage /> }, 
         ],
       },
+      {
+        path: 'comments',
+        children: [
+          { path: '', element: <CommentsListPage /> }, 
+      
+        ],
+      },
+      
 
       {
   path: 'coupon',
@@ -239,6 +253,7 @@ const routes: RouteObject[] = [
           { path: '', element: <ProductListPage /> },
           { path: 'add', element: <ProductFormPage /> },
           { path: 'edit/:id', element: <ProductFormPage /> },
+          { path: 'view/:id', element: <ProductView /> },
           {
             path: 'add-info',
             children: [
@@ -248,6 +263,13 @@ const routes: RouteObject[] = [
             ],
           },
         ],
+      },
+
+      {
+      path: 'subscriber',
+      children:[
+        { path:'', element:<SubscribeListPage/> }
+      ]
       },
 
       {
@@ -267,6 +289,7 @@ const routes: RouteObject[] = [
         {path:'edit/:id',element:<CategoryFormPage/>},
        ]
       },
+         
           {
         path: 'subcategory',
         children: [

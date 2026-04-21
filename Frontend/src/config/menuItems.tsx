@@ -5,7 +5,9 @@ import { MdOutlineRateReview } from "react-icons/md";
 import { BiSolidOffer } from "react-icons/bi";
 import { BiCategory, BiBook, BiBitcoin } from "react-icons/bi";
 import type { ReactNode } from 'react';
-import { SlidersHorizontal, Settings2 } from 'lucide-react';
+import { SlidersHorizontal,Settings2 ,ClipboardPen } from 'lucide-react';
+
+import { FaYoutube } from "react-icons/fa";
 
 export interface SubMenuItem {
   key: string;
@@ -143,6 +145,20 @@ const menuItems: MenuItem[] = [
     label: 'Offers',
     icon: <PiShoppingCartLight />,
     path: '/offer',
+  },
+
+  {
+  key: 'comments',
+  label: 'Comments',
+  path: '/comments',
+  icon: <ClipboardPen />,
+},
+    
+  {
+   key: 'subscriber',
+   label: 'Subscriber',
+   icon: <FaYoutube />,
+   path: '/subscriber'
   },
     {
     key: 'commerce-settings',
