@@ -9,6 +9,7 @@ import { useAuthStore } from '../../stores/authStore';
 import NotFoundPage from '../utils/notFound';   
 import ReviewListPage from '../pages/reviews/ReviewListPage';
 
+
 const Dashboard = lazy(() => import('../templates/dashboard/Dashboard'));
 
 const NewsLetterPage = lazy(() => import('../pages/newsLetter/NewsLetterListPage'));
@@ -82,6 +83,7 @@ const ConfigListPage = lazy(() => import('../pages/config/ConfigListPage'));
 const ConfigFormPage = lazy(() => import('../pages/config/ConfigFormPage'));
 const SliderListPage = lazy(() => import('../pages/slider/SliderListPage'));
 const SliderFormPage = lazy(() => import('../pages/slider/SliderFormPage'));
+const CommentsListPage = lazy(() => import('../pages/comments/CommentsListPage'));
 const ContactFormPage = lazy(()=> import('../pages/contact/contactFormPage'))
 const ContactListPage = lazy(()=> import('../pages/contact/contactListPage'))
 const ContactTrashPage = lazy(()=> import('../pages/trash/ContactTrashPage'))
@@ -199,6 +201,14 @@ const routes: RouteObject[] = [
           { path: 'edit/:id', element: <BrandFormPage /> }, 
         ],
       },
+      {
+        path: 'comments',
+        children: [
+          { path: '', element: <CommentsListPage /> }, 
+      
+        ],
+      },
+      
 
       {
   path: 'coupon',
@@ -279,6 +289,7 @@ const routes: RouteObject[] = [
         {path:'edit/:id',element:<CategoryFormPage/>},
        ]
       },
+         
           {
         path: 'subcategory',
         children: [
