@@ -20,5 +20,9 @@ router.put("/updateStatus/:id", (req, res, next) =>
 router.get("/active/:productId", (req, res, next) =>
   reviewController.getActiveReviews(req, res, next),
 );
+// ✅ FIXED THIS LINE
+router.get("/rating-summary/:productId", (req, res, next) =>
+  reviewController.getRatingSummary(req, res, next),
+);
 
 export default router;

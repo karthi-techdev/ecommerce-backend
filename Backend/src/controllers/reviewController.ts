@@ -21,7 +21,6 @@ class ReviewController {
         return;
       }
 
-      // 🔥 userId check
       if (!userId) {
         res.status(400).json({
           status: HTTP_RESPONSE.FAIL,
@@ -30,7 +29,6 @@ class ReviewController {
         return;
       }
 
-      // ✅ correct payload
       const reviewPayload = {
         ...req.body,
         productId: productId,
@@ -48,7 +46,6 @@ class ReviewController {
     }
   }
 
-  // 2. Get All Reviews
   async getAllReviews(
     req: Request,
     res: Response,
@@ -81,7 +78,6 @@ class ReviewController {
     }
   }
 
-  // 3. Get Review By ID (Ithai add pannittaen - Ippo Red Line varathu)
   async getReviewById(
     req: Request,
     res: Response,
@@ -102,8 +98,6 @@ class ReviewController {
     }
   }
 
-  // 🟢 MAIN CHANGE: 4. Delete Review (Ownership Logic)
-  // 4. Delete Review (Ownership Logic 🔒)
   async deleteReview(
     req: Request,
     res: Response,
@@ -131,7 +125,7 @@ class ReviewController {
         return;
       }
 
-      // // 🔥 MAIN SECURITY CHECK
+      // //  MAIN SECURITY CHECK
       // if (review.userId !== userId) {
       //   res.status(403).json({
       //     status: HTTP_RESPONSE.FAIL,
@@ -151,7 +145,6 @@ class ReviewController {
     }
   }
 
-  // 🔥 NEW 5. Toggle Status (Admin)
   async updateReviewStatus(
     req: Request,
     res: Response,
@@ -173,7 +166,6 @@ class ReviewController {
     }
   }
 
-  // 🔥 NEW 6. Active Reviews மட்டும் (Frontend)
   async getActiveReviews(
     req: Request,
     res: Response,
@@ -187,6 +179,23 @@ class ReviewController {
       res.status(200).json({
         status: HTTP_RESPONSE.SUCCESS,
         data: reviews,
+      });
+    } catch (err: any) {
+      next(err);
+    }
+  }
+
+  async getRatingSummary(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const data = await reviewService.getRatingSummary(req.params.productId);
+
+      res.status(200).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        data,
       });
     } catch (err: any) {
       next(err);
