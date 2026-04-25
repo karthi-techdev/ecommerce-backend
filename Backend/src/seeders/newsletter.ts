@@ -1,4 +1,77 @@
+import mongoose from "mongoose";
+import { NewsLetterModel } from "../models/newsLetterModel";
+import { createTemplateFile } from "../utils/templateHelper";
+import fs from "fs";
+import path from "path";
 
+
+interface INewsLetter {
+    name: string;
+    slug: string;
+    description: string;
+    coverImage: string;
+    isPublished: boolean;
+    isDeleted: boolean;
+    publishedAt?: Date;
+}
+
+const seedNews = async (): Promise<void> => {
+    try {
+        await NewsLetterModel.deleteMany();
+
+      const templateDir = path.join(process.cwd(), "src/templates/newsletters");
+
+if (fs.existsSync(templateDir)) {
+  const files = fs.readdirSync(templateDir);
+
+  for (const file of files) {
+    const filePath = path.join(templateDir, file);
+    fs.unlinkSync(filePath);
+  }
+
+  console.log("Old templates deleted");
+}
+
+        const resetPasswordTemplate = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Reset Password</title>
+</head>
+<body style="margin:0;padding:0;font-family:Arial,sans-serif;background:#f4f4f4;">
+<table align="center" width="600" style="background:#ffffff;">
+<tr>
+<td style="padding:20px;background:#7952b3;color:white;text-align:center;">
+<h1>Password Reset Request</h1>
+</td>
+</tr>
+
+<tr>
+<td style="padding:20px;">
+<p>Hello,</p>
+
+<p>We received a request to reset your password.</p>
+
+<div style="text-align:center;margin:20px;">
+<a href="{{resetUrl}}" 
+style="background:#7952b3;color:white;padding:12px 24px;text-decoration:none;border-radius:4px;">
+Reset Password
+</a>
+</div>
+
+<p>If you didn't request this, ignore this email.</p>
+
+<p>&copy; {{year}} Bookadzone</p>
+
+</td>
+</tr>
+</table>
+</body>
+</html>
+`;
+
+        const subscriber = `
 <!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -184,3 +257,133 @@
 </body>
 
 </html>
+`;
+
+        const resetPasswordmailTemplate = `<div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <!-- Header Section -->
+    <div style="background-color: #7952b3; padding: 40px 20px; border-radius: 8px 8px 0 0; text-align: center;">
+        <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: bold;">Password Reset Request</h1>
+    </div>
+
+    <!-- Content Section -->
+    <div style="padding: 40px 30px; background-color: #ffffff;">
+        <div style="color: #333333;">
+            <p style="margin: 0 0 20px 0;">Hello,</p>
+            <p style="margin: 0 0 20px 0;">We received a request to reset your password for your Bookadzone account. Click the button below to reset it:</p>
+            
+            <!-- Button -->
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{resetUrl}}" style="display: inline-block; padding: 16px 36px; background-color: #7952b3; color: #ffffff; text-decoration: none; border-radius: 4px; font-size: 16px; font-weight: bold;">Reset Password</a>
+            </div>
+
+            <div style="padding: 20px; background-color: #f8f9fa; border-radius: 4px; margin: 20px 0;">
+                <p style="margin: 0; color: #666666; font-size: 14px;">⚠️ This password reset link:</p>
+                <ul style="margin: 10px 0; color: #666666; font-size: 14px;">
+                    <li>Will expire in 1 hour</li>
+                    <li>Can only be used once</li>
+                    <li>Should be kept secure and not shared</li>
+                </ul>
+            </div>
+
+            <p style="margin: 0 0 20px 0;">If you didn't request this reset, you can safely ignore this email. Your account security is important to us, so please contact support if you have concerns.</p>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #dee2e6;">
+        <p style="margin: 0 0 10px 0; font-size: 12px; color: #666666;">This is an automated message, please do not reply to this email.</p>
+        <p style="margin: 0; font-size: 12px; color: #666666;">© {{year}} Bookadzone. All rights reserved.</p>
+    </div>
+</div>`;
+
+        const welcomemail = ` <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <!-- Header -->
+    <div style="background-color: #7952b3; padding: 40px 20px; border-radius: 8px 8px 0 0; text-align: center;">
+        <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: bold;">Welcome to Bookadzone!</h1>
+    </div>
+
+    <!-- Content -->
+    <div style="padding: 40px 30px; background-color: #ffffff;">
+        <div style="color: #333333;">
+            <p style="margin: 0 0 20px 0;">Hello {{name}},</p>
+            <p style="margin: 0 0 20px 0;">Welcome to <strong>Bookadzone</strong>! 🎉 We're thrilled to have you join our community of advertisers and publishers.</p>
+            <p style="margin: 0 0 20px 0;">With your new account, you can:</p>
+            <ul style="margin: 0 0 20px 0; padding-left: 20px; color: #333333;">
+                <li style="margin-bottom: 10px;">Browse advertising opportunities</li>
+                <li style="margin-bottom: 10px;">Manage your campaigns</li>
+                <li style="margin-bottom: 10px;">Track your performance</li>
+                <li style="margin-bottom: 10px;">Connect with advertisers</li>
+            </ul>
+            
+            <!-- Button -->
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{loginUrl}}" style="display: inline-block; padding: 16px 36px; background-color: #7952b3; color: #ffffff; text-decoration: none; border-radius: 4px; font-size: 16px; font-weight: bold;">Get Started</a>
+            </div>
+            
+            <p style="margin: 0 0 20px 0;">If you have any questions, our support team is always here to help!</p>
+            <p style="margin: 0 0 20px 0; font-style: italic;">— The Bookadzone Team</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #dee2e6;">
+        <p style="margin: 0 0 10px 0; font-size: 12px; color: #666666;">This is an automated message, please do not reply to this email.</p>
+        <p style="margin: 0; font-size: 12px; color: #666666;">© {{year}} Bookadzone. All rights reserved.</p>
+    </div>
+</div>`;
+        const NewsLetter: INewsLetter[] = [
+            {
+                name: "Forgot Password",
+                slug: "forgot-password",
+                description: resetPasswordTemplate,
+                coverImage: "uploads/newsletters/default.jpg",
+                isPublished: true,
+                isDeleted: false,
+                publishedAt: new Date(),
+
+            },
+            {
+                name: "Subscriber Email",
+                slug: "subscriber-email",
+                description: subscriber,
+                coverImage: "uploads/newsletters/default.jpg",
+                isPublished: true,
+                isDeleted: false,
+                publishedAt: new Date(),
+
+            },
+
+            {
+                name: "Reset Password Mail",
+                slug: "reset-password-mail",
+                description: resetPasswordmailTemplate,
+                coverImage: "uploads/newsletters/default.jpg",
+                isPublished: true,
+                isDeleted: false,
+                publishedAt: new Date(),
+
+            },
+            {
+                name: "Welcome Email",
+                slug: "welcome-mail",
+                description: welcomemail,
+                coverImage: "uploads/newsletters/default.jpg",
+                isPublished: true,
+                isDeleted: false,
+                publishedAt: new Date(),
+
+            }
+        ]
+
+        for (const item of NewsLetter) {
+            createTemplateFile(item.slug, item.description);
+        }
+
+        await NewsLetterModel.insertMany(NewsLetter);
+        console.log(" NewsLetters data seeded successfully");
+    } catch (error) {
+        console.error("Seeding Newsletter failed:", error);
+    }
+};
+
+export default seedNews;

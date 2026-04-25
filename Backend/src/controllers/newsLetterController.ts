@@ -253,34 +253,52 @@ class NewsLetterController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const id = req.params.id;
-      if (!id) {
-        res.status(400).json({
-          status: HTTP_RESPONSE.FAIL,
-          message: "Newsletter id is required",
-        });
-        return;
-      }
+    const id = req.params.id;
 
-      const newsLetter = await newsLetterService.softDeleteNewsLetter(id);
-      if (!newsLetter) {
-        res.status(404).json({
-          status: HTTP_RESPONSE.FAIL,
-          message: "Newsletter not found",
-        });
-        return;
-      }
-
-      // Include updated Newsletter document in response data
-      res.status(200).json({
-        status: HTTP_RESPONSE.SUCCESS,
-        message: "Newsletter deleted successfully",
-        data: newsLetter,
+    if (!id) {
+      res.status(400).json({
+        status: HTTP_RESPONSE.FAIL,
+        message: "Newsletter id is required",
       });
-    } catch (err: any) {
-      next(err);
+      return;
     }
+
+    
+    const existing = await newsLetterService.getNewsLetterById(id);
+
+    if (!existing) {
+       res.status(404).json({
+        status: HTTP_RESPONSE.FAIL,
+        message: "Newsletter not found",
+      });
+      return;
+    }
+
+    
+    const filePath = path.join(
+      __dirname,
+      "../templates/newsletters",
+      `${existing.slug}.html`
+    );
+
+    
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      console.log("✅ Template file deleted");
+    }
+
+    
+    const newsLetter = await newsLetterService.softDeleteNewsLetter(id);
+
+    res.status(200).json({
+      status: HTTP_RESPONSE.SUCCESS,
+      message: "Newsletter soft deleted + template removed",
+      data: newsLetter,
+    });
+  } catch (err: any) {
+    next(err);
   }
+}
 }
 
 export default new NewsLetterController();
