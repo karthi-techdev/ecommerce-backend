@@ -22,6 +22,7 @@ import sliderRoutes from './sliderRoutes'
 import blogRoutes from "./blogRoutes";
 import settingsRoutes from "./settingsRoutes";
 import offerRoutes from "./offerRoutes";
+import cartRoutes from './cartRoutes';
 
 import commentsRoutes from "./commentsRoutes";
 
@@ -29,12 +30,12 @@ import reviewRoutes from "./reviewRoutes";
 import usersRoutes from "./usersRoutes";
 
 
+import contactRoutes from "./contactRoutes"
+import addInfoRoutes from './addInfoRoutes'
 
 
 import subscribeRoutes from "./subscribeRoutes"
 
-import contactRoutes from "./contactRoutes"
-import addInfoRoutes from './addInfoRoutes'
 import bannerRoutes from "./bannerRoutes";
 
 export default function registerRoutes(app: Express) {
@@ -61,6 +62,9 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/settings", settingsRoutes);
   app.use("/api/v1/admin/blog-category", blogCategoryRoutes);
   app.use("/api/v1/admin/promotions", promotionRoutes);
+  app.use("/api/v1/cart",cartRoutes);
+  app.use("/api/users", usersRoutes);
+  // app.use("/api/v1/admin/banner", bannerRoutes);
   app.use("/api/v1/admin/banner", bannerRoutes);
   app.use("/api/v1/admin/comments", commentsRoutes);
 
@@ -70,6 +74,5 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/subscribe", subscribeRoutes);
   app.use("/api/v1/admin/contact", contactRoutes);
   app.use("/api/v1/admin/product/add-info", addInfoRoutes);
-  app.use("/api/users", usersRoutes);
 
 }
