@@ -3,6 +3,7 @@ export interface IMainCategoryInput {
   slug: string;
   description: string;
   image: string;
+  icon:string;
   isActive?: boolean;
   isDeleted?: boolean;
 }

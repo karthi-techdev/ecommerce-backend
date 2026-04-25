@@ -1,11 +1,11 @@
 import { Schema, model, Document } from "mongoose";
 
 export interface IMainCategory extends Document {
-  
   name: string;
   slug: string;
   description: string;
   image: string;
+  icon: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date;
@@ -19,7 +19,6 @@ const mainCategorySchema = new Schema<IMainCategory>(
       required: [true, "name is required"],
       trim: true,
     },
-
     slug: {
       type: String,
       required: [true, "slug is required"],
@@ -27,7 +26,11 @@ const mainCategorySchema = new Schema<IMainCategory>(
       lowercase: true,
       trim: true,
     },
-
+    icon: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     description: {
       type: String,
       required: [true, "description is required"],

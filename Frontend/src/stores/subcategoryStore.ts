@@ -194,23 +194,29 @@ subHasMore: true,
     }
   },
 
-  updateSubCategory: async (id, formData) => {
-    try {
-      const res = await axiosInstance.put(`${API.updateSubCategory}${id}`,
-        formData, { headers: { "Content-Type": "multipart/form-data" } } );
-      set((state) => ({
-        subCategories: state.subCategories.map((sc) =>
-          sc._id === id ? res.data.data : sc
-        ),
-      }));
-    } catch (error: any) {
-      set({
-        error:
-          error?.response?.data?.message ||"Failed to update SubCategory",
-      });
-      throw error;
-    }
-  },
+ updateSubCategory: async (id, formData) => {
+  try {
+    const res = await axiosInstance.put(
+      `${API.updateSubCategory}${id}`,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    set((state) => ({
+      subCategories: state.subCategories.map((sc) =>
+        sc._id === id ? res.data.data : sc
+      ),
+    }));
+
+    return res.data.data; 
+  } catch (error: any) {
+    set({
+      error:
+        error?.response?.data?.message || "Failed to update SubCategory",
+    });
+    throw error;
+  }
+},
 
   deleteSubCategory: async (id) => {
     try {
