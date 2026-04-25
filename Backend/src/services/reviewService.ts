@@ -61,6 +61,30 @@ class ReviewService {
 
     return await reviewRepository.getActiveReviews(productId);
   }
+
+  async getRatingSummary(productId: string) {
+    if (!productId) {
+      throw new Error("Product ID is required");
+    }
+
+    const reviews = await reviewRepository.getActiveReviews(productId);
+
+    const totalReviews = reviews.length;
+
+    const totalRating = reviews.reduce((sum, review: IReview) => {
+      return sum + (review.rating || 0);
+    }, 0);
+
+    const avgRating = totalReviews > 0 ? totalRating / totalReviews : 0;
+
+    const percentage = Math.round((avgRating / 5) * 100);
+
+    return {
+      avgRating: Number(avgRating.toFixed(1)),
+      percentage,
+      totalReviews,
+    };
+  }
 }
 
 export default new ReviewService();

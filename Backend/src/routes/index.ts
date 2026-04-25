@@ -18,24 +18,17 @@ import testimonialRoutes from "./testimonialRoutes";
 import blogCategoryRoutes from "./blogCategoryRoutes";
 import promotionRoutes from "./promotionRoutes";
 import newsLetterRoutes from "./newsLetterRoutes";
-import sliderRoutes from './sliderRoutes'
+import sliderRoutes from "./sliderRoutes";
 import blogRoutes from "./blogRoutes";
 import settingsRoutes from "./settingsRoutes";
 import offerRoutes from "./offerRoutes";
-import cartRoutes from './cartRoutes';
-
-import commentsRoutes from "./commentsRoutes";
-
 import reviewRoutes from "./reviewRoutes";
 import usersRoutes from "./usersRoutes";
-
-
-import contactRoutes from "./contactRoutes"
-import addInfoRoutes from './addInfoRoutes'
-
-
-import subscribeRoutes from "./subscribeRoutes"
-
+import cartRoutes from "./cartRoutes";
+import commentsRoutes from "./commentsRoutes";
+import contactRoutes from "./contactRoutes";
+import addInfoRoutes from "./addInfoRoutes";
+import subscribeRoutes from "./subscribeRoutes";
 import bannerRoutes from "./bannerRoutes";
 
 export default function registerRoutes(app: Express) {
@@ -53,26 +46,24 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/page", pageRoutes);
   app.use("/api/v1/admin/orders", orderRoutes);
   app.use("/api/v1/admin/offers", offerRoutes);
-  app.use('/api/v1/admin/testimonials', testimonialRoutes)
-  app.use('/api/v1/admin/blog-category', blogCategoryRoutes);
+  app.use("/api/v1/admin/testimonials", testimonialRoutes);
+  app.use("/api/v1/admin/blog-category", blogCategoryRoutes);
   app.use("/api/v1/admin/testimonials", testimonialRoutes);
   app.use("/api/v1/admin/newsletters", newsLetterRoutes);
   app.use("/api/v1/admin/blogs", blogRoutes);
-  app.use('/api/v1/admin/sliders',sliderRoutes)
+  app.use("/api/v1/admin/sliders", sliderRoutes);
   app.use("/api/v1/admin/settings", settingsRoutes);
   app.use("/api/v1/admin/blog-category", blogCategoryRoutes);
   app.use("/api/v1/admin/promotions", promotionRoutes);
-  app.use("/api/v1/cart",cartRoutes);
+  app.use("/api/v1/cart", cartRoutes);
   app.use("/api/users", usersRoutes);
   // app.use("/api/v1/admin/banner", bannerRoutes);
   app.use("/api/v1/admin/banner", bannerRoutes);
   app.use("/api/v1/admin/comments", commentsRoutes);
-
 
   app.use("/api/users", usersRoutes);
   app.use("/api/v1/admin/banner", bannerRoutes);
   app.use("/api/v1/admin/subscribe", subscribeRoutes);
   app.use("/api/v1/admin/contact", contactRoutes);
   app.use("/api/v1/admin/product/add-info", addInfoRoutes);
-
 }
