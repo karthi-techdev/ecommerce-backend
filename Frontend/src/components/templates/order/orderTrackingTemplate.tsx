@@ -101,7 +101,7 @@ const OrderTrackingTemplate: React.FC = () => {
                                     className="h-1"
                                     style={{
                                         width: `${(2 / (timelineData.length - 1)) * 100}%`,
-                                        backgroundColor: "#FFC107"
+                                        backgroundColor: "#FFB300"
                                     }}
                                 />
                             </div>
@@ -124,7 +124,7 @@ const OrderTrackingTemplate: React.FC = () => {
                                         <div
                                             className={`w-18 h-18 mx-auto rounded-full flex items-center justify-center 
   ${isActive ? "text-white" : "bg-gray-100 text-gray-400"}`}
-                                            style={isActive ? { backgroundColor: "#FFC107"} : {}}
+                                            style={isActive ? { backgroundColor: "#FFB300" } : {}}
                                         >
                                             {icons[index]}
                                         </div>
