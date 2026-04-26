@@ -25,6 +25,7 @@ import settingsRoutes from "./settingsRoutes";
 import offerRoutes from "./offerRoutes";
 import reviewRoutes from "./reviewRoutes";
 import usersRoutes from "./usersRoutes";
+import userRoutes from "./userRoutes";
 
 
 export default function registerRoutes(app: Express) {
@@ -50,7 +51,7 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/settings", settingsRoutes);
   app.use("/api/v1/admin/blog-category", blogCategoryRoutes);
   app.use("/api/v1/admin/promotions", promotionRoutes);
-
+  app.use("/api/users", userRoutes);
   app.use("/api/users", usersRoutes);
   app.use("/api/v1/admin/banner", bannerRoutes);
   app.use("/api/v1/admin/reviews", reviewRoutes);

@@ -15,6 +15,8 @@ export interface IUser extends Document {
     isDeleted: boolean;
     resetPasswordToken?: string;
     resetPasswordExpires?: Date;
+    resetAttempts?: number;
+    resetAttemptTime?: Date;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -31,8 +33,10 @@ const userSchema: Schema<IUser> = new Schema(
         rolePrivilegeIds: [{ type: Schema.Types.ObjectId, ref: "RolePrivilege" }],
         status: { type: String, enum: ["active", "inactive"], default: "active" },
         isDeleted: { type: Boolean, default: false },
-         resetPasswordToken: { type: String },
-        resetPasswordExpires: { type: Date }
+        resetPasswordToken: { type: String },
+        resetPasswordExpires: { type: Date },
+        resetAttempts: {type: Number,default: 0},
+        resetAttemptTime: {type: Date},
     },
     { timestamps: true }
 );
