@@ -49,6 +49,7 @@ export interface MainCategory {
   _id?: string;
   name: string;
   slug: string;
+  icon: string; 
   description: string;
   image: File | string | null;
   isActive: boolean;
@@ -65,6 +66,21 @@ export interface Brand {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface Comment {
+  _id: string;
+  comment: string;
+  name: string;
+  email: string;
+  website?: string;
+  image?: string;
+  rating: number;
+  blogId: string;
+  userId: string;
+  createdAt: string;
+  isActive: boolean;
+}
+
 
 export interface Coupon {
   _id?: string;
@@ -102,6 +118,19 @@ export interface ShipmentMethod {
   description?: string;
   price: string;
   status?: "active" | "inactive";
+  isDeleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Contact {
+  _id?: string;
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+  status?: 'active' | 'inactive'; 
   isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -252,6 +281,14 @@ export interface ProductFormData {
   type: string;
 }
 
+export interface SubscriberFormData {
+  _id?: string;
+  email: string
+  isActive: boolean;
+  createdAt: Date;
+}
+
+
 export type InputType =
   | "text"
   | "email"
@@ -400,4 +437,13 @@ export interface ReviewFormData {
   productId: string;
   status: string;
   isActive?: boolean;
+}
+export interface AddInfo {
+  _id?: string;
+  key: string;
+  value: string;
+  isDeleted?: boolean;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }

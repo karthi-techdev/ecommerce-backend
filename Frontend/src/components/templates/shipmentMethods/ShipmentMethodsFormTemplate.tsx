@@ -127,7 +127,7 @@ const ShipmentMethodFormTemplate: React.FC = () => {
   return (
     <div className="p-6">
       <FormHeader managementName="Shipment Method" addButtonLink="/shipment-methods" type={id ? 'Edit' : 'Add'}/>
-      <form  onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <form  onSubmit={handleSubmit} noValidate className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="space-y-6">
           {shipmentFields.map(field => {
           const isRequired = ['name', 'price'].includes(field.name);

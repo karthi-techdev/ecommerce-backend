@@ -1,11 +1,13 @@
 
 import { PiShoppingCartLight } from "react-icons/pi";
-import { FiSettings, FiTruck, FiFileText, FiLayers, FiTag, FiMail, FiList, FiSliders, FiTool, FiBriefcase, FiTrash2, FiShoppingCart } from 'react-icons/fi';
+import { FiSettings, FiTruck, FiFileText, FiLayers, FiTag, FiMail, FiList, FiSliders, FiTool, FiBriefcase, FiTrash2, FiShoppingCart, FiPhone } from 'react-icons/fi';
 import { MdOutlineRateReview } from "react-icons/md";
 import { BiSolidOffer } from "react-icons/bi";
 import { BiCategory, BiBook, BiBitcoin } from "react-icons/bi";
 import type { ReactNode } from 'react';
-import { SlidersHorizontal, Settings2 } from 'lucide-react';
+import { SlidersHorizontal, Settings2, ClipboardPen } from 'lucide-react';
+
+import { FaYoutube } from "react-icons/fa";
 
 export interface SubMenuItem {
   key: string;
@@ -80,14 +82,26 @@ const menuItems: MenuItem[] = [
     label: 'Orders',
     icon: <PiShoppingCartLight />,
     path: '/orders',
+    submenu: [
+      {
+        key: 'orders',
+        label: 'Order list ',
+        path: '/orders',
+      }
+      ,
+      {
+        key: 'order-tracking',
+        label: 'Order Tracking',
+        path: '/orders/ordertracking',
+      }
+    ]
   },
 
-  // 1. Inga Reviews-ai add pannunga
   {
-    key: 'reviews',
-    label: 'Customer Reviews',
-    icon: <MdOutlineRateReview />,
-    path: '/reviews',
+    key: 'Contact',
+    label: 'contact',
+    icon: <FiPhone />,
+    path: '/contact',
   },
 
   {
@@ -104,6 +118,14 @@ const menuItems: MenuItem[] = [
     ]
   },
 
+
+  // 1. Inga Reviews-ai add pannunga
+  {
+    key: 'reviews',
+    label: 'Customer Reviews',
+    icon: <MdOutlineRateReview />,
+    path: '/reviews',
+  },
 
   {
     key: 'blogs',
@@ -137,6 +159,20 @@ const menuItems: MenuItem[] = [
     label: 'Offers',
     icon: <PiShoppingCartLight />,
     path: '/offer',
+  },
+
+  {
+    key: 'comments',
+    label: 'Comments',
+    path: '/comments',
+    icon: <ClipboardPen />,
+  },
+
+  {
+    key: 'subscriber',
+    label: 'Subscriber',
+    icon: <FaYoutube />,
+    path: '/subscriber'
   },
   {
     key: 'commerce-settings',
@@ -222,6 +258,11 @@ const menuItems: MenuItem[] = [
         key: 'trash-blogs',
         label: 'Blogs',
         path: '/trash/blogs',
+      },
+      {
+        key: 'contact',
+        label: 'Contact',
+        path: '/trash/contact',
       },
 
 
