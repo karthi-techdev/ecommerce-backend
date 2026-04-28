@@ -1,11 +1,11 @@
 
 import { PiShoppingCartLight } from "react-icons/pi";
-import { FiSettings, FiTruck, FiFileText, FiLayers, FiTag, FiMail, FiList, FiSliders, FiTool, FiBriefcase, FiTrash2, FiShoppingCart,FiPhone } from 'react-icons/fi';
+import { FiSettings, FiTruck, FiFileText, FiLayers, FiTag, FiMail, FiList, FiSliders, FiTool, FiBriefcase, FiTrash2, FiShoppingCart, FiPhone } from 'react-icons/fi';
 import { MdOutlineRateReview } from "react-icons/md";
 import { BiSolidOffer } from "react-icons/bi";
 import { BiCategory, BiBook, BiBitcoin } from "react-icons/bi";
 import type { ReactNode } from 'react';
-import { SlidersHorizontal,Settings2 ,ClipboardPen } from 'lucide-react';
+import { SlidersHorizontal, Settings2, ClipboardPen } from 'lucide-react';
 
 import { FaYoutube } from "react-icons/fa";
 
@@ -82,7 +82,21 @@ const menuItems: MenuItem[] = [
     label: 'Orders',
     icon: <PiShoppingCartLight />,
     path: '/orders',
+    submenu: [
+      {
+        key: 'orders',
+        label: 'Order list ',
+        path: '/orders',
+      }
+      ,
+      {
+        key: 'order-tracking',
+        label: 'Order Tracking',
+        path: '/orders/ordertracking',
+      }
+    ]
   },
+
   {
     key: 'Contact',
     label: 'contact',
@@ -148,25 +162,25 @@ const menuItems: MenuItem[] = [
   },
 
   {
-  key: 'comments',
-  label: 'Comments',
-  path: '/comments',
-  icon: <ClipboardPen />,
-},
-    
-  {
-   key: 'subscriber',
-   label: 'Subscriber',
-   icon: <FaYoutube />,
-   path: '/subscriber'
+    key: 'comments',
+    label: 'Comments',
+    path: '/comments',
+    icon: <ClipboardPen />,
   },
-    {
+
+  {
+    key: 'subscriber',
+    label: 'Subscriber',
+    icon: <FaYoutube />,
+    path: '/subscriber'
+  },
+  {
     key: 'commerce-settings',
     label: 'Commerce Settings',
     icon: <FiTool />,
     path: '#',
     submenu: [
-       {
+      {
         key: 'coupon',
         label: 'Coupon',
         icon: <FiLayers />,
