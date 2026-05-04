@@ -4,6 +4,8 @@ export interface IUser extends Document {
   email: string;
   password: string;
   username: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 const usersSchema: Schema = new Schema({
@@ -18,7 +20,15 @@ const usersSchema: Schema = new Schema({
   },
   username: {
     type: String,
-    required: true, 
+    required: true,
+  },
+
+  // ✅ ADD THESE
+  firstName: {
+    type: String,
+  },
+  lastName: {
+    type: String,
   },
 });
 

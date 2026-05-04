@@ -68,9 +68,9 @@ const BlogViewTemplate: React.FC = () => {
 
           <button
             onClick={() => navigate(`/blogs/edit/${blog._id}`)}
-            className="px-5 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition font-medium shadow-sm"
+            className="px-5 py-2 rounded-lg bg-[#fe9a00] text-white hover:bg-[#fe9a00] transition font-medium shadow-sm"
           >
-            ✏️ Edit
+             Edit
           </button>
 
         </div>
