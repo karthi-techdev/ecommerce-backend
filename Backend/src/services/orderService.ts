@@ -1,114 +1,24 @@
-// import { Types } from "mongoose";
-// import OrderRepository from "../repositories/orderRepository";
-// import { OrderModel , IOrder } from "../models/orderModel";
-// import { CommonService } from "./commonService";
-// import ValidationHelper from "../utils/validationHelper";
 
-// class OrderService {
-//     private commonService = new CommonService<IOrder>(OrderModel);
-
-//     private validateOrderData( data: Partial<IOrder>, isUpdate: boolean = false): void {
-//         const rules = [
-//             !isUpdate ? ValidationHelper.isRequired(data.customerId, "customerId") : (data.customerId !== undefined ? ValidationHelper.isValidObjectId(data.customerId, "customerId") : null),
-            
-//             !isUpdate ? ValidationHelper.isRequired(data.customerName, "customerName") : (data.customerName !== undefined ? ValidationHelper.isNonEmptyString(data.customerName, "customerName") : null),
-
-//             !isUpdate ? ValidationHelper.isRequired(data.customerEmail, "customerEmail") : (data.customerEmail !== undefined ? ValidationHelper.isValidEmail(data.customerEmail, "customerEmail") : null),
-
-//             !isUpdate ? ValidationHelper.isRequired(data.customerPhone, "customerPhone") : null,
-
-//             !isUpdate ? ValidationHelper.isRequired(data.shippingAddress, "shippingAddress") : null,
-
-//             !isUpdate ? ValidationHelper.isRequired(data.products, "products") : null,
-
-//             ValidationHelper.isArray(data.products, "products"),
-
-//             !isUpdate ? ValidationHelper.isRequired(data.totalAmount, "totalAmount") : null,
-
-//             ValidationHelper.isNumber(data.totalAmount, "totalAmount"),
-
-//             ValidationHelper.isValidEnum(data.paymentStatus,"paymentStatus",["Paid", "Unpaid", "Failed"]),
-
-//             ValidationHelper.isValidEnum( data.orderStatus, "orderStatus", ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"]),
-
-//             ValidationHelper.isBoolean(data.isDeleted, "isDeleted")
-//         ];
-
-//         const errors = ValidationHelper.validate(rules);
-
-//         if (errors.length > 0) {
-//             throw new Error(errors.map(e => e.message).join(", "));
-//         }
-//     }
-    
-//     async createOrder(data: IOrder): Promise<IOrder> {
-//         this.validateOrderData(data);
-//         return await OrderRepository.createOrder(data);
-//     }
-
-//     async getAllOrders(page = 1 , limit = 10 , filter?: string , paymentFilter?: string , customerId?: string) {
-//         return await OrderRepository.getAllOrders(page , limit , filter , paymentFilter , customerId);
-//     }
-
-//     async getOrderById(id: string | Types.ObjectId): Promise<IOrder | null>{
-
-//         const error = ValidationHelper.isValidObjectId(id, "id");
-//         if (error) throw new Error(error.message);
-
-//         return await OrderRepository.getOrderById(id);
-//     }
-
-//     async updateOrder(id: string | Types.ObjectId , data: Partial<IOrder>): Promise<IOrder | null>{
-
-//         const error = ValidationHelper.isValidObjectId(id, "id");
-//         if (error) throw new Error(error.message);
-//         this.validateOrderData(data, true);
-
-//         return await OrderRepository.updateOrder(id , data);
-//     }
-
-//     async updateOrderStatus(id: string | Types.ObjectId , status : string ): Promise<IOrder | null>{
-//         const error = ValidationHelper.isValidObjectId(id, "id");
-//         if (error) throw new Error(error.message);
-
-//         const enumError = ValidationHelper.isValidEnum(status, "orderStatus", ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"]);
-//         if (enumError) throw new Error(enumError.message);
-
-//         return await OrderRepository.updateOrderStatus(id , status)
-//     }
-
-//     async updatePaymentStatus(id: string | Types.ObjectId , paymentStatus: "Paid" | "Unpaid" | "Failed" ): Promise<IOrder | null>{
-//         const error = ValidationHelper.isValidObjectId(id, "id");
-//         if (error) throw new Error(error.message);
-
-//         const enumError = ValidationHelper.isValidEnum(paymentStatus, "paymentStatus", ["Paid", "Unpaid", "Failed"]);
-//         if (enumError) throw new Error(enumError.message);
-
-//         return await OrderRepository.updatePaymentStatus(id , paymentStatus)
-//     }
-
-//     async softDeleteOrder( id: string | Types.ObjectId ): Promise<IOrder | null>{
-//         const error = ValidationHelper.isValidObjectId(id, "id");
-//         if (error) throw new Error(error.message);
-
-//         return await OrderRepository.softDeleteOrder(id); 
-//     }
-
-//     async deleteOrderPermanently( id: string | Types.ObjectId ): Promise<IOrder | null>{
-//         const error = ValidationHelper.isValidObjectId(id, "id");
-//         if (error) throw new Error(error.message);
-
-//         return await OrderRepository.deleteOrderPermanently(id);
-//     }
-// }
-
-// export default new OrderService();
 
 import { Types } from "mongoose";
 import OrderRepository from "../repositories/orderRepository";
 import ValidationHelper from "../utils/validationHelper";
+import { v4 as uuidv4 } from "uuid";
 
 class OrderService {
+    
+
+async createOrder(data: any) {
+     if (!data.customerId) throw new Error("customerId required");
+    if (!data.products || data.products.length === 0) throw new Error("Products required");
+    if (!data.totalAmount) throw new Error("Total amount required");
+    if (!data.shippingMethod) throw new Error("Shipping method required");
+if (!data.shippingPrice && data.shippingPrice !== 0) throw new Error("Shipping price required");
+if (!data.paymentMethod) throw new Error("Payment method required");
+    // generate order number 
+    data.orderNumber = "ORD-" + uuidv4().slice(0, 8);
+    return await OrderRepository.create(data);
+}
 
     async listAllOrders(page?: number, limit?: number, status?: string) {
         return await OrderRepository.getAllOrders(page, limit, status);
