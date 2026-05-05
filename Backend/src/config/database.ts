@@ -114,7 +114,7 @@ class DatabaseConnection extends EventEmitter {
   }
 
   public async clearDatabase(): Promise<void> {
-    if (process.env.NODE_ENV === 'test') {
+    if (process.env.NODE_ENV === 'ecommerce') {
       const db = mongoose.connection.db;
       if (db) {
         const collections = await db.collections();
