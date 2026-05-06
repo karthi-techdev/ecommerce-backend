@@ -41,6 +41,7 @@ class productController {
 
       const payload = {
         ...req.body,
+        
         relatedTags,
         images,
         thumbnail,
@@ -431,7 +432,7 @@ class productController {
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
         filter.createdAt = { $gte: sevenDaysAgo };
       }
-      console.log("🔥 FILTER:", filter);
+      console.log(" FILTER:", filter);
 
       const products = await ProductModel.find(filter)
         .populate("categoryId", "name")
@@ -442,7 +443,7 @@ class productController {
         data: products,
       });
     } catch (err) {
-      console.log("❌ FILTER ERROR:", err);
+      console.log(" FILTER ERROR:", err);
       next(err);
     }
   }
@@ -475,5 +476,54 @@ class productController {
       next(err);
     }
   }
+  //  CATEGORY SLUG BASED PRODUCTS
+async getProductsByCategorySlug(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { slug } = req.params;
+
+    console.log(" CATEGORY SLUG:", slug);
+
+    if (!slug) {
+      res.status(400).json({
+        status: HTTP_RESPONSE.FAIL,
+        message: "Category slug is required",
+      });
+      return;
+    }
+
+    const products = await ProductModel.find({
+      status: "active",
+      isDeleted: false,
+    })
+      .populate({
+        path: "categoryId",
+        match: { slug: slug }, //  slug match
+      })
+      .sort({ createdAt: -1 });
+
+console.log(" FILTERED:", products);
+
+
+    //null remove
+    const filteredProducts = products.filter(
+      (p: any) => p.categoryId
+    );
+
+    console.log(" FILTERED:", filteredProducts.length);
+
+    res.status(200).json({
+      status: HTTP_RESPONSE.SUCCESS,
+      data: filteredProducts,
+    });
+  } catch (err) {
+    console.log(" CATEGORY FILTER ERROR:", err);
+    next(err);
+  }
+}
 }
 export default new productController();
+
