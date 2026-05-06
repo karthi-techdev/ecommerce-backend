@@ -5,6 +5,7 @@ import { setProductUpload } from "../middleware/setManagementName";
 
 const router = Router();
 
+
 router.post(
   "/",
   (req, res, next) => {
@@ -60,9 +61,16 @@ router.get("/trash", (req, res, next) =>
 router.get("/filter", (req, res, next) =>
   productController.getFilteredProducts(req, res, next),
 );
-
+router.get(
+  "/category/:slug",
+  (req, res, next) =>
+    productController.getProductsByCategorySlug(req, res, next)
+);
 router.get("/new", (req, res, next) =>
   productController.getNewProducts(req, res, next),
 );
 
 export default router;
+
+
+
