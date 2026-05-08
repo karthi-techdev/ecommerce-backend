@@ -65,7 +65,7 @@ import ReviewFormTemplate from '../components/templates/reviews/ReviewFormTempla
 import AddInfoListPage from '../components/templates/addinfo/addinfoListTemplate';
 import AddInfoFormPage from '../components/templates/addinfo/addinfoFormTemplate';
 
-
+import OrderListsTemplate from '@/components/templates/orderList/orderListsTemplate';
 
 export const router = createBrowserRouter([
   {
@@ -110,6 +110,15 @@ export const router = createBrowserRouter([
             path: 'add',
             element: <OrderListTemplate />,
           },
+        ]
+      },
+      {
+        path: 'orderlist',
+        children: [
+          {
+            path: "",
+            element: <OrderListsTemplate />
+          }
         ]
       },
       {

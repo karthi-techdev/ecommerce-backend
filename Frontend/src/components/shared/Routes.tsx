@@ -86,6 +86,7 @@ const ContactListPage = lazy(()=> import('../pages/contact/contactListPage'))
 const ContactTrashPage = lazy(()=> import('../pages/trash/ContactTrashPage'))
 const AddInfoListPage = lazy(()=>import('../pages/addinfo/AddInfoListPage'))
 const AddInfoFormPage = lazy(()=>import('../pages/addinfo/AddInfoFormPage'))
+const OrderListsPage = lazy(()=> import("../pages/orderList/OrderListsPage"))
 
 const routes: RouteObject[] = [
   {
@@ -162,7 +163,12 @@ const routes: RouteObject[] = [
             ],
           },
 
-          
+          {
+            path: 'orderlist',
+            children: [
+              { path: '', element: <OrderListsPage /> },
+            ],
+          },
           {
         path: 'testimonial',
         children: [

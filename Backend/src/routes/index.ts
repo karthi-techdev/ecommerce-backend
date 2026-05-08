@@ -25,6 +25,7 @@ import offerRoutes from "./offerRoutes";
 import contactRoutes from "./contactRoutes"
 import addInfoRoutes from './addInfoRoutes'
 import usersRoutes from "./usersRoutes";
+import addressRoutes from "./addressRoutes";
 
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
@@ -55,5 +56,6 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/contact", contactRoutes);
   app.use("/api/v1/admin/product/add-info", addInfoRoutes);
   app.use("/api/users", usersRoutes);
-
+  app.use("/api/v1/address", addressRoutes);
+  
 }
