@@ -4,6 +4,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   username: string;
+  loginType: string;
   firstName?: string;
   lastName?: string;
 }
@@ -22,6 +23,11 @@ const usersSchema: Schema = new Schema({
     type: String,
     required: true,
   },
+  loginType: {
+  type: String,
+  enum: ["manual", "google"],
+  default: "manual",
+},
 
   // ✅ ADD THESE
   firstName: {

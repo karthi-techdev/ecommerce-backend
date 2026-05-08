@@ -251,6 +251,7 @@ class AuthenticationService {
     }
 
     // Check if new password is same as old password
+
     const isSameAsOld = await bcrypt.compare(newPassword, user.password);
     if (isSameAsOld) {
       throw new CustomError("New password cannot be the same as your current password", HTTP_STATUS_CODE.BAD_REQUEST);

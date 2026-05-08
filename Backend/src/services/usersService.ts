@@ -12,7 +12,8 @@ import usersModel from "../models/usersModel";
 export const registerUser = async (
   email: string,
   password: string,
-  username: string
+  username: string,
+  loginType: string = "manual"
 ): Promise<IUser> => {
   const existingUser = await findUserByEmail(email);
 
@@ -26,6 +27,8 @@ export const registerUser = async (
     email,
     password: hashedPassword,
     username, 
+    loginType,
+
   });
 };
 
