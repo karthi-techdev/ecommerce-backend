@@ -37,7 +37,6 @@ import addInfoRoutes from './addInfoRoutes'
 import subscribeRoutes from "./subscribeRoutes"
 
 import bannerRoutes from "./bannerRoutes";
-
 export default function registerRoutes(app: Express) {
   app.use("/api/v1/auth", authenticationRoutes);
   app.use("/api/v1/admin/faqs", faqRoutes);
@@ -51,7 +50,7 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/config", configRoutes);
   app.use("/api/v1/admin/products", productRoutes);
   app.use("/api/v1/admin/page", pageRoutes);
-  app.use("/api/v1/admin/orders", orderRoutes);
+  //app.use("/api/v1/admin/orders", orderRoutes);
   app.use("/api/v1/admin/offers", offerRoutes);
   app.use('/api/v1/admin/testimonials', testimonialRoutes)
   app.use('/api/v1/admin/blog-category', blogCategoryRoutes);

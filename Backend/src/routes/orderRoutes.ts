@@ -17,11 +17,11 @@ import { Router } from "express";
 import OrderController from "../controllers/orderController";
 
 const orderRoutes = Router();
-
+orderRoutes.post('/createOrder',OrderController.createOrder);
 orderRoutes.get("/", OrderController.getAllOrders);
 orderRoutes.get("/:id", OrderController.getOrderById);
 // orderRoutes.put("/:id/status", OrderController.updateOrderStatus);
 orderRoutes.put("/orderstatus/:id", OrderController.updateOrderStatus);
 orderRoutes.delete("/:id", OrderController.cancelOrder);
-
+orderRoutes.put('/verifyPayment',OrderController.verifyPayment);
 export default orderRoutes;

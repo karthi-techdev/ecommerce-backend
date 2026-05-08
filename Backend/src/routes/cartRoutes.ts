@@ -1,6 +1,5 @@
 import { Router } from "express"
 import cartController from '../controllers/cartController';
-import { UserModel } from "../models/userModel";
 const router=Router();
 router.post('/addtocart',(req,res,next)=>cartController.addToCart(req,res,next));
 router.get('/:id',(req,res,next)=>cartController.getAllCart(req,res,next));

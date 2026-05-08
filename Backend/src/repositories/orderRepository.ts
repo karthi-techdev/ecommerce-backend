@@ -260,6 +260,12 @@ async updateStatus(id: string | Types.ObjectId, status: string): Promise<IOrder 
     async softDelete(id: string | Types.ObjectId): Promise<IOrder | null> {
         return await OrderModel.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
     }
+    async createOrder(data:IOrder):Promise<IOrder>{
+        return await OrderModel.create(data);
+    }
+    async updateOrder(razorpayOrderId:string,razorpayPaymentId:string,razorpaySignature:string):Promise<IOrder|null>{
+        return await OrderModel.findOneAndUpdate({razorpayOrderId},{razorpayPaymentId,razorpaySignature,paidAt:Date.now(),paymentStatus:'Paid'},{new:true})
+    }
 }
 
 export default new OrderRepository();

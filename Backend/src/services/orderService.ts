@@ -107,7 +107,8 @@
 import { Types } from "mongoose";
 import OrderRepository from "../repositories/orderRepository";
 import ValidationHelper from "../utils/validationHelper";
-
+import { IOrder } from "../models/orderModel";
+import { createOrder,verifyPayment } from "../utils/razorpay";
 class OrderService {
 
     async listAllOrders(page?: number, limit?: number, status?: string) {
@@ -149,6 +150,21 @@ class OrderService {
         }
 
         return await OrderRepository.softDelete(id);
+    }
+    async createOrder(data:IOrder){
+        const createRazorpayOrder=await createOrder(data.totalAmount);
+        data.razorpayOrderId=createRazorpayOrder.id
+        data.paymentStatus='Unpaid',
+        data.orderStatus='Pending'
+        return await OrderRepository.createOrder(data);
+    }
+    async verifyPayment(razorpayOrderId:string,razorpayPaymentId:string,razorpaySignature:string){
+            const generateSignature=verifyPayment(razorpayOrderId,razorpayPaymentId);
+            if(generateSignature!=razorpaySignature){
+                throw new Error("Payment verification failed");
+                return;
+            }
+            return await OrderRepository.updateOrder(razorpayOrderId,razorpayPaymentId,razorpaySignature);
     }
 }
 

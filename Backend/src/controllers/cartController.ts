@@ -6,6 +6,7 @@ class cartController{
     async addToCart(req:Request,res:Response,next:NextFunction):Promise<void>{
         try {
             const data=req.body;
+            console.log('data here',data)
             const cartData=await cartService.addToCart(data);
             res.status(200).json({status:HTTP_RESPONSE.SUCCESS,message:"Product added to cart",data:cartData});
         } catch (err:any) {
