@@ -264,6 +264,52 @@ async isCodeExists(code: string, excludeId?: string): Promise<boolean> {
   return !!existingCoupon;
 }
 
+async applyCoupon(code: string, totalAmount: number) {
+
+  const coupon = await CouponModel.findOne({
+    code: code.toUpperCase(),
+    isDeleted: false,
+    isActive: true,
+  });
+
+  if (!coupon) {
+    throw new Error("Invalid coupon");
+  }
+
+  const now = new Date();
+
+  if (now < coupon.startDate || now > coupon.endDate) {
+    throw new Error("Coupon expired");
+  }
+
+  if (totalAmount < (coupon.minOrderValue || 0)) {
+    throw new Error(`Minimum order amount is ${coupon.minOrderValue}`);
+  }
+
+  let discountAmount = 0;
+
+  if (coupon.discountType === "percentage") {
+
+    discountAmount =
+      (totalAmount * coupon.discountValue) / 100;
+
+    if (
+      coupon.maxDiscountAmount &&
+      discountAmount > coupon.maxDiscountAmount
+    ) {
+      discountAmount = coupon.maxDiscountAmount;
+    }
+
+  } else {
+
+    discountAmount = coupon.discountValue;
+
+  }
+
+  return {
+    discountAmount,
+  };
+}
 
 
 }
