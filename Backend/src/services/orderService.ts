@@ -8,19 +8,6 @@ import { ProductModel } from "../models/productModel";
 
 class OrderService {
     
-
-// async createOrder(data: any) {
-//      if (!data.customerId) throw new Error("customerId required");
-//     if (!data.products || data.products.length === 0) throw new Error("Products required");
-//     if (!data.totalAmount) throw new Error("Total amount required");
-//     if (!data.shippingMethod) throw new Error("Shipping method required");
-// if (!data.shippingPrice && data.shippingPrice !== 0) throw new Error("Shipping price required");
-// if (!data.paymentMethod) throw new Error("Payment method required");
-
-//     // generate order number 
-//     data.orderNumber = "ORD-" + uuidv4().slice(0, 8);
-//     return await OrderRepository.create(data);
-// }
 async createOrder(data: any) {
 
     if (!data.customerId) throw new Error("customerId required");
@@ -74,7 +61,7 @@ async createOrder(data: any) {
 
 
     // GENERATE ORDER NUMBER
-    data.orderNumber = "ORD-" + uuidv4().slice(0, 8);
+    data.orderNumber = "ORD-aven" + uuidv4().slice(0, 4);
 
 
     // CREATE ORDER
