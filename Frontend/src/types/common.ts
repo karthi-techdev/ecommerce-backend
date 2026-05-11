@@ -67,6 +67,21 @@ export interface Brand {
   updatedAt?: string;
 }
 
+export interface Comment {
+  _id: string;
+  comment: string;
+  name: string;
+  email: string;
+  website?: string;
+  image?: string;
+  rating: number;
+  blogId: string;
+  userId: string;
+  createdAt: string;
+  isActive: boolean;
+}
+
+
 export interface Coupon {
   _id?: string;
   code: string;
@@ -265,6 +280,14 @@ export interface ProductFormData {
   relatedTags: string[];
   type: string;
 }
+
+export interface SubscriberFormData {
+  _id?: string;
+  email: string
+  isActive: boolean;
+  createdAt: Date;
+}
+
 
 export type InputType =
   | "text"

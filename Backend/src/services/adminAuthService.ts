@@ -5,26 +5,24 @@ import { IAdmin, AdminModel } from "../models/adminAuthModel";
 import newsLetterRepository from "../repositories/newsLetterRepository";
 import ValidationHelper from "../utils/validationHelper";
 import { Types } from "mongoose";
-import { sendEmail } from '../utils/email';
+import { sendEmail } from "../utils/email";
 import path from "path";
-import fs from 'fs'
-import crypto from 'crypto'
+import fs from "fs";
+import crypto from "crypto";
 export class AdminAuthService {
-
   private readonly JWT_SECRET: Secret;
   private readonly JWT_ACCESS_EXPIRATION: SignOptions["expiresIn"];
 
   constructor() {
-
-    this.JWT_SECRET = process.env.JWT_SECRET || 'your-secure-jwt-secret-min-32-chars';
+    this.JWT_SECRET =
+      process.env.JWT_SECRET || "your-secure-jwt-secret-min-32-chars";
     this.JWT_ACCESS_EXPIRATION =
       (process.env.JWT_ACCESS_EXPIRATION as SignOptions["expiresIn"]) || "15m";
   }
 
   async login(email: string, password: string) {
-
     const admin = await adminAuthRepository.findEmail(email);
-
+    console.log("addd", JSON.stringify(admin), email, password)
     if (!admin || !admin.isActive) {
       throw new Error("Invalid Email");
     }
@@ -38,17 +36,18 @@ export class AdminAuthService {
     const token = jwt.sign(
       { _id: admin._id, role: admin.role },
       this.JWT_SECRET,
-      { expiresIn: this.JWT_ACCESS_EXPIRATION }
+      { expiresIn: this.JWT_ACCESS_EXPIRATION },
     );
 
     await adminAuthRepository.lastLoggedIn((admin as any)._id.toString());
+
     return {
       token,
       admin: {
         name: admin.name,
         email: admin.email,
-        role: admin.role
-      }
+        role: admin.role,
+      },
     };
   }
 
@@ -94,7 +93,10 @@ export class AdminAuthService {
     return { message: "Password updated successfully" };
   }
   async forgetPassword(email: string) {
-    const error = ValidationHelper.isRequired(email, 'Email') || email.trim() !== '' ? ValidationHelper.isValidEmail(email, "Email") : null;
+    const error =
+      ValidationHelper.isRequired(email, "Email") || email.trim() !== ""
+        ? ValidationHelper.isValidEmail(email, "Email")
+        : null;
     if (error) {
       throw new Error(error.message);
     }
@@ -104,28 +106,38 @@ export class AdminAuthService {
     }
     let htmlContent = "";
     let templatePath = "";
-    const token = crypto.randomBytes(32).toString('hex');
+    const token = crypto.randomBytes(32).toString("hex");
     const expires = new Date(Date.now() + 60 * 60 * 1000);
 
     await adminAuthRepository.saveResetToken(email, token, expires);
 
-    const resetUrl = `${process.env.FRONTEND_URL ? process.env.FRONTEND_URL : 'http://localhost:3001'}/resetPassword?token=${token}`;
-    const isNewsLetter = await newsLetterRepository.getNewsLetterBySlug('forgot-password');
+    const resetUrl = `${process.env.FRONTEND_URL ? process.env.FRONTEND_URL : "http://localhost:3001"}/resetPassword?token=${token}`;
+    const isNewsLetter =
+      await newsLetterRepository.getNewsLetterBySlug("forgot-password");
 
-    if (isNewsLetter && isNewsLetter.isPublished && !isNewsLetter.isDeleted && isNewsLetter.slug == "forgot-password") {
-      templatePath = path.join(__dirname, '../templates/newsletters/forgot-password.html');
-      htmlContent = fs.readFileSync(templatePath, 'utf-8');
-      console.log("its here ")
-    }
-    else {
-      templatePath = path.join(__dirname, '../templates/default/reset-password.html');
-      htmlContent = fs.readFileSync(templatePath, 'utf-8');
+    if (
+      isNewsLetter &&
+      isNewsLetter.isPublished &&
+      !isNewsLetter.isDeleted &&
+      isNewsLetter.slug == "forgot-password"
+    ) {
+      templatePath = path.join(
+        __dirname,
+        "../templates/newsletters/forgot-password.html",
+      );
+      htmlContent = fs.readFileSync(templatePath, "utf-8");
+      console.log("its here ");
+    } else {
+      templatePath = path.join(
+        __dirname,
+        "../templates/default/reset-password.html",
+      );
+      htmlContent = fs.readFileSync(templatePath, "utf-8");
     }
     htmlContent = htmlContent
-      .replace('{{resetUrl}}', resetUrl)
-      .replace('{{year}}', new Date().getFullYear().toString());
+      .replace("{{resetUrl}}", resetUrl)
+      .replace("{{year}}", new Date().getFullYear().toString());
     return await sendEmail(email, "Reset your password", htmlContent);
-
   }
   async resetPassword(token: string, newPassword: string) {
     const tokenRequired = ValidationHelper.isRequired(token, "Reset Token");
@@ -134,16 +146,26 @@ export class AdminAuthService {
     const tokenValid = ValidationHelper.isNonEmptyString(token, "Reset Token");
     if (tokenValid) throw new Error(tokenValid.message);
 
-    const passwordRequired = ValidationHelper.isRequired(newPassword, "Password");
+    const passwordRequired = ValidationHelper.isRequired(
+      newPassword,
+      "Password",
+    );
     if (passwordRequired) throw new Error(passwordRequired.message);
 
-    const passwordLength = ValidationHelper.minLength(newPassword, "Password", 6);
+    const passwordLength = ValidationHelper.minLength(
+      newPassword,
+      "Password",
+      6,
+    );
     if (passwordLength) throw new Error(passwordLength.message);
     const admin = await adminAuthRepository.findResetToken(token);
-    if (!admin) throw new Error('Invalid or expired reset token');
+    if (!admin) throw new Error("Invalid or expired reset token");
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await adminAuthRepository.resetPassword((admin as any)._id.toString(),hashedPassword);
+    await adminAuthRepository.resetPassword(
+      (admin as any)._id.toString(),
+      hashedPassword,
+    );
   }
 }
 

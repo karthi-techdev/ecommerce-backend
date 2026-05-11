@@ -26,7 +26,9 @@ export const protectAdmin = (req: Request, res: Response, next: NextFunction) =>
     if (!token) return res.status(401).json({ message: "Not authorized" });
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+       const secret = process.env.JWT_SECRET || "your-secure-jwt-secret-min-32-chars"; // ✅ SAME LINE
+
+        const decoded = jwt.verify(token, secret);
         (req as any).admin = decoded;
         next();
     } catch (error) {

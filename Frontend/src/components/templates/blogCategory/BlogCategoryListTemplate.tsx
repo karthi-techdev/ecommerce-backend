@@ -35,7 +35,11 @@ const BlogCategoryListTemplate: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('total');
 
   useEffect(() => {
-    fetchBlogCategories(1, PAGINATION_CONFIG.DEFAULT_LIMIT, selectedFilter);
+    fetchBlogCategories(
+      1,
+      PAGINATION_CONFIG.DEFAULT_LIMIT,
+      selectedFilter === 'total' ? undefined : selectedFilter
+    );
     fetchBlogs();
   }, [selectedFilter]);
 
@@ -63,19 +67,18 @@ const BlogCategoryListTemplate: React.FC = () => {
 
     const action = isActive ? 'deactivate' : 'activate';
 
-
     if (isActive) {
 
-    const activeBlogExists = blogs?.some((blog) => {
-          if (!blog.categoryId) return false;
+      const activeBlogExists = blogs?.some((blog) => {
+        if (!blog.categoryId) return false;
 
-          const categoryId =
-            typeof blog.categoryId === "string"
-              ? blog.categoryId
-              : blog.categoryId._id;
+        const categoryId =
+          typeof blog.categoryId === "string"
+            ? blog.categoryId
+            : blog.categoryId._id;
 
-          return categoryId === id && blog.isActive === true;
-        });
+        return categoryId === id && blog.isActive === true;
+      });
 
       if (activeBlogExists) {
 
@@ -114,7 +117,7 @@ const BlogCategoryListTemplate: React.FC = () => {
     fetchBlogCategories(
       selectedItem.selected + 1,
       PAGINATION_CONFIG.DEFAULT_LIMIT,
-      selectedFilter
+      selectedFilter === 'total' ? undefined : selectedFilter
     );
   };
 

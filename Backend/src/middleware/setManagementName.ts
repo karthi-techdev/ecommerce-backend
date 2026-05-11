@@ -27,8 +27,6 @@ export const setbannerUpload = (req: Request, res: Response, next: NextFunction)
   next();
 };
 
-
-
 export const setSettingsUpload = (req: Request, res: Response, next: NextFunction) => {
   res.locals.managementName = "settings";
   next();
@@ -39,6 +37,10 @@ export const setSliderUpload=(req:Request,res:Response,next:NextFunction)=>{
 }
 export const setBlogUpload = (req: Request,res: Response,next: NextFunction) => {
   res.locals.managementName = "blog";
+  next();
+};
+export const setCommentUpload = (req: Request, res: Response, next: NextFunction) => {
+  res.locals.managementName = "comments";
   next();
 };
 

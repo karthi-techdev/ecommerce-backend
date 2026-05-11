@@ -83,5 +83,24 @@ class ReviewRepository {
       { new: true, runValidators: true },
     );
   }
+
+  async getRatingSummary(productId: string) {
+    return await ReviewModel.aggregate([
+      {
+        $match: {
+          productId: productId,
+          status: "active",
+          isDeleted: false,
+        },
+      },
+      {
+        $group: {
+          _id: "$productId",
+          avgRating: { $avg: "$rating" },
+          totalReviews: { $sum: 1 },
+        },
+      },
+    ]);
+  }
 }
 export default new ReviewRepository();

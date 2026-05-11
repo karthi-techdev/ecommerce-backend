@@ -1,29 +1,36 @@
-import  nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
-// Create transporter
+
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
-    user: 'mani30saravanan@gmail.com',       // Replace with your Gmail
-    pass: 'qkxm jikz vopu hymn'   // Replace with your App Password
+    user: "sowmiyaashmithaa@gmail.com",       // sender Gmail
+    pass: "lmsu mcek zosm ksgp"          // Gmail App Password
   }
 });
 
-// Email options
-export async function sendEmail(email: string,sub:string,htmlContent:string) {
+export const sendEmail = async (
+  to: string,
+  subject: string,
+  html: string
+) => {
   try {
-    const mailOptions = {
-      from: 'mani30saravanan@gmail.com',
-      to: email,                              
-      subject: sub,
-      text: 'Hello! This is a plain text email.',
-      html: htmlContent
-    };
+    console.log("📩 EMAIL STARTED");
+    console.log("TO:", to);
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully to:', email);
-    console.log('Message ID:', info.messageId);
+    const info = await transporter.sendMail({
+      from: `"Evara" <sowmiyaashmithaa@gmail.com>`,
+      to,
+      subject,
+      html
+    });
+
+    console.log("✔ EMAIL SENT SUCCESSFULLY");
+    console.log("Message ID:", info.messageId);
+
+    return info;
   } catch (error: any) {
-    console.error(' Error sending email:', error.message);
+    console.log("❌ EMAIL FAILED");
+    console.log("Error:", error.message);
   }
-}
+};
