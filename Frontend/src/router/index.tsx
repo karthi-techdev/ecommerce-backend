@@ -118,8 +118,9 @@ export const router = createBrowserRouter([
              element: <OrderTrackingTemplate /> 
             },
             
-            { path: 'orderdetails',
-             element: <OrderDetailTemplate /> 
+            {
+              path: 'view/:id',
+              element: <OrderDetailTemplate />
             },
 
         ]
