@@ -188,90 +188,55 @@ const imageErrorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 }, [mainCategories]);
 
   useEffect(() => {
-  const fetchSubCategories = async () => {
-    if (!formData.mainCategoryId) {
-      useSubCategoryStore.setState({ subCategories: [] });
-      return;
-    }
-
-    try {
-      const res = await axiosInstance.get(`/admin/subcategory`, {
-        params: { mainCategoryId: formData.mainCategoryId }  
-      });
-
-      const list = res.data?.data?.data || res.data?.data || res.data || [];
-
-      const filtered = Array.isArray(list)
-        ? list.filter(item => {
-            const mainId = typeof item.mainCategoryId === "string" ? item.mainCategoryId : item.mainCategoryId?._id;
-            return String(mainId) === String(formData.mainCategoryId);
-          })
-        : [];
-
-      useSubCategoryStore.setState({ subCategories: filtered });
-
-    } catch (error) {
-      console.log("Subcategory fetch error", error);
-      useSubCategoryStore.setState({ subCategories: [] });
-    }
-  };
-
-  fetchSubCategories();
-}, [formData.mainCategoryId]);
+    const fetchSubCats = async () => {
+      if (!formData.mainCategoryId) {
+        useSubCategoryStore.setState({ subCategories: [] });
+        return;
+      }
+      try {
+        const res = await axiosInstance.get(`/admin/subcategory`);
+        const list = res.data?.data?.data || res.data?.data || res.data || [];
+        
+        // Filter subcategories where mainCategoryId matches selected ID
+        const filtered = list.filter((item: any) => {
+          const mId = typeof item.mainCategoryId === "object" ? item.mainCategoryId?._id : item.mainCategoryId;
+          return String(mId) === String(formData.mainCategoryId);
+        });
+        
+        useSubCategoryStore.setState({ subCategories: filtered });
+      } catch (error) {
+        console.error("Subcategory fetch error", error);
+      }
+    };
+    fetchSubCats();
+  }, [formData.mainCategoryId]);
  
  const subCategoryId = formData.subCategoryId;
-useEffect(() => {
 
-  const fetchCategoryBySub = async () => {
-
-    if (!subCategoryId) {
-      useCategoryStore.setState({ categories: [] });
-      return;
-    }
-
-    try {
-
-      const res = await axiosInstance.get(`/admin/categories`);
-
-      console.log("CATEGORY API RESPONSE:", res.data);
-
-      const list =
-        res.data?.data?.data ||
-        res.data?.data ||
-        res.data ||
-        [];
-
-      const filtered = Array.isArray(list)
-        ? list.filter((item: any) => {
-
-            const subId =
-              typeof item.subCategoryId === "string"
-                ? item.subCategoryId
-                : item.subCategoryId?._id;
-
-            return subId === subCategoryId;
-
-          })
-        : [];
-
-      useCategoryStore.setState({
-        categories: filtered
-      });
-
-    } catch (error) {
-
-      console.log("Category fetch error", error);
-
-      useCategoryStore.setState({
-        categories: []
-      });
-    }
-  };
-
-  fetchCategoryBySub();
-
-}, [subCategoryId]);
-
+ useEffect(() => {
+    const fetchCats = async () => {
+      if (!formData.subCategoryId) {
+        useCategoryStore.setState({ categories: [] });
+        return;
+      }
+      try {
+        const res = await axiosInstance.get(`/admin/categories`);
+        const list = res.data?.data?.data || res.data?.data || res.data || [];
+        
+        // Filter categories where subCategoryId matches selected ID
+        const filtered = list.filter((item: any) => {
+          const sId = typeof item.subCategoryId === "object" ? item.subCategoryId?._id : item.subCategoryId;
+          return String(sId) === String(formData.subCategoryId);
+        });
+        
+        useCategoryStore.setState({ categories: filtered });
+      } catch (error) {
+        console.error("Category fetch error", error);
+      }
+    };
+    fetchCats();
+  }, [formData.subCategoryId]); 
+  
   useEffect(() => {
     if (!id) return;
 
@@ -526,102 +491,53 @@ const removeColor = (index: number) => {
   }));
 };
  type SimpleEvent = { target: { name: string; value: any } };
-  const handleChange = async (e: SimpleEvent) => {
-  const { name, value } = e.target;
-  let next = { ...formData };
+ const handleChange = (e: SimpleEvent) => {
+    const { name, value } = e.target;
 
-  if (name === "sku") {
-    next.sku = value.toUpperCase()
-  }
+    setFormData((prev) => {
+     
+      const next = { ...prev };
 
-  if (name === "mainCategoryId") {
-     setErrors(prev => ({ ...prev, mainCategoryId: undefined }));
-    next = {
-      ...next,
-      mainCategoryId: value,
-      subCategoryId: "",
-      categoryId: ""
-    };
+     
+      if (["price", "discountPrice", "stockQuantity"].includes(name)) {
+        (next as any)[name] = value === "" ? "" : Number(value);
+      } 
+      else if (name === "mainCategoryId") {
+        next.mainCategoryId = value;
+        next.subCategoryId = "";
+        next.categoryId = "";
+      } 
+      
+      else if (name === "subCategoryId") {
+        next.subCategoryId = value;
+        next.categoryId = "";
+      } 
+      
+      else if (name === "name") {
+        if (value.startsWith(" ")) return prev;
+        next.name = value;
+        const slug = generateSlug(value);
+        next.slug = slug;
+        checkNameExist(slug);
+      } 
+     
+      else if (name === "sku") {
+        next.sku = value.toUpperCase();
+      } 
+ 
+      else {
+        (next as any)[name] = value;
+      }
 
-    useSubCategoryStore.setState({ subCategories: [] });
-    useCategoryStore.setState({ categories: [] });
+      return next;
+    });
 
-    setFormData(next);
-
-    try {
-      const res = await axiosInstance.get(`/admin/subcategory`);
-      const list = res.data?.data?.data || res.data?.data || res.data || [];
-      const filtered = list.filter(
-        (sc: any) => String(sc.mainCategoryId?._id || sc.mainCategoryId) === value
-      );
-      useSubCategoryStore.setState({ subCategories: filtered });
-    } catch (err) {
-      console.log("Subcategory fetch error", err);
-      useSubCategoryStore.setState({ subCategories: [] });
-    }
-    return;
-  }
-
-  if (name === "subCategoryId") {
-    next = {
-      ...next,
-      subCategoryId: value,
-      categoryId: ""
-    };
-
-    setFormData(next);
-    useCategoryStore.setState({ categories: [] });
-
-    try {
-      const res = await axiosInstance.get(`/admin/categories`);
-      const list = res.data?.data?.data || res.data?.data || res.data || [];
-      const filtered = list.filter(
-        (c: any) => String(c.subCategoryId?._id || c.subCategoryId) === value
-      );
-      useCategoryStore.setState({ categories: filtered });
-    } catch (err) {
-      console.log("Category fetch error", err);
-      useCategoryStore.setState({ categories: [] });
-    }
-    return;
-  }
-
-
-  if (name === "images" || name === "thumbnail") return;
-
-  if (name === "name") {
-    next.name = value;
-    if (value.startsWith(" ")) {
-      setErrors(prev => ({ ...prev, name: "Name should not start with space." }));
-      setFormData(next);
-      return;
-    }
-    if (!value) {
-      setErrors(prev => ({ ...prev, name: "Name is required" }));
-      setFormData(next);
-      return;
-    }
-    if (value.trim().length < 3) {
-      setErrors(prev => ({ ...prev, name: "Name must be at least 3 characters long." }));
-      setFormData(next);
-      return;
-    }
-
-    const slug = generateSlug(value);
-    next.slug = slug;
-    checkNameExist(slug);
-  }
-
-  if (name === "price") next.price = value === "" ? "" : Number(value);
-  else if (name === "discountPrice") next.discountPrice = value === "" ? "" : Number(value);
-  else if (name === "stockQuantity") next.stockQuantity = value === "" ? "" : Number(value);
-  else next[name as keyof ProductFormData] = value;
-
-  const fieldError = validateProductForm(next, !!id)[name as keyof ProductValidationErrors];
-  setErrors(prev => ({ ...prev, [name]: fieldError }));
-
-  setFormData(next);
-};
+    // Handle validation errors
+    const validationResult = validateProductForm({ ...formData, [name]: value }, !!id);
+    const fieldError = (validationResult as any)[name];
+    setErrors(prev => ({ ...prev, [name]: fieldError }));
+  };
+  
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
