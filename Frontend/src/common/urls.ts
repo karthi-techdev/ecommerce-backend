@@ -160,7 +160,7 @@ updateSettings: `${ROOTURL}admin/settings/`,
   // Order endpoints
   listOrder: `${ROOTURL}admin/orders/`,
   getOrderById: `${ROOTURL}admin/orders/`,
-  updateOrderStatus: `${ROOTURL}admin/orders/orderstatus`,
+  updateOrderStatus: `${ROOTURL}admin/orders/orderstatus/`,
   updatePaymentStatus: `${ROOTURL}admin/orders/paymentstatus`,
   deleteOrder: `${ROOTURL}admin/orders/`,
 
