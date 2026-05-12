@@ -193,6 +193,7 @@ class productService {
     throw new Error("Name already exists");
   }
 
+  
   data.name = data.name[0].toUpperCase() + data.name.slice(1);
   return await productRepository.createProduct(data);
 }
