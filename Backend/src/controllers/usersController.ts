@@ -7,12 +7,12 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email, password, username } = req.body;
+    const { email, password, username, loginType } = req.body;
     const emailClean = email.trim().toLowerCase();
 
     console.log("REGISTER API CALLED");
 
-    const user = await registerUser(emailClean, password, username);
+    const user = await registerUser(emailClean, password, username, loginType);
 
     console.log("USER CREATED");
 

@@ -27,7 +27,7 @@ const userSchema: Schema<IUser> = new Schema(
         role: { type: String, required: true },
         password: { type: String, required: true },
         username: { type: String },
-        userType: { type: String },
+        userType: { type: String,enum: ["manual", "google"], default: "manual" },
         phone: { type: String },
         roleId: { type: Schema.Types.ObjectId, ref: "Role" },
         rolePrivilegeIds: [{ type: Schema.Types.ObjectId, ref: "RolePrivilege" }],
@@ -64,6 +64,3 @@ userSchema.methods.comparePassword = async function(candidatePassword: string): 
 };
 
 export const UserModel = mongoose.model<IUser>("users", userSchema) as Model<IUser>;
-
-
-

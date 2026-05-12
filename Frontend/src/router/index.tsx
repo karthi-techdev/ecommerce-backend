@@ -68,6 +68,7 @@ import ReviewFormTemplate from '../components/templates/reviews/ReviewFormTempla
 import AddInfoListPage from '../components/templates/addinfo/addinfoListTemplate';
 import AddInfoFormPage from '../components/templates/addinfo/addinfoFormTemplate';
 import OrderTrackingTemplate from '@/components/templates/order/orderTrackingTemplate';
+import OrderDetailTemplate from '@/components/templates/order/orderDetailsTemplate';
 
 
 export const router = createBrowserRouter([
@@ -115,7 +116,12 @@ export const router = createBrowserRouter([
           },
           { path: 'ordertracking',
              element: <OrderTrackingTemplate /> 
-            }
+            },
+            
+            { path: 'orderdetails',
+             element: <OrderDetailTemplate /> 
+            },
+
         ]
       },
       {

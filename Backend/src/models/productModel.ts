@@ -72,3 +72,4 @@ productSchema.index(
 );
 
 export const ProductModel = model<IProduct>('product', productSchema);
+
