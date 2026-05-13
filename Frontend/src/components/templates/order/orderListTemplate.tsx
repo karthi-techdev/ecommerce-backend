@@ -179,13 +179,8 @@ const OrderListTemplate: React.FC = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex justify-center gap-4">
-                        <button className="text-indigo-600 hover:text-indigo-900"><Eye size={18} /></button>
-                        <button
-                       
-                        className="text-indigo-500 hover:text-indigo-700 p-2"
-                      >
-                        <Pencil size={16} />
-                      </button>
+                        <button onClick={() => navigate(`/orders/view/${item._id}`)} className="text-indigo-600 hover:text-indigo-900"><Eye size={18} /></button>
+                        
                         <button onClick={() => handleDelete(item)} className="text-red-600 hover:text-red-900"><Trash2 size={18} /></button>
                       </div>
                     </td>

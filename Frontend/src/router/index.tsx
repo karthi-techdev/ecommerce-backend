@@ -116,12 +116,13 @@ export const router = createBrowserRouter([
             path: 'add',
             element: <OrderListTemplate />,
           },
-          { path: 'ordertracking',
-             element: <OrderTrackingTemplate /> 
+          {  path:"ordertracking/:id",
+          element:<OrderTrackingTemplate />,
             },
             
-            { path: 'orderdetails',
-             element: <OrderDetailTemplate /> 
+            {
+              path: 'view/:id',
+              element: <OrderDetailTemplate />
             },
 
         ]

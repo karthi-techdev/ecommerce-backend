@@ -1,12 +1,14 @@
 
 import React from 'react';
 import { 
-  LayoutDashboard, ShoppingBag, ShoppingCart, Users, PlusCircle, 
   Wallet, UserCircle, Star, Award, Printer, Download, MapPin, 
-  Truck, CreditCard, ChevronDown, Calendar, User, Search
+  Truck, CreditCard, ChevronDown, Calendar, User
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+import { useParams } from 'react-router-dom';
+import { useOrderStore } from '../../../stores/orderStore';
+import { useEffect } from 'react';
 interface Product {
   id: number;
   name: string;
@@ -17,13 +19,24 @@ interface Product {
 
 const OrderDetailTemplate: React.FC = () => {
       const navigate = useNavigate();
-  
-  const products: Product[] = [
-    { id: 1, name: "T-shirt blue, XXL size", image: "src/assets/images/product-img1.jpg", price: 44.25, quantity: 2 },
-    { id: 2, name: "Winter jacket for men", image: "src/assets/images/product-img1.jpg", price: 7.50, quantity: 2 },
-    { id: 3, name: "Jeans wear for men", image: "src/assets/images/product-img1.jpg", price: 43.50, quantity: 2 },
-    { id: 4, name: "Product name color and size", image: "src/assets/images/product-img1.jpg", price: 99.00, quantity: 3 },
-  ];
+  const { id } = useParams();
+
+const { currentOrder, fetchOrderById, loading } = useOrderStore();
+
+useEffect(() => {
+  if (id) {
+    fetchOrderById(id);
+  }
+}, [id, fetchOrderById]);
+if (loading) {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      Loading...
+    </div>
+  );
+}
+  const products = currentOrder?.products || [];
+  console.log(products);
 
   return (
     <div className="flex min-h-screen bg-[#f8f9fa] font-sans text-[#495057]">
@@ -33,7 +46,7 @@ const OrderDetailTemplate: React.FC = () => {
   
           <header className="mb-6">
             <h2 className="text-2xl font-bold text-[#253d4e]">Order detail</h2>
-            <p className="text-sm text-gray-400 mt-1">Details for Order ID: 3453012</p>
+            <p className="text-sm text-gray-400 mt-1">Details for Order ID: {currentOrder?.orderNumber}</p>
           </header>
 
         
@@ -43,8 +56,15 @@ const OrderDetailTemplate: React.FC = () => {
                 <Calendar size={18} />
               </div>
               <div>
-                <p className="font-bold text-[15px] text-[#253d4e]">Wed, Aug 13, 2026, 4:34PM</p>
-                <p className="text-xs text-gray-400">Order ID: 3453012</p>
+                <p className="font-bold text-[15px] text-[#253d4e]">
+                  {currentOrder?.createdAt
+                    ? new Date(currentOrder.createdAt).toLocaleString()
+                    : "No Date"}
+                </p>
+
+                <p className="text-xs text-gray-400">
+                  Order ID: {currentOrder?.orderNumber}
+                </p>
               </div>
             </div>
             
@@ -72,9 +92,9 @@ const OrderDetailTemplate: React.FC = () => {
               title="Customer"
               content={
                 <div className="text-[14px]">
-                  <p className="font-bold text-[#253d4e]">John Alexander</p>
-                  <p className="text-gray-500">alex@example.com</p>
-                  <p className="text-gray-500">+998 99 22123456</p>
+                  <p className="font-bold text-[#253d4e]">{currentOrder?.customerName}</p>
+                  <p className="text-gray-500">{currentOrder?.customerEmail}</p>
+                  <p className="text-gray-500">{currentOrder?.customerPhone}</p>
                   <button className="text-amber-600 font-medium mt-2 hover:underline">View profile</button>
                 </div>
               }
@@ -84,9 +104,9 @@ const OrderDetailTemplate: React.FC = () => {
               title="Order info"
               content={
                 <div className="text-[14px]">
-                  <p className="text-gray-500">Shipping: Fargo express</p>
-                  <p className="text-gray-500">Pay method: card</p>
-                  <p className="text-gray-500">Status: new</p>
+                  <p className="text-gray-500">Shipping: {currentOrder?.shippingMethod || "Not Available"}</p>
+                  <p className="text-gray-500"> Pay method: {currentOrder?.paymentMethod || "Not Available"}</p>
+                  <p className="text-gray-500">   Status: {currentOrder?.orderStatus || "Pending"}</p>
                   <button className="text-amber-600 font-medium mt-2 flex items-center gap-1 hover:underline">
                     Download info
                   </button>
@@ -98,9 +118,7 @@ const OrderDetailTemplate: React.FC = () => {
               title="Deliver to"
               content={
                 <div className="text-[14px]">
-                  <p className="text-gray-500">City: Tashkent, Uzbekistan</p>
-                  <p className="text-gray-500">Block A, House 123, Floor 2</p>
-                  <p className="text-gray-500">Po Box 10000</p>
+                  <p className="text-gray-500">{currentOrder?.shippingAddress}</p>
                   <button className="text-amber-600 font-medium mt-2 hover:underline">View profile</button>
                 </div>
               }
@@ -121,20 +139,47 @@ const OrderDetailTemplate: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-50">
-                    {products.map((item) => (
-                      <tr key={item.id} className="hover:bg-gray-50 transition">
+                  {products.map((item: any, index: number) => {
+
+                    const matchedProduct = currentOrder?.productDetails?.find(
+                      (product: any) => product._id === item.productId
+                    );
+
+                    return (
+                      <tr key={index} className="hover:bg-gray-50 transition">
                         <td className="px-6 py-4 flex items-center gap-4">
-                          <img src={item.image} alt="" className="w-10 h-10 rounded border" />
-                          <span className="text-[14px] font-medium text-[#253d4e]">{item.name}</span>
+
+                          <img
+                            src={
+                              matchedProduct?.images?.length
+                                ? matchedProduct.images[0]
+                                : "/no-image.png"
+                            }
+                            alt=""
+                            className="w-10 h-10 rounded border"
+                          />
+
+                          <span className="text-[14px] font-medium text-[#253d4e]">
+                            {item.productName}
+                          </span>
+
                         </td>
-                        <td className="px-6 py-4 text-[14px]">${item.price.toFixed(2)}</td>
-                        <td className="px-6 py-4 text-[14px]">{item.quantity}</td>
+
+                        <td className="px-6 py-4 text-[14px]">
+                          ₹{item.price}
+                        </td>
+
+                        <td className="px-6 py-4 text-[14px]">
+                          {item.quantity}
+                        </td>
+
                         <td className="px-6 py-4 text-[14px] font-bold text-right text-[#253d4e]">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ₹{item.price * item.quantity}
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
+                    );
+                  })}
+                </tbody>
                 </table>
               </div>
 
@@ -142,26 +187,34 @@ const OrderDetailTemplate: React.FC = () => {
                 <div className="w-full max-w-[240px] text-sm space-y-2">
                   <div className="flex justify-between text-gray-500">
                     <span>Subtotal:</span>
-                    <span>$973.35</span>
+                    <span>₹{currentOrder?.totalAmount}</span>
                   </div>
                   <div className="flex justify-between text-gray-500">
                     <span>Shipping cost:</span>
-                    <span>$10.00</span>
+                    <span>₹{currentOrder?.shippingCharge || 0}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg text-[#253d4e] pt-1">
                     <span>Grand total:</span>
-                    <span>$983.00</span>
+                    <span>₹{currentOrder?.grandTotal || currentOrder?.totalAmount}</span>
                   </div>
                   <div className="flex justify-between pt-2">
                     <span className="text-gray-400">Status:</span>
-                    <span className="text-green-500 font-medium text-xs">Payment done</span>
+                    <span
+                      className={`font-medium text-xs ${
+                        currentOrder?.paymentStatus === "Paid"
+                          ? "text-green-500"
+                          : "text-red-500"
+                      }`}
+                    >
+                      {currentOrder?.paymentStatus}
+                    </span>
                   </div>
                 </div>
               </div>
               
               <div className="mt-8">
                 <button  className="bg-amber-600 text-white px-8 py-2.5 rounded-md hover:bg-[#077068] transition font-medium text-sm" 
-                            onClick={() => navigate("/ordertracking")}
+                            onClick={() => navigate(`/ordertracking/${currentOrder?._id}`)}
                 >
                   View Order Tracking
                 </button>
@@ -177,11 +230,11 @@ const OrderDetailTemplate: React.FC = () => {
                      <div className="w-6 h-4 bg-orange-400 rounded-sm"></div>
                   </div>
                   {/* //card detsils */}
-                  <span className="text-sm font-medium text-gray-600">Master Card **** **** 4768</span> 
+                  <span className="text-sm font-medium text-gray-600"> {currentOrder?.paymentMethod || "Cash On Delivery"}</span> 
                 </div>
                 <div className="text-[13px] space-y-1 text-gray-500 leading-relaxed">
-                  <p>Business name: Grand Market LLC</p>
-                  <p>Phone: +1 (800) 555-154-52</p>
+                  <p>Customer: {currentOrder?.customerName}</p>
+                  <p>Phone: {currentOrder?.customerPhone}</p>
                 </div>
               </div>
 

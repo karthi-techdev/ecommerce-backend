@@ -161,13 +161,14 @@ const routes: RouteObject[] = [
                 path: 'edit/:id',
                 element: <OrderListPage />
               },
-              {
-                path: 'ordertracking',
-                element: <OrderTrackingPage />
+              {              
+          path:"ordertracking/:id",
+          element:<OrderTrackingPage />,
               },
-              { path: 'orderdetails',
-             element: <OrderDetailPage /> 
-            },
+              {
+                path: 'orders/view/:id',
+                element: <OrderDetailPage />
+              },
             ]
           },
           {

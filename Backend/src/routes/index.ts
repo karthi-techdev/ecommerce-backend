@@ -72,5 +72,6 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/address", addressRoutes);
   
   app.use("/api/v1/admin/account", accountRoutes);
+  
 
 }

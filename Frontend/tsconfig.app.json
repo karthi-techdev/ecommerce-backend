@@ -29,6 +29,9 @@
       "@types/text-encoding",
       "node"
     ],
+
+    "ignoreDeprecations": "6.0",
+    
     "baseUrl": "src",
     "paths": {
       "@/components/*": [

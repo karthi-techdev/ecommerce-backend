@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { ShoppingCart, Settings, Package, Truck, CheckCircle, Printer,Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useOrderStore } from "../../../stores/orderStore";
 
 
 const OrderTrackingTemplate: React.FC = () => {
@@ -11,14 +14,7 @@ const OrderTrackingTemplate: React.FC = () => {
   "Product Dispatched": "Your order has been dispatched",
   "Product Delivered": "Your order has been delivered",
 };
-const currentDateTime = new Date().toLocaleString("en-IN", {
-  weekday: "short",
-  month: "short",
-  day: "numeric",
-  year: "numeric",
-  hour: "2-digit",
-  minute: "2-digit",
-});
+
     const navigate = useNavigate();
 
     const [currentStatus, setCurrentStatus] = useState("Confirmed Order");
@@ -34,18 +30,33 @@ const currentDateTime = new Date().toLocaleString("en-IN", {
     [newStatus]: new Date().toLocaleDateString(),
   }));
 };
-    const orderData = {
-        orderId: "3453012",
-        shipping: "Fargo express",
-        payMethod: "card",
-        status: "new",
-        customerName: "John Alexander",
-        customerEmail: "alex@example.com",
-        customerPhone: "+998 99 22123456",
-        deliveryCity: "Tashkent, Uzbekistan",
-        deliveryAddress: "Block A, House 123, Floor 2",
-        deliveryPoBox: "Po Box 10000"
-    };
+const { id } = useParams();
+
+const { currentOrder, fetchOrderById, loading } = useOrderStore();
+
+useEffect(() => {
+  if (id) {
+    fetchOrderById(id);
+  }
+}, [id]);
+
+if (loading) {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      Loading...
+    </div>
+  );
+}
+const orderDateTime = currentOrder?.createdAt
+  ? new Date(currentOrder.createdAt).toLocaleString("en-IN", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  : "No Date";
     const statusFlow = [
     "Confirmed Order",
     "Processing Order",
@@ -80,30 +91,30 @@ const currentDateTime = new Date().toLocaleString("en-IN", {
 
                 {/* Header */}
                 <div className="mb-4">
-    <h1 className="text-xl font-bold text-gray-900">
-        Order Tracking
-    </h1>
+                <h1 className="text-xl font-bold text-gray-900">
+                    Order Tracking
+                </h1>
 
-    <p className="text-gray-500 text-sm">
-        Details for Order ID: {orderData.orderId}
-    </p>
+                    <p className="text-gray-500 text-sm">
+                Details for Order ID: {currentOrder?.orderNumber}
+                </p>
                 </div>
 
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 p-3">
 
                     {/* Left Side */}
-                    <div>
-                        <p className="text-sm text-gray-600">
-                            {currentDateTime}
-                        </p>
+                  <div>
+                    <p className="text-sm text-gray-600">
+                        {orderDateTime}
+                    </p>
 
-                        <p className="text-sm text-gray-600">
-                            Order ID: {orderData.orderId}
-                        </p>
+                    <p className="text-sm text-gray-600">
+                        Order ID: {currentOrder?.orderNumber}
+                    </p>
 
-                        <p className="text-sm text-gray-500 capitalize">
-                            {statusMessages[currentStatus]}
-                        </p>
+                    <p className="text-sm text-gray-500 capitalize">
+                        {statusMessages[currentStatus]}
+                    </p>
                     </div>
 
                     <div className="flex flex-col sm:flex-row sm:items-start gap-3 w-full md:w-auto">
@@ -200,9 +211,9 @@ const currentDateTime = new Date().toLocaleString("en-IN", {
                         <div className="p-5 w-full max-w-[280px] mx-auto text-center">
                             <h3 className="text-base font-semibold text-gray-900 mb-3">Customer</h3>
                             <div>
-                                <p className="font-medium text-gray-900">{orderData.customerName}</p>
-                                <p className="text-sm text-gray-500 mt-1">{orderData.customerEmail}</p>
-                                <p className="text-sm text-gray-500">{orderData.customerPhone}</p>
+                                <p className="font-medium text-gray-900">{currentOrder?.customerName}</p>
+                                <p className="text-sm text-gray-500 mt-1">{currentOrder?.customerEmail}</p>
+                                <p className="text-sm text-gray-500">{currentOrder?.customerPhone}</p>
                             </div>
                             <button className="mt-3 text-blue-600 hover:text-blue-800 text-sm">
                                 View profile
@@ -215,16 +226,16 @@ const currentDateTime = new Date().toLocaleString("en-IN", {
                             <div className="space-y-2">
                                 <p className="text-sm">
                                     <span className="text-gray-500">Shipping:</span>{" "}
-                                    <span className="text-gray-800">{orderData.shipping}</span>
+                                    <span className="text-gray-800">{currentOrder?.shippingMethod}</span>
                                 </p>
                                 <p className="text-sm">
                                     <span className="text-gray-500">Pay method:</span>{" "}
-                                    <span className="text-gray-800">{orderData.payMethod}</span>
+                                    <span className="text-gray-800">{currentOrder?.paymentMethod}</span>
                                 </p>
                                 <p className="text-sm">
                                     <span className="text-gray-500">Status:</span>{" "}
-                                    <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(orderData.status)}`}>
-                                        {orderData.status}
+                                    <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(currentOrder?.orderStatus || "")}`}>
+                                        {currentOrder?.orderStatus}
                                     </span>
                                 </p>
                             </div>
@@ -237,9 +248,9 @@ const currentDateTime = new Date().toLocaleString("en-IN", {
                         <div className="p-5 w-full max-w-[280px] mx-auto text-center">
                             <h3 className="text-base font-semibold text-gray-900 mb-3">Deliver to</h3>
                             <div>
-                                <p className="text-sm text-gray-700">City: {orderData.deliveryCity}</p>
-                                <p className="text-sm text-gray-700 mt-1">{orderData.deliveryAddress}</p>
-                                <p className="text-sm text-gray-700">{orderData.deliveryPoBox}</p>
+                                <p className="text-sm text-gray-700">{currentOrder?.shippingAddress}</p>
+                                {/* <p className="text-sm text-gray-700 mt-1">{currentOrder?.deliveryAddress}</p>
+                                <p className="text-sm text-gray-700">{currentOrder?.deliveryPoBox}</p> */}
                             </div>
                             <button className="mt-3 text-blue-600 hover:text-blue-800 text-sm">
                                 View profile
@@ -248,7 +259,7 @@ const currentDateTime = new Date().toLocaleString("en-IN", {
                     </div>
                     <div className="flex justify-center mt-10 md:mt-16">
                         <button
-                            onClick={() => navigate("/orderdetails")}
+                            onClick={() => navigate(`/orders/view/${currentOrder?._id}`)}
                             className="bg-amber-500 text-white font-medium py-2 px-6 rounded-md text-sm transition-colors duration-200 shadow-sm"
                         >
                             View Order Details
