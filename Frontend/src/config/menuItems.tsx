@@ -82,19 +82,20 @@ const menuItems: MenuItem[] = [
     label: 'Orders',
     icon: <PiShoppingCartLight />,
     path: '/orders',
-    submenu: [
-      {
-        key: 'orders',
-        label: 'Order list ',
-        path: '/orders',
-      }
-      ,
-      {
-        key: 'order-tracking',
-        label: 'Order Tracking',
-        path: '/orders/ordertracking',
-      }
-    ]
+    // submenu: [
+    //   {
+    //     key: 'orders',
+    //     label: 'Order list ',
+    //     path: '/orders',
+    //   }
+    //   ,
+    //   {
+    //     key: 'order-tracking',
+    //     label: 'Order Tracking',
+    //     path: '/orders/ordertracking',
+    //   },
+      
+    // ]
   },
 
   {

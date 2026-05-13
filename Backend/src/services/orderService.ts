@@ -6,19 +6,67 @@ import ValidationHelper from "../utils/validationHelper";
 import { IOrder } from "../models/orderModel";
 import { createOrder,verifyPayment } from "../utils/razorpay";
 import { v4 as uuidv4 } from "uuid";
+import { ProductModel } from "../models/productModel";
 
 class OrderService {
     
-
 async createOrder(data: any) {
-     if (!data.customerId) throw new Error("customerId required");
-    if (!data.products || data.products.length === 0) throw new Error("Products required");
-    if (!data.totalAmount) throw new Error("Total amount required");
-    if (!data.shippingMethod) throw new Error("Shipping method required");
-if (!data.shippingPrice && data.shippingPrice !== 0) throw new Error("Shipping price required");
-if (!data.paymentMethod) throw new Error("Payment method required");
-    // generate order number 
-    data.orderNumber = "ORD-" + uuidv4().slice(0, 8);
+
+    if (!data.customerId) throw new Error("customerId required");
+
+    if (!data.products || data.products.length === 0)
+        throw new Error("Products required");
+
+    if (!data.totalAmount)
+        throw new Error("Total amount required");
+
+    if (!data.shippingMethod)
+        throw new Error("Shipping method required");
+
+    if (!data.paymentMethod)
+        throw new Error("Payment method required");
+
+    if (!data.shippingPrice && data.shippingPrice !== 0)
+        throw new Error("Shipping price required");
+
+
+    // CHECK STOCK
+    for (const item of data.products) {
+
+        const product = await ProductModel.findById(item.productId);
+
+        if (!product) {
+            throw new Error(`${item.productName} not found`);
+        }
+
+        // CHECK AVAILABLE STOCK
+        if (product.stockQuantity < item.quantity) {
+            throw new Error(
+                `${product.name} only ${product.stockQuantity} items left in stock`
+            );
+        }
+    }
+
+
+    // REDUCE STOCK
+    for (const item of data.products) {
+
+        await ProductModel.findByIdAndUpdate(
+            item.productId,
+            {
+                $inc: {
+                    stockQuantity: -item.quantity
+                }
+            }
+        );
+    }
+
+
+    // GENERATE ORDER NUMBER
+    data.orderNumber = "ORD-aven" + uuidv4().slice(0, 4);
+
+
+    // CREATE ORDER
     return await OrderRepository.create(data);
 }
 

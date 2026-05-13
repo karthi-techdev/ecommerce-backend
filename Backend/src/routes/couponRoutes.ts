@@ -39,10 +39,13 @@ router.delete("/permanentDelete/:id", (req, res, next) =>
 router.get("/check-code", (req, res, next) =>
   couponController.checkCodeExists(req, res, next)
 );
+router.post("/apply", (req, res, next) =>
+  couponController.applyCoupon(req, res, next)
+);
+
 router.get("/:id", (req, res, next) =>
   couponController.getCouponById(req, res, next)
 );
-
 
 
 export default router;
