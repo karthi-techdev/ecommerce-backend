@@ -174,6 +174,64 @@ class UserController {
       next(err);
     }
   }
+  async userForgotPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email } = req.body;
+
+      const result = await userService.userForgotPassword(email);
+
+      console.log(result, " user forgot");
+
+      res.status(200).json({
+        status: HTTP_RESPONSE.SUCCESS,
+        message: "Email sent successfully"
+      });
+
+    } catch (error: any) {
+      res.status(400).json({
+        status: HTTP_RESPONSE.FAIL,
+        message: error.message,
+      });
+      next(error);
+    }
+  }
+
+async userResetPassword(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { token, newPassword } = req.body;
+
+    const user = await userService.userResetPassword(token, newPassword);
+
+    console.log(user, " reset user");
+
+    res.status(200).json({
+      status: HTTP_RESPONSE.SUCCESS,
+      message: "Password updated successfully"
+    });
+
+  } catch (error: any) {
+    res.status(400).json({
+      status: HTTP_RESPONSE.FAIL,
+      message: error.message,
+    });
+    next(error);
+  }
+}
+async validateResetToken(req: Request, res: Response) {
+  try {
+    const { token } = req.body;
+
+    const result = await userService.validateResetToken(token);
+
+    res.status(200).json(result);
+  } catch (error: any) {
+    res.status(400).json({
+      status: HTTP_RESPONSE.FAIL,
+      message: error.message,
+    });
+  }
+}
+
 }
 
 export default new UserController();

@@ -1,12 +1,17 @@
 // src/services/userService.ts
 import UserRepository from "../repositories/userRepository";
+import newsLetterRepository from "../repositories/newsLetterRepository";
 import { IUser, UserModel } from "../models/userModel";
 import { RoleModel } from "../models/roleModel";
 import { RolePrivilgeModel } from "../models/rolePrivilegeModel";
 import { Types } from "mongoose";
 import ValidationHelper from "../utils/validationHelper";
 import { CommonService } from "./commonService";
-
+import crypto from "crypto";
+import bcrypt from "bcrypt";
+import { sendEmail } from "../utils/email";
+import path from "path";
+import fs from "fs";
 class UserService {
   private commonService = new CommonService<IUser>(UserModel);
 
@@ -136,6 +141,182 @@ class UserService {
     if (error) throw new Error(error.message);
     return await UserRepository.deleteUserPermanently(id);
   }
+  async userForgotPassword(email: string) {
+  const error =
+    ValidationHelper.isRequired(email, "Email") ||
+    (email.trim() !== ""
+      ? ValidationHelper.isValidEmail(email, "Email")
+      : null);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const user = await UserModel.findOne({ email });
+
+  if (!user) {
+    throw new Error("Email not exist");
+  }
+
+  const MAX_ATTEMPTS = 5;
+const ONE_HOUR = 60 * 60 * 1000;
+const now = new Date();
+
+const diff = user.resetAttemptTime
+  ? now.getTime() -
+    new Date(user.resetAttemptTime).getTime()
+  : null;
+
+if (diff && diff > ONE_HOUR) {
+  user.resetAttempts = 0;
+}
+
+if (
+  diff !== null &&
+  diff < ONE_HOUR &&
+  (user.resetAttempts || 0) >= MAX_ATTEMPTS
+) {
+  throw new Error(
+    "You have reached the maximum number of reset email attempts. Please try again after 1 hour."
+  );
+}
+
+user.resetAttempts =
+  (user.resetAttempts || 0) + 1;
+
+user.resetAttemptTime = now;
+
+await user.save({ validateBeforeSave: false });
+
+  const token = crypto.randomBytes(32).toString("hex");
+  const expires = new Date(Date.now() + 2 * 60 * 1000); 
+
+  await UserRepository.saveResetToken(email, token, expires);
+
+  const resetUrl = `http://localhost:3000/reset-password?token=${token}`;
+
+  let htmlContent = "";
+let templatePath = "";
+
+const newsLetter = await newsLetterRepository.getNewsLetterBySlug('user-forgot-password');
+
+if (
+  newsLetter &&
+  newsLetter.isPublished &&
+  !newsLetter.isDeleted &&
+  newsLetter.slug === "user-forgot-password"
+) {
+  templatePath = path.join(
+    __dirname,
+    "../templates/newsletters/user-forgot-password.html"
+  );
+} else {
+  templatePath = path.join(
+    __dirname,
+    "../templates/default/user-reset-password.html"
+  );
+}
+
+htmlContent = fs.readFileSync(templatePath, "utf-8");
+
+htmlContent = htmlContent
+  .replace("{{resetUrl}}", resetUrl)
+  .replace("{{year}}", new Date().getFullYear().toString());
+
+  return await sendEmail(email, "Reset your password", htmlContent);
+}
+async userResetPassword(token: string, newPassword: string) {
+
+  const tokenRequired = ValidationHelper.isRequired(token, "Reset Token");
+  if (tokenRequired) throw new Error(tokenRequired.message);
+
+  const passwordRequired = ValidationHelper.isRequired(newPassword, "Password");
+  if (passwordRequired) throw new Error(passwordRequired.message);
+
+  const passwordLength = ValidationHelper.minLength(newPassword, "Password", 6);
+  if (passwordLength) throw new Error(passwordLength.message);
+
+  const existingUser = await UserModel.findOne({
+    resetPasswordToken: token
+  });
+ const MAX_ATTEMPTS = 5;
+const ONE_HOUR = 60 * 60 * 1000;
+
+const now = new Date();
+
+if (existingUser) {
+
+  if (existingUser.resetAttemptTime) {
+
+    const diff =
+      now.getTime() -
+      new Date(existingUser.resetAttemptTime).getTime();
+
+    if (
+      diff < ONE_HOUR &&
+      (existingUser.resetAttempts || 0) >= MAX_ATTEMPTS
+    ) {
+      throw new Error(
+       "You have reached the maximum number of reset attempts. Please try again after 1 hour."
+      );
+    }
+
+    if (diff > ONE_HOUR) {
+      existingUser.resetAttempts = 0;
+    }
+
+  }
+
+  existingUser.resetAttempts =
+    (existingUser.resetAttempts || 0) + 1;
+
+  existingUser.resetAttemptTime = now;
+
+  await existingUser.save({ validateBeforeSave: false });
+
+}
+
+  if (!existingUser) {
+    throw new Error("Password already updated. Please login.");
+  }
+  if (
+    !existingUser.resetPasswordExpires ||
+    existingUser.resetPasswordExpires < new Date()
+  ) {
+    throw new Error("Reset link expired. Please request again.");
+  }
+
+
+  existingUser.password = newPassword;
+
+  existingUser.resetPasswordToken = undefined;
+  existingUser.resetPasswordExpires = undefined;
+
+  await existingUser.save({ validateBeforeSave: false });
+
+  return existingUser;
+}
+async validateResetToken(token: string) {
+  const user = await UserModel.findOne({
+    resetPasswordToken: token,
+  });
+
+  if (!user) {
+    return { valid: false, message: "Password already updated" };
+  }
+
+  if (
+    !user.resetPasswordExpires ||
+    user.resetPasswordExpires < new Date()
+  ) {
+    return { valid: false, message: "Reset link expired" };
+  }
+
+  return { valid: true };
+}
+
+
+
 }
 
 export default new UserService();

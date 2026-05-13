@@ -5,6 +5,7 @@ import { HTTP_RESPONSE, HTTP_STATUS_CODE } from "../utils/httpResponse";
 class SubscribeController {
 
   async subscribe(req: Request, res: Response, next: NextFunction) {
+    console.log("REQ BODY:", req.body); 
     try {
       const { email } = req.body;
 

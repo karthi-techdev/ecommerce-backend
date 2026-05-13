@@ -48,12 +48,6 @@ class sliderService{
     }
     async createSlider(data:Partial<ISLider>){
         this.validateSliderData(data);
-        if(data.serialNumber){
-            const isExist=await sliderRepository.existByField(data.serialNumber);
-            if(isExist){
-                throw new Error('Serial number already exists');
-            }
-        }
         data.title=data.title?data.title[0].toUpperCase()+""+data.title.slice(1):'';
         data.buttonName=data.buttonName?data.buttonName[0].toUpperCase()+""+data.buttonName.slice(1):''
         data.highlightsText=data.highlightsText?data.highlightsText[0].toUpperCase()+""+data.highlightsText.slice(1):'';

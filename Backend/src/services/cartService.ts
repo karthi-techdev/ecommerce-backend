@@ -15,8 +15,8 @@ class cartService{
       !isUpdate?((ValidationHelper.isRequired(data.productId,'Product Id'))||(data.productId!==undefined?ValidationHelper.isValidObjectId(data.productId,'Product Id'):null)):null,
       !isUpdate?((ValidationHelper.isRequired(data.quantity,'Quantity'))||(data.quantity!==undefined?ValidationHelper.isNumber(data.quantity,'Quantity'):null)):null,
       !isUpdate?((ValidationHelper.isRequired(data.price,'Price'))||(data.price!==undefined?ValidationHelper.isNumber(data.price,'Price'):null)):null,
-       !isUpdate?((data.color?.trim()!==undefined?ValidationHelper.isNonEmptyString(data.color,'color'):null)):null,
-        !isUpdate?((data.size?.trim()!==undefined?ValidationHelper.isNonEmptyString(data.size,'size'):null)):null,
+        // !isUpdate?((data.color!==undefined?ValidationHelper.isNonEmptyString(data.color,'color'):null)):null,
+        //  !isUpdate?((data.size!==undefined?ValidationHelper.isNonEmptyString(data.size,'size'):null)):null,
         ];
         const errors=ValidationHelper.validate(rules);
         if(errors.length>0){
@@ -70,6 +70,9 @@ class cartService{
             throw new Error(isValidId.message);
         }
         return await cartRepository.deleteCart(id);
+    }
+    async clearCart(userId:Types.ObjectId|string){
+        return await cartRepository.clearCart(userId);
     }
     async getStats(id:Types.ObjectId|string){
         const isValidId=ValidationHelper.isValidObjectId(id,'id');

@@ -18,8 +18,8 @@ interface AuthState {
   logout: () => void;
   refreshToken: () => Promise<boolean>;
   startTokenMonitor: () => void;
-  forgetPassword:(email:string)=>void;
-  resetPassword:(token:string,newPassword:string)=>void;
+  forgetPassword: (email: string) => void;
+  resetPassword: (token: string, newPassword: string) => void;
 }
 
 const API_URL = "http://localhost:5000/api/v1/admin/auth";
@@ -28,13 +28,10 @@ let tokenInterval: any = null;
 let alertShown = false;
 
 export const useAuthStore = create<AuthState>((set, get) => {
-
   const startMonitorInternal = () => {
-
-    if (tokenInterval) return; 
+    if (tokenInterval) return;
 
     tokenInterval = setInterval(async () => {
-
       const token = localStorage.getItem("adminToken");
       if (!token) return;
 
@@ -45,7 +42,6 @@ export const useAuthStore = create<AuthState>((set, get) => {
         const timeLeft = expTime - Date.now();
 
         if (timeLeft <= 60000 && timeLeft > 0 && !alertShown) {
-
           alertShown = true;
 
           const result = await Swal.fire({
@@ -58,15 +54,13 @@ export const useAuthStore = create<AuthState>((set, get) => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             allowOutsideClick: false,
-            allowEscapeKey: false
+            allowEscapeKey: false,
           });
 
           if (result.isConfirmed) {
-
             const refreshed = await get().refreshToken();
 
             if (!refreshed) get().logout();
-
           } else {
             get().logout();
           }
@@ -75,11 +69,9 @@ export const useAuthStore = create<AuthState>((set, get) => {
         if (timeLeft <= 0) {
           get().logout();
         }
-
       } catch {
         get().logout();
       }
-
     }, 30000);
   };
 
@@ -88,7 +80,6 @@ export const useAuthStore = create<AuthState>((set, get) => {
   }
 
   return {
-
     token: localStorage.getItem("adminToken"),
     admin: JSON.parse(localStorage.getItem("adminData") || "null"),
     isAuthenticated: !!localStorage.getItem("adminToken"),
@@ -105,15 +96,15 @@ export const useAuthStore = create<AuthState>((set, get) => {
         set({
           token,
           admin,
-          isAuthenticated: true
+          isAuthenticated: true,
         });
 
-        startMonitorInternal(); 
+        startMonitorInternal();
       }
     },
-    forgetPassword:async(email:string)=>{
-     const res = await axios.post(`${API_URL}/forgetPassword`, {email});
-      console.log("Email data",email)
+    forgetPassword: async (email: string) => {
+      const res = await axios.post(`${API_URL}/forgetPassword`, { email });
+      console.log("Email data", email);
     },
     resetPassword: async (token: string, newPassword: string) => {
       await axios.post(`${API_URL}/resetPassword`, { token, newPassword });
@@ -128,21 +119,19 @@ export const useAuthStore = create<AuthState>((set, get) => {
           `${API_URL}/refresh`,
           {},
           {
-            headers: { Authorization: `Bearer ${token}` }
-          }
+            headers: { Authorization: `Bearer ${token}` },
+          },
         );
 
         if (res.data.status === true) {
-
           localStorage.setItem("adminToken", res.data.token);
           set({ token: res.data.token });
 
-          alertShown = false; 
+          alertShown = false;
           return true;
         }
 
         return false;
-
       } catch {
         return false;
       }
@@ -151,7 +140,6 @@ export const useAuthStore = create<AuthState>((set, get) => {
     startTokenMonitor: startMonitorInternal,
 
     logout: () => {
-
       localStorage.removeItem("adminToken");
       localStorage.removeItem("adminData");
 
@@ -165,12 +153,10 @@ export const useAuthStore = create<AuthState>((set, get) => {
       set({
         token: null,
         admin: null,
-        isAuthenticated: false
+        isAuthenticated: false,
       });
 
       window.location.replace("/login");
-    }
-
+    },
   };
-
 });

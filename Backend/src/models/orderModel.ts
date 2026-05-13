@@ -16,6 +16,8 @@ export interface IOrder extends Document {
     shippingAddress : string,
     products : IProductDetail[],
     totalAmount : number,
+    shippingMethod: string,
+    shippingPrice: number,
     paymentMethod : string,
     paymentStatus : "Paid" | "Unpaid" | "Failed",
     orderStatus : "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled",
@@ -32,6 +34,7 @@ const OrderProductSchema = new Schema<IProductDetail>({
     productName : { type : String , required : true },
     quantity : { type : Number , required : true },
     price : { type : Number , required : true },
+    
 })
 
 const OrderSchema = new Schema<IOrder>(
@@ -44,6 +47,8 @@ const OrderSchema = new Schema<IOrder>(
         shippingAddress : { type : String , required : true },
         products: { type: [OrderProductSchema] , required: true },
         totalAmount : { type : Number , required : true , min : 0 },
+        shippingMethod: { type: String },
+    shippingPrice: { type: Number },
         paymentMethod : { type : String , required : true , trim : true },
         paymentStatus : { type : String , enum : ["Paid", "Unpaid", "Failed"] ,  default: "Unpaid" },
         orderStatus : { type : String , enum : ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"] ,  default: "Pending" },

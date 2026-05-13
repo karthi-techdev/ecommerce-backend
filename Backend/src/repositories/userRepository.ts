@@ -104,6 +104,35 @@ class UserRepository {
     async deleteUserPermanently(id: string | Types.ObjectId): Promise<IUser | null> {
       return await UserModel.findByIdAndDelete(id);
     }
+    
+    async saveResetToken(email: string, token: string, expires: Date) {
+  return await UserModel.findOneAndUpdate(
+    { email },
+    { resetPasswordToken: token, resetPasswordExpires: expires },
+    { new: true }
+  );
+}
+
+async findByResetToken(token: string) {
+  return await UserModel.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpires: { $gt: new Date() }
+  });
+}
+
+async updatePassword(id: string, password: string) {
+  return await UserModel.findByIdAndUpdate(
+    id,
+    {
+      password,
+      $unset: {
+        resetPasswordToken: "",
+        resetPasswordExpires: ""
+      }
+    },
+    { new: true }
+  );
+}
   }
   
   export default new UserRepository();

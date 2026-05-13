@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import { ENV } from "../config/env";
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
@@ -5,7 +7,6 @@ const razorpay=new Razorpay({
     key_id:ENV.RAZORPAY_ID,
     key_secret:ENV.RAZORPAY_SECRET
 })
-
 export const createOrder=(totalAmount:number)=>{
     return razorpay.orders.create({
         amount:totalAmount*100,
