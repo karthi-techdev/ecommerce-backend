@@ -18,7 +18,7 @@ export interface IAddress extends Document {
 
 const addressSchema = new Schema<IAddress>(
   {
-    addressType: { type: String,}, 
+    addressType: { type: String,unique:true}, 
     fullName: { type: String},
     phoneNumber: { type: String},
     streetAddress: { type: String},

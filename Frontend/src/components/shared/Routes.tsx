@@ -94,6 +94,8 @@ const AddInfoFormPage = lazy(() => import('../pages/addinfo/AddInfoFormPage'))
 const SubscribeListPage = lazy(() => import('../pages/subscriber/subscriberListPage'));
 const OrderTrackingPage = lazy(() => import('../pages/order/orderTrackingPages'));
 
+const OrderDetailPage = lazy(() => import('../pages/order/orderDetailPages'));
+
 
 const routes: RouteObject[] = [
   {
@@ -145,10 +147,10 @@ const routes: RouteObject[] = [
             ]
           },
           {
-            path: 'orders',
+            path: '',
             children: [
               {
-                path: "",
+                path: "orders",
                 element: <OrderListPage />
               }
               , {
@@ -162,7 +164,10 @@ const routes: RouteObject[] = [
               {
                 path: 'ordertracking',
                 element: <OrderTrackingPage />
-              }
+              },
+              { path: 'orderdetails',
+             element: <OrderDetailPage /> 
+            },
             ]
           },
           {
