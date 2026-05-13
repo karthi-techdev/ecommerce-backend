@@ -3,6 +3,7 @@
 import { Response, Request, NextFunction } from "express";
 import OrderService from "../services/orderService";
 import { HTTP_RESPONSE, HTTP_STATUS_CODE } from "../utils/httpResponse";
+import orderService from "../services/orderService";
 
 class OrderController {
      async createOrder(req: Request, res: Response) {
@@ -139,6 +140,24 @@ class OrderController {
                 status: HTTP_RESPONSE.FAIL,
                 message: error.message
             });
+        }
+    }
+    async createOrderCheckout(req:Request,res:Response,next:NextFunction):Promise<void>{
+        try {
+            const {totalAmount}=req.body;
+            const result=await OrderService.createOrderCheckout(totalAmount);
+            res.status(200).json({status:HTTP_RESPONSE.SUCCESS,data:result})
+        } catch (error:any) {
+            next(error)
+        }
+    }
+    async verifyPayment(req:Request,res:Response,next:NextFunction):Promise<void>{
+        try {
+            const data=req.body;
+            const result=await orderService.verifyPayment(data);
+            res.status(200).json({status:HTTP_RESPONSE.SUCCESS,data:result});
+        } catch (error:any) {
+            next(error);
         }
     }
 }

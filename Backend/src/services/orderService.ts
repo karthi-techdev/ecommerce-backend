@@ -3,6 +3,8 @@
 import { Types } from "mongoose";
 import OrderRepository from "../repositories/orderRepository";
 import ValidationHelper from "../utils/validationHelper";
+import { IOrder } from "../models/orderModel";
+import { createOrder,verifyPayment } from "../utils/razorpay";
 import { v4 as uuidv4 } from "uuid";
 import { ProductModel } from "../models/productModel";
 
@@ -105,8 +107,21 @@ async createOrder(data: any) {
         if (["Shipped", "Delivered"].includes(order.orderStatus)) {
             throw new Error(`Cannot cancel an order that has already been ${order.orderStatus.toLowerCase()}.`);
         }
-
         return await OrderRepository.softDelete(id);
+    }
+    async createOrderCheckout(totalAmount:number){
+        const createRazorpayOrder=await createOrder(totalAmount);
+        return createRazorpayOrder.id
+    }
+    async verifyPayment(data:IOrder){
+            const generateSignature=verifyPayment(data.razorpayOrderId,data.razorpayPaymentId);
+            if(generateSignature!=data.razorpaySignature){
+                throw new Error("Payment verification failed");
+                return;
+            }
+            data.paymentStatus="Paid";
+            data.orderNumber = "ORD-" + uuidv4().slice(0, 8);
+            return await OrderRepository.createOrder(data);
     }
 }
 

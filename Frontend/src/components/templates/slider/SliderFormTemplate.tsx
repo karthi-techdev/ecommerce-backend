@@ -9,7 +9,11 @@ import type { FieldConfig } from '../../../types/common';
 import { handleError } from '../../utils/errorHandler';
 import ImportedURL from '../../../common/urls';
 import defaultImg from '../../../assets/images/preview-image.jpg.jpeg'
-const sliderFields: FieldConfig[] = [
+
+
+const SliderFormTemplate: React.FC = () => {
+   const { fetchSlider, addSlider, updateSlider,sliders } = useSliderStore();
+  const sliderFields: FieldConfig[] = [
   {
     name: 'title',
     label: 'Title',
@@ -29,8 +33,9 @@ const sliderFields: FieldConfig[] = [
     name: 'serialNumber',
     label: 'Serial Number',
     type: 'number',
-    required:true,
-    placeholder: 'Enter the Serial Number...',
+   readonly: true,
+      disabled:true,
+      defaultValue:sliders.length+1,
     className:'col-span-6',
   },{
     name: 'buttonName',
@@ -53,12 +58,10 @@ const sliderFields: FieldConfig[] = [
      className: 'col-span-12',
   },
 ];
-
-const SliderFormTemplate: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const ALLOWED_IMAGE_TYPES = ['image/jpeg','image/jpg','image/png','image/webp',];
-  const { fetchSlider, addSlider, updateSlider } = useSliderStore();
+ 
   const [preview, setPreview] = useState<string>(defaultImg);
   const existingImageUrl=useRef<string>(defaultImg);
 const [fileError, setFileError] = useState<string | null>(null);
@@ -68,7 +71,7 @@ const [fileError, setFileError] = useState<string | null>(null);
     buttonName:'',
     buttonUrl:'',
     image:null,
-    serialNumber:0
+    serialNumber:sliders.length+1
   });
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
