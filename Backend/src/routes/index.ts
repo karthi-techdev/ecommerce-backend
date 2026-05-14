@@ -28,6 +28,7 @@ import usersRoutes from "./usersRoutes";
 import subscribeRoutes from "./subscribeRoutes"
 import contactRoutes from "./contactRoutes"
 import addInfoRoutes from './addInfoRoutes'
+import addressRoutes from "./addressRoutes";
 import userRoutes from "./userRoutes";
 import cartRoutes from "./cartRoutes";
 import bannerRoutes from "./bannerRoutes";
@@ -68,6 +69,9 @@ export default function registerRoutes(app: Express) {
   app.use("/api/v1/admin/contact", contactRoutes);
   app.use("/api/v1/admin/product/add-info", addInfoRoutes);
   app.use("/api/users", usersRoutes);
+  app.use("/api/v1/address", addressRoutes);
+  
   app.use("/api/v1/admin/account", accountRoutes);
+  
 
 }
