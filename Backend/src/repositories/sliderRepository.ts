@@ -12,7 +12,7 @@ class sliderRepository{
         if(filter=='active')query.status='active';
         if(filter=='inactive')query.status='inactive';
         const [data,totalCount]=await Promise.all([
-            SliderModel.find(query).skip(skip).limit(limit).sort({createdAt:-1,updatedAt:-1}).exec(),
+            SliderModel.find(query).sort({ serialNumber: 1 }).skip(skip).limit(limit).exec(),
             SliderModel.countDocuments(query)
         ]);
         const totalPages=Math.ceil(totalCount/limit)||1;
