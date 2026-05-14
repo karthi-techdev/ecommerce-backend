@@ -21,6 +21,7 @@ export interface IOrder extends Document {
     paymentMethod : string,
     paymentStatus : "Paid" | "Unpaid" | "Failed",
     orderStatus : "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled",
+    notes?: string,
     isDeleted : boolean,
     createdAt : Date
 }
@@ -44,10 +45,11 @@ const OrderSchema = new Schema<IOrder>(
         products: { type: [OrderProductSchema] , required: true },
         totalAmount : { type : Number , required : true , min : 0 },
         shippingMethod: { type: String },
-    shippingPrice: { type: Number },
+        shippingPrice: { type: Number },
         paymentMethod : { type : String , required : true , trim : true },
         paymentStatus : { type : String , enum : ["Paid", "Unpaid", "Failed"] ,  default: "Unpaid" },
         orderStatus : { type : String , enum : ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"] ,  default: "Pending" },
+        notes: { type: String, default: "" },
         isDeleted: {type:Boolean, default: false }
 
     },

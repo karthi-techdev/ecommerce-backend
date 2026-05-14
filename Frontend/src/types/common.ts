@@ -194,6 +194,7 @@ export interface Order {
   customerPhone: string;
   shippingAddress?: string;
   shippingMethod?: string;
+  shippingPrice?: number;
   products: OrderProduct[];
   productDetails?: any[]; 
   totalAmount: number;
@@ -204,6 +205,7 @@ export interface Order {
   items?: any[];
   shippingCharge?: number;
   grandTotal?: number;
+  notes?: string; 
 }
 
 export interface PageFormData {

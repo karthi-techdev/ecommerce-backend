@@ -94,6 +94,22 @@ async createOrder(data: any) {
 
         return updatedOrder;
     }
+        async updateOrderNote(id: string, notes: string) {
+
+        const error = ValidationHelper.isValidObjectId(id, "id");
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        const updatedOrder = await OrderRepository.updateNote(id, notes);
+
+        if (!updatedOrder) {
+            throw new Error("Order not found");
+        }
+
+        return updatedOrder;
+    }
 
     async cancelOrder(id: string) {
         const error = ValidationHelper.isValidObjectId(id, "id");
@@ -108,6 +124,7 @@ async createOrder(data: any) {
 
         return await OrderRepository.softDelete(id);
     }
+
 }
 
 export default new OrderService();
