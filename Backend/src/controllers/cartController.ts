@@ -36,9 +36,27 @@ class cartController{
             next(err);
         }
     }
+    async clearCart(req:Request,res:Response,next:NextFunction):Promise<void>{
+        try {
+            const {id}=req.params;
+            
+        if(!id){
+                res.status(400).json({status:HTTP_RESPONSE.FAIL,message:"user id is required"});
+            }
+            console.log(id,'check bro here')
+            const deleteCartData=await cartService.clearCart(id);
+            if(!deleteCartData){
+                res.status(400).json({status:HTTP_RESPONSE.FAIL,message:"User cart items not found"});
+            }
+            res.status(200).json({status:HTTP_RESPONSE.SUCCESS,message:"Cart items cleared"});
+        } catch (err:any) {
+            next(err);
+        }
+    }
     async getStats(req:Request,res:Response,next:NextFunction):Promise<void>{
         try {
             const id=req.params.id;
+            console.log(id,'bro are you there')
             if(!id){
                 res.status(400).json({status:HTTP_RESPONSE.FAIL,message:"Cart id is required"});
             }

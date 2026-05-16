@@ -1,114 +1,74 @@
-// import { Types } from "mongoose";
-// import OrderRepository from "../repositories/orderRepository";
-// import { OrderModel , IOrder } from "../models/orderModel";
-// import { CommonService } from "./commonService";
-// import ValidationHelper from "../utils/validationHelper";
 
-// class OrderService {
-//     private commonService = new CommonService<IOrder>(OrderModel);
-
-//     private validateOrderData( data: Partial<IOrder>, isUpdate: boolean = false): void {
-//         const rules = [
-//             !isUpdate ? ValidationHelper.isRequired(data.customerId, "customerId") : (data.customerId !== undefined ? ValidationHelper.isValidObjectId(data.customerId, "customerId") : null),
-            
-//             !isUpdate ? ValidationHelper.isRequired(data.customerName, "customerName") : (data.customerName !== undefined ? ValidationHelper.isNonEmptyString(data.customerName, "customerName") : null),
-
-//             !isUpdate ? ValidationHelper.isRequired(data.customerEmail, "customerEmail") : (data.customerEmail !== undefined ? ValidationHelper.isValidEmail(data.customerEmail, "customerEmail") : null),
-
-//             !isUpdate ? ValidationHelper.isRequired(data.customerPhone, "customerPhone") : null,
-
-//             !isUpdate ? ValidationHelper.isRequired(data.shippingAddress, "shippingAddress") : null,
-
-//             !isUpdate ? ValidationHelper.isRequired(data.products, "products") : null,
-
-//             ValidationHelper.isArray(data.products, "products"),
-
-//             !isUpdate ? ValidationHelper.isRequired(data.totalAmount, "totalAmount") : null,
-
-//             ValidationHelper.isNumber(data.totalAmount, "totalAmount"),
-
-//             ValidationHelper.isValidEnum(data.paymentStatus,"paymentStatus",["Paid", "Unpaid", "Failed"]),
-
-//             ValidationHelper.isValidEnum( data.orderStatus, "orderStatus", ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"]),
-
-//             ValidationHelper.isBoolean(data.isDeleted, "isDeleted")
-//         ];
-
-//         const errors = ValidationHelper.validate(rules);
-
-//         if (errors.length > 0) {
-//             throw new Error(errors.map(e => e.message).join(", "));
-//         }
-//     }
-    
-//     async createOrder(data: IOrder): Promise<IOrder> {
-//         this.validateOrderData(data);
-//         return await OrderRepository.createOrder(data);
-//     }
-
-//     async getAllOrders(page = 1 , limit = 10 , filter?: string , paymentFilter?: string , customerId?: string) {
-//         return await OrderRepository.getAllOrders(page , limit , filter , paymentFilter , customerId);
-//     }
-
-//     async getOrderById(id: string | Types.ObjectId): Promise<IOrder | null>{
-
-//         const error = ValidationHelper.isValidObjectId(id, "id");
-//         if (error) throw new Error(error.message);
-
-//         return await OrderRepository.getOrderById(id);
-//     }
-
-//     async updateOrder(id: string | Types.ObjectId , data: Partial<IOrder>): Promise<IOrder | null>{
-
-//         const error = ValidationHelper.isValidObjectId(id, "id");
-//         if (error) throw new Error(error.message);
-//         this.validateOrderData(data, true);
-
-//         return await OrderRepository.updateOrder(id , data);
-//     }
-
-//     async updateOrderStatus(id: string | Types.ObjectId , status : string ): Promise<IOrder | null>{
-//         const error = ValidationHelper.isValidObjectId(id, "id");
-//         if (error) throw new Error(error.message);
-
-//         const enumError = ValidationHelper.isValidEnum(status, "orderStatus", ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"]);
-//         if (enumError) throw new Error(enumError.message);
-
-//         return await OrderRepository.updateOrderStatus(id , status)
-//     }
-
-//     async updatePaymentStatus(id: string | Types.ObjectId , paymentStatus: "Paid" | "Unpaid" | "Failed" ): Promise<IOrder | null>{
-//         const error = ValidationHelper.isValidObjectId(id, "id");
-//         if (error) throw new Error(error.message);
-
-//         const enumError = ValidationHelper.isValidEnum(paymentStatus, "paymentStatus", ["Paid", "Unpaid", "Failed"]);
-//         if (enumError) throw new Error(enumError.message);
-
-//         return await OrderRepository.updatePaymentStatus(id , paymentStatus)
-//     }
-
-//     async softDeleteOrder( id: string | Types.ObjectId ): Promise<IOrder | null>{
-//         const error = ValidationHelper.isValidObjectId(id, "id");
-//         if (error) throw new Error(error.message);
-
-//         return await OrderRepository.softDeleteOrder(id); 
-//     }
-
-//     async deleteOrderPermanently( id: string | Types.ObjectId ): Promise<IOrder | null>{
-//         const error = ValidationHelper.isValidObjectId(id, "id");
-//         if (error) throw new Error(error.message);
-
-//         return await OrderRepository.deleteOrderPermanently(id);
-//     }
-// }
-
-// export default new OrderService();
 
 import { Types } from "mongoose";
 import OrderRepository from "../repositories/orderRepository";
 import ValidationHelper from "../utils/validationHelper";
+import { IOrder } from "../models/orderModel";
+import { createOrder,verifyPayment } from "../utils/razorpay";
+import { v4 as uuidv4 } from "uuid";
+import { ProductModel } from "../models/productModel";
 
 class OrderService {
+    
+async createOrder(data: any) {
+
+    if (!data.customerId) throw new Error("customerId required");
+
+    if (!data.products || data.products.length === 0)
+        throw new Error("Products required");
+
+    if (!data.totalAmount)
+        throw new Error("Total amount required");
+
+    if (!data.shippingMethod)
+        throw new Error("Shipping method required");
+
+    if (!data.paymentMethod)
+        throw new Error("Payment method required");
+
+    if (!data.shippingPrice && data.shippingPrice !== 0)
+        throw new Error("Shipping price required");
+
+
+    // CHECK STOCK
+    for (const item of data.products) {
+
+        const product = await ProductModel.findById(item.productId);
+
+        if (!product) {
+            throw new Error(`${item.productName} not found`);
+        }
+
+        // CHECK AVAILABLE STOCK
+        if (product.stockQuantity < item.quantity) {
+            throw new Error(
+                `${product.name} only ${product.stockQuantity} items left in stock`
+            );
+        }
+    }
+
+
+    // REDUCE STOCK
+    for (const item of data.products) {
+
+        await ProductModel.findByIdAndUpdate(
+            item.productId,
+            {
+                $inc: {
+                    stockQuantity: -item.quantity
+                }
+            }
+        );
+    }
+
+
+    // GENERATE ORDER NUMBER
+    data.orderNumber = "ORD-aven" + uuidv4().slice(0, 4);
+
+
+    // CREATE ORDER
+    return await OrderRepository.create(data);
+}
 
     async listAllOrders(page?: number, limit?: number, status?: string) {
         return await OrderRepository.getAllOrders(page, limit, status);
@@ -147,8 +107,21 @@ class OrderService {
         if (["Shipped", "Delivered"].includes(order.orderStatus)) {
             throw new Error(`Cannot cancel an order that has already been ${order.orderStatus.toLowerCase()}.`);
         }
-
         return await OrderRepository.softDelete(id);
+    }
+    async createOrderCheckout(totalAmount:number){
+        const createRazorpayOrder=await createOrder(totalAmount);
+        return createRazorpayOrder.id
+    }
+    async verifyPayment(data:IOrder){
+            const generateSignature=verifyPayment(data.razorpayOrderId,data.razorpayPaymentId);
+            if(generateSignature!=data.razorpaySignature){
+                throw new Error("Payment verification failed");
+                return;
+            }
+            data.paymentStatus="Paid";
+            data.orderNumber = "ORD-" + uuidv4().slice(0, 8);
+            return await OrderRepository.createOrder(data);
     }
 }
 
