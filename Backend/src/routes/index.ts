@@ -22,6 +22,7 @@ import sliderRoutes from "./sliderRoutes";
 import blogRoutes from "./blogRoutes";
 import settingsRoutes from "./settingsRoutes";
 import offerRoutes from "./offerRoutes";
+import SearchHistoryRoute from './SearchHistoryRoutes'
 import commentsRoutes from "./commentsRoutes";
 import reviewRoutes from "./reviewRoutes";
 import usersRoutes from "./usersRoutes";
@@ -64,10 +65,14 @@ export default function registerRoutes(app: Express) {
   // app.use("/api/v1/admin/banner", bannerRoutes);
   app.use("/api/v1/admin/banner", bannerRoutes);
   app.use("/api/v1/admin/comments", commentsRoutes);
+  app.use("/api/v1/reviews", reviewRoutes);
+
+  app.use("/api/users", usersRoutes);
   app.use("/api/v1/admin/banner", bannerRoutes);
   app.use("/api/v1/admin/subscribe", subscribeRoutes);
   app.use("/api/v1/admin/contact", contactRoutes);
   app.use("/api/v1/admin/product/add-info", addInfoRoutes);
+  app.use("/api/v1/admin/search-history", SearchHistoryRoute);
   app.use("/api/users", usersRoutes);
   app.use("/api/v1/address", addressRoutes);
   
