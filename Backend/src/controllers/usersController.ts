@@ -7,14 +7,14 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email, password, username } = req.body;
+    const { email, password, username, loginType } = req.body;
     const emailClean = email.trim().toLowerCase();
 
-    console.log("🚀 REGISTER API CALLED");
+    console.log("REGISTER API CALLED");
 
-    const user = await registerUser(emailClean, password, username);
+    const user = await registerUser(emailClean, password, username, loginType);
 
-    console.log("✔ USER CREATED");
+    console.log("USER CREATED");
 
     res.status(201).json({
       message: "User registered",
@@ -33,13 +33,13 @@ export const register = async (req: Request, res: Response) => {
 
       await sendEmail(email, "Welcome 🎉", html);
 
-      console.log("✔ EMAIL SENT");
+      console.log("EMAIL SENT");
     } catch (emailError: any) {
-      console.log("⚠ EMAIL FAILED:", emailError.message);
+      console.log("EMAIL FAILED:", emailError.message);
     }
 
   } catch (error: any) {
-    console.log("❌ REGISTER ERROR:", error.message);
+    console.log("---reg err--", error.message);
 
     res.status(400).json({
       error: error.message
@@ -77,11 +77,11 @@ const token = jwt.sign(
 
       html = html.replace(/{{name}}/g, user.username || "User");
 
-      await sendEmail(email, "Welcome Back 👋", html);
+      await sendEmail(email, "Welcome Back..", html);
 
-      console.log("✔ LOGIN EMAIL SENT");
+      console.log("LOGIN EMAIL SENT");
     } catch (emailError: any) {
-      console.log("⚠ EMAIL FAILED:", emailError.message);
+      console.log("EMAIL FAILED:", emailError.message);
     }
 
   } catch (error: any) {

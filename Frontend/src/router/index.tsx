@@ -67,6 +67,8 @@ import ReviewListTemplate from '../components/templates/reviews/ReviewListTempla
 import ReviewFormTemplate from '../components/templates/reviews/ReviewFormTemplate';
 import AddInfoListPage from '../components/templates/addinfo/addinfoListTemplate';
 import AddInfoFormPage from '../components/templates/addinfo/addinfoFormTemplate';
+
+import OrderListsTemplate from '@/components/templates/orderList/orderListsTemplate';
 import OrderTrackingTemplate from '@/components/templates/order/orderTrackingTemplate';
 import OrderDetailTemplate from '@/components/templates/order/orderDetailsTemplate';
 
@@ -114,14 +116,24 @@ export const router = createBrowserRouter([
             path: 'add',
             element: <OrderListTemplate />,
           },
-          { path: 'ordertracking',
-             element: <OrderTrackingTemplate /> 
+          {  path:"ordertracking/:id",
+          element:<OrderTrackingTemplate />,
             },
             
-            { path: 'orderdetails',
-             element: <OrderDetailTemplate /> 
+            {
+              path: 'view/:id',
+              element: <OrderDetailTemplate />
             },
 
+        ]
+      },
+      {
+        path: 'orderlist',
+        children: [
+          {
+            path: "",
+            element: <OrderListsTemplate />
+          }
         ]
       },
       {

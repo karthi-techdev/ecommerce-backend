@@ -36,11 +36,11 @@ interface Coupon {
   status?: boolean;
 }
 const customerColors = [
-  "from-amber-50 to-orange-50",   // warm yellow-orange
-  "from-pink-50 to-rose-50",      // warm pink-red
-  "from-emerald-50 to-green-50",  // natural green
-  "from-sky-50 to-blue-50",       // cool blue
-  "from-violet-50 to-purple-50",  // rich purple
+  "from-amber-50 to-orange-50",   
+  "from-pink-50 to-rose-50",      
+  "from-emerald-50 to-green-50",  
+  "from-sky-50 to-blue-50",       
+  "from-violet-50 to-purple-50",  
 ];
 
 const avatarColors = [
@@ -82,6 +82,7 @@ const [salesCategories, setSalesCategories] = useState<string[]>([]);
   processing: 0,
   shipped: 0,
   delivered: 0,
+  cancelled: 0,
 });
 const [salesSummary, setSalesSummary] = useState({
   bestMonth: "",
@@ -209,7 +210,7 @@ const fetchCategoryRevenue = async () => {
   try {
     setIsLoadingChart(true);
     
-    // FIRST: Fetch all main categories
+    // Fetch all main categories
     const categoriesRes = await fetch(`${ImportedURL.API.listMainCategory}?limit=100&page=1`);
     const categoriesData = await categoriesRes.json();
     
@@ -220,7 +221,7 @@ const fetchCategoryRevenue = async () => {
       categoryNameMap[category._id.toString()] = category.name;
     });
     
-    // SECOND: Fetch all products to get their mainCategoryId
+    // Fetch all products to get their mainCategoryId
     const productsRes = await fetch(`${ImportedURL.API.listProduct}?limit=1000&page=1`);
     const productsData = await productsRes.json();
     
@@ -241,7 +242,7 @@ const fetchCategoryRevenue = async () => {
   }
 });
     
-    // THIRD: Fetch all orders
+    // Fetch all orders
     const ordersRes = await fetch(`${ImportedURL.API.listOrder}?limit=1000&page=1`);
     const ordersData = await ordersRes.json();
     
@@ -256,7 +257,7 @@ const fetchCategoryRevenue = async () => {
     });
    
     
-    // Process orders - use product mapping to get category
+    // Process orders 
     ordersData?.data?.forEach((order: any) => {
       order.products?.forEach((product: any) => {
         const productId =
@@ -267,15 +268,15 @@ const fetchCategoryRevenue = async () => {
     console.log("ORDER PRODUCT ID", productId);
     console.log("CATEGORY FOUND", productCategoryMap[productId]);
         const quantity = product.quantity || 1;
-        // Use the price from order product (it's the price at time of purchase)
+        
         const price = product.price || 0;
         const amount = price * quantity;
         
-        // Get category name from our product mapping
+        
         let categoryName = productCategoryMap[productId];
         
         if (!categoryName) {
-  return; // skip uncategorized products
+  return;
 }
         
         // Add to revenue
@@ -288,8 +289,7 @@ const fetchCategoryRevenue = async () => {
         }
       });
     });
-    
-    // Convert to array format for chart
+   
     const revenueArray = Object.entries(revenueMap)
   .filter(([_, revenue]) => revenue > 0)
   .map(([name, revenue]) => ({
@@ -298,8 +298,7 @@ const fetchCategoryRevenue = async () => {
     orderCount: orderCountMap[name] || 0,
     _id: name
   }));
-    
-    // Sort by revenue (highest first)
+   
     revenueArray.sort((a, b) => b.revenue - a.revenue);
     
     console.log("Category Revenue Breakdown:", revenueArray);
@@ -326,7 +325,7 @@ const fetchCategoryRevenue = async () => {
       const couponData = await couponRes.json();
 
 
-      // Example calculations
+  
       const productImageMap: any = {};
 
 productsData?.data?.forEach((product: any) => {
@@ -338,6 +337,7 @@ productsData?.data?.forEach((product: any) => {
   processing: 0,
   shipped: 0,
   delivered: 0,
+  cancelled:0
 };
 
 ordersData?.data?.forEach((order: any) => {
@@ -366,7 +366,7 @@ ordersData?.data?.forEach((order: any) => {
     productMap[productId].pcs += item.quantity || 1;
   });
 });
-// ===== SALES ANALYTICS =====
+
 const totalProducts = productsData?.data?.length || 0;
 
 const totalOrders = ordersData?.data?.length || 0;
@@ -399,7 +399,6 @@ months.forEach((month) => {
   previousYearMonthly[month] = [];
 });
 
-// Split orders into CY and PY
 ordersData?.data?.forEach((order: any) => {
   const date = new Date(order.createdAt);
 
@@ -480,7 +479,7 @@ const growthPercent =
       )
     : 0;
 
-// ===== CY RANGE =====
+
 
 const cyRange = months.map((month) => {
   const values = currentYearMonthly[month];
@@ -498,7 +497,7 @@ const cyRange = months.map((month) => {
   };
 });
 
-// ===== CY MEDIAN =====
+
 
 const cyMedian = months.map((month) => {
   const values = currentYearMonthly[month];
@@ -519,7 +518,7 @@ const cyMedian = months.map((month) => {
   };
 });
 
-// ===== PY RANGE =====
+
 
 const pyRange = months.map((month) => {
   const values = previousYearMonthly[month];
@@ -537,7 +536,7 @@ const pyRange = months.map((month) => {
   };
 });
 
-// ===== PY MEDIAN =====
+
 
 const pyMedian = months.map((month) => {
   const values = previousYearMonthly[month];
@@ -616,7 +615,7 @@ const sortedTopProducts = Object.values(productMap)
       });
   
 
-      // Convert object → array
+    
       const sortedCustomers = Object.values(customerMap)
         .sort((a: any, b: any) => {
           if (b.orders === a.orders) {
@@ -684,7 +683,7 @@ const sortedTopProducts = Object.values(productMap)
             ))}
           </motion.div>
 
-          {/* Row 1: Sales Analytics (Left) + Sales Target (Right) */}
+          {/* Row 1:  */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* Sales Analytics - LEFT */}
             <motion.div
@@ -765,7 +764,7 @@ const sortedTopProducts = Object.values(productMap)
 
             </motion.div>
 
-            {/* Sales Target - RIGHT */}
+            {/* order status - RIGHT */}
 
             <motion.div
   initial={{ opacity: 0, x: 20 }}
@@ -781,8 +780,8 @@ const sortedTopProducts = Object.values(productMap)
 
   <ReactApexChart
     options={{
-      labels: ["Pending", "Processing", "Shipped", "Delivered"],
-      colors: ["#ef4444", "#f59e0b", "#3b82f6", "#10b981"],
+      labels: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
+      colors: ["#ef4444", "#f59e0b", "#3b82f6", "#10b981", "#6b7280"],
       legend: {
         position: "bottom",
       },
@@ -800,12 +799,13 @@ const sortedTopProducts = Object.values(productMap)
       orderStatus.processing,
       orderStatus.shipped,
       orderStatus.delivered,
+      orderStatus.cancelled,
     ]}
     type="donut"
     height={300}
   />
 
-  {/* Small summary cards */}
+  {/* summary cards */}
   <div className="grid grid-cols-2 gap-3 mt-4">
     <div className="bg-red-50 p-2 rounded-lg text-center">
       <p className="text-xs text-gray-500">Pending</p>
@@ -826,15 +826,19 @@ const sortedTopProducts = Object.values(productMap)
       <p className="text-xs text-gray-500">Delivered</p>
       <p className="font-bold text-emerald-600">{orderStatus.delivered}</p>
     </div>
+    <div className="bg-gray-100 p-2 rounded-lg text-center">
+  <p className="text-xs text-gray-500">Cancelled</p>
+  <p className="font-bold text-gray-600">{orderStatus.cancelled}</p>
+</div>
   </div>
 </motion.div>
 
           </div>
 
-          {/* /* Row 2: departments */}
+          {/* /* Row 2 */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
 
-            {/* Frequent Customers - LEFT */}
+            {/* Customers - LEFT */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -888,7 +892,7 @@ const sortedTopProducts = Object.values(productMap)
               </div>
             </motion.div>
 
-            {/* Department Sales - RIGHT */}
+            {/* Category - RIGHT */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -952,7 +956,7 @@ const sortedTopProducts = Object.values(productMap)
       bar: {
         borderRadius: 4,
         horizontal: false,
-        distributed: true, // different color per bar
+        distributed: true, 
       }
     },
 
@@ -1001,12 +1005,12 @@ const sortedTopProducts = Object.values(productMap)
 
           </div>
 
-          {/* Row 3: Top Selling Products  */}
+          {/* Row 3:  */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Top Selling Products (LEFT) */}
 
             <div className="lg:col-span-2">
-              {/* Top Selling Products content */}
+              
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -1018,7 +1022,7 @@ const sortedTopProducts = Object.values(productMap)
                   <Link to="/products" className="text-sm text-indigo-600 hover:text-indigo-700 font-medium">View All →</Link>
                 </div>
 
-                {/* Horizontal Scroll Product Cards */}
+               
                 <div className="relative">
                   {/* Scroll Buttons */}
                   <button
@@ -1034,7 +1038,6 @@ const sortedTopProducts = Object.values(productMap)
                     <FiChevronRight size={20} className="text-gray-600" />
                   </button>
 
-                  {/* Scrollable Container */}
                   <div
                     ref={scrollContainerRef}
                     className="flex gap-5 overflow-x-auto scrollbar-hide pb-4 px-2"
@@ -1061,7 +1064,7 @@ const sortedTopProducts = Object.values(productMap)
                           </div>
                         </div>
 
-                        {/* Product Info */}
+                        
                         <div className="p-4">
                           <div className="flex items-center gap-1 mb-2">
                             <FiStar className="text-amber-400 fill-amber-400" size={14} />
@@ -1091,7 +1094,7 @@ const sortedTopProducts = Object.values(productMap)
             </div>
 
             {/* Current Offers (RIGHT) */}
-{/* Current Offers (RIGHT) */}
+
 <motion.div
   initial={{ opacity: 0, x: 20 }}
   animate={{ opacity: 1, x: 0 }}
@@ -1111,15 +1114,14 @@ const sortedTopProducts = Object.values(productMap)
     key={coupon._id}
     className="relative flex items-center gap-3 p-3.5 rounded-xl border border-gray-100 hover:border-gray-200 transition overflow-hidden"
   >
-    {/* Left accent bar */}
+
     <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-xl ${accents[idx % accents.length].bar}`} />
 
-    {/* Icon */}
+    
     <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${accents[idx % accents.length].icon}`}>
       <FiTag size={17} />
     </div>
 
-    {/* Content */}
     <div className="flex-1 min-w-0">
       <div className="flex items-center justify-between gap-2">
         <span className="font-mono text-sm font-medium tracking-wide border border-dashed border-gray-300 bg-gray-50 px-2 py-0.5 rounded-md">
@@ -1177,8 +1179,8 @@ const sortedTopProducts = Object.values(productMap)
       className="border-b border-gray-100 bg-white transition cursor-pointer"
     >
       <td className="py-3 px-4 text-sm font-medium text-gray-800">
-        #{order._id?.slice(-6).toUpperCase()}
-      </td>
+  {order.orderNumber}
+</td>
 
       <td className="py-3 px-4 text-sm text-gray-600">
         {order.customerName || "Unknown"}

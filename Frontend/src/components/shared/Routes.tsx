@@ -83,6 +83,7 @@ const ConfigListPage = lazy(() => import('../pages/config/ConfigListPage'));
 const ConfigFormPage = lazy(() => import('../pages/config/ConfigFormPage'));
 const SliderListPage = lazy(() => import('../pages/slider/SliderListPage'));
 const SliderFormPage = lazy(() => import('../pages/slider/SliderFormPage'));
+const OrderListsPage = lazy(()=> import("../pages/orderList/OrderListsPage"))
 const CommentsListPage = lazy(() => import('../pages/comments/CommentsListPage'));
 const ContactFormPage = lazy(() => import('../pages/contact/contactFormPage'))
 const ContactListPage = lazy(() => import('../pages/contact/contactListPage'))
@@ -160,13 +161,14 @@ const routes: RouteObject[] = [
                 path: 'edit/:id',
                 element: <OrderListPage />
               },
-              {
-                path: 'ordertracking',
-                element: <OrderTrackingPage />
+              {              
+          path:"ordertracking/:id",
+          element:<OrderTrackingPage />,
               },
-              { path: 'orderdetails',
-             element: <OrderDetailPage /> 
-            },
+              {
+                path: 'orders/view/:id',
+                element: <OrderDetailPage />
+              },
             ]
           },
           {
@@ -178,6 +180,12 @@ const routes: RouteObject[] = [
             ],
           },
 
+          {
+            path: 'orderlist',
+            children: [
+              { path: '', element: <OrderListsPage /> },
+            ],
+          },
 
           {
             path: 'testimonial',

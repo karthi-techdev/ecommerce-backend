@@ -130,8 +130,8 @@ const handleMainCategorySearch = (input: string) => {
       className: 'col-span-6',
       placeholder: 'Select the sub category',
       required:true,
-      options: subCategories
-  .filter(s => s._id)
+      options: (subCategories || [])
+  .filter(s => s && s._id && s.name)
   .map(s => ({
     label: s.name,
     value: s._id as string
@@ -277,73 +277,23 @@ await activeMainCategory(1, 5, '', false);
 };
     loadEditData();
   }, [id]);
-useEffect(() => {
-  if (!formData.subCategoryId && formData.mainCategoryId) {
 
-    setSubSearchTerm('');
+  
+  useEffect(() => {
+  if (!formData.mainCategoryId) return;
 
-    useSubCategoryStore.setState({
-      subCategories: [],
-      subPage: 1,
-      subHasMore: true
-    });
+  setSubSearchTerm('');
 
-    fetchSubCategoryByMainCategoryId(
-      formData.mainCategoryId,
-      1,
-      5,
-      '',
-      false
-    );
-  }
-}, [formData.subCategoryId]);
-useEffect(() => {
-  if (!formData.mainCategoryId) {
 
-    // Clear subcategory store completely
-    useSubCategoryStore.setState({
-      subCategories: [],
-      subPage: 1,
-      subHasMore: true
-    });
-
-    prevMainCategoryId.current = null; 
-
-    setFormData(prev => ({
-      ...prev,
-      subCategoryId: ''
-    }));
-
-    return;
-  };
-
-  // Only run if main category really changed
-  if (prevMainCategoryId.current !== formData.mainCategoryId) {
-    prevMainCategoryId.current = formData.mainCategoryId;
-
-    useSubCategoryStore.setState({
-      subCategories: [],
-      subPage: 1,
-      subHasMore: true
-    });
-
-    setFormData(prev => ({
-      ...prev,
-      subCategoryId: ''
-    }));
-
-    fetchSubCategoryByMainCategoryId(
-      formData.mainCategoryId,
-      1,
-      5,
-      '',
-      false
-    );
-  }
+  fetchSubCategoryByMainCategoryId(
+    formData.mainCategoryId,
+    1,
+    10,
+    '',
+    false
+  );
 
 }, [formData.mainCategoryId]);
-
-
 
 
   const generateSlug = (text: string) =>

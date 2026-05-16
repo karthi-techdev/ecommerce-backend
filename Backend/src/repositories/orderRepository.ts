@@ -54,13 +54,39 @@ async create(data: any) {
             ]);
 
             // Count total matching documents for pagination metadata
-            const total = await OrderModel.countDocuments(listMatch);
-            const totalPages = Math.ceil(total / limit);
+          const total = await OrderModel.countDocuments(listMatch);
+const totalPages = Math.ceil(total / limit);
 
-            return {
-                data,
-                meta: { total, totalPages, page, limit }
-            };
+// FULL DATABASE STATS
+const totalOrdersCount = await OrderModel.countDocuments({
+    isDeleted: false
+});
+
+const paidOrdersCount = await OrderModel.countDocuments({
+    isDeleted: false,
+    paymentStatus: "Paid"
+});
+
+const unpaidOrdersCount = await OrderModel.countDocuments({
+    isDeleted: false,
+    paymentStatus: "Unpaid"
+});
+
+return {
+    data,
+    meta: {
+        total,
+        totalPages,
+        page,
+        limit,
+
+        stats: {
+            total: totalOrdersCount,
+            paid: paidOrdersCount,
+            unpaid: unpaidOrdersCount
+        }
+    }
+};
         } catch (error) {
             throw error;
         }
@@ -103,6 +129,9 @@ async updateStatus(id: string | Types.ObjectId, status: string): Promise<IOrder 
 
     async softDelete(id: string | Types.ObjectId): Promise<IOrder | null> {
         return await OrderModel.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
+    }
+    async createOrder(data:IOrder):Promise<IOrder>{
+        return await OrderModel.create(data);
     }
 }
 

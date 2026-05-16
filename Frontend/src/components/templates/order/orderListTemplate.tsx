@@ -43,7 +43,11 @@ const OrderListTemplate: React.FC = () => {
       try {
         const activeFilter = selectedFilter || statusDropdown;
         // We fetch the data based on status/tabs, but search locally like SubCategory
-        await fetchOrders(currentPage, PAGINATION_CONFIG.DEFAULT_LIMIT, activeFilter);
+        fetchOrders(
+  currentPage,
+  PAGINATION_CONFIG.DEFAULT_LIMIT,
+  activeFilter
+);
       } catch (err: any) {
         toast.error(err?.message || 'Failed to load orders');
       }
@@ -52,16 +56,20 @@ const OrderListTemplate: React.FC = () => {
   }, [currentPage, selectedFilter, statusDropdown, fetchOrders]);
 
   // CLIENT-SIDE FILTERING (Same logic as your SubCategory management)
-  const filteredOrders = useMemo(() => {
-    return orders.filter((item) => {
-      if (!item) return false;
-      const orderNo = item.orderNumber?.toLowerCase() || '';
-      const customer = item.customerName?.toLowerCase() || '';
-      const search = searchTerm.toLowerCase();
-      
-      return orderNo.includes(search) || customer.includes(search);
-    });
-  }, [orders, searchTerm]);
+const filteredOrders = useMemo(() => {
+  return orders.filter((item) => {
+
+    const matchesSearch =
+      item.orderNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.customerName?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus =
+      !selectedFilter ||
+      item.paymentStatus === selectedFilter;
+
+    return matchesSearch && matchesStatus;
+  });
+}, [orders, searchTerm, selectedFilter]);
 
   const handlePageChange = (selectedItem: { selected: number }) => {
     setCurrentPage(selectedItem.selected + 1);
@@ -170,22 +178,28 @@ const OrderListTemplate: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${
-                        item.orderStatus === 'Delivered' ? 'bg-green-100 text-green-700' : 
-                        item.orderStatus === 'Pending' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'
-                      }`}>
-                        {item.orderStatus}
-                      </span>
+                     <span
+  className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${
+    item.orderStatus === "Pending"
+      ? "bg-red-100 text-red-700"
+      : item.orderStatus === "Processing"
+      ? "bg-amber-100 text-amber-700"
+      : item.orderStatus === "Shipped"
+      ? "bg-blue-100 text-blue-700"
+      : item.orderStatus === "Delivered"
+      ? "bg-emerald-100 text-emerald-700"
+      : item.orderStatus === "Cancelled"
+      ? "bg-gray-100 text-gray-700"
+      : "bg-gray-100 text-gray-700"
+  }`}
+>
+  {item.orderStatus}
+</span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex justify-center gap-4">
-                        <button className="text-indigo-600 hover:text-indigo-900"><Eye size={18} /></button>
-                        <button
-                       
-                        className="text-indigo-500 hover:text-indigo-700 p-2"
-                      >
-                        <Pencil size={16} />
-                      </button>
+                        <button onClick={() => navigate(`/orders/view/${item._id}`)} className="text-indigo-600 hover:text-indigo-900"><Eye size={18} /></button>
+                        
                         <button onClick={() => handleDelete(item)} className="text-red-600 hover:text-red-900"><Trash2 size={18} /></button>
                       </div>
                     </td>

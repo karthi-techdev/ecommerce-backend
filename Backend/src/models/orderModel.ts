@@ -22,7 +22,11 @@ export interface IOrder extends Document {
     paymentStatus : "Paid" | "Unpaid" | "Failed",
     orderStatus : "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled",
     isDeleted : boolean,
-    createdAt : Date
+    createdAt : Date,
+    razorpayOrderId:string,
+    razorpayPaymentId:string,
+    razorpaySignature:string,
+    paidAt:Date
 }
 
 const OrderProductSchema = new Schema<IProductDetail>({
@@ -48,8 +52,11 @@ const OrderSchema = new Schema<IOrder>(
         paymentMethod : { type : String , required : true , trim : true },
         paymentStatus : { type : String , enum : ["Paid", "Unpaid", "Failed"] ,  default: "Unpaid" },
         orderStatus : { type : String , enum : ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"] ,  default: "Pending" },
-        isDeleted: {type:Boolean, default: false }
-
+        isDeleted: {type:Boolean, default: false },
+        razorpayOrderId:{type:String,trim:true},
+        razorpayPaymentId:{type:String,trim:true},
+        razorpaySignature:{type:String,trim:true},
+        paidAt:{type:Date}
     },
     {
         timestamps : { createdAt: true, updatedAt: false }

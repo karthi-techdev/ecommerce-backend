@@ -192,13 +192,18 @@ export interface Order {
   customerName: string;
   customerEmail: string;
   customerPhone: string;
-  shippingAddress: string;
+  shippingAddress?: string;
+  shippingMethod?: string;
   products: OrderProduct[];
+  productDetails?: any[]; 
   totalAmount: number;
   paymentMethod: string;
   paymentStatus: "Paid" | "Unpaid" | "Failed";
   orderStatus: "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
   createdAt: Date;
+  items?: any[];
+  shippingCharge?: number;
+  grandTotal?: number;
 }
 
 export interface PageFormData {

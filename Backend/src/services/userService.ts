@@ -87,13 +87,18 @@ class UserService {
     const rolePrivilegeIds: Types.ObjectId[] = rolePrivileges.map(
       (p) => new Types.ObjectId(p._id.toString())
     );
+    let loginType = "manual";
+
+    if (!data.password) {
+      loginType = "google";
+    }
     const payload: Partial<IUser> = {
       email: data.email?.toLowerCase().trim(),
-      password: data.password,
+      password: data.password || "google-auth",
       username: data.username?.trim(),
       role: data.role, 
       phone: data.phone?.trim(),
-      userType: data.userType,
+      userType: loginType,
       status: data.status ?? "active",
       isDeleted: false,
       roleId: roleDoc._id,

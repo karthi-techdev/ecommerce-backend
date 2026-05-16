@@ -15,6 +15,8 @@ export const ENV = {
   MONGO_URI,
   ADMIN_EMAIL: getEnv("ADMIN_EMAIL", ""),
   JWT_SECRET: getEnv("JWT_SECRET", ""),
-  JWT_EXPIRE_TIME: getEnv("JWT_EXPIRE_TIME", "")
+  JWT_EXPIRE_TIME: getEnv("JWT_EXPIRE_TIME", ""),
+  RAZORPAY_ID:getEnv('RAZORPAY_ID',""),
+  RAZORPAY_SECRET:getEnv('RAZORPAY_SECRET',""),
 
 }
