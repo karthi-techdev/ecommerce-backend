@@ -26,8 +26,8 @@ async createOrder(data: any) {
     if (!data.paymentMethod)
         throw new Error("Payment method required");
 
-    if (!data.shippingPrice && data.shippingPrice !== 0)
-        throw new Error("Shipping price required");
+    if (data.shippingPrice == null)
+    throw new Error("Shipping price required");
 
 
     // CHECK STOCK

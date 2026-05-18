@@ -1,10 +1,11 @@
 
 import React, { useRef } from 'react';
 import { 
-  LayoutDashboard, ShoppingBag, ShoppingCart, Users, PlusCircle, 
   Wallet, UserCircle, Star, Award, Printer, Download, MapPin, 
-  Truck, CreditCard, ChevronDown, Calendar, User, Search
+  Truck, CreditCard, ChevronDown, Calendar, User
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
 import { useParams } from 'react-router-dom';
 import { useOrderStore } from '../../../stores/orderStore';
 import { useEffect } from 'react';
@@ -19,6 +20,7 @@ interface Product {
 
 
 const OrderDetailTemplate: React.FC = () => {
+      const navigate = useNavigate();
   const { id } = useParams();
 
 const { currentOrder, fetchOrderById, loading } = useOrderStore();
@@ -259,7 +261,9 @@ if (loading) {
               </div>
               
               <div className="mt-8">
-                <button className="bg-amber-600 text-white px-8 py-2.5 rounded-md hover:bg-[#077068] transition font-medium text-sm">
+                <button  className="bg-amber-600 text-white px-8 py-2.5 rounded-md hover:bg-[#077068] transition font-medium text-sm" 
+                            onClick={() => navigate(`/ordertracking/${currentOrder?._id}`)}
+                >
                   View Order Tracking
                 </button>
               </div>

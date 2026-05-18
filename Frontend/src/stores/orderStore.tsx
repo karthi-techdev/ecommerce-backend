@@ -60,11 +60,22 @@ export const useOrderStore = create<OrderState>((set) => ({
         set({
             orders: ordersArray,
             stats: {
-                total: metaData.total ?? ordersArray.length,
-                // Change these to filter by paymentStatus instead of orderStatus
-                paid: ordersArray.filter((o: any) => o.paymentStatus === 'Paid').length,
-                unpaid: ordersArray.filter((o: any) => o.paymentStatus === 'Unpaid').length,
-            },
+    total: metaData.stats?.total ?? 0,
+
+    paid: metaData.stats?.paid ?? 0,
+
+    unpaid: metaData.stats?.unpaid ?? 0,
+
+    pending: metaData.stats?.pending ?? 0,
+
+    processing: metaData.stats?.processing ?? 0,
+
+    shipped: metaData.stats?.shipped ?? 0,
+
+    delivered: metaData.stats?.delivered ?? 0,
+
+    cancelled: metaData.stats?.cancelled ?? 0,
+},
             page,
             totalPages: metaData.totalPages ?? 1,
             loading: false
