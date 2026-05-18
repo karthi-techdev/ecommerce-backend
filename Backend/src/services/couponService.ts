@@ -308,6 +308,7 @@ async applyCoupon(code: string, totalAmount: number) {
 
   return {
     discountAmount,
+    couponData: coupon,
   };
 }
 

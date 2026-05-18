@@ -21,12 +21,14 @@ export interface IOrder extends Document {
     paymentMethod : string,
     paymentStatus : "Paid" | "Unpaid" | "Failed",
     orderStatus : "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled",
+    notes?: string,
     isDeleted : boolean,
     createdAt : Date,
     razorpayOrderId:string,
     razorpayPaymentId:string,
     razorpaySignature:string,
-    paidAt:Date
+    paidAt:Date,
+    couponCode?: string,
 }
 
 const OrderProductSchema = new Schema<IProductDetail>({
@@ -48,15 +50,17 @@ const OrderSchema = new Schema<IOrder>(
         products: { type: [OrderProductSchema] , required: true },
         totalAmount : { type : Number , required : true , min : 0 },
         shippingMethod: { type: String },
-    shippingPrice: { type: Number },
+        shippingPrice: { type: Number },
         paymentMethod : { type : String , required : true , trim : true },
         paymentStatus : { type : String , enum : ["Paid", "Unpaid", "Failed"] ,  default: "Unpaid" },
         orderStatus : { type : String , enum : ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"] ,  default: "Pending" },
+        notes: { type: String, default: "" },
         isDeleted: {type:Boolean, default: false },
         razorpayOrderId:{type:String,trim:true},
         razorpayPaymentId:{type:String,trim:true},
         razorpaySignature:{type:String,trim:true},
-        paidAt:{type:Date}
+        paidAt:{type:Date},
+        couponCode:{type:String,trim:true}
     },
     {
         timestamps : { createdAt: true, updatedAt: false }

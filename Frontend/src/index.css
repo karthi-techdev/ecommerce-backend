@@ -10,6 +10,85 @@
 @tailwind components;
 @tailwind utilities;
 
+@media print {
+
+  aside,
+  nav {
+    display: none !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  main {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 20px !important;
+  }
+
+  .print-area .xl\:grid-cols-3 {
+    display: grid !important;
+    grid-template-columns: 2fr 1fr !important;
+    gap: 20px !important;
+    align-items: start !important;
+  }
+
+  .print-area .grid.md\:grid-cols-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px !important;
+  }
+
+  .print-area .xl\:col-span-2 {
+    grid-column: span 1 / span 1 !important;
+  }
+
+  .print-area table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  .print-area textarea {
+    height: 220px !important;
+    background: #f3f4f6 !important;
+    resize: none !important;
+  }
+
+  .print-area img {
+    display: block !important;
+  }
+    body * {
+    visibility: hidden;
+  }
+
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white;
+  }
+
+  @page {
+    size: auto;
+    margin: 10mm;
+  }
+}
+
 @font-face {
   font-family: 'Satoshi-Light';
   src: url('./assets/fonts/Satoshi-Light.woff2') format('woff2');

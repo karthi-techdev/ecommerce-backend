@@ -22,6 +22,7 @@
     "dom-to-image": "^2.6.0",
     "framer-motion": "^12.23.5",
     "html2canvas": "^1.4.1",
+    "html2pdf.js": "^0.14.0",
     "jodit": "^4.11.3",
     "jodit-react": "^5.3.21",
     "jspdf": "^3.0.1",

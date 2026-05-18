@@ -114,6 +114,43 @@ class OrderController {
             });
         }
     }
+    async updateOrderNote(
+        req: Request,
+        res: Response
+    ): Promise<void> {
+
+        try {
+
+            const { id } = req.params;
+            const { notes } = req.body;
+
+            if (!id) {
+                res.status(400).json({
+                    success: false,
+                    message: "Order ID required"
+                });
+                return;
+            }
+
+            const updatedOrder = await OrderService.updateOrderNote(
+                id,
+                notes
+            );
+
+            res.status(200).json({
+                success: true,
+                message: "Note saved successfully",
+                data: updatedOrder
+            });
+
+        } catch (error: any) {
+
+            res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
 
     async cancelOrder(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {

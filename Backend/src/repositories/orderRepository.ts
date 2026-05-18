@@ -126,6 +126,17 @@ async updateStatus(id: string | Types.ObjectId, status: string): Promise<IOrder 
         { new: true, runValidators: true } // Add runValidators to catch schema errors
     );
 }
+    async updateNote(
+        id: string | Types.ObjectId,
+        notes: string
+    ): Promise<IOrder | null> {
+
+        return await OrderModel.findByIdAndUpdate(
+            new Types.ObjectId(id),
+            { notes },
+            { new: true }
+        );
+    }
 
     async softDelete(id: string | Types.ObjectId): Promise<IOrder | null> {
         return await OrderModel.findByIdAndUpdate(id, { isDeleted: true }, { new: true });

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { 
   Wallet, UserCircle, Star, Award, Printer, Download, MapPin, 
   Truck, CreditCard, ChevronDown, Calendar, User
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useOrderStore } from '../../../stores/orderStore';
 import { useEffect } from 'react';
+import { useState } from 'react';
 interface Product {
   id: number;
   name: string;
@@ -17,11 +18,54 @@ interface Product {
   quantity: number;
 }
 
+
 const OrderDetailTemplate: React.FC = () => {
       const navigate = useNavigate();
   const { id } = useParams();
 
 const { currentOrder, fetchOrderById, loading } = useOrderStore();
+const [note, setNote] = useState("");
+const pdfRef = useRef<HTMLDivElement>(null);
+
+
+useEffect(() => {
+  if (currentOrder?.notes) {
+    setNote(currentOrder.notes);
+  }
+}, [currentOrder]);
+
+const handleSaveNote = async () => {
+  try {
+    const response = await fetch(
+        `http://localhost:5000/api/v1/admin/orders/${id}/note`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          notes: note,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+      alert("Note saved successfully");
+    } else {
+      alert("Failed to save note");
+    }
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+const handlePrint = () => {
+  window.print();
+};
 
 useEffect(() => {
   if (id) {
@@ -42,13 +86,12 @@ if (loading) {
     <div className="flex min-h-screen bg-[#f8f9fa] font-sans text-[#495057]">
       
       <div className="flex-1 flex flex-col">
-        <main className="p-8 flex-1">
-  
+        <main   className="p-8 flex-1">
+        <div ref={pdfRef} className="print-area">
           <header className="mb-6">
             <h2 className="text-2xl font-bold text-[#253d4e]">Order detail</h2>
             <p className="text-sm text-gray-400 mt-1">Details for Order ID: {currentOrder?.orderNumber}</p>
           </header>
-
         
         <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm mb-6 flex flex-wrap justify-between items-center gap-4">
             <div className="flex items-center gap-3">
@@ -68,7 +111,7 @@ if (loading) {
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 no-print">
               <select className="bg-gray-100 border-none rounded-md px-4 py-2 text-sm focus:ring-2 focus:ring-teal-500">
               <option>Change status</option>
               <option>Awaiting payment</option>
@@ -78,12 +121,11 @@ if (loading) {
               <button className="bg-amber-600 text-white px-6 py-2 rounded-lg hover:bg-[#077068] transition font-medium text-sm">
                 Save
               </button>
-              <button className="p-2 bg-gray-600 border border-radius-5 rounded-md text-gray-600 hover:bg-gray-300 transition">
+              <button   onClick={handlePrint} className="p-2 bg-gray-600 border border-radius-5 rounded-md text-gray-600 hover:bg-gray-300 transition">
                 <Printer size={18} className='text-white'  />
               </button>
             </div>
           </div>
-
           {/* //to stor data details */}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -119,7 +161,6 @@ if (loading) {
               content={
                 <div className="text-[14px]">
                   <p className="text-gray-500">{currentOrder?.shippingAddress}</p>
-                  <button className="text-amber-600 font-medium mt-2 hover:underline">View profile</button>
                 </div>
               }
             />
@@ -152,11 +193,11 @@ if (loading) {
                           <img
                             src={
                               matchedProduct?.images?.length
-                                ? matchedProduct.images[0]
+                                ? `http://localhost:5000${matchedProduct.images[0]}`
                                 : "/no-image.png"
                             }
-                            alt=""
-                            className="w-10 h-10 rounded border"
+                            alt={item.productName}
+                            className="w-10 h-10 rounded border object-cover"
                           />
 
                           <span className="text-[14px] font-medium text-[#253d4e]">
@@ -187,11 +228,18 @@ if (loading) {
                 <div className="w-full max-w-[240px] text-sm space-y-2">
                   <div className="flex justify-between text-gray-500">
                     <span>Subtotal:</span>
-                    <span>₹{currentOrder?.totalAmount}</span>
+                      <span>
+                        ₹
+                        {products.reduce(
+                          (total: number, item: any) =>
+                            total + item.price * item.quantity,
+                          0
+                        )}
+                      </span>
                   </div>
                   <div className="flex justify-between text-gray-500">
                     <span>Shipping cost:</span>
-                    <span>₹{currentOrder?.shippingCharge || 0}</span>
+                    <span>₹{currentOrder?.shippingPrice || 0}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg text-[#253d4e] pt-1">
                     <span>Grand total:</span>
@@ -223,32 +271,42 @@ if (loading) {
 
 
             <div className="space-y-8">
-              <div className="bg-[#f0f4f8] p-6 rounded-lg border border-blue-50">
+              {/* <div className="bg-[#f0f4f8] p-6 rounded-lg border border-blue-50">
                 <h3 className="font-bold text-[#253d4e] mb-4">Payment info</h3>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-white p-1 rounded border shadow-sm flex items-center justify-center">
                      <div className="w-6 h-4 bg-orange-400 rounded-sm"></div>
                   </div>
-                  {/* //card detsils */}
+
                   <span className="text-sm font-medium text-gray-600"> {currentOrder?.paymentMethod || "Cash On Delivery"}</span> 
                 </div>
                 <div className="text-[13px] space-y-1 text-gray-500 leading-relaxed">
                   <p>Customer: {currentOrder?.customerName}</p>
                   <p>Phone: {currentOrder?.customerPhone}</p>
                 </div>
-              </div>
+              </div> */}
 
               <div>
                 <h3 className="font-bold text-[#253d4e] mb-3">Notes</h3>
-                <textarea 
-                  placeholder="Type some note" 
-                  className="w-full h-36 p-4 bg-[#f3f4f6] border-none rounded-lg focus:ring-1 focus:ring-[#088178] text-sm resize-none mb-4"
+                <textarea
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder="Type some note"
+                  className="w-full h-36 p-4 border-none rounded-lg text-sm resize-none mb-4"
+                  style={{
+                    backgroundColor: "#f3f4f6",
+                    WebkitTextFillColor: "#374151",
+                    opacity: 1,
+                  }}
                 />
-                <button className="bg-amber-600 text-white px-6 py-2.5 rounded-md hover:bg-[#077068] transition font-medium text-sm">
+                <button 
+                 onClick={handleSaveNote}
+                className="bg-amber-600 text-white px-6 py-2.5 rounded-md hover:bg-[#077068] transition font-medium text-sm">
                   Save note
                 </button>
               </div>
             </div>
+          </div>
           </div>
         </main>
 
@@ -268,14 +326,34 @@ const NavItem: React.FC<{ icon: React.ReactNode, label: string, active?: boolean
   </div>
 );
 
-const InfoCard: React.FC<{ icon: React.ReactNode, title: string, content: React.ReactNode }> = ({ icon, title, content }) => (
-  <div className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm flex gap-4">
+const InfoCard: React.FC<{
+  icon: React.ReactNode;
+  title: string;
+  content: React.ReactNode;
+}> = ({ icon, title, content }) => (
+  <div
+    className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm flex gap-4"
+    style={{
+      minWidth: 0,
+    }}
+  >
     <div className="w-11 h-11 rounded-full bg-[#e8f1f0] flex items-center justify-center shrink-0">
       {icon}
     </div>
-    <div>
-      <h3 className="font-bold text-[#253d4e] text-[16px] mb-2">{title}</h3>
-      {content}
+
+    <div className="flex-1 min-w-0">
+      <h3 className="font-bold text-[#253d4e] text-[16px] mb-2">
+        {title}
+      </h3>
+
+      <div
+        style={{
+          overflowWrap: "anywhere",
+        }}
+        className="text-sm text-gray-600"
+      >
+        {content}
+      </div>
     </div>
   </div>
 );

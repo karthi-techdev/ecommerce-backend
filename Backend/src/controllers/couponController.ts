@@ -208,7 +208,7 @@ async applyCoupon(req: Request, res: Response, next: NextFunction) {
     const { code, totalAmount } = req.body;
 
     const coupon = await couponService.applyCoupon(code, totalAmount);
-
+ 
     res.status(200).json({
       success: true,
       message: "Coupon applied successfully",

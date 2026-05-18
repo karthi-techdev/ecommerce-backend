@@ -7,7 +7,7 @@ import { IOrder } from "../models/orderModel";
 import { createOrder,verifyPayment } from "../utils/razorpay";
 import { v4 as uuidv4 } from "uuid";
 import { ProductModel } from "../models/productModel";
-
+import { CouponModel } from "../models/couponModel";
 class OrderService {
     
 async createOrder(data: any) {
@@ -60,14 +60,28 @@ async createOrder(data: any) {
             }
         );
     }
-
-
     // GENERATE ORDER NUMBER
-    data.orderNumber = "ORD-aven" + uuidv4().slice(0, 4);
+        data.orderNumber = "ORD-aven" + uuidv4().slice(0, 4);
 
+        // CREATE ORDER
+        const order = await OrderRepository.create(data);
 
-    // CREATE ORDER
-    return await OrderRepository.create(data);
+        if (data.couponCode) {
+
+            await CouponModel.findOneAndUpdate(
+                {
+                    code: data.couponCode.toUpperCase()
+                },
+                {
+                    $inc: {
+                        usageLimit: -1
+                    }
+                }
+            );
+        }
+
+        return order;
+
 }
 
     async listAllOrders(page?: number, limit?: number, status?: string) {
@@ -96,6 +110,22 @@ async createOrder(data: any) {
 
         return updatedOrder;
     }
+        async updateOrderNote(id: string, notes: string) {
+
+        const error = ValidationHelper.isValidObjectId(id, "id");
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        const updatedOrder = await OrderRepository.updateNote(id, notes);
+
+        if (!updatedOrder) {
+            throw new Error("Order not found");
+        }
+
+        return updatedOrder;
+    }
 
     async cancelOrder(id: string) {
         const error = ValidationHelper.isValidObjectId(id, "id");
@@ -109,6 +139,7 @@ async createOrder(data: any) {
         }
         return await OrderRepository.softDelete(id);
     }
+
     async createOrderCheckout(totalAmount:number){
         const createRazorpayOrder=await createOrder(totalAmount);
         return createRazorpayOrder.id
@@ -119,10 +150,16 @@ async createOrder(data: any) {
                 throw new Error("Payment verification failed");
                 return;
             }
-            data.paymentStatus="Paid";
+            data.paymentStatus = "Paid";
+
             data.orderNumber = "ORD-" + uuidv4().slice(0, 8);
-            return await OrderRepository.createOrder(data);
-    }
+
+            // CREATE ORDER
+            const order = await this.createOrder(data);
+
+
+            return order;
+                }
 }
 
 export default new OrderService();
