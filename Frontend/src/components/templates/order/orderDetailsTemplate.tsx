@@ -16,8 +16,7 @@ interface Product {
   price: number;
   quantity: number;
 }
-import html2pdf from "html2pdf.js";
-import { toast } from "react-toastify";
+
 
 const OrderDetailTemplate: React.FC = () => {
   const { id } = useParams();
@@ -25,7 +24,7 @@ const OrderDetailTemplate: React.FC = () => {
 const { currentOrder, fetchOrderById, loading } = useOrderStore();
 const [note, setNote] = useState("");
 const pdfRef = useRef<HTMLDivElement>(null);
-const [isDownloading, setIsDownloading] = useState(false);
+
 
 useEffect(() => {
   if (currentOrder?.notes) {
@@ -61,68 +60,9 @@ const handleSaveNote = async () => {
   }
 };
 
-const replaceOklchColors = () => {
-  const allElements = document.querySelectorAll("*");
 
-  allElements.forEach((el: any) => {
-
-    if (el.tagName === "TEXTAREA") return;
-
-    const style = window.getComputedStyle(el);
-
-    if (style.color.includes("oklch")) {
-      el.style.color = "#000000";
-    }
-
-    if (style.backgroundColor.includes("oklch")) {
-      el.style.backgroundColor = "#ffffff";
-    }
-
-    if (style.borderColor.includes("oklch")) {
-      el.style.borderColor = "#d1d5db";
-    }
-  });
-};
-
-const handleDownloadPDF = async () => {
-  if (!pdfRef.current) {
-    toast.error("PDF section not found");
-    return;
-  }
-
-  try {
-    replaceOklchColors();
-    const noPrintEls = document.querySelectorAll(".no-print");
-    noPrintEls.forEach((el: any) => (el.style.display = "none"));
-    const options = {
-      margin: 10,
-      filename: `Order-${currentOrder?.orderNumber}.pdf`,
-      image: {
-        type: "jpeg"as const,
-        quality: 1,
-      },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff",
-      },
-      jsPDF: {
-        unit: "mm"as const,
-        format: "a4"as const,
-        orientation: "portrait"as const,
-      },
-    };
-
-    await html2pdf()
-      .set(options)
-      .from(pdfRef.current)
-      .save();
-       noPrintEls.forEach((el: any) => (el.style.display = ""));
-    toast.success("Order downloaded successfully");
-  } catch (error) {
-    console.error(error);
-    toast.error("Failed to download PDF");
-  }
+const handlePrint = () => {
+  window.print();
 };
 
 useEffect(() => {
@@ -145,7 +85,7 @@ if (loading) {
       
       <div className="flex-1 flex flex-col">
         <main   className="p-8 flex-1">
-        <div ref={pdfRef}>
+        <div ref={pdfRef} className="print-area">
           <header className="mb-6">
             <h2 className="text-2xl font-bold text-[#253d4e]">Order detail</h2>
             <p className="text-sm text-gray-400 mt-1">Details for Order ID: {currentOrder?.orderNumber}</p>
@@ -179,7 +119,7 @@ if (loading) {
               <button className="bg-amber-600 text-white px-6 py-2 rounded-lg hover:bg-[#077068] transition font-medium text-sm">
                 Save
               </button>
-              <button   onClick={handleDownloadPDF} className="p-2 bg-gray-600 border border-radius-5 rounded-md text-gray-600 hover:bg-gray-300 transition">
+              <button   onClick={handlePrint} className="p-2 bg-gray-600 border border-radius-5 rounded-md text-gray-600 hover:bg-gray-300 transition">
                 <Printer size={18} className='text-white'  />
               </button>
             </div>
@@ -224,13 +164,7 @@ if (loading) {
             />
           </div>
 
-          <div
-            className={`grid gap-8 ${
-              isDownloading
-                ? "grid-cols-1"
-                : "grid-cols-1 xl:grid-cols-3"
-            }`}
-          >
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         
             <div className="xl:col-span-2">
               <div className="bg-white rounded-lg border border-gray-100 overflow-hidden">

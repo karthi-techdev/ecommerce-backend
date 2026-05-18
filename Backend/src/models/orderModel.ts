@@ -27,7 +27,8 @@ export interface IOrder extends Document {
     razorpayOrderId:string,
     razorpayPaymentId:string,
     razorpaySignature:string,
-    paidAt:Date
+    paidAt:Date,
+    couponCode?: string,
 }
 
 const OrderProductSchema = new Schema<IProductDetail>({
@@ -58,7 +59,8 @@ const OrderSchema = new Schema<IOrder>(
         razorpayOrderId:{type:String,trim:true},
         razorpayPaymentId:{type:String,trim:true},
         razorpaySignature:{type:String,trim:true},
-        paidAt:{type:Date}
+        paidAt:{type:Date},
+        couponCode:{type:String,trim:true}
     },
     {
         timestamps : { createdAt: true, updatedAt: false }
